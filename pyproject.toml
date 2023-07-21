@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "popenapi"
+name = "beckett-api"
 version = "0.1.0"
-description = "Typed Python OpenAPI Client"
+description = "Typed API Clients from OpenAPI specs"
 authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
 readme = "README.md"

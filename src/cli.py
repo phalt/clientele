@@ -15,17 +15,17 @@ def cli_group():
     "-o", "--output", help="Directory for the generated client", required=True
 )
 @click.option("-a", "--asyncio", help="Use Async.IO", required=False)
-@click.option("-d", "--debug", help="Print debug information", default=False)
 def generate(url, file, output, asyncio, debug):
     """
-    Generate a new client.
+    Generate a new client from an openapi.json spec
     """
     from httpx import Client
     from openapi_core import Spec
-    from rich.pretty import pprint
     from structlog import get_logger
 
     from src.generator import Generator
+
+    assert url or file, "Must pass either a URL or a file"
 
     log = get_logger(__name__)
     if url:
@@ -33,12 +33,10 @@ def generate(url, file, output, asyncio, debug):
         spec = Spec.from_dict(client.get(url).json())
     else:
         spec = Spec.from_file(file)
-    if debug:
-        pprint(spec["info"])
     log.info(
         f"Found API client for {spec['info']['title']} | version {spec['info']['version']}"
     )
-    Generator(spec=spec).generate(url=url, output_dir=output)
+    Generator(spec=spec, asyncio=asyncio).generate(url=url, output_dir=output)
 
 
 cli_group.add_command(generate)
