@@ -19,6 +19,13 @@ class DataType:
     ANY_OF = "anyOf"
 
 
+def get_func_name(operation: Dict, path: str) -> str:
+    if operation.get("operationId"):
+        return operation["operationId"].split("__")[0]
+    # Probably 3.0.1
+    return path.replace("/", "_").replace("-", "_")[1:]
+
+
 def get_type(t):
     t_type = t.get("type")
     if t_type == DataType.STRING:
@@ -121,7 +128,7 @@ class Generator:
                 response_classes.append(
                     content["schema"]["$ref"].replace("#/components/schemas/", "")
                 )
-        return response_classes
+        return list(set(response_classes))
 
     def generate_response_types(self, responses: Dict) -> str:
         response_class_names = self.get_response_class_names(responses=responses)
@@ -131,44 +138,48 @@ class Generator:
             return f"schemas.{response_class_names[0]}"
 
     def generate_get_content(
-        self, operation: Dict, output_dir: str, api_url: str
+        self, operation: Dict, output_dir: str, api_url: str, path: str
     ) -> None:
+        api_url = f"{self.parse_api_base_url(api_url)}{path}"
         response_types = self.generate_response_types(operation["responses"])
-        func_name = operation["operationId"] and operation["operationId"].split("__")[0]
-        CONTENT = f'''
+        func_name = get_func_name(operation, path)
+        CONTENT = f"""
 def {func_name}({self.generate_function_args(operation.get('parameters', []))}) -> {response_types}:
-    """ {operation['description'] or 'no description'} """
     response = _get(f"{api_url}")
     return _handle_response({func_name}, response)
-    '''
+    """
         write_to_client(content=CONTENT, output_dir=output_dir)
 
     def generate_post_content(
-        self, operation: Dict, output_dir: str, api_url: str
+        self, operation: Dict, output_dir: str, api_url: str, path: str
     ) -> None:
+        api_url = f"{self.parse_api_base_url(api_url)}{path}"
         response_types = self.generate_response_types(operation["responses"])
-        breakpoint()
-        func_name = operation["operationId"] and operation["operationId"].split("__")[0]
+        func_name = get_func_name(operation, path)
         input_class_name = self.generate_response_types({"": operation["requestBody"]})
-        CONTENT = f'''
+        CONTENT = f"""
 def {func_name}(data: {input_class_name}) -> {response_types}:
-    """ {operation['description'] or 'no description'} """
     response = _post(f"{api_url}", data=data.model_dump())
     return _handle_response({func_name}, response)
-    '''
+    """
         write_to_client(content=CONTENT, output_dir=output_dir)
 
     def write_path_to_client(self, api_url: str, path: Dict, output_dir: str) -> None:
         url, operations = path
         for method, operation in operations.items():
-            api_url = f"{self.parse_api_base_url(api_url)}{url}"
             if method == "get":
                 self.generate_get_content(
-                    operation=operation, output_dir=output_dir, api_url=api_url
+                    operation=operation,
+                    output_dir=output_dir,
+                    api_url=api_url,
+                    path=url,
                 )
             elif method == "post":
                 self.generate_post_content(
-                    operation=operation, output_dir=output_dir, api_url=api_url
+                    operation=operation,
+                    output_dir=output_dir,
+                    api_url=api_url,
+                    path=url,
                 )
 
     def generate(self, url: str, output_dir: str) -> None:
