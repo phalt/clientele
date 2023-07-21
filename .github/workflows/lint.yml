@@ -1,0 +1,20 @@
+name: Linting
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10"]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Ruff Check
+      # You may pin to the exact commit or the version.
+      # uses: jpetrucciani/ruff-check@33f3725e751a187bb666b7d7a7094d38a2df12db
+      uses: jpetrucciani/ruff-check@0.0.239
+      with:
+        # File or directory to run ruff on
+        path: src/
+        # Optional ruff flags (refer to `ruff --help`)
