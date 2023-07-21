@@ -19,6 +19,9 @@ types-pytz = "^2023.3.0.0"
 structlog = "^23.1.0"
 openapi3-parser = "^1.1.10"
 ipython = "^8.14.0"
+pydantic = "^2.0.3"
+rich = "^13.4.2"
+openapi-core = "0.17.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
