@@ -96,11 +96,13 @@ class Generator:
     """
 
     spec: Spec
+    asyncio: bool
     schemas_generator: SchemasGenerator
 
-    def __init__(self, spec: Spec) -> None:
+    def __init__(self, spec: Spec, asyncio: bool) -> None:
         self.schemas_generator = SchemasGenerator(spec=spec)
         self.spec = spec
+        self.asyncio = asyncio
 
     def parse_api_base_url(self, url: str) -> str:
         """
