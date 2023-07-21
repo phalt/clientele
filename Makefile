@@ -8,7 +8,7 @@ install:  ## Install requirements ready for development
 	poetry install
 
 mypy: ## Run a static syntax check
-	poetry run mypy src/ cli.py
+	poetry run mypy src/
 
 lint: ## Format the code correctly
 	poetry run black .

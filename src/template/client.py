@@ -1,7 +1,3 @@
-from httpx import Client, Response
-
-client = Client()
-
-
-def _get(url: str) -> Response:
-    client.get(url)
+import typing  # noqa
+from . import schemas  # noqa
+from .http import _handle_response, _get, _post  # noqa

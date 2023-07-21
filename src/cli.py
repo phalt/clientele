@@ -9,23 +9,36 @@ def cli_group():
 
 
 @click.command()
-@click.option("-u", "--url", help="URL to openapi schema (json file)", required=True)
+@click.option("-u", "--url", help="URL to openapi schema (json file)", required=False)
+@click.option("-f", "--file", help="Path to openapi schema (json file)", required=False)
 @click.option(
     "-o", "--output", help="Directory for the generated client", required=True
 )
-def generate(url, output):
+@click.option("-a", "--asyncio", help="Use Async.IO", required=False)
+@click.option("-d", "--debug", help="Print debug information", default=False)
+def generate(url, file, output, asyncio, debug):
     """
     Generate a new client.
     """
-    from openapi_parser import parse
+    from httpx import Client
+    from openapi_core import Spec
+    from rich.pretty import pprint
     from structlog import get_logger
 
-    from src.generator import generate
+    from src.generator import Generator
 
     log = get_logger(__name__)
-    spec = parse(url)
-    log.info(f"Found API client for {spec.info.title} | version {spec.info.version}")
-    generate(url=url, specification=spec, output_dir=output)
+    if url:
+        client = Client()
+        spec = Spec.from_dict(client.get(url).json())
+    else:
+        spec = Spec.from_file(file)
+    if debug:
+        pprint(spec["info"])
+    log.info(
+        f"Found API client for {spec['info']['title']} | version {spec['info']['version']}"
+    )
+    Generator(spec=spec).generate(url=url, output_dir=output)
 
 
 cli_group.add_command(generate)
