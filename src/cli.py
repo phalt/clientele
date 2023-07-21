@@ -4,7 +4,7 @@ import click
 @click.group()
 def cli_group():
     """
-    Typed Python OpenAPI Clients
+    Beckett-API:  Typed API Clients from OpenAPI specs
     """
 
 
