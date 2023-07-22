@@ -155,7 +155,7 @@ class {class_name}(BaseModel):
                     {v: {"type": f'"{v}"'} for v in schema["enum"]}
                 )
             else:
-                properties = self.generate_class_properties(schema.get("properties"))
+                properties = self.generate_class_properties(schema.get("properties", {}))
             self.schemas[schema_key] = properties
             content = f"""
 class {schema_key}({"Enum" if enum else "BaseModel"}):
