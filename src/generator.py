@@ -3,9 +3,12 @@ from typing import Dict, List
 from urllib.parse import urlparse
 
 from openapi_core import Spec
+from rich.console import Console
 
 from src.settings import TEMPLATE_ROOT
 from src.writer import write_to_client, write_to_response
+
+console = Console()
 
 
 class DataType:
@@ -75,10 +78,12 @@ class SchemasGenerator:
 
     spec: Spec
     schemas: Dict[str, str]
+    output_dir: str
 
-    def __init__(self, spec: Spec) -> None:
+    def __init__(self, spec: Spec, output_dir: str) -> None:
         self.spec = spec
         self.schemas = {}
+        self.output_dir = output_dir
 
     generated_response_class_names: List[str] = []
 
@@ -109,7 +114,32 @@ class SchemasGenerator:
             )
         return content
 
-    def generate_schema_classes(self, output_dir: str) -> None:
+    def generate_input_class(self, schema: Dict) -> None:
+        for _, schema_details in schema.items():
+            content = schema_details["content"]
+            for encoding, input_schema in content.items():
+                class_name = ""
+                if ref := input_schema["schema"].get("$ref", False):
+                    class_name = class_name_titled(
+                        ref.replace("#/components/schemas/", "")
+                    )
+                elif title := input_schema["schema"].get("title", False):
+                    class_name = title
+                else:
+                    raise "Cannot find a name for this class"
+                properties = self.generate_class_properties(
+                    input_schema["schema"]["properties"]
+                )
+                content = f"""
+class {class_name}(BaseModel):
+{properties if properties else "    pass"}
+    """
+            write_to_response(
+                content,
+                output_dir=self.output_dir,
+            )
+
+    def generate_schema_classes(self) -> None:
         """
         Generates the Pydantic response classes.
         """
@@ -130,8 +160,10 @@ class {schema_key}({"Enum" if enum else "BaseModel"}):
     """
             write_to_response(
                 content,
-                output_dir=output_dir,
+                output_dir=self.output_dir,
             )
+
+        console.log(f"Generated {len(self.schemas.items())} schemas...")
 
 
 class Generator:
@@ -142,11 +174,13 @@ class Generator:
     spec: Spec
     asyncio: bool
     schemas_generator: SchemasGenerator
+    output_dir: str
 
-    def __init__(self, spec: Spec, asyncio: bool) -> None:
-        self.schemas_generator = SchemasGenerator(spec=spec)
+    def __init__(self, spec: Spec, output_dir: str, asyncio: bool) -> None:
+        self.schemas_generator = SchemasGenerator(spec=spec, output_dir=output_dir)
         self.spec = spec
         self.asyncio = asyncio
+        self.output_dir = output_dir
 
     def parse_api_base_url(self, url: str) -> str:
         """
@@ -171,10 +205,36 @@ class Generator:
         response_classes = []
         for _, details in responses.items():
             for _, content in details["content"].items():
-                response_classes.append(
-                    content["schema"]["$ref"].replace("#/components/schemas/", "")
-                )
+                class_name = ""
+                if ref := content["schema"].get("$ref", False):
+                    class_name = class_name_titled(
+                        ref.replace("#/components/schemas/", "")
+                    )
+                elif title := content["schema"].get("title", False):
+                    class_name = title
+                else:
+                    raise "Cannot find a name for this class"
+                response_classes.append(class_name)
         return list(set(response_classes))
+
+    def get_input_class_names(self, inputs: Dict) -> List[str]:
+        """
+        Generates a list of input class for this operation.
+        """
+        input_classes = []
+        for _, details in inputs.items():
+            for _, content in details["content"].items():
+                class_name = ""
+                if ref := content["schema"].get("$ref", False):
+                    class_name = class_name_titled(
+                        ref.replace("#/components/schemas/", "")
+                    )
+                elif title := content["schema"].get("title", False):
+                    class_name = title
+                else:
+                    raise "Cannot find a name for this class"
+                input_classes.append(class_name)
+        return list(set(input_classes))
 
     def generate_response_types(self, responses: Dict) -> str:
         response_class_names = self.get_response_class_names(responses=responses)
@@ -183,9 +243,18 @@ class Generator:
         else:
             return f"schemas.{response_class_names[0]}"
 
-    def generate_get_content(
-        self, operation: Dict, output_dir: str, api_url: str, path: str
-    ) -> None:
+    def generate_input_types(self, request_body: Dict) -> str:
+        input_class_names = self.get_input_class_names(inputs=request_body)
+        for input_class in input_class_names:
+            if input_class not in self.schemas_generator.schemas.keys():
+                # It doesn't exist! Generate the schema for it
+                self.schemas_generator.generate_input_class(schema=request_body)
+        if len(input_class_names) > 1:
+            return f"""typing.Union[{', '.join([f'schemas.{r}' for r in input_class_names])}]"""
+        else:
+            return f"schemas.{input_class_names[0]}"
+
+    def generate_get_content(self, operation: Dict, api_url: str, path: str) -> None:
         api_url = f"{self.parse_api_base_url(api_url)}{path}"
         response_types = self.generate_response_types(operation["responses"])
         func_name = get_func_name(operation, path)
@@ -194,42 +263,43 @@ def {func_name}({self.generate_function_args(operation.get('parameters', []))}) 
     response = _get(f"{api_url}")
     return _handle_response({func_name}, response)
     """
-        write_to_client(content=CONTENT, output_dir=output_dir)
+        write_to_client(content=CONTENT, output_dir=self.output_dir)
 
-    def generate_post_content(
-        self, operation: Dict, output_dir: str, api_url: str, path: str
-    ) -> None:
+    def generate_post_content(self, operation: Dict, api_url: str, path: str) -> None:
         api_url = f"{self.parse_api_base_url(api_url)}{path}"
         response_types = self.generate_response_types(operation["responses"])
         func_name = get_func_name(operation, path)
-        input_class_name = self.generate_response_types({"": operation["requestBody"]})
+        input_class_name = self.generate_input_types({"": operation["requestBody"]})
         CONTENT = f"""
 def {func_name}(data: {input_class_name}) -> {response_types}:
     response = _post(f"{api_url}", data=data.model_dump())
     return _handle_response({func_name}, response)
     """
-        write_to_client(content=CONTENT, output_dir=output_dir)
+        write_to_client(content=CONTENT, output_dir=self.output_dir)
 
-    def write_path_to_client(self, api_url: str, path: Dict, output_dir: str) -> None:
+    def write_path_to_client(self, api_url: str, path: Dict) -> None:
         url, operations = path
+        if servers := operations.get("servers"):
+            api_url = servers[0]["url"]
         for method, operation in operations.items():
             if method == "get":
                 self.generate_get_content(
                     operation=operation,
-                    output_dir=output_dir,
                     api_url=api_url,
                     path=url,
                 )
             elif method == "post":
                 self.generate_post_content(
                     operation=operation,
-                    output_dir=output_dir,
                     api_url=api_url,
                     path=url,
                 )
 
-    def generate(self, url: str, output_dir: str) -> None:
-        copy_tree(src=TEMPLATE_ROOT, dst=output_dir)
-        self.schemas_generator.generate_schema_classes(output_dir=output_dir)
+    def generate(
+        self,
+        url: str,
+    ) -> None:
+        copy_tree(src=TEMPLATE_ROOT, dst=self.output_dir)
+        self.schemas_generator.generate_schema_classes()
         for path in self.spec["paths"].items():
-            self.write_path_to_client(api_url=url, path=path, output_dir=output_dir)
+            self.write_path_to_client(api_url=url, path=path)
