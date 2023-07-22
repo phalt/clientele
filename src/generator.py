@@ -19,6 +19,28 @@ class DataType:
     ANY_OF = "anyOf"
 
 
+def class_name_titled(input_str: str) -> str:
+    """
+    Make the input string suitable for a class name
+    """
+    input_str = input_str.title()
+    for badstr in [".", "-", "_"]:
+        input_str = input_str.replace(badstr, "")
+    return input_str
+
+
+def clean_prop(input_str: str) -> str:
+    """
+    Clean a property to not have invalid characters
+    """
+    for badstr in ["-", "."]:
+        input_str = input_str.replace(badstr, "_")
+    reserved_words = ["from"]
+    if input_str in reserved_words:
+        input_str = input_str + "_"
+    return input_str
+
+
 def get_func_name(operation: Dict, path: str) -> str:
     if operation.get("operationId"):
         return operation["operationId"].split("__")[0]
@@ -30,7 +52,7 @@ def get_type(t):
     t_type = t.get("type")
     if t_type == DataType.STRING:
         return "str"
-    if t_type == DataType.INTEGER:
+    if t_type in [DataType.INTEGER, DataType.NUMBER]:
         return "int"
     if t_type == DataType.BOOLEAN:
         return "bool"
@@ -40,6 +62,9 @@ def get_type(t):
         return "typing.List[typing.Any]"
     if ref := t.get("$ref"):
         return f'"{ref.replace("#/components/schemas/", "")}"'
+    if t_type is None:
+        # In this case, make it an "Any"
+        return "typing.Any"
     return t_type
 
 
@@ -57,13 +82,25 @@ class SchemasGenerator:
 
     generated_response_class_names: List[str] = []
 
+    def generate_enum_properties(self, properties: Dict) -> str:
+        """
+        Generate a string list of the properties for this enum.
+        """
+        content = ""
+        for arg, arg_details in properties.items():
+            content = (
+                content
+                + f"""    {clean_prop(arg.upper())} = {get_type(arg_details)}\n"""
+            )
+        return content
+
     def generate_class_properties(self, properties: Dict) -> str:
         """
         Generate a string list of the properties for this pydantic class.
         """
         content = ""
         for arg, arg_details in properties.items():
-            content = content + f"""    {arg}: {get_type(arg_details)}\n"""
+            content = content + f"""    {clean_prop(arg)}: {get_type(arg_details)}\n"""
         return content
 
     def generate_schema_classes(self, output_dir: str) -> None:
@@ -71,10 +108,11 @@ class SchemasGenerator:
         Generates the Pydantic response classes.
         """
         for schema_key, schema in self.spec["components"]["schemas"].items():
+            schema_key = class_name_titled(schema_key)
             enum = False
             if schema.get("enum"):
                 enum = True
-                properties = self.generate_class_properties(
+                properties = self.generate_enum_properties(
                     {v: {"type": f'"{v}"'} for v in schema["enum"]}
                 )
             else:
@@ -82,7 +120,7 @@ class SchemasGenerator:
             self.schemas[schema_key] = properties
             content = f"""
 class {schema_key}({"Enum" if enum else "BaseModel"}):
-{properties}
+{properties if properties else "    pass"}
     """
             write_to_response(
                 content,
