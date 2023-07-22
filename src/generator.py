@@ -100,7 +100,13 @@ class SchemasGenerator:
         """
         content = ""
         for arg, arg_details in properties.items():
-            content = content + f"""    {clean_prop(arg)}: {get_type(arg_details)}\n"""
+            arg_type = get_type(arg_details)
+            # TODO support this
+            is_optional = False
+            content = (
+                content
+                + f"""    {clean_prop(arg)}: {is_optional and f"typing.Optional[{arg_type}]" or arg_type}\n"""
+            )
         return content
 
     def generate_schema_classes(self, output_dir: str) -> None:
