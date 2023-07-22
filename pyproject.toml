@@ -18,7 +18,9 @@ structlog = "^23.1.0"
 ipython = "^8.14.0"
 pydantic = "^2.0.3"
 rich = "^13.4.2"
-openapi-core = "0.17.0"
+openapi-core = "0.18.0"
+pyyaml = "^6.0.1"
+types-pyyaml = "^6.0.12.11"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"

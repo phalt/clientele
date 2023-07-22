@@ -15,10 +15,13 @@ def cli_group():
     "-o", "--output", help="Directory for the generated client", required=True
 )
 @click.option("-a", "--asyncio", help="Use Async.IO", required=False)
-def generate(url, file, output, asyncio, debug):
+def generate(url, file, output, asyncio):
     """
     Generate a new client from an openapi.json spec
     """
+    from json import JSONDecodeError
+
+    import yaml
     from httpx import Client
     from openapi_core import Spec
     from structlog import get_logger
@@ -30,12 +33,25 @@ def generate(url, file, output, asyncio, debug):
     log = get_logger(__name__)
     if url:
         client = Client()
-        spec = Spec.from_dict(client.get(url).json())
+        response = client.get(url)
+        try:
+            data = response.json()
+        except JSONDecodeError:
+            # It's probably yaml
+            data = yaml.safe_load(response.content)
+        spec = Spec.from_dict(data)
     else:
-        spec = Spec.from_file(file)
+        with open(file, "r") as f:
+            spec = Spec.from_file(f)
     log.info(
         f"Found API client for {spec['info']['title']} | version {spec['info']['version']}"
     )
+    major, _, _ = spec["openapi"].split(".")
+    if int(major) < 3:
+        log.warning(
+            f"Beckett-API only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
+        )
+        return
     Generator(spec=spec, asyncio=asyncio).generate(url=url, output_dir=output)
 
 
