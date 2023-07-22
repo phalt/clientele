@@ -1,5 +1,6 @@
+from collections import defaultdict
 from distutils.dir_util import copy_tree
-from typing import Dict, List
+from typing import Any, Dict, List
 from urllib.parse import urlparse
 
 from openapi_core import Spec
@@ -27,7 +28,7 @@ def class_name_titled(input_str: str) -> str:
     Make the input string suitable for a class name
     """
     input_str = input_str.title()
-    for badstr in [".", "-", "_"]:
+    for badstr in [".", "-", "_", ">", "<"]:
         input_str = input_str.replace(badstr, "")
     return input_str
 
@@ -36,6 +37,8 @@ def clean_prop(input_str: str) -> str:
     """
     Clean a property to not have invalid characters
     """
+    for dropchar in [">", "<"]:
+        input_str = input_str.replace(dropchar, "")
     for badstr in ["-", "."]:
         input_str = input_str.replace(badstr, "_")
     reserved_words = ["from"]
@@ -175,12 +178,14 @@ class Generator:
     asyncio: bool
     schemas_generator: SchemasGenerator
     output_dir: str
+    results: Dict[str, int]
 
     def __init__(self, spec: Spec, output_dir: str, asyncio: bool) -> None:
         self.schemas_generator = SchemasGenerator(spec=spec, output_dir=output_dir)
         self.spec = spec
         self.asyncio = asyncio
         self.output_dir = output_dir
+        self.results = defaultdict(int)
 
     def parse_api_base_url(self, url: str) -> str:
         """
@@ -189,14 +194,32 @@ class Generator:
         url_parts = urlparse(url=url)
         return f"{url_parts.scheme}://{url_parts.hostname}{f':{url_parts.port}' if url_parts.port not in [80, 443] else ''}"  # noqa
 
-    def generate_function_args(self, parameters: List[Dict]) -> str:
-        return_parameters = []
+    def generate_function_args(self, parameters: List[Dict]) -> Dict[str, Any]:
+        return_string_bits = []
+        param_keys = []
+        query_args = []
+        path_args = []
         for p in parameters:
-            if p["required"]:
-                return_parameters.append(f"{p['name']}: str")
+            clean_key = clean_prop(p['name'])
+            if clean_key in param_keys:
+                continue
+            in_ = p.get("in")
+            required = p.get("required", False) or in_ != "query"
+            if in_ == "query":
+                query_args.append(p["name"])
+            elif in_ == "path":
+                path_args.append(p["name"])
+            if required:
+                return_string_bits.append(f"{clean_key}: {get_type(p['schema'])}")
             else:
-                return_parameters.append(f"{p['name']}: typing.Optional[str]")
-        return ", ".join(return_parameters)
+                return_string_bits.append(f"{clean_key}: typing.Optional[{get_type(p['schema'])}]")
+            param_keys.append(clean_key)
+        return_string = ", ".join(return_string_bits)
+        return {
+            "return_string": return_string,
+            "query_args": query_args,
+            "path_args": path_args,
+        }
 
     def get_response_class_names(self, responses: Dict) -> List[str]:
         """
@@ -255,14 +278,25 @@ class Generator:
             return f"schemas.{input_class_names[0]}"
 
     def generate_get_content(self, operation: Dict, api_url: str, path: str) -> None:
-        api_url = f"{self.parse_api_base_url(api_url)}{path}"
         response_types = self.generate_response_types(operation["responses"])
         func_name = get_func_name(operation, path)
+        function_arguments = self.generate_function_args(
+            operation.get("parameters", [])
+        )
+        if query_args := function_arguments["query_args"]:
+            api_url = f"{self.parse_api_base_url(api_url)}{path}"
+            # TODO do this far more elegantly
+            api_url = (
+                api_url + "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
+            )
+        else:
+            api_url = f"{self.parse_api_base_url(api_url)}{path}"
         CONTENT = f"""
-def {func_name}({self.generate_function_args(operation.get('parameters', []))}) -> {response_types}:
+def {func_name}({function_arguments['return_string']}) -> {response_types}:
     response = _get(f"{api_url}")
     return _handle_response({func_name}, response)
     """
+        self.results["get_methods"] += 1
         write_to_client(content=CONTENT, output_dir=self.output_dir)
 
     def generate_post_content(self, operation: Dict, api_url: str, path: str) -> None:
@@ -270,11 +304,15 @@ def {func_name}({self.generate_function_args(operation.get('parameters', []))}) 
         response_types = self.generate_response_types(operation["responses"])
         func_name = get_func_name(operation, path)
         input_class_name = self.generate_input_types({"": operation["requestBody"]})
+        function_arguments = self.generate_function_args(
+            operation.get("parameters", [])
+        )
         CONTENT = f"""
-def {func_name}(data: {input_class_name}) -> {response_types}:
+def {func_name}({function_arguments['return_string']}{function_arguments['return_string'] and ", "}data: {input_class_name}) -> {response_types}:
     response = _post(f"{api_url}", data=data.model_dump())
     return _handle_response({func_name}, response)
     """
+        self.results["post_methods"] += 1
         write_to_client(content=CONTENT, output_dir=self.output_dir)
 
     def write_path_to_client(self, api_url: str, path: Dict) -> None:
@@ -303,3 +341,5 @@ def {func_name}(data: {input_class_name}) -> {response_types}:
         self.schemas_generator.generate_schema_classes()
         for path in self.spec["paths"].items():
             self.write_path_to_client(api_url=url, path=path)
+        console.log(f"Wrote {self.results['get_methods']} GET methods...")
+        console.log(f"Wrote {self.results['post_methods']} POST methods...")
