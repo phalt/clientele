@@ -200,7 +200,7 @@ class Generator:
         query_args = []
         path_args = []
         for p in parameters:
-            clean_key = clean_prop(p['name'])
+            clean_key = clean_prop(p["name"])
             if clean_key in param_keys:
                 continue
             in_ = p.get("in")
@@ -212,7 +212,9 @@ class Generator:
             if required:
                 return_string_bits.append(f"{clean_key}: {get_type(p['schema'])}")
             else:
-                return_string_bits.append(f"{clean_key}: typing.Optional[{get_type(p['schema'])}]")
+                return_string_bits.append(
+                    f"{clean_key}: typing.Optional[{get_type(p['schema'])}]"
+                )
             param_keys.append(clean_key)
         return_string = ", ".join(return_string_bits)
         return {
@@ -307,8 +309,10 @@ def {func_name}({function_arguments['return_string']}) -> {response_types}:
         function_arguments = self.generate_function_args(
             operation.get("parameters", [])
         )
+        FUNCTION_ARGS = f"""
+{function_arguments['return_string']}{function_arguments['return_string'] and ", "}data: {input_class_name}"""
         CONTENT = f"""
-def {func_name}({function_arguments['return_string']}{function_arguments['return_string'] and ", "}data: {input_class_name}) -> {response_types}:
+def {func_name}({FUNCTION_ARGS}) -> {response_types}:
     response = _post(f"{api_url}", data=data.model_dump())
     return _handle_response({func_name}, response)
     """
@@ -341,5 +345,6 @@ def {func_name}({function_arguments['return_string']}{function_arguments['return
         self.schemas_generator.generate_schema_classes()
         for path in self.spec["paths"].items():
             self.write_path_to_client(api_url=url, path=path)
+        # TODO: Generate security schemeas here
         console.log(f"Wrote {self.results['get_methods']} GET methods...")
         console.log(f"Wrote {self.results['post_methods']} POST methods...")
