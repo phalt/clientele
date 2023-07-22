@@ -52,7 +52,7 @@ def generate(url, file, output, asyncio):
             f"Beckett-API only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
         )
         return
-    Generator(spec=spec, asyncio=asyncio).generate(url=url, output_dir=output)
+    Generator(spec=spec, asyncio=asyncio, output_dir=output).generate(url=url)
 
 
 cli_group.add_command(generate)
