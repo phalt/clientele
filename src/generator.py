@@ -67,7 +67,7 @@ def get_type(t):
     if t_type == DataType.ARRAY:
         return "typing.List[typing.Any]"
     if ref := t.get("$ref"):
-        return f'"{ref.replace("#/components/schemas/", "")}"'
+        return f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
     if t_type is None:
         # In this case, make it an "Any"
         return "typing.Any"
@@ -257,6 +257,7 @@ class Generator:
                 elif title := content["schema"].get("title", False):
                     class_name = title
                 else:
+                    breakpoint()
                     raise "Cannot find a name for this class"
                 input_classes.append(class_name)
         return list(set(input_classes))

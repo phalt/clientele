@@ -1,10 +1,10 @@
-#  ⚜️ Beckett-API
+#  ⚜️ Clientele
 
 ### Typed API Clients from OpenAPI specs
 
-![beckett_api_logo](https://github.com/beckett-software/beckett-api/blob/main/docs/beckett_api.jpeg?raw=true)
+![clientele_logo](https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true)
 
-Beckett-API lets you generate fully-typed, functional, API Clients from OpenAPI specs.
+Clientele lets you generate fully-typed, functional, API Clients from OpenAPI specs.
 
 It uses modern tools to be blazing fast and type safe. 
 
@@ -26,13 +26,25 @@ We're built on:
 ## Install
 
 ```sh
-poetry add beckett-api
+poetry add clientele
 ```
 
-## Use
+## Usage
+
+### From URLs
 
 ```sh
-beckett-api generate -u URL_TO_OPEN_API.json -o output/ --async t
+clientele generate -u URL_TO_OPEN_API.json -o output/
 ```
 
-Inspect the `output/` folder when it has finished to see your new API client!
+### From files
+
+```sh
+clientele generate -f path/to/file.json -o output/
+```
+
+### Async Client
+
+```sh
+clientele generate -f path/to/file.json -o output/ --async t
+```

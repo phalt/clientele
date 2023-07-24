@@ -4,7 +4,7 @@ import click
 @click.group()
 def cli_group():
     """
-    Beckett-API:  Typed API Clients from OpenAPI specs
+    Clientele:  Typed API Clients from OpenAPI specs
     """
 
 
@@ -49,7 +49,7 @@ def generate(url, file, output, asyncio):
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
         log.warning(
-            f"Beckett-API only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
+            f"clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
         )
         return
     Generator(spec=spec, asyncio=asyncio, output_dir=output).generate(url=url)
