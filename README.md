@@ -55,6 +55,7 @@ clientele generate -f path/to/file.json -o output/ --asyncio t
 If your OpenAPI spec provides security information for the following authentication methods:
 
 * HTTP Bearer
+* HTTP Basic
 
 Then clientele will provide you information on the environment variables you need to set to
 make this work during the generation. For example:
