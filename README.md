@@ -47,7 +47,7 @@ clientele generate -f path/to/file.json -o output/
 ### Async Client
 
 ```sh
-clientele generate -f path/to/file.json -o output/ --async t
+clientele generate -f path/to/file.json -o output/ --asyncio t
 ```
 
 ## Authentication
@@ -60,5 +60,8 @@ Then clientele will provide you information on the environment variables you nee
 make this work during the generation. For example:
 
 ```sh
-[info ] Generated HTTP Bearer auth, use with this environment variable to use: {EXAMPLE_BEARER_AUTH}
+Please set
+* MY_CLIENT_AUTH_USER_KEY
+* MY_CLIENT_AUTH_PASS_KEY
+environment variable to use basic authentication
 ```

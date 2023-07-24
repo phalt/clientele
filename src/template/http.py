@@ -1,20 +1,11 @@
 import typing
+from os import environ  # noqa
 
-from httpx import Client, Response
+import httpx  # noqa
 from pydantic import ValidationError
 
-client = Client()
 
-
-def _get(url: str) -> Response:
-    return client.get(url)
-
-
-def _post(url: str, data: typing.Dict) -> Response:
-    return client.post(url, json=data)
-
-
-def _handle_response(func, response):
+def handle_response(func, response):
     """
     returns a response that matches the data neatly for a function
     """

@@ -18,7 +18,7 @@ def class_name_titled(input_str: str) -> str:
     """
     # Capitalize the first letter always
     input_str = input_str[:1].title() + input_str[1:]
-    for badstr in [".", "-", "_", ">", "<"]:
+    for badstr in [".", "-", "_", ">", "<", "/"]:
         input_str = input_str.replace(badstr, " ")
     if " " in input_str:
         # Capitalize all the spaces
@@ -43,7 +43,7 @@ def clean_prop(input_str: str) -> str:
 
 def get_func_name(operation: Dict, path: str) -> str:
     if operation.get("operationId"):
-        return operation["operationId"].split("__")[0]
+        return class_name_titled(operation["operationId"].split("__")[0])
     # Probably 3.0.1
     return path.replace("/", "_").replace("-", "_")[1:]
 
