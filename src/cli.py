@@ -44,7 +44,7 @@ def generate(url, file, output, asyncio):
         with open(file, "r") as f:
             spec = Spec.from_file(f)
     log.info(
-        f"Found API client for {spec['info']['title']} | version {spec['info']['version']}"
+        f"Found API specification for {spec['info']['title']} | version {spec['info']['version']}"
     )
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
@@ -52,6 +52,11 @@ def generate(url, file, output, asyncio):
             f"clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
         )
         return
+    log.info(f"OpenAPI version {spec['openapi']}")
+    if asyncio:
+        log.info("Generating async client...")
+    else:
+        log.info("Generating sync client...")
     Generator(spec=spec, asyncio=asyncio, output_dir=output).generate(url=url)
 
 

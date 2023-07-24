@@ -15,6 +15,7 @@ Plus - there is no complex boilerplate and the generated code is very small.
 * Fully typed API Client using Pydantic.
 * Minimalist and easy to use - the generated code is tiny.
 * Choose either sync (default) or async - we support both.
+* Generates authentication code for you (curently only supports HTTP Bearer auth)
 * Written entirely in Python - no need to install other languages to use OpenAPI.
 
 We're built on:
@@ -34,7 +35,7 @@ poetry add clientele
 ### From URLs
 
 ```sh
-clientele generate -u URL_TO_OPEN_API.json -o output/
+clientele generate -u http://URL_TO_OPEN_API.json -o output/
 ```
 
 ### From files
@@ -47,4 +48,17 @@ clientele generate -f path/to/file.json -o output/
 
 ```sh
 clientele generate -f path/to/file.json -o output/ --async t
+```
+
+## Authentication
+
+If your OpenAPI spec provides security information for the following authentication methods:
+
+* HTTP Bearer
+
+Then clientele will provide you information on the environment variables you need to set to
+make this work during the generation. For example:
+
+```sh
+[info ] Generated HTTP Bearer auth, use with this environment variable to use: {EXAMPLE_BEARER_AUTH}
 ```

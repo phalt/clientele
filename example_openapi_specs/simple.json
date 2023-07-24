@@ -1,0 +1,153 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Simple API Example",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/health-check": {
+            "get": {
+                "summary": "Health Check",
+                "description": "Standard health check.",
+                "operationId": "health_check_health_check_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthCheckResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/test-input": {
+            "post": {
+                "summary": "Test Input",
+                "description": "A POST API endpoint for testing",
+                "operationId": "test_input_test_input_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TestInputData"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TestInputResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "HealthCheckResponse": {
+                "title": "HealthCheckResponse",
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "title": "Status",
+                        "type": "string"
+                    }
+                }
+            },
+            "TestInputData": {
+                "title": "TestInputData",
+                "required": [
+                    "my_title"
+                ],
+                "type": "object",
+                "properties": {
+                    "my_title": {
+                        "title": "My Title",
+                        "type": "string"
+                    }
+                }
+            },
+            "TestInputResponse": {
+                "title": "TestInputResponse",
+                "required": [
+                    "title"
+                ],
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "title": "Title",
+                        "type": "string"
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
