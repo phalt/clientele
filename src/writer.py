@@ -1,5 +1,9 @@
-def write_to_response(content: str, output_dir: str) -> None:
+def write_to_schemas(content: str, output_dir: str) -> None:
     _write_to(f"{output_dir}schemas.py", content)
+
+
+def write_to_http(content: str, output_dir: str) -> None:
+    _write_to(f"{output_dir}http.py", content)
 
 
 def write_to_client(content: str, output_dir: str) -> None:

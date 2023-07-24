@@ -4,7 +4,7 @@ from openapi_core import Spec
 from rich.console import Console
 
 from src.utils import class_name_titled, clean_prop, get_type
-from src.writer import write_to_response
+from src.writer import write_to_schemas
 
 console = Console()
 
@@ -55,24 +55,25 @@ class SchemasGenerator:
     def generate_input_class(self, schema: Dict) -> None:
         for _, schema_details in schema.items():
             content = schema_details["content"]
-            for _, input_schema in content.items():
+            for encoding, input_schema in content.items():
                 class_name = ""
                 if ref := input_schema["schema"].get("$ref", False):
                     class_name = class_name_titled(
                         ref.replace("#/components/schemas/", "")
                     )
                 elif title := input_schema["schema"].get("title", False):
-                    class_name = title
+                    class_name = class_name_titled(title)
                 else:
-                    raise "Cannot find a name for this class"
+                    # No idea, using the encoding?
+                    class_name = class_name_titled(encoding)
                 properties = self.generate_class_properties(
-                    input_schema["schema"]["properties"]
+                    input_schema["schema"].get("properties", {})
                 )
                 content = f"""
 class {class_name}(BaseModel):
 {properties if properties else "    pass"}
     """
-            write_to_response(
+            write_to_schemas(
                 content,
                 output_dir=self.output_dir,
             )
@@ -98,7 +99,7 @@ class {class_name}(BaseModel):
 class {schema_key}({"Enum" if enum else "BaseModel"}):
 {properties if properties else "    pass"}
     """
-            write_to_response(
+            write_to_schemas(
                 content,
                 output_dir=self.output_dir,
             )

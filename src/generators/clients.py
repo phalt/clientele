@@ -23,12 +23,17 @@ class ClientsGenerator:
     schemas_generator: SchemasGenerator
 
     def __init__(
-        self, spec: Spec, output_dir: str, schemas_generator: SchemasGenerator
+        self,
+        spec: Spec,
+        output_dir: str,
+        schemas_generator: SchemasGenerator,
+        asyncio: bool,
     ) -> None:
         self.spec = spec
         self.output_dir = output_dir
         self.results = defaultdict(int)
         self.schemas_generator = schemas_generator
+        self.asyncio = asyncio
 
     def generate_paths(self, api_url: str) -> None:
         for path in self.spec["paths"].items():
@@ -49,6 +54,9 @@ class ClientsGenerator:
         query_args = []
         path_args = []
         for p in parameters:
+            if p.get("$ref"):
+                # Not currently supporter
+                continue
             clean_key = clean_prop(p["name"])
             if clean_key in param_keys:
                 continue
@@ -78,16 +86,16 @@ class ClientsGenerator:
         """
         response_classes = []
         for _, details in responses.items():
-            for _, content in details.get("content", {}).items():
+            for encoding, content in details.get("content", {}).items():
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
                     class_name = class_name_titled(
                         ref.replace("#/components/schemas/", "")
                     )
                 elif title := content["schema"].get("title", False):
-                    class_name = title
+                    class_name = class_name_titled(title)
                 else:
-                    raise "Cannot find a name for this class"
+                    class_name = class_name_titled(encoding)
                 response_classes.append(class_name)
         return list(set(response_classes))
 
@@ -97,7 +105,7 @@ class ClientsGenerator:
         """
         input_classes = []
         for _, details in inputs.items():
-            for _, content in details["content"].items():
+            for encoding, content in details.get("content", {}).items():
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
                     class_name = class_name_titled(
@@ -106,7 +114,8 @@ class ClientsGenerator:
                 elif title := content["schema"].get("title", False):
                     class_name = title
                 else:
-                    raise "Cannot find a name for this class"
+                    # No idea, using the encoding?
+                    class_name = encoding
                 class_name = class_name_titled(class_name)
                 input_classes.append(class_name)
         return list(set(input_classes))
@@ -115,6 +124,8 @@ class ClientsGenerator:
         response_class_names = self.get_response_class_names(responses=responses)
         if len(response_class_names) > 1:
             return f"""typing.Union[{', '.join([f'schemas.{r}' for r in response_class_names])}]"""
+        elif len(response_class_names) == 0:
+            return "None"
         else:
             return f"schemas.{response_class_names[0]}"
 
@@ -126,6 +137,8 @@ class ClientsGenerator:
                 self.schemas_generator.generate_input_class(schema=request_body)
         if len(input_class_names) > 1:
             return f"""typing.Union[{', '.join([f'schemas.{r}' for r in input_class_names])}]"""
+        elif len(input_class_names) == 0:
+            return "None"
         else:
             return f"schemas.{input_class_names[0]}"
 
@@ -144,9 +157,9 @@ class ClientsGenerator:
         else:
             api_url = f"{self.parse_api_base_url(api_url)}{path}"
         CONTENT = f"""
-def {func_name}({function_arguments['return_string']}) -> {response_types}:
-    response = _get(f"{api_url}")
-    return _handle_response({func_name}, response)
+{self.asyncio and "async " or ""}def {func_name}({function_arguments['return_string']}) -> {response_types}:
+    response = {self.asyncio and "await " or ""}http.get(f"{api_url}")
+    return http.handle_response({func_name}, response)
     """
         self.results["get_methods"] += 1
         write_to_client(content=CONTENT, output_dir=self.output_dir)
@@ -155,16 +168,21 @@ def {func_name}({function_arguments['return_string']}) -> {response_types}:
         api_url = f"{self.parse_api_base_url(api_url)}{path}"
         response_types = self.generate_response_types(operation["responses"])
         func_name = get_func_name(operation, path)
-        input_class_name = self.generate_input_types({"": operation["requestBody"]})
+        if not operation.get("requestBody"):
+            input_class_name = "None"
+        else:
+            input_class_name = self.generate_input_types(
+                {"": operation.get("requestBody")}
+            )
         function_arguments = self.generate_function_args(
             operation.get("parameters", [])
         )
         FUNCTION_ARGS = f"""
 {function_arguments['return_string']}{function_arguments['return_string'] and ", "}data: {input_class_name}"""
         CONTENT = f"""
-def {func_name}({FUNCTION_ARGS}) -> {response_types}:
-    response = _post(f"{api_url}", data=data.model_dump())
-    return _handle_response({func_name}, response)
+{self.asyncio and "async " or ""}def {func_name}({FUNCTION_ARGS}) -> {response_types}:
+    response = {self.asyncio and "await " or ""}http.post(f"{api_url}", data=data and data.model_dump())
+    return http.handle_response({func_name}, response)
     """
         self.results["post_methods"] += 1
         write_to_client(content=CONTENT, output_dir=self.output_dir)
