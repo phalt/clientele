@@ -10,6 +10,10 @@ def write_to_client(content: str, output_dir: str) -> None:
     _write_to(f"{output_dir}client.py", content)
 
 
+def write_to_manifest(content: str, output_dir: str) -> None:
+    _write_to(f"{output_dir}MANIFEST", content)
+
+
 def _write_to(
     path: str,
     content: str,

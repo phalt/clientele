@@ -1,8 +1,20 @@
 import typing
 from os import environ  # noqa
+from urllib.parse import urlparse
 
 import httpx  # noqa
 from pydantic import ValidationError
+
+from . import constants as c  # noqa
+
+
+def parse_url(url: str) -> str:
+    """
+    Returns the base API URL for this service
+    """
+    api_url = f"{c.api_base_url()}{url}"
+    url_parts = urlparse(url=api_url)
+    return url_parts.geturl()
 
 
 def handle_response(func, response):

@@ -24,13 +24,14 @@ def generate(url, file, output, asyncio):
     import yaml
     from httpx import Client
     from openapi_core import Spec
-    from structlog import get_logger
+    from rich.console import Console
+
+    console = Console()
 
     from src.generator import Generator
 
     assert url or file, "Must pass either a URL or a file"
 
-    log = get_logger(__name__)
     if url:
         client = Client()
         response = client.get(url)
@@ -43,21 +44,21 @@ def generate(url, file, output, asyncio):
     else:
         with open(file, "r") as f:
             spec = Spec.from_file(f)
-    log.info(
+    console.log(
         f"Found API specification for {spec['info']['title']} | version {spec['info']['version']}"
     )
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
-        log.warning(
-            f"clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
+        console.log(
+            f"[red]clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
         )
         return
-    log.info(f"OpenAPI version {spec['openapi']}")
+    console.log(f"OpenAPI version {spec['openapi']}")
     if asyncio:
-        log.info("Generating async client...")
+        console.log("Generating async client...")
     else:
-        log.info("Generating sync client...")
-    Generator(spec=spec, asyncio=asyncio, output_dir=output).generate(url=url)
+        console.log("Generating sync client...")
+    Generator(spec=spec, asyncio=asyncio, output_dir=output).generate()
 
 
 cli_group.add_command(generate)
