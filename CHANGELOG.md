@@ -1,5 +1,9 @@
 # Change log
 
+## 0.4.0 NOT YET RELEASED
+
+- Use [pydantic settings](https://docs.pydantic.dev/latest/usage/pydantic_settings/) for settings management in the `constants.py` file. This is a **breaking change** and you will need to delete your `constants.py` file.
+
 ## 0.3.0
 
 - Now generates a `MANIFEST` file with information about the build versions
