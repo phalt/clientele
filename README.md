@@ -1,10 +1,10 @@
 # ⚜️ Clientele
 
-# Typed API Clients from OpenAPI specs
+# Typed API Clients from OpenAPI schemas
 
 ![clientele_logo](https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true)
 
-Clientele lets you generate fully-typed, functional, API Clients from OpenAPI specs.
+Clientele lets you generate fully-typed, functional, API Clients from OpenAPI schemas.
 
 It uses modern tools to be blazing fast and type safe.
 

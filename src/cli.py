@@ -4,7 +4,7 @@ import click
 @click.group()
 def cli_group():
     """
-    Clientele:  Typed API Clients from OpenAPI specs
+    Clientele:  Typed API Clients from OpenAPI schemas
     """
 
 

@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "clientele"
 version = "0.3.0"
-description = "Typed API Clients from OpenAPI specs"
+description = "Typed API Clients from OpenAPI schemas"
 authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
 readme = "README.md"
