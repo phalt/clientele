@@ -1,3 +1,4 @@
+import re
 from typing import Dict
 
 
@@ -41,11 +42,21 @@ def clean_prop(input_str: str) -> str:
     return input_str
 
 
+def _split_upper(s):
+    return "_".join(re.findall(".[^A-Z]*", s))
+
+
+def _snake_case(s):
+    for badchar in ["/", "-", "."]:
+        s = s.replace(badchar, "_")
+    s = _split_upper(s)
+    return s.lower()
+
+
 def get_func_name(operation: Dict, path: str) -> str:
     if operation.get("operationId"):
-        return class_name_titled(operation["operationId"].split("__")[0])
-    # Probably 3.0.1
-    return path.replace("/", "_").replace("-", "_")[1:]
+        return _snake_case(operation["operationId"].split("__")[0])
+    return _snake_case(path)
 
 
 def get_type(t):

@@ -161,7 +161,7 @@ class ClientsGenerator:
         if not operation.get("requestBody"):
             input_class_name = "None"
         else:
-            input_class_name = self.generate_input_types(operation.get("requestBody"))
+            input_class_name = self.generate_input_types(operation.get("requestBody", {}))
         function_arguments = self.generate_function_args(
             operation.get("parameters", [])
         )

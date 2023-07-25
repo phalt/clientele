@@ -9,7 +9,8 @@ from src.writer import write_to_http
 console = Console()
 
 BEARER_CLIENT = """
-headers = dict(Authorization=f'Bearer {c.get_bearer_token()}')
+auth_key = c.get_bearer_token()
+headers = dict(Authorization=f'Bearer ' + auth_key)
 client = httpx.{client_type}(headers=headers)
 """
 
