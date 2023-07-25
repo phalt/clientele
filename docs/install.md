@@ -1,13 +1,7 @@
 # 🏗️ Install
 
-We recommend using [poetry](https://python-poetry.org/) to manage your python packages.
+We recommend installing with [pip](https://pip.pypa.io/en/stable/) globally.
 
 ```sh
-poetry add clientele
-```
-
-We also work with [pip](https://pip.pypa.io/en/stable/)
-
-```sh
-pip install clientele
+sudo pip install clientele
 ```
