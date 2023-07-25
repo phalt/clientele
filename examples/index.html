@@ -8,18 +8,20 @@
       
       
       
+        <link rel="canonical" href="https://beckett-software.github.io/clientele/examples/">
       
-        <link rel="prev" href="..">
+      
+        <link rel="prev" href="../compatibility/">
       
       
-        <link rel="next" href="../install/">
+        <link rel="next" href="../CHANGELOG/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.19">
     
     
       
-        <title>📋 Examples - ⚜️ Clientele</title>
+        <title>Client Example - ⚜️ Clientele</title>
       
     
     
@@ -57,7 +59,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
   
     
     
@@ -67,7 +69,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#examples" class="md-skip">
+        <a href="#client-example" class="md-skip">
           Skip to content
         </a>
       
@@ -102,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              📋 Examples
+              Client Example
             
           </span>
         </div>
@@ -191,7 +193,52 @@
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        ⚜️ Clientele
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        Install
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../usage/" class="md-nav__link">
+        Usage
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compatibility/" class="md-nav__link">
+        Compatibility
       </a>
     </li>
   
@@ -214,9 +261,88 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Client Example
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
-        📋 Examples
+        Client Example
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#generate-the-client" class="md-nav__link">
+    Generate the client
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-directory" class="md-nav__link">
+    Client directory
+  </a>
+  
+    <nav class="md-nav" aria-label="Client directory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clientpy" class="md-nav__link">
+    client.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schemaspy" class="md-nav__link">
+    schemas.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#httppy" class="md-nav__link">
+    http.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constantspy" class="md-nav__link">
+    constants.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifest" class="md-nav__link">
+    MANIFEST
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -230,23 +356,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../install/" class="md-nav__link">
-        🏗️ Install
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
-        📝 Usage
+      <a href="../CHANGELOG/" class="md-nav__link">
+        Change log
       </a>
     </li>
   
@@ -272,6 +383,69 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#generate-the-client" class="md-nav__link">
+    Generate the client
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-directory" class="md-nav__link">
+    Client directory
+  </a>
+  
+    <nav class="md-nav" aria-label="Client directory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clientpy" class="md-nav__link">
+    client.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schemaspy" class="md-nav__link">
+    schemas.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#httppy" class="md-nav__link">
+    http.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#constantspy" class="md-nav__link">
+    constants.py
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manifest" class="md-nav__link">
+    MANIFEST
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -285,7 +459,148 @@
                   
 
 
-<h1 id="examples">📋 Examples</h1>
+<h1 id="client-example">🪄 Client example</h1>
+<p>Let's build an API Client using clientele and an example OpenAPI schema.</p>
+<p>Our <a href="https://github.com/beckett-software/clientele/tree/main/example_openapi_specs">GitHub</a> has a bunch of schemas that are proven to work with clientele, so let's use one of those!</p>
+<h2 id="generate-the-client">Generate the client</h2>
+<p>Very simply:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/beckett-software/clientele/main/example_openapi_specs/simple.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+</span></code></pre></div>
+<p>The <code>-u</code> parameter expects a URL, you can provide a path to a file with <code>-f</code> instead if you download the file.</p>
+<p>The <code>-o</code> parameter is the output directory of the generated client.</p>
+<p>Run it now and you will see this output:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>my_client/
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span>__init__.py
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>client.py
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span>constants.py
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span>http.py
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>MANIFEST
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>schemas.py
+</span></code></pre></div>
+<h2 id="client-directory">Client directory</h2>
+<p>Let's go over each file and talk about what it does</p>
+<h3 id="clientpy">client.py</h3>
+<p>This file provides all the client functions.</p>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">my_client/client.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-2-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-2-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-2-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-2-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-2-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-2-10">10</a></span>
+<span class="normal"><a href="#__codelineno-2-11">11</a></span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span>
+<span class="normal"><a href="#__codelineno-2-13">13</a></span>
+<span class="normal"><a href="#__codelineno-2-14">14</a></span>
+<span class="normal"><a href="#__codelineno-2-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">typing</span>  <span class="c1"># noqa</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">schemas</span>  <span class="c1"># noqa</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">http</span>  <span class="c1"># noqa</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="k">def</span> <span class="nf">HealthCheckHealthCheckGet</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">HealthCheckResponse</span><span class="p">:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health-check&quot;</span><span class="p">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">HealthCheckHealthCheckGet</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="k">def</span> <span class="nf">TestInputTestInputPost</span><span class="p">(</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputData</span><span class="p">,</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">schemas</span><span class="o">.</span><span class="n">HTTPValidationError</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputResponse</span><span class="p">]:</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/test-input&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">TestInputTestInputPost</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> 
+</span></code></pre></div></td></tr></table></div>
+<p>We can see one of the functions here, <code>HealthCheckHealthCheckGet</code>, is for a straight-forward HTTP GET request without any input arguments, and it returns a schema object. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function.</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span> <span class="nf">HealthCheckHealthCheckGet</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">HealthCheckResponse</span><span class="p">:</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health-check&quot;</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">HealthCheckHealthCheckGet</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Here is how you might use it:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">my_client</span> <span class="kn">import</span> <span class="n">client</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">client</span><span class="o">.</span><span class="n">HealthCheckHealthCheckGet</span><span class="p">()</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">HealthCheckResponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>A more complex example is shown just below - <code>TestInputTestInputPost</code>, this is for an HTTP POST method, and it requires an input property called <code>data</code> that is an instance of a schema, and returns a union of responses. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function alongside the <code>data</code> argument.</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span> <span class="nf">TestInputTestInputPost</span><span class="p">(</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputData</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">schemas</span><span class="o">.</span><span class="n">HTTPValidationError</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputResponse</span><span class="p">]:</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/test-input&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">TestInputTestInputPost</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> 
+</span></code></pre></div>
+<p>Here is how you might use it:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">my_client</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputData</span><span class="p">(</span><span class="n">my_title</span><span class="o">=</span><span class="s2">&quot;Hello, world&quot;</span><span class="p">)</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">client</span><span class="o">.</span><span class="n">TestInputTestInputPost</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">TestInputResponse</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Hello, world&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Because we're using Pydantic to manage the input data, we get a strongly-typed interface for us.</p>
+<h3 id="schemaspy">schemas.py</h3>
+<p>This file has all the possible schemas, request and response, for the API.</p>
+<p>They are all subclassed from pydantic's <code>BaseModel</code>. Here are a few examples:</p>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">my_client/schemas.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-7-10">10</a></span>
+<span class="normal"><a href="#__codelineno-7-11">11</a></span>
+<span class="normal"><a href="#__codelineno-7-12">12</a></span>
+<span class="normal"><a href="#__codelineno-7-13">13</a></span>
+<span class="normal"><a href="#__codelineno-7-14">14</a></span>
+<span class="normal"><a href="#__codelineno-7-15">15</a></span>
+<span class="normal"><a href="#__codelineno-7-16">16</a></span>
+<span class="normal"><a href="#__codelineno-7-17">17</a></span>
+<span class="normal"><a href="#__codelineno-7-18">18</a></span>
+<span class="normal"><a href="#__codelineno-7-19">19</a></span>
+<span class="normal"><a href="#__codelineno-7-20">20</a></span>
+<span class="normal"><a href="#__codelineno-7-21">21</a></span>
+<span class="normal"><a href="#__codelineno-7-22">22</a></span>
+<span class="normal"><a href="#__codelineno-7-23">23</a></span>
+<span class="normal"><a href="#__codelineno-7-24">24</a></span>
+<span class="normal"><a href="#__codelineno-7-25">25</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">import</span> <span class="nn">typing</span>  <span class="c1"># noqa</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>  <span class="c1"># noqa</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>  <span class="c1"># noqa</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="k">class</span> <span class="nc">HTTPValidationError</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a>    <span class="n">detail</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="k">class</span> <span class="nc">HealthCheckResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a>    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13"></a>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="k">class</span> <span class="nc">TestInputData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15"></a>    <span class="n">my_title</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16"></a>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17"></a>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18"></a><span class="k">class</span> <span class="nc">TestInputResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20"></a>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22"></a><span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23"></a>    <span class="n">loc</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24"></a>    <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25"></a>    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+</span></code></pre></div></td></tr></table></div>
+<h3 id="httppy">http.py</h3>
+<p>This file manages the HTTP layer of the client.</p>
+<p>You should never need to touch the code here, but feel free to have a browse.</p>
+<p>This file will have either a sync, or an async instance of a client from <code>httpx</code>.</p>
+<p>It also manages the coersion of response bodies into schema objects.</p>
+<h3 id="constantspy">constants.py</h3>
+<p>This manages all the configuration your client might need.</p>
+<p>This file is only ever generated once, and will never be overwritten (unless you delete it yourself).</p>
+<p>You can modify the contents of the functions in this file to provide things like the base url and authentication keys for your client.</p>
+<h3 id="manifest">MANIFEST</h3>
+<p>The <code>MANIFEST</code> file provides some information on how the client was generated.</p>
 
 
 

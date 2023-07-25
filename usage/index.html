@@ -8,16 +8,20 @@
       
       
       
+        <link rel="canonical" href="https://beckett-software.github.io/clientele/usage/">
+      
       
         <link rel="prev" href="../install/">
       
+      
+        <link rel="next" href="../compatibility/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.19">
     
     
       
-        <title>📝 Usage - ⚜️ Clientele</title>
+        <title>Usage - ⚜️ Clientele</title>
       
     
     
@@ -55,7 +59,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
   
     
     
@@ -100,7 +104,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              📝 Usage
+              Usage
             
           </span>
         </div>
@@ -189,22 +193,7 @@
   
     <li class="md-nav__item">
       <a href=".." class="md-nav__link">
-        ⚜️ Clientele
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
-        📋 Examples
+        Home
       </a>
     </li>
   
@@ -219,7 +208,7 @@
   
     <li class="md-nav__item">
       <a href="../install/" class="md-nav__link">
-        🏗️ Install
+        Install
       </a>
     </li>
   
@@ -243,12 +232,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          📝 Usage
+          Usage
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        📝 Usage
+        Usage
       </a>
       
         
@@ -294,10 +283,62 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compatibility/" class="md-nav__link">
+        Compatibility
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        Client Example
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        Change log
+      </a>
     </li>
   
 
@@ -356,6 +397,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -375,7 +423,7 @@
 <p>Clientele provides a single command, <code>generate</code>, for generating your API Clients.</p>
 <h2 id="from-a-url">From a URL</h2>
 <p>Assuming the OpenAPI schema is available on the internet somewhere, you can query it to generate your client.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/beckett-software/clientele/main/example_openapi_specs/simple.json<span class="w"> </span>-o<span class="w"> </span>output/
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/beckett-software/clientele/main/example_openapi_specs/simple.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -383,11 +431,11 @@
 </div>
 <h2 id="from-a-file">From a file</h2>
 <p>Alternatively, if you have a local file you can use it to generate your client.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>output/
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </span></code></pre></div>
 <h2 id="async-client">Async Client</h2>
 <p>If you prefer an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> client, just pass <code>--asyncio t</code> to your command.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>output/<span class="w"> </span>--asyncio<span class="w"> </span>t
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -402,6 +450,48 @@
 <p>Then clientele will provide you information on the environment variables you need to set to
 make this work during the generation. For example:</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Please<span class="w"> </span>see<span class="w"> </span>my_client/constants.py<span class="w"> </span>to<span class="w"> </span><span class="nb">set</span><span class="w"> </span>authentication<span class="w"> </span>variables
+</span></code></pre></div>
+<p>The <code>constants.py</code> file will have entry points for you to configure, for example, HTTP Bearer authentication will need the <code>get_bearer_token</code> function to be updated, something like this:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">def</span> <span class="nf">get_bearer_token</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="sd">    HTTP Bearer authentication.</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="sd">    Used by many authentication methods - token, jwt, etc.</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="sd">    Does not require the &quot;Bearer&quot; content, just the key as a string.</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="k">return</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MY_AUTHENTICATION_TOKEN&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="configuration">Configuration</h2>
+<p>One of the problems with auto-generated clients is that you often need to configure them, and
+if you try and regenerate the client at some point (say because you've added new endpoints or fixed a bug)
+then your configuration gets wiped clean and you have to do it all over again.</p>
+<p>Clientele solves this problem by providing an entry point for configuration that will never be overwritten - <code>constants.py</code>.</p>
+<p>When you first generate the project, you will see a file called <code>my_client/constants.py</code> (assuming your <code>-o</code> was <code>my_client/</code>), and it'll look a bit like this:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="sd">This file will never be updated on subsequent clientele runs.</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="sd">Use it as a space to store configuration and constants.</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="sd">DO NOT CHANGE THE FUNCTION NAMES</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">def</span> <span class="nf">api_base_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="sd">    Modify this function to provide the current api_base_url.</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>    <span class="k">return</span> <span class="s2">&quot;http://localhost&quot;</span>
+</span></code></pre></div>
+<p>Subsequent runs of the <code>generate</code> command will not change this file the first time is made, so you are free to modify the defaults to suit your needs, for example, if you need to source the base url of your API for different configurations, you can modify the <code>api_base_url</code> function like this:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">my_project</span> <span class="kn">import</span> <span class="n">my_config</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="k">def</span> <span class="nf">api_base_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="sd">    Modify this function to provide the current api_base_url.</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="k">if</span> <span class="n">my_config</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="k">return</span> <span class="s2">&quot;http://localhost:8000&quot;</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="k">elif</span> <span class="n">my_config</span><span class="o">.</span><span class="n">production</span><span class="p">:</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>        <span class="k">return</span> <span class="s2">&quot;http://my-production-url.com&quot;</span>
 </span></code></pre></div>
 
 
