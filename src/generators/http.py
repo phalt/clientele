@@ -9,15 +9,12 @@ from src.writer import write_to_http
 console = Console()
 
 BEARER_CLIENT = """
-AUTH_TOKEN = environ.get("{bearer_token_key}")
-headers = dict(Authorization=f'Bearer {{AUTH_TOKEN}}')
+headers = dict(Authorization=f'Bearer {c.get_bearer_token()}')
 client = httpx.{client_type}(headers=headers)
 """
 
 BASIC_CLIENT = """
-AUTH_USER = environ.get("{user_key}")
-AUTH_PASS = environ.get("{pass_key}")
-client = httpx.{client_type}(auth=(AUTH_USER, AUTH_PASS))
+client = httpx.{client_type}(auth=(c.get_user_key(), c.get_pass_key()))
 """
 
 NO_AUTH_CLIENT = """
@@ -26,20 +23,20 @@ client = httpx.{client_type}()
 
 SYNC_METHODS = """
 def get(url: str) -> httpx.Response:
-    return client.get(url)
+    return client.get(parse_url(url))
 
 
 def post(url: str, data: typing.Dict) -> httpx.Response:
-    return client.post(url, json=data)
+    return client.post(parse_url(url), json=data)
 """
 
 ASYNC_METHODS = """
 async def get(url: str) -> httpx.Response:
-    return await client.get(url)
+    return await client.get(parse_url(url))
 
 
 async def post(url: str, data: typing.Dict) -> httpx.Response:
-    return await client.post(url, json=data)
+    return await client.post(parse_url(url), json=data)
 """
 
 
@@ -72,29 +69,16 @@ class HTTPGenerator:
                 ):
                     client_generated = True
                     if info["scheme"] == "bearer":
-                        test_key = env_var(output_dir=self.output_dir, key="AUTH_KEY")
                         content = BEARER_CLIENT.format(
                             client_type=client_type,
-                            bearer_token_key=f"{test_key}",
-                        )
-                        console.log(
-                            f"[yellow]Please use \n* {test_key}\nenvironment variable to use bearer authentication"
                         )
                     else:  # Can only be "basic" at this point
-                        user_key = env_var(
-                            output_dir=self.output_dir, key="AUTH_USER_KEY"
-                        )
-                        pass_key = env_var(
-                            output_dir=self.output_dir, key="AUTH_PASS_KEY"
-                        )
-                        console.log(
-                            f"[yellow]Please set \n* {user_key}\n* {pass_key} \nenvironment variable to use basic authentication"  # noqa
-                        )
                         content = BASIC_CLIENT.format(
                             client_type=client_type,
-                            user_key=f"{user_key}",
-                            pass_key=f"{pass_key}",
                         )
+                    console.log(
+                        f"[yellow]Please see {self.output_dir}constants.py to set authentication variables"
+                    )
         if client_generated is False:
             console.log(f"Generating {'async' if self.asyncio else 'sync'} client...")
             content = NO_AUTH_CLIENT.format(client_type=client_type)

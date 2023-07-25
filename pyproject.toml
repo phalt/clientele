@@ -1,11 +1,12 @@
 [tool.poetry]
 name = "clientele"
-version = "0.2.0"
+version = "0.3.0"
 description = "Typed API Clients from OpenAPI specs"
 authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "src"}]
+homepage = "https://beckett-software.github.io/clientele/"
 
 [tool.poetry.scripts]
 clientele = "src.cli:cli_group"
@@ -14,8 +15,6 @@ clientele = "src.cli:cli_group"
 python = "^3.9"
 httpx = "^0.24.1"
 click = "^8.1.3"
-structlog = "^23.1.0"
-ipython = "^8.14.0"
 pydantic = "^2.0.3"
 rich = "^13.4.2"
 openapi-core = "0.18.0"
@@ -26,6 +25,9 @@ types-pyyaml = "^6.0.12.11"
 black = "^23.3.0"
 mypy = "1.4.0"
 ruff = "^0.0.272"
+mkdocs = "^1.4.3"
+ipython = "^8.14.0"
+mkdocs-material = "^9.1.19"
 
 [build-system]
 requires = ["poetry-core"]

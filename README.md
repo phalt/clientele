@@ -1,22 +1,24 @@
-#  ⚜️ Clientele
+# ⚜️ Clientele
 
-### Typed API Clients from OpenAPI specs
+# Typed API Clients from OpenAPI specs
 
 ![clientele_logo](https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true)
 
 Clientele lets you generate fully-typed, functional, API Clients from OpenAPI specs.
 
-It uses modern tools to be blazing fast and type safe. 
+It uses modern tools to be blazing fast and type safe.
 
 Plus - there is no complex boilerplate and the generated code is very small.
 
 ## Features
 
 * Fully typed API Client using Pydantic.
-* Minimalist and easy to use - the generated code is tiny.
-* Choose either sync (default) or async - we support both.
-* Generates authentication code for you (curently only supports HTTP Bearer auth)
+* Minimalist and easy to use - the generated code is designed for readability.
+* Choose either sync or async - we support both, and you can switch between them easily.
+* Supports authentication (curently only HTTP Bearer and HTTP Basic auth).
 * Written entirely in Python - no need to install other languages to use OpenAPI.
+* The client footprint is minimal - it only requires `httpx` and `pydantic`.
+* Supports your own configuration - we provide an entry point that will never be overwritten.
 
 We're built on:
 
@@ -32,36 +34,8 @@ poetry add clientele
 
 ## Usage
 
-### From URLs
-
 ```sh
-clientele generate -u http://URL_TO_OPEN_API.json -o output/
+clientele generate -f path/to/file.json -o my_client/ --asyncio t
 ```
 
-### From files
-
-```sh
-clientele generate -f path/to/file.json -o output/
-```
-
-### Async Client
-
-```sh
-clientele generate -f path/to/file.json -o output/ --asyncio t
-```
-
-## Authentication
-
-If your OpenAPI spec provides security information for the following authentication methods:
-
-* HTTP Bearer
-
-Then clientele will provide you information on the environment variables you need to set to
-make this work during the generation. For example:
-
-```sh
-Please set
-* MY_CLIENT_AUTH_USER_KEY
-* MY_CLIENT_AUTH_PASS_KEY
-environment variable to use basic authentication
-```
+[Read the docs](https://beckett-software.github.io/clientele/)
