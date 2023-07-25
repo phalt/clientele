@@ -4,6 +4,12 @@
 
 - Use [pydantic settings](https://docs.pydantic.dev/latest/usage/pydantic_settings/) for settings management in the `constants.py` file. This is a **breaking change** and you will need to delete your `constants.py` file.
 
+## 0.3.1
+
+- Fixes a bug when generating HTTP Authentication schema.
+- Fixes a bug when generating input classes for post functions, when the input schema doesn't exist yet.
+- Generates pythonic function names in clients now, always (like `lower_case_snake_case`).
+
 ## 0.3.0
 
 - Now generates a `MANIFEST` file with information about the build versions

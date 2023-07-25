@@ -53,8 +53,7 @@ class SchemasGenerator:
         return content
 
     def generate_input_class(self, schema: Dict) -> None:
-        for _, schema_details in schema.items():
-            content = schema_details["content"]
+        if content := schema.get("content"):
             for encoding, input_schema in content.items():
                 class_name = ""
                 if ref := input_schema["schema"].get("$ref", False):
@@ -69,12 +68,12 @@ class SchemasGenerator:
                 properties = self.generate_class_properties(
                     input_schema["schema"].get("properties", {})
                 )
-                content = f"""
+                out_content = f"""
 class {class_name}(BaseModel):
 {properties if properties else "    pass"}
     """
             write_to_schemas(
-                content,
+                out_content,
                 output_dir=self.output_dir,
             )
 
