@@ -31,7 +31,7 @@ Plus - there is no complex boilerplate and the generated code is very small.
 
 We're built on:
 
-* [Pydantic 2.0](https://docs.pydantic.dev/latest/)
+* [Pydantic 2.2](https://docs.pydantic.dev/latest/)
 * [httpx](https://www.python-httpx.org/)
 * [openapi-core](https://openapi-core.readthedocs.io/en/latest/)
 
