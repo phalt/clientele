@@ -67,7 +67,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#clientele" class="md-skip">
+        <a href="#features" class="md-skip">
           Skip to content
         </a>
       
@@ -196,12 +196,39 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Home
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="." class="md-nav__link md-nav__link--active">
         Home
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    Features
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -299,8 +326,21 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    Features
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -315,9 +355,21 @@
                   
 
 
-<h1 id="clientele">⚜️ Clientele</h1>
-<h1 id="typed-api-clients-from-openapi-schemas">Typed API Clients from OpenAPI schemas</h1>
-<p><img alt="clientele_logo" src="https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true" /></p>
+<p align="center">
+    <h1>⚜️ Clientele</h1>
+    <em>Typed API Clients from OpenAPI schemas</em>
+    <img src="https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true">
+</p>
+
+<p align="center">
+<a href="https://pypi.org/project/clientele" target="_blank">
+    <img src="https://img.shields.io/pypi/v/clientele?color=%2334D058&label=pypi%20package" alt="Package version">
+</a>
+<a href="https://pypi.org/project/clientele" target="_blank">
+    <img src="https://img.shields.io/pypi/pyversions/clientele.svg?color=%2334D058" alt="Supported Python versions">
+</a>
+</p>
+
 <p>Clientele lets you generate fully-typed, functional, API Clients from OpenAPI schemas.</p>
 <p>It uses modern tools to be blazing fast and type safe.</p>
 <p>Plus - there is no complex boilerplate and the generated code is very small.</p>
