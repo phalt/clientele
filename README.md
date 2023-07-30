@@ -1,8 +1,17 @@
-# ⚜️ Clientele
+<p align="center">
+    <h1>⚜️ Clientele</h1>
+    <em>Typed API Clients from OpenAPI schemas</em>
+    <img src="https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true">
+</p>
 
-# Typed API Clients from OpenAPI schemas
-
-![clientele_logo](https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true)
+<p align="center">
+<a href="https://pypi.org/project/clientele" target="_blank">
+    <img src="https://img.shields.io/pypi/v/clientele?color=%2334D058&label=pypi%20package" alt="Package version">
+</a>
+<a href="https://pypi.org/project/clientele" target="_blank">
+    <img src="https://img.shields.io/pypi/pyversions/clientele.svg?color=%2334D058" alt="Supported Python versions">
+</a>
+</p>
 
 Clientele lets you generate fully-typed, functional, API Clients from OpenAPI schemas.
 
