@@ -43,13 +43,18 @@ def clean_prop(input_str: str) -> str:
 
 
 def _split_upper(s):
-    return "_".join(re.findall(".[^A-Z]*", s))
+    res = re.findall(".[^A-Z]*", s)
+    if len(res) > 1:
+        return "_".join(res)
+    return res[0]
 
 
 def _snake_case(s):
     for badchar in ["/", "-", "."]:
         s = s.replace(badchar, "_")
     s = _split_upper(s)
+    if s[0] == "_":
+        s = s[1:]
     return s.lower()
 
 

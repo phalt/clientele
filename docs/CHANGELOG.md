@@ -1,5 +1,10 @@
 # Change log
 
+## 0.3.2
+
+- Minor changes to function name generation to make it more consistent.
+- Optional parameters in schemas are working properly.
+
 ## 0.3.1
 
 - Fixes a bug when generating HTTP Authentication schema.
