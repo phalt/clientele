@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from openapi_core import Spec
 from rich.console import Console
@@ -37,7 +37,9 @@ class SchemasGenerator:
             )
         return content
 
-    def generate_class_properties(self, properties: Dict) -> str:
+    def generate_class_properties(
+        self, properties: Dict, required: Optional[List] = None
+    ) -> str:
         """
         Generate a string list of the properties for this pydantic class.
         """
@@ -45,7 +47,7 @@ class SchemasGenerator:
         for arg, arg_details in properties.items():
             arg_type = get_type(arg_details)
             # TODO support this
-            is_optional = False
+            is_optional = required and arg not in required
             content = (
                 content
                 + f"""    {clean_prop(arg)}: {is_optional and f"typing.Optional[{arg_type}]" or arg_type}\n"""
@@ -66,12 +68,13 @@ class SchemasGenerator:
                     # No idea, using the encoding?
                     class_name = class_name_titled(encoding)
                 properties = self.generate_class_properties(
-                    input_schema["schema"].get("properties", {})
+                    properties=input_schema["schema"].get("properties", {}),
+                    required=input_schema["schema"].get("required", None),
                 )
                 out_content = f"""
 class {class_name}(BaseModel):
 {properties if properties else "    pass"}
-    """
+"""
             write_to_schemas(
                 out_content,
                 output_dir=self.output_dir,
@@ -91,7 +94,8 @@ class {class_name}(BaseModel):
                 )
             else:
                 properties = self.generate_class_properties(
-                    schema.get("properties", {})
+                    properties=schema.get("properties", {}),
+                    required=schema.get("required", None),
                 )
             self.schemas[schema_key] = properties
             content = f"""

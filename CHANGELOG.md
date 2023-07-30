@@ -4,6 +4,11 @@
 
 - Use [pydantic settings](https://docs.pydantic.dev/latest/usage/pydantic_settings/) for settings management in the `constants.py` file. This is a **breaking change** and you will need to delete your `constants.py` file.
 
+## 0.3.2
+
+- Minor changes to function name generation to make it more consistent.
+- Optional parameters in schemas are working properly.
+
 ## 0.3.1
 
 - Fixes a bug when generating HTTP Authentication schema.

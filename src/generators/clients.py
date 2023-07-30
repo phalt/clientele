@@ -161,7 +161,9 @@ class ClientsGenerator:
         if not operation.get("requestBody"):
             input_class_name = "None"
         else:
-            input_class_name = self.generate_input_types(operation.get("requestBody", {}))
+            input_class_name = self.generate_input_types(
+                operation.get("requestBody", {})
+            )
         function_arguments = self.generate_function_args(
             operation.get("parameters", [])
         )
@@ -169,7 +171,7 @@ class ClientsGenerator:
 {function_arguments['return_string']}{function_arguments['return_string'] and ", "}data: {input_class_name}"""
         CONTENT = f"""
 {self.asyncio and "async " or ""}def {func_name}({FUNCTION_ARGS}) -> {response_types}:
-    response = {self.asyncio and "await " or ""}http.post(f"{path}", data=data and data.model_dump())
+    response = {self.asyncio and "await " or ""}http.post(f"{path}", data=data.model_dump())
     return http.handle_response({func_name}, response)
     """
         self.results["post_methods"] += 1
