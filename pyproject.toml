@@ -6,7 +6,7 @@ authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "src"}]
-homepage = "https://beckett-software.github.io/clientele/"
+homepage = "https://phalt.github.io/clientele/"
 
 [tool.poetry.scripts]
 clientele = "src.cli:cli_group"

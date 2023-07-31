@@ -8,7 +8,7 @@ Clientele provides a single command, `generate`, for generating your API Clients
 Assuming the OpenAPI schema is available on the internet somewhere, you can query it to generate your client.
 
 ```sh
-clientele generate -u https://raw.githubusercontent.com/beckett-software/clientele/main/example_openapi_specs/simple.json -o my_client/
+clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/simple.json -o my_client/
 ```
 
 !!! note
