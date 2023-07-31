@@ -1,7 +1,7 @@
 <p align="center">
     <h1>⚜️ Clientele</h1>
     <em>Typed API Clients from OpenAPI schemas</em>
-    <img src="https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true">
+    <img src="https://github.com/phalt/clientele/blob/main/docs/clientele.jpeg?raw=true">
 </p>
 
 <p align="center">

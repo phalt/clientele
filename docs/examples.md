@@ -2,14 +2,14 @@
 
 Let's build an API Client using clientele and an example OpenAPI schema.
 
-Our [GitHub](https://github.com/beckett-software/clientele/tree/main/example_openapi_specs) has a bunch of schemas that are proven to work with clientele, so let's use one of those!
+Our [GitHub](https://github.com/phalt/clientele/tree/main/example_openapi_specs) has a bunch of schemas that are proven to work with clientele, so let's use one of those!
 
 ## Generate the client
 
 Very simply:
 
 ```sh
-clientele generate -u https://raw.githubusercontent.com/beckett-software/clientele/main/example_openapi_specs/simple.json -o my_client/
+clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/simple.json -o my_client/
 ```
 
 The `-u` parameter expects a URL, you can provide a path to a file with `-f` instead if you download the file.

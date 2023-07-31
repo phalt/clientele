@@ -17,7 +17,7 @@
 - Added a `constants.py` file to the output if one does not exist yet, which can be used to store values that you do not want to change between subsequent re-generations of the clientele client, such as the API base url.
 - Authentication patterns now use `constants.py` for constants values.
 - Removed `ipython` from package dependencies and moved to dev dependencies.
-- Documentation! [https://beckett-software.github.io/clientele/](https://beckett-software.github.io/clientele/)
+- Documentation! [https://phalt.github.io/clientele/](https://phalt.github.io/clientele/)
 
 ## 0.2.0
 

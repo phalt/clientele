@@ -1,7 +1,7 @@
 <p align="center">
     <h1>⚜️ Clientele</h1>
     <em>Typed API Clients from OpenAPI schemas</em>
-    <img src="https://github.com/beckett-software/clientele/blob/main/docs/clientele.jpeg?raw=true">
+    <img src="https://github.com/phalt/clientele/blob/main/docs/clientele.jpeg?raw=true">
 </p>
 
 <p align="center">
@@ -47,4 +47,4 @@ poetry add clientele
 clientele generate -f path/to/file.json -o my_client/ --asyncio t
 ```
 
-[Read the docs](https://beckett-software.github.io/clientele/)
+[Read the docs](https://phalt.github.io/clientele/)
