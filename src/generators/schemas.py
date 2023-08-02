@@ -107,47 +107,57 @@ class SchemasGenerator:
                 output_dir=self.output_dir,
             )
 
-    def generate_schema_classes(self) -> None:
-        """
-        Generates the Pydantic response classes.
-        """
-        for schema_key, schema in self.spec["components"]["schemas"].items():
-            schema_key = class_name_titled(schema_key)
-            enum = False
-            properties: str = ""
-            if all_of := schema.get("allOf"):
-                # This schema uses "all of" the properties from another model
-                for other_ref in all_of:
-                    other_schema_key = class_name_titled(schema_ref(other_ref["$ref"]))
+    def make_schema_class(self, schema_key: str, schema: dict) -> None:
+        schema_key = class_name_titled(schema_key)
+        enum = False
+        properties: str = ""
+        if all_of := schema.get("allOf"):
+            # This schema uses "all of" the properties inside it
+            for other_ref in all_of:
+                is_ref = other_ref.get("$ref", False)
+                if is_ref:
+                    other_schema_key = class_name_titled(schema_ref(is_ref))
                     if other_schema_key in self.schemas:
                         properties += self.schemas[other_schema_key]
                     else:
-                        # We need to generate it now
-                        schema_model = get_schema_from_ref(
-                            spec=self.spec, ref=other_ref["$ref"]
-                        )
+                        # It's a ref but we've just not made it yet
+                        schema_model = get_schema_from_ref(spec=self.spec, ref=is_ref)
                         properties += self.generate_class_properties(
                             properties=schema_model.get("properties", {}),
                             required=schema_model.get("required", None),
                         )
-            elif schema.get("enum"):
-                enum = True
-                properties = self.generate_enum_properties(
-                    {v: {"type": f'"{v}"'} for v in schema["enum"]}
-                )
-            else:
-                properties = self.generate_class_properties(
-                    properties=schema.get("properties", {}),
-                    required=schema.get("required", None),
-                )
-            self.schemas[schema_key] = properties
-            template = templates.get_template("schema_class.jinja2")
-            content = template.render(
-                class_name=schema_key, properties=properties, enum=enum
+                else:
+                    # It's not a ref and we need to figure out what it is
+                    if other_ref.get("type") == "object":
+                        properties += self.generate_class_properties(
+                            properties=other_ref.get("properties", {}),
+                            required=other_ref.get("required", None),
+                        )
+        elif schema.get("enum"):
+            enum = True
+            properties = self.generate_enum_properties(
+                {v: {"type": f'"{v}"'} for v in schema["enum"]}
             )
-            write_to_schemas(
-                content,
-                output_dir=self.output_dir,
+        else:
+            properties = self.generate_class_properties(
+                properties=schema.get("properties", {}),
+                required=schema.get("required", None),
             )
+        self.schemas[schema_key] = properties
+        template = templates.get_template("schema_class.jinja2")
+        content = template.render(
+            class_name=schema_key, properties=properties, enum=enum
+        )
+        write_to_schemas(
+            content,
+            output_dir=self.output_dir,
+        )
+
+    def generate_schema_classes(self) -> None:
+        """
+        Generates all Pydantic schema classes.
+        """
+        for schema_key, schema in self.spec["components"]["schemas"].items():
+            self.make_schema_class(schema_key=schema_key, schema=schema)
 
         console.log(f"Generated {len(self.schemas.items())} schemas...")
