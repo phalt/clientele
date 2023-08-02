@@ -1,7 +1,7 @@
 {
     "openapi": "3.0.2",
     "info": {
-        "title": "Simple API Example",
+        "title": "Simple API Example from FastAPI",
         "version": "0.1.0"
     },
     "paths": {

@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: "OpenAPI 3.0.3 example"
+  description: |-
+    An example OpenAPI 3.0.3 schema for testing, with header parameters, oauth etc
+  version: 1.0.1
+security:
+  - Bearer: []
+paths:
+  /threads:
+    parameters:
+      - $ref: '#/components/parameters/request-id'
+    post:
+      summary: Create Thread
+      operationId: create-thread
+      responses:
+        '201':
+          description: Thread created successfully
+          content:
+            application/json:
+              schema:
+                title: Create Thread Response
+                type: object
+                description: The create thread response
+                properties:
+                  thread_id:
+                    type: string
+                    description: The thread ID
+                    format: uuid
+                required:
+                  - thread_id
+        '400':
+          $ref: '#/components/responses/detail-error-response'
+        default:
+          $ref: '#/components/responses/optional-detail-error-response'
+      security:
+        - Bearer:
+            - 'create:thread'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/create-thread-request'
+        description: The create thread request.
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-customer-ip
+          description: The customers IP address
+        - $ref: '#/components/parameters/idempotency-key'
+      tags:
+        - Quick Payments
+  '/threads/{thread_id}':
+    parameters:
+      - $ref: '#/components/parameters/request-id'
+      - schema:
+          type: string
+          format: uuid
+          example: 035d4ea4-4037-4110-9861-183eae1408b4
+        name: thread_id
+        in: path
+        required: true
+        description: The thread ID
+    get:
+      summary: Get Thread
+      responses:
+        '200':
+          description: The thread details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/create-thread-response'
+        '400':
+          $ref: '#/components/responses/detail-error-response'
+        5XX:
+          $ref: '#/components/responses/optional-detail-error-response'
+        default:
+          $ref: '#/components/responses/optional-detail-error-response'
+      operationId: get-thread
+      security:
+        - Bearer:
+            - 'view:thread'
+      description: Get thread ID.
+    delete:
+      summary: Delete Thread
+      operationId: delete-thread
+      responses:
+        '204':
+          description: Deleted successfully.
+        '400':
+          $ref: '#/components/responses/detail-error-response'
+        5XX:
+          $ref: '#/components/responses/optional-detail-error-response'
+        default:
+          $ref: '#/components/responses/optional-detail-error-response'
+      security:
+        - Bearer:
+            - 'revoke:thread'
+components:
+  schemas:
+    thread:
+      title: Thread Model
+      type: object
+      description: The model for a thread.
+      properties:
+        thread_id:
+          type: string
+          description: The thread ID
+          format: uuid
+      required:
+        - thread_id
+    create-thread-request:
+      title: Create Thread Model
+      description: 'The model for creating a thread'
+      allOf:
+        - $ref: '#/components/schemas/thread'
+        - $ref: '#/components/schemas/thread-request'
+    create-thread-response:
+      title: Create Thread Model
+      description: 'The model for creating a thread'
+      allOf:
+        - $ref: '#/components/schemas/thread'
+    detail-error-response-model:
+      title: Detail Error Response Model
+      type: object
+      description: The detailed error response.
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The error timestamp.
+        status:
+          type: integer
+          description: The status code.
+      required:
+        - status
+    thread-request:
+      title: Thread request Model
+      type: object
+      description: The model for requesting a thread.
+      properties:
+        content:
+          type: string
+          description: The thread content
+      required:
+        - content
+  responses:
+    detail-error-response:
+      description: An error response.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/detail-error-response-model'
+    optional-detail-error-response:
+      description: An error response.
+  securitySchemes:
+    Bearer:
+      type: oauth2
+      description: OAuth2 Access Token scopes.
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://localhost/oauth2/token'
+          scopes:
+            'create:thread': Create thread requests
+            'revoke:thread': Delete thread
+            'view:thread': View thread
+  parameters:
+    request-id:
+      name: request-id
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: a1d207f3-8e61-4c14-9fe4-843af1addd8f
+      description: 'a request id header'
+    idempotency-key:
+      name: idempotency-key
+      in: header
+      required: false
+      schema:
+        type: string
+        format: uuid
+        example: ddc0315c-fba7-4926-ba24-b7700ed389e7
+      description: An optional idempotency key to prevent duplicate submissions.

@@ -1,5 +1,18 @@
 # Change log
 
+## 0.4.0
+
+- Change install suggestion to use [pipx](https://github.com/pypa/pipx) as it works best as a global CLI tool.
+- Improved support for OpenAPI 3.0.3 schemas (a test version is available in the example_openapi_specs directory).
+- `validate` command for validating an OpenAPI schema will work with clientele.
+- `version` command for showing the current version of clientele.
+- Supports HTTP DELETE methods.
+- Big refactor of how methods are generated to reduce duplicate code.
+- Support optional header parameters in all request functions (where they are required).
+- Very simple Oauth2 support - if it is discovered will set up HTTP Bearer auth for you.
+- Uses `dict` and `list` instead of `typing.Dict` and `typing.List` respectively.
+- Improved schema generation when schemas have $ref to other models.
+
 ## 0.3.2
 
 - Minor changes to function name generation to make it more consistent.
