@@ -299,6 +299,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#040" class="md-nav__link">
+    0.4.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#032" class="md-nav__link">
     0.3.2
   </a>
@@ -368,6 +375,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#040" class="md-nav__link">
+    0.4.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#032" class="md-nav__link">
     0.3.2
   </a>
@@ -418,6 +432,19 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="040">0.4.0</h2>
+<ul>
+<li>Change install suggestion to use <a href="https://github.com/pypa/pipx">pipx</a> as it works best as a global CLI tool.</li>
+<li>Improved support for OpenAPI 3.0.3 schemas (a test version is available in the example_openapi_specs directory).</li>
+<li><code>validate</code> command for validating an OpenAPI schema will work with clientele.</li>
+<li><code>version</code> command for showing the current version of clientele.</li>
+<li>Supports HTTP DELETE methods.</li>
+<li>Big refactor of how methods are generated to reduce duplicate code.</li>
+<li>Support optional header parameters in all request functions (where they are required).</li>
+<li>Very simple Oauth2 support - if it is discovered will set up HTTP Bearer auth for you.</li>
+<li>Uses <code>dict</code> and <code>list</code> instead of <code>typing.Dict</code> and <code>typing.List</code> respectively.</li>
+<li>Improved schema generation when schemas have $ref to other models.</li>
+</ul>
 <h2 id="032">0.3.2</h2>
 <ul>
 <li>Minor changes to function name generation to make it more consistent.</li>
