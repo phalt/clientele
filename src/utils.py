@@ -1,5 +1,6 @@
 import re
-from typing import Dict
+
+from openapi_core import Spec
 
 
 class DataType:
@@ -58,7 +59,7 @@ def _snake_case(s):
     return s.lower()
 
 
-def get_func_name(operation: Dict, path: str) -> str:
+def get_func_name(operation: dict, path: str) -> str:
     if operation.get("operationId"):
         return _snake_case(operation["operationId"].split("__")[0])
     return _snake_case(path)
@@ -73,12 +74,35 @@ def get_type(t):
     if t_type == DataType.BOOLEAN:
         return "bool"
     if t_type == DataType.OBJECT:
-        return "typing.Dict[str, typing.Any]"
+        return "dict[str, typing.Any]"
     if t_type == DataType.ARRAY:
-        return "typing.List[typing.Any]"
+        return "list[typing.Any]"
     if ref := t.get("$ref"):
         return f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
     if t_type is None:
         # In this case, make it an "Any"
         return "typing.Any"
     return t_type
+
+
+def create_query_args(query_args: list[str]) -> str:
+    return "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
+
+
+def schema_ref(ref: str) -> str:
+    return ref.replace("#/components/schemas/", "")
+
+
+def param_ref(ref: str) -> str:
+    return ref.replace("#/components/parameters/", "")
+
+
+def get_param_from_ref(spec: Spec, param: dict) -> dict:
+    ref = param.get("$ref")
+    stripped_name = param_ref(ref)
+    return spec["components"]["parameters"][stripped_name]
+
+
+def get_schema_from_ref(spec: Spec, ref: str) -> dict:
+    stripped_name = schema_ref(ref)
+    return spec["components"]["schemas"][stripped_name]

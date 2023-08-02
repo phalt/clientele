@@ -1,7 +1,7 @@
 # 🏗️ Install
 
-We recommend installing with [pip](https://pip.pypa.io/en/stable/) globally.
+We recommend installing with [pipx](https://github.com/pypa/pipx) as a global CLI command.
 
 ```sh
-sudo pip install clientele
+sudo pipx install clientele
 ```

@@ -1,14 +1,38 @@
 from collections import defaultdict
-from typing import Any, Dict, List
+from typing import Optional
 
 from openapi_core import Spec
+from pydantic import BaseModel
 from rich.console import Console
 
 from src.generators.schemas import SchemasGenerator
-from src.utils import class_name_titled, clean_prop, get_func_name, get_type
+from src.settings import templates
+from src.utils import (
+    class_name_titled,
+    clean_prop,
+    create_query_args,
+    get_func_name,
+    get_param_from_ref,
+    get_type,
+    schema_ref,
+)
 from src.writer import write_to_client
 
 console = Console()
+
+
+class ParametersResponse(BaseModel):
+    # Parameters that need to be passed in the URL query
+    query_args: dict[str, str]
+    # Parameters that need to be passed as variables in the function
+    path_args: dict[str, str]
+    # Parameters that are needed in the headers object
+    headers_args: dict[str, str]
+
+    def get_path_args_as_string(self):
+        # Get all the path arguments, and the query arguments and make a big string out of them.
+        args = list(self.path_args.items()) + list(self.query_args.items())
+        return ", ".join(f"{k}: {v}" for k, v in args)
 
 
 class ClientsGenerator:
@@ -16,7 +40,8 @@ class ClientsGenerator:
     Handles all the content generated in the clients.py file.
     """
 
-    results: Dict[str, int]
+    method_template_map: dict[str, str]
+    results: dict[str, int]
     spec: Spec
     output_dir: str
     schemas_generator: SchemasGenerator
@@ -33,46 +58,63 @@ class ClientsGenerator:
         self.results = defaultdict(int)
         self.schemas_generator = schemas_generator
         self.asyncio = asyncio
+        self.method_template_map = dict(
+            get="get_method.jinja2",
+            delete="get_method.jinja2",
+            post="post_method.jinja2",
+        )
 
     def generate_paths(self) -> None:
         for path in self.spec["paths"].items():
             self.write_path_to_client(path=path)
-        console.log(f"Generated {self.results['get_methods']} GET methods...")
-        console.log(f"Generated {self.results['post_methods']} POST methods...")
+        console.log(f"Generated {self.results['get']} GET methods...")
+        console.log(f"Generated {self.results['post']} POST methods...")
+        console.log(f"Generated {self.results['delete']} DELETE methods...")
 
-    def generate_function_args(self, parameters: List[Dict]) -> Dict[str, Any]:
-        return_string_bits = []
+    def generate_parameters(
+        self, parameters: list[dict], additional_parameters: list[dict]
+    ) -> ParametersResponse:
         param_keys = []
-        query_args = []
-        path_args = []
-        for p in parameters:
-            if p.get("$ref"):
-                # Not currently supporter
-                continue
-            clean_key = clean_prop(p["name"])
+        query_args = {}
+        path_args = {}
+        headers_args = {}
+        all_parameters = parameters + additional_parameters
+        for param in all_parameters:
+            if param.get("$ref"):
+                # Get the actual parameter it is referencing
+                param = get_param_from_ref(spec=self.spec, param=param)
+            clean_key = clean_prop(param["name"])
             if clean_key in param_keys:
                 continue
-            in_ = p.get("in")
-            required = p.get("required", False) or in_ != "query"
+            in_ = param.get("in")
+            required = param.get("required", False) or in_ != "query"
             if in_ == "query":
-                query_args.append(p["name"])
+                # URL query string values
+                if required:
+                    query_args[clean_key] = get_type(param["schema"])
+                else:
+                    query_args[
+                        clean_key
+                    ] = f"typing.Optional[{get_type(param['schema'])}]"
             elif in_ == "path":
-                path_args.append(p["name"])
-            if required:
-                return_string_bits.append(f"{clean_key}: {get_type(p['schema'])}")
-            else:
-                return_string_bits.append(
-                    f"{clean_key}: typing.Optional[{get_type(p['schema'])}]"
-                )
+                # Function arguments
+                if required:
+                    path_args[clean_key] = get_type(param["schema"])
+                else:
+                    path_args[
+                        clean_key
+                    ] = f"typing.Optional[{get_type(param['schema'])}]"
+            elif in_ == "header":
+                # Header object arguments
+                headers_args[param["name"]] = get_type(param["schema"])
             param_keys.append(clean_key)
-        return_string = ", ".join(return_string_bits)
-        return {
-            "return_string": return_string,
-            "query_args": query_args,
-            "path_args": path_args,
-        }
+        return ParametersResponse(
+            query_args=query_args,
+            path_args=path_args,
+            headers_args=headers_args,
+        )
 
-    def get_response_class_names(self, responses: Dict) -> List[str]:
+    def get_response_class_names(self, responses: dict) -> list[str]:
         """
         Generates a list of response class for this operation.
         """
@@ -81,9 +123,7 @@ class ClientsGenerator:
             for encoding, content in details.get("content", {}).items():
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
-                    class_name = class_name_titled(
-                        ref.replace("#/components/schemas/", "")
-                    )
+                    class_name = class_name_titled(schema_ref(ref))
                 elif title := content["schema"].get("title", False):
                     class_name = class_name_titled(title)
                 else:
@@ -91,7 +131,7 @@ class ClientsGenerator:
                 response_classes.append(class_name)
         return list(set(response_classes))
 
-    def get_input_class_names(self, inputs: Dict) -> List[str]:
+    def get_input_class_names(self, inputs: dict) -> list[str]:
         """
         Generates a list of input class for this operation.
         """
@@ -100,9 +140,7 @@ class ClientsGenerator:
             for encoding, content in details.get("content", {}).items():
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
-                    class_name = class_name_titled(
-                        ref.replace("#/components/schemas/", "")
-                    )
+                    class_name = class_name_titled(schema_ref(ref))
                 elif title := content["schema"].get("title", False):
                     class_name = title
                 else:
@@ -112,7 +150,7 @@ class ClientsGenerator:
                 input_classes.append(class_name)
         return list(set(input_classes))
 
-    def generate_response_types(self, responses: Dict) -> str:
+    def generate_response_types(self, responses: dict) -> str:
         response_class_names = self.get_response_class_names(responses=responses)
         if len(response_class_names) > 1:
             return f"""typing.Union[{', '.join([f'schemas.{r}' for r in response_class_names])}]"""
@@ -121,7 +159,7 @@ class ClientsGenerator:
         else:
             return f"schemas.{response_class_names[0]}"
 
-    def generate_input_types(self, request_body: Dict) -> str:
+    def generate_input_types(self, request_body: dict) -> str:
         input_class_names = self.get_input_class_names(inputs={"": request_body})
         for input_class in input_class_names:
             if input_class not in self.schemas_generator.schemas.keys():
@@ -134,59 +172,62 @@ class ClientsGenerator:
         else:
             return f"schemas.{input_class_names[0]}"
 
-    def generate_get_content(self, operation: Dict, path: str) -> None:
+    def generate_function(
+        self,
+        operation: dict,
+        method: str,
+        url: str,
+        additional_parameters: list[dict],
+        summary: Optional[str],
+    ):
         response_types = self.generate_response_types(operation["responses"])
-        func_name = get_func_name(operation, path)
-        function_arguments = self.generate_function_args(
-            operation.get("parameters", [])
+        func_name = get_func_name(operation, url)
+        function_arguments = self.generate_parameters(
+            parameters=operation.get("parameters", []),
+            additional_parameters=additional_parameters,
         )
-        if query_args := function_arguments["query_args"]:
-            # TODO do this far more elegantly
-            api_url = (
-                path + "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
-            )
+        if query_args := function_arguments.query_args:
+            api_url = url + create_query_args(query_args)
         else:
-            api_url = path
-        CONTENT = f"""
-{self.asyncio and "async " or ""}def {func_name}({function_arguments['return_string']}) -> {response_types}:
-    response = {self.asyncio and "await " or ""}http.get(f"{api_url}")
-    return http.handle_response({func_name}, response)
-    """
-        self.results["get_methods"] += 1
-        write_to_client(content=CONTENT, output_dir=self.output_dir)
-
-    def generate_post_content(self, operation: Dict, path: str) -> None:
-        response_types = self.generate_response_types(operation["responses"])
-        func_name = get_func_name(operation, path)
-        if not operation.get("requestBody"):
-            input_class_name = "None"
-        else:
-            input_class_name = self.generate_input_types(
+            api_url = url
+        if method in ["post"] and not operation.get("requestBody"):
+            data_class_name = "None"
+        elif method in ["post"]:
+            data_class_name = self.generate_input_types(
                 operation.get("requestBody", {})
             )
-        function_arguments = self.generate_function_args(
-            operation.get("parameters", [])
+        else:
+            data_class_name = None
+        self.results[method] += 1
+        template = templates.get_template(self.method_template_map[method])
+        if headers := function_arguments.headers_args:
+            header_class_name = self.schemas_generator.generate_headers_class(
+                properties=headers,
+                func_name=func_name,
+            )
+        else:
+            header_class_name = None
+        content = template.render(
+            asyncio=self.asyncio,
+            func_name=func_name,
+            function_arguments=function_arguments.get_path_args_as_string(),
+            response_types=response_types,
+            data_class_name=data_class_name,
+            header_class_name=header_class_name,
+            api_url=api_url,
+            method=method,
+            summary=operation.get("summary", summary),
         )
-        FUNCTION_ARGS = f"""
-{function_arguments['return_string']}{function_arguments['return_string'] and ", "}data: {input_class_name}"""
-        CONTENT = f"""
-{self.asyncio and "async " or ""}def {func_name}({FUNCTION_ARGS}) -> {response_types}:
-    response = {self.asyncio and "await " or ""}http.post(f"{path}", data=data.model_dump())
-    return http.handle_response({func_name}, response)
-    """
-        self.results["post_methods"] += 1
-        write_to_client(content=CONTENT, output_dir=self.output_dir)
+        write_to_client(content=content, output_dir=self.output_dir)
 
-    def write_path_to_client(self, path: Dict) -> None:
+    def write_path_to_client(self, path: dict) -> None:
         url, operations = path
         for method, operation in operations.items():
-            if method == "get":
-                self.generate_get_content(
+            if method in self.method_template_map.keys():
+                self.generate_function(
                     operation=operation,
-                    path=url,
-                )
-            elif method == "post":
-                self.generate_post_content(
-                    operation=operation,
-                    path=url,
+                    method=method,
+                    url=url,
+                    additional_parameters=operations.get("parameters", []),
+                    summary=operations.get("summary", None),
                 )

@@ -1,5 +1,10 @@
 from os.path import abspath, dirname
 
-TEMPLATE_ROOT = dirname(dirname(abspath(__file__))) + "/src/template/"
+from jinja2 import Environment, PackageLoader
+
+CLIENT_TEMPLATE_ROOT = dirname(dirname(abspath(__file__))) + "/src/client_template/"
+TEMPLATES_ROOT = dirname(dirname(abspath(__file__))) + "/src/templates/"
 CONSTANTS_ROOT = dirname(dirname(abspath(__file__))) + "/src/"
-VERSION = "0.3.2"
+VERSION = "0.4.0"
+
+templates = Environment(loader=PackageLoader("src", "templates"))

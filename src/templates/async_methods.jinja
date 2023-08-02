@@ -1,0 +1,10 @@
+
+
+async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return await client.get(parse_url(url), headers=headers)
+
+async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return await client.post(parse_url(url), json=data, headers=headers)
+
+async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return await client.delete(parse_url(url), headers=headers)

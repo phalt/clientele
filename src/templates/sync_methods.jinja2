@@ -1,0 +1,10 @@
+
+
+def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return client.get(parse_url(url), headers=headers)
+
+def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return client.post(parse_url(url), json=data, headers=headers)
+
+def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return client.delete(parse_url(url), headers=headers)

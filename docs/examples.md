@@ -106,7 +106,7 @@ from enum import Enum  # noqa
 
 
 class HTTPValidationError(BaseModel):
-    detail: typing.List[typing.Any]
+    detail: list[typing.Any]
 
 
 class HealthCheckResponse(BaseModel):
@@ -122,7 +122,7 @@ class TestInputResponse(BaseModel):
 
 
 class ValidationError(BaseModel):
-    loc: typing.List[typing.Any]
+    loc: list[typing.Any]
     msg: str
     type: str
 

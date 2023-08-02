@@ -38,7 +38,7 @@ We're built on:
 ## Install
 
 ```sh
-poetry add clientele
+pipx add clientele
 ```
 
 ## Usage

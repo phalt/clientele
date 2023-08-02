@@ -7,7 +7,7 @@ from openapi_core import Spec
 from src.generators.clients import ClientsGenerator
 from src.generators.http import HTTPGenerator
 from src.generators.schemas import SchemasGenerator
-from src.settings import CONSTANTS_ROOT, TEMPLATE_ROOT, VERSION
+from src.settings import CLIENT_TEMPLATE_ROOT, CONSTANTS_ROOT, VERSION
 from src.writer import write_to_manifest
 
 
@@ -49,7 +49,7 @@ class Generator:
         write_to_manifest(f"CLIENTELE VERSION: {VERSION}\n", self.output_dir)
 
     def generate(self) -> None:
-        copy_tree(src=TEMPLATE_ROOT, dst=self.output_dir)
+        copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
         if not exists(f"{self.output_dir}constants.py"):
             copyfile(
                 f"{CONSTANTS_ROOT}/constants_template.py",
