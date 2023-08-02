@@ -7,6 +7,14 @@ help:
 install:  ## Install requirements ready for development
 	poetry install
 
+deploy-docs:  ## Build and deploy the documentation
+	mkdocs build
+	mkdocs gh-deploy
+
+release:  ## Build a new version and release it
+	poetry build
+	poetry publish
+
 mypy: ## Run a static syntax check
 	poetry run mypy src/
 
