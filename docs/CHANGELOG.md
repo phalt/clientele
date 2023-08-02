@@ -1,5 +1,10 @@
 # Change log
 
+## 0.4.1
+
+- Correctly generate lists of nested schema classes
+- Correctly build response schemas that are emphemeral (such as when they just return an array of other schemas, or when they have no $ref).
+
 ## 0.4.0
 
 - Change install suggestion to use [pipx](https://github.com/pypa/pipx) as it works best as a global CLI tool.

@@ -114,20 +114,34 @@ class ClientsGenerator:
             headers_args=headers_args,
         )
 
-    def get_response_class_names(self, responses: dict) -> list[str]:
+    def get_response_class_names(self, responses: dict, func_name: str) -> list[str]:
         """
         Generates a list of response class for this operation.
         """
         response_classes = []
-        for _, details in responses.items():
-            for encoding, content in details.get("content", {}).items():
+        for status_code, details in responses.items():
+            for _, content in details.get("content", {}).items():
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
+                    # An object reference, so should be generated
+                    # by the schema generator later.
                     class_name = class_name_titled(schema_ref(ref))
                 elif title := content["schema"].get("title", False):
+                    # This usually means we have an object that isn't
+                    # $ref so we need to create the schema class here
                     class_name = class_name_titled(title)
+                    self.schemas_generator.make_schema_class(
+                        class_name, schema=content["schema"]
+                    )
                 else:
-                    class_name = class_name_titled(encoding)
+                    # At this point we're just making things up!
+                    # It is likely it isn't an object it is just a simple resonse.
+                    class_name = class_name_titled(func_name + status_code + "Response")
+                    # We need to generate the class at this point because it does not exist
+                    self.schemas_generator.make_schema_class(
+                        func_name + status_code + "Response",
+                        schema={"properties": {"test": content["schema"]}},
+                    )
                 response_classes.append(class_name)
         return list(set(response_classes))
 
@@ -150,8 +164,10 @@ class ClientsGenerator:
                 input_classes.append(class_name)
         return list(set(input_classes))
 
-    def generate_response_types(self, responses: dict) -> str:
-        response_class_names = self.get_response_class_names(responses=responses)
+    def generate_response_types(self, responses: dict, func_name: str) -> str:
+        response_class_names = self.get_response_class_names(
+            responses=responses, func_name=func_name
+        )
         if len(response_class_names) > 1:
             return f"""typing.Union[{', '.join([f'schemas.{r}' for r in response_class_names])}]"""
         elif len(response_class_names) == 0:
@@ -180,14 +196,16 @@ class ClientsGenerator:
         additional_parameters: list[dict],
         summary: Optional[str],
     ):
-        response_types = self.generate_response_types(operation["responses"])
         func_name = get_func_name(operation, url)
+        response_types = self.generate_response_types(
+            responses=operation["responses"], func_name=func_name
+        )
         function_arguments = self.generate_parameters(
             parameters=operation.get("parameters", []),
             additional_parameters=additional_parameters,
         )
         if query_args := function_arguments.query_args:
-            api_url = url + create_query_args(query_args)
+            api_url = url + create_query_args(list(query_args.keys()))
         else:
             api_url = url
         if method in ["post"] and not operation.get("requestBody"):

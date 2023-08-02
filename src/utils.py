@@ -76,7 +76,8 @@ def get_type(t):
     if t_type == DataType.OBJECT:
         return "dict[str, typing.Any]"
     if t_type == DataType.ARRAY:
-        return "list[typing.Any]"
+        inner_class = get_type(t.get("items"))
+        return f"list[{inner_class}]"
     if ref := t.get("$ref"):
         return f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
     if t_type is None:
@@ -98,7 +99,7 @@ def param_ref(ref: str) -> str:
 
 
 def get_param_from_ref(spec: Spec, param: dict) -> dict:
-    ref = param.get("$ref")
+    ref = param.get("$ref", "")
     stripped_name = param_ref(ref)
     return spec["components"]["parameters"][stripped_name]
 

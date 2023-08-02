@@ -63,7 +63,7 @@ class HTTPGenerator:
             client_generated = True
         write_to_http(content, output_dir=self.output_dir)
         if self.asyncio:
-            template = templates.get_template("async_methods.jinja").render()
+            content = templates.get_template("async_methods.jinja2").render()
         else:
-            template = templates.get_template("sync_methods.jinja2").render()
-        write_to_http(template, output_dir=self.output_dir)
+            content = templates.get_template("sync_methods.jinja2").render()
+        write_to_http(content, output_dir=self.output_dir)
