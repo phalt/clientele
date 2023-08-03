@@ -13,7 +13,6 @@
 </a>
 </p>
 
-
 Clientele lets you generate fully-typed, functional, API Clients from OpenAPI schemas.
 
 It uses modern tools to be blazing fast and type safe.
@@ -29,6 +28,7 @@ Plus - there is no complex boilerplate and the generated code is very small.
 * Written entirely in Python - no need to install other languages to use OpenAPI.
 * The client footprint is minimal - it only requires `httpx` and `pydantic`.
 * Supports your own configuration - we provide an entry point that will never be overwritten.
+* Incredibly easy to write mocked tests using [respx](https://lundberg.github.io/respx/).
 
 We're built on:
 

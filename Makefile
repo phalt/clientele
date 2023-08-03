@@ -29,6 +29,11 @@ clean:  ## Clear any cache files and test files
 	rm -rf test_output
 	rm -rf site/
 	rm -rf dist/
+	rm -rf **/__pycache__
+	rm -rf **/*.pyc
+
+test:  ## Run tests
+	pytest -vv 
 
 shell:  ## Run an ipython shell
 	poetry run ipython

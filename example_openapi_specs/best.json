@@ -1,0 +1,601 @@
+{
+    "components": {
+        "schemas": {
+            "AnotherModel": {
+                "description": "Another model used as a nested example",
+                "properties": {
+                    "key": {
+                        "title": "Key",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "key"
+                ],
+                "title": "AnotherModel",
+                "type": "object"
+            },
+            "ComplexModelResponse": {
+                "description": "A complex response with a breadth of response types",
+                "properties": {
+                    "a_dict_response": {
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "title": "A Dict Response",
+                        "type": "object"
+                    },
+                    "a_enum": {
+                        "$ref": "#/components/schemas/ExampleEnum"
+                    },
+                    "a_list_of_enums": {
+                        "items": {
+                            "$ref": "#/components/schemas/ExampleEnum"
+                        },
+                        "type": "array"
+                    },
+                    "a_list_of_numbers": {
+                        "items": {
+                            "type": "integer"
+                        },
+                        "title": "A List Of Numbers",
+                        "type": "array"
+                    },
+                    "a_list_of_other_models": {
+                        "items": {
+                            "$ref": "#/components/schemas/AnotherModel"
+                        },
+                        "title": "A List Of Other Models",
+                        "type": "array"
+                    },
+                    "a_list_of_strings": {
+                        "items": {
+                            "type": "string"
+                        },
+                        "title": "A List Of Strings",
+                        "type": "array"
+                    },
+                    "a_number": {
+                        "title": "A Number",
+                        "type": "integer"
+                    },
+                    "a_string": {
+                        "title": "A String",
+                        "type": "string"
+                    },
+                    "another_model": {
+                        "$ref": "#/components/schemas/AnotherModel"
+                    }
+                },
+                "required": [
+                    "a_string",
+                    "a_number",
+                    "a_list_of_strings",
+                    "a_list_of_numbers",
+                    "another_model",
+                    "a_list_of_other_models",
+                    "a_dict_response",
+                    "a_enum",
+                    "a_list_of_enums"
+                ],
+                "title": "ComplexModelResponse",
+                "type": "object"
+            },
+            "DeleteResponse": {
+                "description": "A delete response, which is also empty! ",
+                "properties": {},
+                "title": "DeleteResponse",
+                "type": "object"
+            },
+            "ExampleEnum": {
+                "description": "An example Enum",
+                "enum": [
+                    "ONE",
+                    "TWO"
+                ],
+                "title": "ExampleEnum"
+            },
+            "HeadersResponse": {
+                "description": "A model that returns the X-TEST header from a request ",
+                "properties": {
+                    "x_test": {
+                        "title": "X Test",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "x_test"
+                ],
+                "title": "HeadersResponse",
+                "type": "object"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "title": "Detail",
+                        "type": "array"
+                    }
+                },
+                "title": "HTTPValidationError",
+                "type": "object"
+            },
+            "OptionalParametersResponse": {
+                "description": "A response with optional parameters",
+                "properties": {
+                    "optional_parameter": {
+                        "title": "Optional Parameter",
+                        "type": "string"
+                    },
+                    "required_parameter": {
+                        "title": "Required Parameter",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "required_parameter"
+                ],
+                "title": "OptionalParametersResponse",
+                "type": "object"
+            },
+            "ParameterResponse": {
+                "description": "Returns the parameter sent to it",
+                "properties": {
+                    "your_input": {
+                        "title": "Your Input",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "your_input"
+                ],
+                "title": "ParameterResponse",
+                "type": "object"
+            },
+            "RequestDataAndParameterResponse": {
+                "description": "A response for the POST endpoint that also takes a path parameter ",
+                "properties": {
+                    "my_input": {
+                        "title": "My Input",
+                        "type": "string"
+                    },
+                    "path_parameter": {
+                        "title": "Path Parameter",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "my_input",
+                    "path_parameter"
+                ],
+                "title": "RequestDataAndParameterResponse",
+                "type": "object"
+            },
+            "RequestDataRequest": {
+                "description": "Input data for the test POST endpoint ",
+                "properties": {
+                    "my_input": {
+                        "title": "My Input",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "my_input"
+                ],
+                "title": "RequestDataRequest",
+                "type": "object"
+            },
+            "RequestDataResponse": {
+                "description": "A response for the POST endpoint ",
+                "properties": {
+                    "my_input": {
+                        "title": "My Input",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "my_input"
+                ],
+                "title": "RequestDataResponse",
+                "type": "object"
+            },
+            "SecurityRequiredResponse": {
+                "description": "Returns the token passed in the HTTP AUTHORIZATION headers ",
+                "properties": {
+                    "token": {
+                        "title": "Token",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "token"
+                ],
+                "title": "SecurityRequiredResponse",
+                "type": "object"
+            },
+            "SimpleQueryParametersResponse": {
+                "description": "A response for query parameters request",
+                "properties": {
+                    "your_query": {
+                        "title": "Your Query",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "your_query"
+                ],
+                "title": "SimpleQueryParametersResponse",
+                "type": "object"
+            },
+            "SimpleResponse": {
+                "description": "A simple response",
+                "properties": {
+                    "status": {
+                        "title": "Status",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "status"
+                ],
+                "title": "SimpleResponse",
+                "type": "object"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "title": "Location",
+                        "type": "array"
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError",
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "HTTPBearer": {
+                "scheme": "bearer",
+                "type": "http"
+            }
+        }
+    },
+    "info": {
+        "title": "Example OpenAPI schema server for clientele testing",
+        "version": "0.1.0"
+    },
+    "openapi": "3.0.2",
+    "paths": {
+        "/complex-model-request": {
+            "get": {
+                "description": "A request that returns a complex model demonstrating various response types",
+                "operationId": "complex_model_request_complex_model_request_get",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ComplexModelResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    }
+                },
+                "summary": "Complex Model Request"
+            }
+        },
+        "/header-request": {
+            "get": {
+                "operationId": "header_request_header_request_get",
+                "parameters": [
+                    {
+                        "description": "test header",
+                        "in": "header",
+                        "name": "x-test",
+                        "required": false,
+                        "schema": {
+                            "description": "test header",
+                            "title": "X-Test"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HeadersResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
+                    }
+                },
+                "summary": "Header Request"
+            }
+        },
+        "/optional-parameters": {
+            "get": {
+                "description": "A response with a a model that has optional input values",
+                "operationId": "optional_parameters_request_optional_parameters_get",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OptionalParametersResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    }
+                },
+                "summary": "Optional Parameters Request"
+            }
+        },
+        "/request-data": {
+            "post": {
+                "description": "An endpoint that takes input data from an HTTP POST request and returns it",
+                "operationId": "request_data_request_data_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestDataRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequestDataResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
+                    }
+                },
+                "summary": "Request Data"
+            }
+        },
+        "/request-data/{path_parameter}": {
+            "post": {
+                "description": "An endpoint that takes input data from an HTTP POST request and also a path parameter",
+                "operationId": "request_data_path_request_data__path_parameter__post",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "path_parameter",
+                        "required": true,
+                        "schema": {
+                            "title": "Path Parameter",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestDataRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RequestDataAndParameterResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
+                    }
+                },
+                "summary": "Request Data Path"
+            }
+        },
+        "/request-delete": {
+            "delete": {
+                "operationId": "request_delete_request_delete_delete",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DeleteResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    }
+                },
+                "summary": "Request Delete"
+            }
+        },
+        "/security-required": {
+            "get": {
+                "operationId": "security_required_request_security_required_get",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SecurityRequiredResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    }
+                },
+                "security": [
+                    {
+                        "HTTPBearer": []
+                    }
+                ],
+                "summary": "Security Required Request"
+            }
+        },
+        "/simple-query": {
+            "get": {
+                "description": "A request with a query parameters",
+                "operationId": "query_request_simple_query_get",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "your_input",
+                        "required": true,
+                        "schema": {
+                            "title": "Your Input",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleQueryParametersResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
+                    }
+                },
+                "summary": "Query Request"
+            }
+        },
+        "/simple-request": {
+            "get": {
+                "description": "A simple API request with no parameters.",
+                "operationId": "simple_request_simple_request_get",
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    }
+                },
+                "summary": "Simple Request"
+            }
+        },
+        "/simple-request/{your_input}": {
+            "get": {
+                "description": "A request with a URL parameter",
+                "operationId": "parameter_request_simple_request__your_input__get",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "your_input",
+                        "required": true,
+                        "schema": {
+                            "title": "Your Input",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ParameterResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
+                    }
+                },
+                "summary": "Parameter Request"
+            }
+        }
+    }
+}

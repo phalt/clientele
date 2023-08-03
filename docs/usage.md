@@ -8,7 +8,7 @@ Clientele provides a single command, `generate`, for generating your API Clients
 Assuming the OpenAPI schema is available on the internet somewhere, you can query it to generate your client.
 
 ```sh
-clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/simple.json -o my_client/
+clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/
 ```
 
 !!! note
@@ -105,3 +105,38 @@ def api_base_url() -> str:
     elif my_config.production:
         return "http://my-production-url.com"
 ```
+
+
+## Testing
+
+Clientele is designed for easy testing, and our own test suite is a great example of how easily you can write mock test endpoints
+for your API Client.
+
+```python
+import pytest
+from httpx import Response
+from respx import MockRouter
+
+from .test_client import client, constants, schemas
+
+BASE_URL = constants.api_base_url()
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_simple_request_simple_request_get(respx_mock: MockRouter):
+    # Given
+    mocked_response = {"status": "hello world"}
+    mock_path = "/simple-request"
+    respx_mock.get(mock_path).mock(
+        return_value=Response(json=mocked_response, status_code=200)
+    )
+    # When
+    response = client.simple_request_simple_request_get()
+    # Then
+    assert isinstance(response, schemas.SimpleResponse)
+    assert len(respx_mock.calls) == 1
+    call = respx_mock.calls[0]
+    assert call.request.url == BASE_URL + mock_path
+```
+
+We recommend you install [respx](https://lundberg.github.io/respx/) for writing your tests.

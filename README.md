@@ -28,6 +28,7 @@ Plus - there is no complex boilerplate and the generated code is very small.
 * Written entirely in Python - no need to install other languages to use OpenAPI.
 * The client footprint is minimal - it only requires `httpx` and `pydantic`.
 * Supports your own configuration - we provide an entry point that will never be overwritten.
+* Incredibly easy to write mocked tests using [respx](https://lundberg.github.io/respx/).
 
 We're built on:
 
@@ -44,7 +45,9 @@ pipx add clientele
 ## Usage
 
 ```sh
-clientele generate -f path/to/file.json -o my_client/ --asyncio t
+clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/ --asyncio t
 ```
+
+(That line will actually work, try it!)
 
 [Read the docs](https://phalt.github.io/clientele/)
