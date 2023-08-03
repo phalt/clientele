@@ -50,10 +50,10 @@ jobs:
       #----------------------------------------------
       - name: Black check
         run: |
-          black src/ --check
+          poetry run black src/ --check
       - name: Ruff check
         run: |
-          ruff src/
+          poetry run ruff src/
       - name: Test with pytest
         run: |
-          pytest -vv
+          poetry run pytest -vv
