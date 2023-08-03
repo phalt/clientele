@@ -299,6 +299,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#044" class="md-nav__link">
+    0.4.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#043" class="md-nav__link">
     0.4.3
   </a>
@@ -396,6 +403,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#044" class="md-nav__link">
+    0.4.4
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#043" class="md-nav__link">
     0.4.3
   </a>
@@ -474,6 +488,20 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="044">0.4.4</h2>
+<p>Examples and documentation now includes a very complex example schema built using <a href="https://fastapi.tiangolo.com/">FastAPI</a> that offers the following variations:</p>
+<ul>
+<li>Simple request / response (no input just an output)</li>
+<li>A request with a URL/Path parameter.</li>
+<li>Models with <code>int</code>, <code>str</code>, <code>list</code>, <code>dict</code>, references to other models, enums, and <code>list</code>s of other models and enums.</li>
+<li>A request with query parameters.</li>
+<li>A response model that has optional parameters.</li>
+<li>An HTTP POST request that takes an input model.</li>
+<li>An HTTP POST request that takes path parameters and also an input model.</li>
+<li>An HTTP GET request that requires an HTTP header, and returns it.</li>
+<li>An HTTP GET endpoint that returns the HTTP bearer authorization token (also makes clientele generate the http authentication for this schema).</li>
+</ul>
+<p>A huge test suite has been added to the CI pipeline for this project using a copy of the generated client from the schema above.</p>
 <h2 id="043">0.4.3</h2>
 <ul>
 <li><code>Enums</code> now inherit from <code>str</code> as well so that they serialize to JSON properly. See <a href="https://hultner.se/quickbits/2018-03-12-python-json-serializable-enum.html">this little nugget</a>.</li>
