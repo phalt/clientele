@@ -10,21 +10,41 @@ jobs:
         python-version: ["3.9", "3.10", "3.11"]
     steps:
     - uses: actions/checkout@v3
-    - name: Ruff Check
-      # You may pin to the exact commit or the version.
-      # uses: jpetrucciani/ruff-check@33f3725e751a187bb666b7d7a7094d38a2df12db
-      uses: jpetrucciani/ruff-check@0.0.239
-      with:
-        # File or directory to run ruff on
-        path: src/
-        # Optional ruff flags (refer to `ruff --help`)
-    - name: Install dependencies
-      run: |
-          python -m pip install --upgrade pip
-          pip install poetry
-          poetry install
-      env:
-          POETRY_VIRTUALENVS_CREATE: false
+    #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.python-version}}
+      #----------------------------------------------
+      #  -----  install & configure poetry  -----
+      #----------------------------------------------
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
     - name: Black check
       run: |
           black src/ --check
