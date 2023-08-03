@@ -21,7 +21,6 @@ def handle_response(func, response):
     """
     returns a response that matches the data neatly for a function
     """
-    response.raise_for_status()
     response_data = response.json()
     response_types = typing.get_type_hints(func).get("return")
     if typing.get_origin(response_types) == typing.Union:
@@ -34,3 +33,5 @@ def handle_response(func, response):
             return single_type.model_validate(response_data)
         except ValidationError:
             continue
+    # As a fall back, return the response_data
+    return response_data

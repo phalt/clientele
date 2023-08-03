@@ -153,11 +153,18 @@ class SchemasGenerator:
             output_dir=self.output_dir,
         )
 
+    def write_helpers(self) -> None:
+        template = templates.get_template("schema_helpers.jinja2")
+        content = template.render()
+        write_to_schemas(
+            content,
+            output_dir=self.output_dir,
+        )
+
     def generate_schema_classes(self) -> None:
         """
         Generates all Pydantic schema classes.
         """
         for schema_key, schema in self.spec["components"]["schemas"].items():
             self.make_schema_class(schema_key=schema_key, schema=schema)
-
         console.log(f"Generated {len(self.schemas.items())} schemas...")

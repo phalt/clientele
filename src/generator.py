@@ -59,3 +59,4 @@ class Generator:
         self.schemas_generator.generate_schema_classes()
         self.clients_generator.generate_paths()
         self.http_generator.generate_http_content()
+        self.schemas_generator.write_helpers()
