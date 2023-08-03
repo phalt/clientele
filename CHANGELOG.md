@@ -1,5 +1,10 @@
 # Change log
 
+## 0.4.2
+
+- Correctly use `model_rebuild` for complex schemas where there are nested schemas, his may be necessary when one of the annotations is a ForwardRef which could not be resolved during the initial attempt to build the schema.
+- Do not raise for status, instead attempt to return the response if it cannot match a response type.
+
 ## 0.4.1
 
 - Correctly generate lists of nested schema classes
