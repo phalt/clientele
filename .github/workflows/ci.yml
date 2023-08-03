@@ -9,8 +9,8 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v3
-    #----------------------------------------------
+      - uses: actions/checkout@v3
+      #----------------------------------------------
       #       check-out repo and set-up python
       #----------------------------------------------
       - name: Check out repository
@@ -45,9 +45,15 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
-    - name: Black check
-      run: |
+      #----------------------------------------------
+      # Do the actuall checks
+      #----------------------------------------------
+      - name: Black check
+        run: |
           black src/ --check
-    - name: Test with pytest
-      run: |
+      - name: Ruff check
+        run: |
+          ruff src/
+      - name: Test with pytest
+        run: |
           pytest -vv
