@@ -299,6 +299,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#042" class="md-nav__link">
+    0.4.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#041" class="md-nav__link">
     0.4.1
   </a>
@@ -382,6 +389,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#042" class="md-nav__link">
+    0.4.2
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#041" class="md-nav__link">
     0.4.1
   </a>
@@ -446,6 +460,11 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="042">0.4.2</h2>
+<ul>
+<li>Correctly use <code>model_rebuild</code> for complex schemas where there are nested schemas, his may be necessary when one of the annotations is a ForwardRef which could not be resolved during the initial attempt to build the schema.</li>
+<li>Do not raise for status, instead attempt to return the response if it cannot match a response type.</li>
+</ul>
 <h2 id="041">0.4.1</h2>
 <ul>
 <li>Correctly generate lists of nested schema classes</li>
