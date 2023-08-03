@@ -4,7 +4,8 @@ theme:
   name: material
   palette:
     primary: black
-
+repo_name: phalt/clientele
+repo_url: https://github.com/phalt/clientele
 nav:
   - Home: index.md
   - Install: install.md
