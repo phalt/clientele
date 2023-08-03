@@ -1,5 +1,9 @@
 # Change log
 
+## 0.4.3
+
+- `Enums` now inherit from `str` as well so that they serialize to JSON properly. See [this little nugget](https://hultner.se/quickbits/2018-03-12-python-json-serializable-enum.html).
+
 ## 0.4.2
 
 - Correctly use `model_rebuild` for complex schemas where there are nested schemas, his may be necessary when one of the annotations is a ForwardRef which could not be resolved during the initial attempt to build the schema.
