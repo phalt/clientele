@@ -3,15 +3,17 @@ site_url: https://phalt.github.io/clientele/
 theme:
   name: material
   palette:
-    primary: black
+    scheme: slate
+    primary: blue grey
 repo_name: phalt/clientele
 repo_url: https://github.com/phalt/clientele
 nav:
   - Home: index.md
   - Install: install.md
-  - Usage: usage.md
-  - Compatibility: compatibility.md
+  - Commands: usage.md
   - Client Example: examples.md
+  - Testing: testing.md
+  - Compatibility: compatibility.md
   - Change log: CHANGELOG.md
 
 markdown_extensions:
@@ -25,3 +27,4 @@ markdown_extensions:
   - pymdownx.superfences
   - admonition
   - pymdownx.details
+  - codehilite

@@ -1,9 +1,23 @@
 
-# 📝 Usage
+# 📝 Commands
 
-Clientele provides a single command, `generate`, for generating your API Clients.
+## Validate
 
-## From a URL
+Validate lets you check if an OpenAPI schema will work with clientele. Some OpenAPI schema generators do not comply properly with the specification and it is a good way to check if your schema is correct.
+
+```sh
+clientele validate -u http://path.com/to/openapi.json
+```
+
+Alternatively you can provide a local file:
+
+```sh
+clinetele validate -f /path/to/openapi.json
+```
+
+## Generate
+
+### From a URL
 
 Assuming the OpenAPI schema is available on the internet somewhere, you can query it to generate your client.
 
@@ -15,8 +29,7 @@ clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/exa
 
     The example above uses a test OpenAPI format, and will work if you copy/paste it!
 
-
-## From a file
+### From a file
 
 Alternatively, if you have a local file you can use it to generate your client.
 
@@ -24,7 +37,7 @@ Alternatively, if you have a local file you can use it to generate your client.
 clientele generate -f path/to/file.json -o my_client/
 ```
 
-## Async Client
+### Async Client
 
 If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) client, just pass `--asyncio t` to your command.
 
@@ -35,108 +48,3 @@ clientele generate -f path/to/file.json -o my_client/ --asyncio t
 !!! note
 
     You can use this command later to swap between a sync and async client so long as the OpenAPI schema remains the same, so don't worry about making a hard decision now.
-
-## Authentication
-
-If your OpenAPI spec provides security information for the following authentication methods:
-
-* HTTP Bearer
-* HTTP Basic
-
-Then clientele will provide you information on the environment variables you need to set to
-make this work during the generation. For example:
-
-```sh
-Please see my_client/constants.py to set authentication variables
-```
-
-The `constants.py` file will have entry points for you to configure, for example, HTTP Bearer authentication will need the `get_bearer_token` function to be updated, something like this:
-
-```py
-
-def get_bearer_token() -> str:
-    """
-    HTTP Bearer authentication.
-    Used by many authentication methods - token, jwt, etc.
-    Does not require the "Bearer" content, just the key as a string.
-    """
-    from os import environ
-    return environ.get("MY_AUTHENTICATION_TOKEN")
-```
-
-## Configuration
-
-One of the problems with auto-generated clients is that you often need to configure them, and
-if you try and regenerate the client at some point (say because you've added new endpoints or fixed a bug)
-then your configuration gets wiped clean and you have to do it all over again.
-
-Clientele solves this problem by providing an entry point for configuration that will never be overwritten - `constants.py`.
-
-When you first generate the project, you will see a file called `my_client/constants.py` (assuming your `-o` was `my_client/`), and it'll look a bit like this:
-
-```python
-"""
-This file will never be updated on subsequent clientele runs.
-Use it as a space to store configuration and constants.
-
-DO NOT CHANGE THE FUNCTION NAMES
-"""
-
-
-def api_base_url() -> str:
-    """
-    Modify this function to provide the current api_base_url.
-    """
-    return "http://localhost"
-```
-
-Subsequent runs of the `generate` command will not change this file the first time is made, so you are free to modify the defaults to suit your needs, for example, if you need to source the base url of your API for different configurations, you can modify the `api_base_url` function like this:
-
-```py
-
-from my_project import my_config
-
-def api_base_url() -> str:
-    """
-    Modify this function to provide the current api_base_url.
-    """
-    if my_config.debug:
-        return "http://localhost:8000"
-    elif my_config.production:
-        return "http://my-production-url.com"
-```
-
-
-## Testing
-
-Clientele is designed for easy testing, and our own test suite is a great example of how easily you can write mock test endpoints
-for your API Client.
-
-```python
-import pytest
-from httpx import Response
-from respx import MockRouter
-
-from .test_client import client, constants, schemas
-
-BASE_URL = constants.api_base_url()
-
-
-@pytest.mark.respx(base_url=BASE_URL)
-def test_simple_request_simple_request_get(respx_mock: MockRouter):
-    # Given
-    mocked_response = {"status": "hello world"}
-    mock_path = "/simple-request"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
-    # When
-    response = client.simple_request_simple_request_get()
-    # Then
-    assert isinstance(response, schemas.SimpleResponse)
-    assert len(respx_mock.calls) == 1
-    call = respx_mock.calls[0]
-    assert call.request.url == BASE_URL + mock_path
-```
-
-We recommend you install [respx](https://lundberg.github.io/respx/) for writing your tests.
