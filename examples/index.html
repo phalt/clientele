@@ -11,10 +11,10 @@
         <link rel="canonical" href="https://phalt.github.io/clientele/examples/">
       
       
-        <link rel="prev" href="../compatibility/">
+        <link rel="prev" href="../usage/">
       
       
-        <link rel="next" href="../CHANGELOG/">
+        <link rel="next" href="../testing/">
       
       <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.5.1, mkdocs-material-9.1.21">
@@ -59,7 +59,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
   
     
     
@@ -247,22 +247,7 @@
   
     <li class="md-nav__item">
       <a href="../usage/" class="md-nav__link">
-        Usage
-      </a>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../compatibility/" class="md-nav__link">
-        Compatibility
+        Commands
       </a>
     </li>
   
@@ -317,44 +302,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#client-directory" class="md-nav__link">
-    Client directory
+  <a href="#client" class="md-nav__link">
+    Client
   </a>
   
-    <nav class="md-nav" aria-label="Client directory">
+    <nav class="md-nav" aria-label="Client">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clientpy" class="md-nav__link">
-    client.py
+  <a href="#get-functions" class="md-nav__link">
+    GET functions
+  </a>
+  
+    <nav class="md-nav" aria-label="GET functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#url-and-query-parameters" class="md-nav__link">
+    URL and Query parameters
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#schemaspy" class="md-nav__link">
-    schemas.py
-  </a>
+      </ul>
+    </nav>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#httppy" class="md-nav__link">
-    http.py
+  <a href="#post-functions" class="md-nav__link">
+    POST functions
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#constantspy" class="md-nav__link">
-    constants.py
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schemas" class="md-nav__link">
+    Schemas
   </a>
   
 </li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#manifest" class="md-nav__link">
-    MANIFEST
+  <a href="#authentication" class="md-nav__link">
+    Authentication
   </a>
   
 </li>
@@ -368,6 +372,36 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        Testing
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compatibility/" class="md-nav__link">
+        Compatibility
+      </a>
     </li>
   
 
@@ -421,44 +455,63 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#client-directory" class="md-nav__link">
-    Client directory
+  <a href="#client" class="md-nav__link">
+    Client
   </a>
   
-    <nav class="md-nav" aria-label="Client directory">
+    <nav class="md-nav" aria-label="Client">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#clientpy" class="md-nav__link">
-    client.py
+  <a href="#get-functions" class="md-nav__link">
+    GET functions
+  </a>
+  
+    <nav class="md-nav" aria-label="GET functions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#url-and-query-parameters" class="md-nav__link">
+    URL and Query parameters
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#schemaspy" class="md-nav__link">
-    schemas.py
-  </a>
+      </ul>
+    </nav>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#httppy" class="md-nav__link">
-    http.py
+  <a href="#post-functions" class="md-nav__link">
+    POST functions
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#constantspy" class="md-nav__link">
-    constants.py
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schemas" class="md-nav__link">
+    Schemas
   </a>
   
 </li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    Configuration
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#manifest" class="md-nav__link">
-    MANIFEST
+  <a href="#authentication" class="md-nav__link">
+    Authentication
   </a>
   
 </li>
@@ -490,8 +543,8 @@
 <p>Let's build an API Client using clientele and an example OpenAPI schema.</p>
 <p>Our <a href="https://github.com/phalt/clientele/tree/main/example_openapi_specs">GitHub</a> has a bunch of schemas that are proven to work with clientele, so let's use one of those!</p>
 <h2 id="generate-the-client">Generate the client</h2>
-<p>Very simply:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/simple.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+<p>Simply:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </span></code></pre></div>
 <p>The <code>-u</code> parameter expects a URL, you can provide a path to a file with <code>-f</code> instead if you download the file.</p>
 <p>The <code>-o</code> parameter is the output directory of the generated client.</p>
@@ -504,10 +557,10 @@
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span>MANIFEST
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>schemas.py
 </span></code></pre></div>
-<h2 id="client-directory">Client directory</h2>
+<h2 id="client">Client</h2>
 <p>Let's go over each file and talk about what it does</p>
-<h3 id="clientpy">client.py</h3>
-<p>This file provides all the client functions.</p>
+<h3 id="get-functions">GET functions</h3>
+<p>The <code>client.py</code> file provides all the API functions from the OpenAPI schema.</p>
 <div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">my_client/client.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1"> 1</a></span>
 <span class="normal"><a href="#__codelineno-2-2"> 2</a></span>
 <span class="normal"><a href="#__codelineno-2-3"> 3</a></span>
@@ -519,115 +572,159 @@
 <span class="normal"><a href="#__codelineno-2-9"> 9</a></span>
 <span class="normal"><a href="#__codelineno-2-10">10</a></span>
 <span class="normal"><a href="#__codelineno-2-11">11</a></span>
-<span class="normal"><a href="#__codelineno-2-12">12</a></span>
-<span class="normal"><a href="#__codelineno-2-13">13</a></span>
-<span class="normal"><a href="#__codelineno-2-14">14</a></span>
-<span class="normal"><a href="#__codelineno-2-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">typing</span>  <span class="c1"># noqa</span>
+<span class="normal"><a href="#__codelineno-2-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="kn">import</span> <span class="nn">typing</span>  <span class="c1"># noqa</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">schemas</span>  <span class="c1"># noqa</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">http</span>  <span class="c1"># noqa</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4"></a>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="k">def</span> <span class="nf">HealthCheckHealthCheckGet</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">HealthCheckResponse</span><span class="p">:</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health-check&quot;</span><span class="p">)</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">HealthCheckHealthCheckGet</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="k">def</span> <span class="nf">TestInputTestInputPost</span><span class="p">(</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputData</span><span class="p">,</span>
-</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">schemas</span><span class="o">.</span><span class="n">HTTPValidationError</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputResponse</span><span class="p">]:</span>
-</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/test-input&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
-</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">TestInputTestInputPost</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> 
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="k">def</span> <span class="nf">simple_request_simple_request_get</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">SimpleResponse</span><span class="p">:</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Simple Request&quot;&quot;&quot;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;/simple-request&quot;</span><span class="p">)</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">simple_request_simple_request_get</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11"></a>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="o">...</span>
 </span></code></pre></div></td></tr></table></div>
-<p>We can see one of the functions here, <code>HealthCheckHealthCheckGet</code>, is for a straight-forward HTTP GET request without any input arguments, and it returns a schema object. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function.</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span> <span class="nf">HealthCheckHealthCheckGet</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">HealthCheckResponse</span><span class="p">:</span>
+<p>We can see one of the functions here, <code>simple_request_simple_request_get</code>, is for a straight-forward HTTP GET request without any input arguments, and it returns a schema object. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function.</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">def</span> <span class="nf">simple_request_simple_request_get</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">HealthCheckResponse</span><span class="p">:</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/health-check&quot;</span><span class="p">)</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">HealthCheckHealthCheckGet</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">simple_request_simple_request_get</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Here is how you might use it:</p>
 <div class="language-py highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span> <span class="nn">my_client</span> <span class="kn">import</span> <span class="n">client</span>
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">client</span><span class="o">.</span><span class="n">HealthCheckHealthCheckGet</span><span class="p">()</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">HealthCheckResponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="s1">&#39;ok&#39;</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">SimpleResponse</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Paul&#39;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>A more complex example is shown just below - <code>TestInputTestInputPost</code>, this is for an HTTP POST method, and it requires an input property called <code>data</code> that is an instance of a schema, and returns a union of responses. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function alongside the <code>data</code> argument.</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span> <span class="nf">TestInputTestInputPost</span><span class="p">(</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputData</span><span class="p">,</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">schemas</span><span class="o">.</span><span class="n">HTTPValidationError</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputResponse</span><span class="p">]:</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/test-input&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span> <span class="ow">and</span> <span class="n">data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">TestInputTestInputPost</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> 
+<h4 id="url-and-query-parameters">URL and Query parameters</h4>
+<p>If your endpoint takes <a href="https://learn.openapis.org/specification/parameters.html#parameter-location">path parameters</a> (aka URL parameters) then clientele will turn them into parameters in the function:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kn">from</span> <span class="nn">my_client</span> <span class="kn">import</span> <span class="n">client</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="n">client</span><span class="o">.</span><span class="n">parameter_request_simple_request</span><span class="p">(</span><span class="n">your_input</span><span class="o">=</span><span class="s2">&quot;gibberish&quot;</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">ParameterResponse</span><span class="p">(</span><span class="n">your_input</span><span class="o">=</span><span class="s1">&#39;gibberish&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Query parameters will also be generated the same way. See <a href="https://github.com/phalt/clientele/blob/0.4.4/tests/test_client/client.py#L71">this example</a> for a function that takes a required query parameter.</p>
+<h3 id="post-functions">POST functions</h3>
+<p>A more complex example is shown just below. This is for an HTTP POST method, and it requires an input property called <code>data</code> that is an instance of a schema, and returns a union of responses. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function alongside the <code>data</code> argument.</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">def</span> <span class="nf">request_data_request_data_post</span><span class="p">(</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataRequest</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataResponse</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">HTTPValidationError</span><span class="p">]:</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Request Data&quot;&quot;&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;/request-data&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">request_data_request_data_post</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
 </span></code></pre></div>
 <p>Here is how you might use it:</p>
-<div class="language-py highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span> <span class="nn">my_client</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">TestInputData</span><span class="p">(</span><span class="n">my_title</span><span class="o">=</span><span class="s2">&quot;Hello, world&quot;</span><span class="p">)</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">client</span><span class="o">.</span><span class="n">TestInputTestInputPost</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">TestInputResponse</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Hello, world&#39;</span><span class="p">)</span>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">from</span> <span class="nn">my_client</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataRequest</span><span class="p">(</span><span class="n">my_input</span><span class="o">=</span><span class="s2">&quot;Hello, world&quot;</span><span class="p">)</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">request_data_request_data_post</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="o">&gt;&gt;&gt;</span> <span class="n">RequestDataResponse</span><span class="p">(</span><span class="n">your_input</span><span class="o">=</span><span class="s1">&#39;Hello, world&#39;</span><span class="p">)</span>
 </span></code></pre></div>
-<p>Because we're using Pydantic to manage the input data, we get a strongly-typed interface for us.</p>
-<h3 id="schemaspy">schemas.py</h3>
-<p>This file has all the possible schemas, request and response, for the API.</p>
+<p>Because we're using Pydantic to manage the input data, we get a strongly-typed response object.
+This works beautifully with the new <a href="https://peps.python.org/pep-0636/">structural pattern matching</a> feature in Python 3.10:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">request_data_request_data_post</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Handle responses elegantly</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="k">match</span> <span class="n">response</span><span class="p">:</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataResponse</span><span class="p">():</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="c1"># Handle valid response</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>        <span class="o">...</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="c1"># Handle validation error</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="o">...</span>
+</span></code></pre></div>
+<h2 id="schemas">Schemas</h2>
+<p>The <code>schemas.py</code> file has all the possible schemas, request and response, and even Enums, for the API.</p>
 <p>They are all subclassed from pydantic's <code>BaseModel</code>. Here are a few examples:</p>
-<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">my_client/schemas.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1"> 1</a></span>
-<span class="normal"><a href="#__codelineno-7-2"> 2</a></span>
-<span class="normal"><a href="#__codelineno-7-3"> 3</a></span>
-<span class="normal"><a href="#__codelineno-7-4"> 4</a></span>
-<span class="normal"><a href="#__codelineno-7-5"> 5</a></span>
-<span class="normal"><a href="#__codelineno-7-6"> 6</a></span>
-<span class="normal"><a href="#__codelineno-7-7"> 7</a></span>
-<span class="normal"><a href="#__codelineno-7-8"> 8</a></span>
-<span class="normal"><a href="#__codelineno-7-9"> 9</a></span>
-<span class="normal"><a href="#__codelineno-7-10">10</a></span>
-<span class="normal"><a href="#__codelineno-7-11">11</a></span>
-<span class="normal"><a href="#__codelineno-7-12">12</a></span>
-<span class="normal"><a href="#__codelineno-7-13">13</a></span>
-<span class="normal"><a href="#__codelineno-7-14">14</a></span>
-<span class="normal"><a href="#__codelineno-7-15">15</a></span>
-<span class="normal"><a href="#__codelineno-7-16">16</a></span>
-<span class="normal"><a href="#__codelineno-7-17">17</a></span>
-<span class="normal"><a href="#__codelineno-7-18">18</a></span>
-<span class="normal"><a href="#__codelineno-7-19">19</a></span>
-<span class="normal"><a href="#__codelineno-7-20">20</a></span>
-<span class="normal"><a href="#__codelineno-7-21">21</a></span>
-<span class="normal"><a href="#__codelineno-7-22">22</a></span>
-<span class="normal"><a href="#__codelineno-7-23">23</a></span>
-<span class="normal"><a href="#__codelineno-7-24">24</a></span>
-<span class="normal"><a href="#__codelineno-7-25">25</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1"></a><span class="kn">import</span> <span class="nn">typing</span>  <span class="c1"># noqa</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2"></a><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span>  <span class="c1"># noqa</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3"></a><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>  <span class="c1"># noqa</span>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4"></a>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6"></a><span class="k">class</span> <span class="nc">HTTPValidationError</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7"></a>    <span class="n">detail</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8"></a>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9"></a>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10"></a><span class="k">class</span> <span class="nc">HealthCheckResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11"></a>    <span class="n">status</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12"></a>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13"></a>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14"></a><span class="k">class</span> <span class="nc">TestInputData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15"></a>    <span class="n">my_title</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16"></a>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17"></a>
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18"></a><span class="k">class</span> <span class="nc">TestInputResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19"></a>    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20"></a>
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21"></a>
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22"></a><span class="k">class</span> <span class="nc">ValidationError</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23"></a>    <span class="n">loc</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">]</span>
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24"></a>    <span class="n">msg</span><span class="p">:</span> <span class="nb">str</span>
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25"></a>    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+<div class="language-py highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">my_client/schemas.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-9-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-9-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-9-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-9-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-9-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-9-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-9-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-9-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-9-10">10</a></span>
+<span class="normal"><a href="#__codelineno-9-11">11</a></span>
+<span class="normal"><a href="#__codelineno-9-12">12</a></span>
+<span class="normal"><a href="#__codelineno-9-13">13</a></span>
+<span class="normal"><a href="#__codelineno-9-14">14</a></span>
+<span class="normal"><a href="#__codelineno-9-15">15</a></span>
+<span class="normal"><a href="#__codelineno-9-16">16</a></span>
+<span class="normal"><a href="#__codelineno-9-17">17</a></span>
+<span class="normal"><a href="#__codelineno-9-18">18</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1"></a><span class="kn">import</span> <span class="nn">typing</span>  <span class="c1"># noqa</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2"></a><span class="kn">import</span> <span class="nn">pydantic</span>  <span class="c1"># noqa</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3"></a><span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>  <span class="c1"># noqa</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5"></a>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6"></a><span class="k">class</span> <span class="nc">ParameterResponse</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7"></a>    <span class="n">your_input</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8"></a>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9"></a><span class="k">class</span> <span class="nc">RequestDataRequest</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10"></a>    <span class="n">my_input</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12"></a><span class="k">class</span> <span class="nc">RequestDataResponse</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13"></a>    <span class="n">my_input</span><span class="p">:</span> <span class="nb">str</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14"></a>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15"></a><span class="c1"># Enums subclass str so they serialize to JSON nicely</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16"></a><span class="k">class</span> <span class="nc">ExampleEnum</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17"></a>    <span class="n">ONE</span> <span class="o">=</span> <span class="s2">&quot;ONE&quot;</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18"></a>    <span class="n">TWO</span> <span class="o">=</span> <span class="s2">&quot;TWO&quot;</span>
 </span></code></pre></div></td></tr></table></div>
-<h3 id="httppy">http.py</h3>
-<p>This file manages the HTTP layer of the client.</p>
-<p>You should never need to touch the code here, but feel free to have a browse.</p>
-<p>This file will have either a sync, or an async instance of a client from <code>httpx</code>.</p>
-<p>It also manages the coersion of response bodies into schema objects.</p>
-<h3 id="constantspy">constants.py</h3>
-<p>This manages all the configuration your client might need.</p>
-<p>This file is only ever generated once, and will never be overwritten (unless you delete it yourself).</p>
-<p>You can modify the contents of the functions in this file to provide things like the base url and authentication keys for your client.</p>
-<h3 id="manifest">MANIFEST</h3>
-<p>The <code>MANIFEST</code> file provides some information on how the client was generated.</p>
+<h2 id="configuration">Configuration</h2>
+<p>One of the problems with auto-generated clients is that you often need to configure them, and
+if you try and regenerate the client at some point then your configuration gets wiped clean and you have to do it all over again.</p>
+<p>Clientele solves this problem by providing an entry point for configuration that will never be overwritten - <code>constants.py</code>.</p>
+<p>When you first generate the project, you will see a file called <code>constants.py</code> and it will offer configuration functions a bit like this:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="sd">This file will never be updated on subsequent clientele runs.</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="sd">Use it as a space to store configuration and constants.</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="sd">DO NOT CHANGE THE FUNCTION NAMES</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="k">def</span> <span class="nf">api_base_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="sd">    Modify this function to provide the current api_base_url.</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>    <span class="k">return</span> <span class="s2">&quot;http://localhost&quot;</span>
+</span></code></pre></div>
+<p>Subsequent runs of the <code>generate</code> command will not change this file the first time is made, so you are free to modify the defaults to suit your needs, for example, if you need to source the base url of your API for different configurations, you can modify the <code>api_base_url</code> function like this:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span> <span class="nn">my_project</span> <span class="kn">import</span> <span class="n">my_config</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="k">def</span> <span class="nf">api_base_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="sd">    Modify this function to provide the current api_base_url.</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>    <span class="k">if</span> <span class="n">my_config</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="k">return</span> <span class="s2">&quot;http://localhost:8000&quot;</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>    <span class="k">elif</span> <span class="n">my_config</span><span class="o">.</span><span class="n">production</span><span class="p">:</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="k">return</span> <span class="s2">&quot;http://my-production-url.com&quot;</span>
+</span></code></pre></div>
+<p>Just keep the function names the same and you're good to go.</p>
+<h3 id="authentication">Authentication</h3>
+<p>If your OpenAPI spec provides security information for the following authentication methods:</p>
+<ul>
+<li>HTTP Bearer</li>
+<li>HTTP Basic</li>
+</ul>
+<p>Then clientele will provide you information on the environment variables you need to set to
+make this work during the generation. For example:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Please<span class="w"> </span>see<span class="w"> </span>my_client/constants.py<span class="w"> </span>to<span class="w"> </span><span class="nb">set</span><span class="w"> </span>authentication<span class="w"> </span>variables
+</span></code></pre></div>
+<p>The <code>constants.py</code> file will have entry points for you to configure, for example, HTTP Bearer authentication will need the <code>get_bearer_token</code> function to be updated, something like this:</p>
+<div class="language-py highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">def</span> <span class="nf">get_bearer_token</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="sd">    HTTP Bearer authentication.</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="sd">    Used by many authentication methods - token, jwt, etc.</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="sd">    Does not require the &quot;Bearer&quot; content, just the key as a string.</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="sd">    &quot;&quot;&quot;</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>    <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">environ</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="k">return</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MY_AUTHENTICATION_TOKEN&quot;</span><span class="p">)</span>
+</span></code></pre></div>
 
 
 
