@@ -1,6 +1,6 @@
 <p align="center">
     <h1>⚜️ Clientele</h1>
-    <em>Typed API Clients from OpenAPI schemas</em>
+    <em>Loveable API Clients from OpenAPI schemas</em>
     <img src="https://github.com/phalt/clientele/blob/main/docs/clientele.jpeg?raw=true">
 </p>
 
@@ -13,41 +13,57 @@
 </a>
 </p>
 
-Clientele lets you generate fully-typed, functional, API Clients from OpenAPI schemas.
+Clientele lets you generate fully-typed, loveable Python API Clients from OpenAPI schemas:
 
-It uses modern tools to be blazing fast and type safe.
+```py
+from my_api import client, schemas
 
-Plus - there is no complex boilerplate and the generated code is very small.
+# Pydantic-typed inputs
+data = schemas.RequestDataRequest(my_input="test")
 
-## Features
+# Easy to read client functions
+response = client.request_data_request_data_post(data=data)
 
-* Fully typed API Client using Pydantic.
-* Minimalist and easy to use - the generated code is designed for readability.
-* Choose either sync or async - we support both, and you can switch between them easily.
-* Supports authentication (curently only HTTP Bearer and HTTP Basic auth).
-* Written entirely in Python - no need to install other languages to use OpenAPI.
-* The client footprint is minimal - it only requires `httpx` and `pydantic`.
-* Supports your own configuration - we provide an entry point that will never be overwritten.
-* Incredibly easy to write mocked tests using [respx](https://lundberg.github.io/respx/).
+# Handle responses elegantly
+match response:
+    case schemas.RequestDataResponse():
+        # Handle valid response
+        ...
+    case schemas.ValidationError():
+        # Handle validation error
+        ...
+```
+
+The generated code is tiny - the [example schema](https://github.com/phalt/clientele/blob/0.4.4/example_openapi_specs/best.json) we use for documentation and testing only requires [250 lines of code](https://github.com/phalt/clientele/tree/0.4.4/tests/test_client) and 5 files.
+
+Choose either sync or async - we support both, and you can switch between them easily:
+
+```py
+from my_async_api import client
+
+# Async client functions
+response = await client.simple_request_simple_request_get()
+```
+
+All generated from a single command:
+
+```sh
+# add -asyncio -t to make it async
+clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o api_client/
+```
+
+(That works - try it now!)
+
+## Other features
+
+* Supports authentication automatically (curently only HTTP Bearer and HTTP Basic auth).
+* Written entirely in Python - no need to install any other languages.
+* The client footprint only requires `httpx` and `pydantic`.
+* Support your own configuration - we provide an entry point that will never be overwritten.
+* Designed for easy testing with [respx](https://lundberg.github.io/respx/).
 
 We're built on:
 
-* [Pydantic 2.1](https://docs.pydantic.dev/latest/)
+* [Pydantic 2.0](https://docs.pydantic.dev/latest/)
 * [httpx](https://www.python-httpx.org/)
 * [openapi-core](https://openapi-core.readthedocs.io/en/latest/)
-
-## Install
-
-```sh
-pipx add clientele
-```
-
-## Usage
-
-```sh
-clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/ --asyncio t
-```
-
-(That line will actually work, try it!)
-
-[Read the docs](https://phalt.github.io/clientele/)
