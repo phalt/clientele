@@ -6,11 +6,19 @@ DO NOT CHANGE THE FUNCTION NAMES
 """
 
 
+def additional_headers() -> dict:
+    """
+    Modify this function ot provide additional headers to all
+    HTTP requests made by this client.
+    """
+    return {}
+
+
 def api_base_url() -> str:
     """
     Modify this function to provide the current api_base_url.
     """
-    return "http://localhost:8003"
+    return "http://localhost"
 
 
 def get_user_key() -> str:

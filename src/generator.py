@@ -1,6 +1,7 @@
 from distutils.dir_util import copy_tree
 from os.path import exists
 from shutil import copyfile
+from typing import Optional
 
 from openapi_core import Spec
 
@@ -22,8 +23,17 @@ class Generator:
     clients_generator: ClientsGenerator
     http_generator: HTTPGenerator
     output_dir: str
+    file: Optional[str]
+    url: Optional[str]
 
-    def __init__(self, spec: Spec, output_dir: str, asyncio: bool) -> None:
+    def __init__(
+        self,
+        spec: Spec,
+        output_dir: str,
+        asyncio: bool,
+        url: Optional[str],
+        file: Optional[str],
+    ) -> None:
         self.schemas_generator = SchemasGenerator(spec=spec, output_dir=output_dir)
         self.clients_generator = ClientsGenerator(
             spec=spec,
@@ -37,16 +47,28 @@ class Generator:
         self.spec = spec
         self.asyncio = asyncio
         self.output_dir = output_dir
+        self.file = file
+        self.url = url
 
     def generate_manifest(self):
         """
         A manifest file with useful information
         """
         write_to_manifest(
-            f"API VERSION: {self.spec['info']['version']}\n", self.output_dir
+            f"\nAPI VERSION: {self.spec['info']['version']}\n", self.output_dir
         )
         write_to_manifest(f"OPENAPI VERSION: {self.spec['openapi']}\n", self.output_dir)
         write_to_manifest(f"CLIENTELE VERSION: {VERSION}\n", self.output_dir)
+        write_to_manifest(
+            f"""
+Generated using this command:
+
+```sh
+clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir}
+```
+""",
+            self.output_dir,
+        )
 
     def generate(self) -> None:
         copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)

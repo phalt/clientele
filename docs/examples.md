@@ -116,6 +116,25 @@ match response:
         ...
 ```
 
+### API Exceptions
+
+Clientele works by matching the shape of the response object with the Pydantic return types of a function. When it matches one, it generates the pydantic object and returns it.
+
+If the response object is an unintended one, it will not match a return type.
+
+In this case, the function will raise an `http.APIException`.
+
+```py
+from my_client import client, http
+try:
+    good_response = my_client.get_my_thing()
+except http.APIException as e:
+    # The API got a response we didn't expect
+    print(e.response.status_code)
+```
+
+The `response` object will be attached to this exception class for later inspection.
+
 ## Schemas
 
 The `schemas.py` file has all the possible schemas, request and response, and even Enums, for the API.
@@ -213,3 +232,18 @@ def get_bearer_token() -> str:
     from os import environ
     return environ.get("MY_AUTHENTICATION_TOKEN")
 ```
+
+### Additional headers
+
+If you want to pass specific headers with all requests made by the client, you can configure the `additional_headers` function in `constants.py` to do this.
+
+```py
+def additional_headers() -> dict:
+    """
+    Modify this function ot provide additional headers to all
+    HTTP requests made by this client.
+    """
+    return {}
+```
+
+Please note that if you are using this with authentication headers, then authentication headers **will overwrite these defaults** if they keys match.
