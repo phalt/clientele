@@ -14,7 +14,7 @@ def complex_model_request_complex_model_request_get() -> schemas.ComplexModelRes
 
 def header_request_header_request_get(
     headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders],
-) -> typing.Union[schemas.HeadersResponse, schemas.HTTPValidationError]:
+) -> typing.Union[schemas.HTTPValidationError, schemas.HeadersResponse]:
     """Header Request"""
     headers_dict = headers and headers.model_dump(by_alias=True) or None
     response = http.get(url="/header-request", headers=headers_dict)

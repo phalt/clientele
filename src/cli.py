@@ -44,10 +44,19 @@ def validate(url, file):
         except JSONDecodeError:
             # It's probably yaml
             data = yaml.safe_load(response.content)
-        Spec.from_dict(data)
+        spec = Spec.from_dict(data)
     else:
         with open(file, "r") as f:
             Spec.from_file(f)
+    console.log(
+        f"Found API specification for {spec['info']['title']} | version {spec['info']['version']}"
+    )
+    major, _, _ = spec["openapi"].split(".")
+    if int(major) < 3:
+        console.log(
+            f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
+        )
+        return
     console.log("schema validated successfully! You can generate a client with it")
 
 
@@ -93,10 +102,12 @@ def generate(url, file, output, asyncio):
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
         console.log(
-            f"[red]clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
+            f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
         )
         return
-    Generator(spec=spec, asyncio=asyncio, output_dir=output).generate()
+    Generator(
+        spec=spec, asyncio=asyncio, output_dir=output, url=url, file=file
+    ).generate()
 
 
 cli_group.add_command(generate)

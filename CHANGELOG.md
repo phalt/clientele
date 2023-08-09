@@ -1,5 +1,14 @@
 # Change log
 
+## 0.5.0
+
+### Please delete the constants.py file when updating to this version to have new features take affect
+
+* Paths are resolved correctly when generating clients in nested directories.
+* `additional_headers()` is now applied to every client, allowing you to set up headers for all requests made by your client.
+* When the client cannot match an HTTP response to a return type for the function it will now raise an `http.APIException`. This object will have the `response` attached to it for inspection by the developer.
+* `MANIFEST` is now renamed to `MANIFEST.md` and will include install information for Clientele, as well as information on the command used to generate the client.
+
 ## 0.4.4
 
 Examples and documentation now includes a very complex example schema built using [FastAPI](https://fastapi.tiangolo.com/) that offers the following variations:

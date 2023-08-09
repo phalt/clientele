@@ -1,11 +1,20 @@
 import typing
-from os import environ  # noqa
 from urllib.parse import urlparse
 
 import httpx  # noqa
-from pydantic import BaseModel, ValidationError  # noqa
+from pydantic import ValidationError  # noqa
 
 from . import constants as c  # noqa
+
+
+class APIException(Exception):
+    """Could not match API response to return type of this function"""
+
+    response: httpx.Response
+
+    def __init__(self, response: httpx.Response, *args: object) -> None:
+        self.response = response
+        super().__init__(*args)
 
 
 def parse_url(url: str) -> str:
@@ -19,7 +28,8 @@ def parse_url(url: str) -> str:
 
 def handle_response(func, response):
     """
-    returns a response that matches the data neatly for a function
+    Returns a response that matches the data neatly for a function
+    If it can't - raises an error with details of the response.
     """
     response_data = response.json()
     response_types = typing.get_type_hints(func).get("return")
@@ -33,12 +43,13 @@ def handle_response(func, response):
             return single_type.model_validate(response_data)
         except ValidationError:
             continue
-    # As a fall back, return the response_data
-    return response_data
+    # As a fall back, raise an exception with the response in it
+    raise APIException(response=response)
 
 
 auth_key = c.get_bearer_token()
-headers = dict(Authorization="Bearer " + auth_key)
+headers = c.additional_headers()
+headers.update(Authorization="Bearer " + auth_key)
 client = httpx.Client(headers=headers)
 
 

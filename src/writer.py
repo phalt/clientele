@@ -1,22 +1,29 @@
+from pathlib import Path, PosixPath
+
+
 def write_to_schemas(content: str, output_dir: str) -> None:
-    _write_to(f"{output_dir}schemas.py", content)
+    path = Path(output_dir) / "schemas.py"
+    _write_to(path, content)
 
 
 def write_to_http(content: str, output_dir: str) -> None:
-    _write_to(f"{output_dir}http.py", content)
+    path = Path(output_dir) / "http.py"
+    _write_to(path, content)
 
 
 def write_to_client(content: str, output_dir: str) -> None:
-    _write_to(f"{output_dir}client.py", content)
+    path = Path(output_dir) / "client.py"
+    _write_to(path, content)
 
 
 def write_to_manifest(content: str, output_dir: str) -> None:
-    _write_to(f"{output_dir}MANIFEST", content)
+    path = Path(output_dir) / "MANIFEST.md"
+    _write_to(path, content)
 
 
 def _write_to(
-    path: str,
+    path: PosixPath,
     content: str,
 ) -> None:
-    with open(path, "a") as f:
+    with path.open("a") as f:
         f.write(content)

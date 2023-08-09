@@ -6,6 +6,14 @@ DO NOT CHANGE THE FUNCTION NAMES
 """
 
 
+def additional_headers() -> dict:
+    """
+    Modify this function to provide additional headers to all
+    HTTP requests made by this client.
+    """
+    return {}
+
+
 def api_base_url() -> str:
     """
     Modify this function to provide the current api_base_url.

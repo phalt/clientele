@@ -4,7 +4,7 @@ import pytest
 from httpx import Response
 from respx import MockRouter
 
-from .test_client import client, constants, schemas
+from .test_client import client, constants, http, schemas
 
 BASE_URL = constants.api_base_url()
 
@@ -21,6 +21,25 @@ def test_simple_request_simple_request_get(respx_mock: MockRouter):
     response = client.simple_request_simple_request_get()
     # Then
     assert isinstance(response, schemas.SimpleResponse)
+    assert len(respx_mock.calls) == 1
+    call = respx_mock.calls[0]
+    assert call.request.url == BASE_URL + mock_path
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_simple_request_simple_request_get_raises_exception(respx_mock: MockRouter):
+    # Given
+    mocked_response = {"bad": "response"}
+    mock_path = "/simple-request"
+    respx_mock.get(mock_path).mock(
+        return_value=Response(json=mocked_response, status_code=404)
+    )
+    # Then
+    with pytest.raises(http.APIException) as raised_exception:
+        client.simple_request_simple_request_get()
+    assert isinstance(raised_exception.value, http.APIException)
+    # Make sure we have the response on the exception
+    assert raised_exception.value.response.status_code == 404
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path
