@@ -1,5 +1,12 @@
 # Change log
 
+## 0.5.1
+
+* Support for HTTP PUT methods
+* Headers objects use `exclude_unset` to avoid passing `None` values as headers, which httpx does not support.
+
+Additionally, an async test client is now included in the test suite. It has identical tests to the standard one but uses the async client instead.
+
 ## 0.5.0
 
 ### Please delete the constants.py file when updating to this version to have new features take affect

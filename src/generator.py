@@ -59,12 +59,13 @@ class Generator:
         )
         write_to_manifest(f"OPENAPI VERSION: {self.spec['openapi']}\n", self.output_dir)
         write_to_manifest(f"CLIENTELE VERSION: {VERSION}\n", self.output_dir)
+        # ruff: noqa
         write_to_manifest(
             f"""
 Generated using this command:
 
 ```sh
-clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir}
+clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""}
 ```
 """,
             self.output_dir,

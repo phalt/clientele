@@ -62,6 +62,7 @@ class ClientsGenerator:
             get="get_method.jinja2",
             delete="get_method.jinja2",
             post="post_method.jinja2",
+            put="post_method.jinja2",
         )
 
     def generate_paths(self) -> None:
@@ -69,6 +70,7 @@ class ClientsGenerator:
             self.write_path_to_client(path=path)
         console.log(f"Generated {self.results['get']} GET methods...")
         console.log(f"Generated {self.results['post']} POST methods...")
+        console.log(f"Generated {self.results['put']} PUT methods...")
         console.log(f"Generated {self.results['delete']} DELETE methods...")
 
     def generate_parameters(

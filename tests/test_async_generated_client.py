@@ -1,16 +1,21 @@
+"""
+Identical to the normal tests but just using
+the async client instead
+"""
 import json
 
 import pytest
 from httpx import Response
 from respx import MockRouter
 
-from .test_client import client, constants, http, schemas
+from .async_test_client import client, constants, http, schemas
 
 BASE_URL = constants.api_base_url()
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_simple_request_simple_request_get(respx_mock: MockRouter):
+async def test_simple_request_simple_request_get(respx_mock: MockRouter):
     # Given
     mocked_response = {"status": "hello world"}
     mock_path = "/simple-request"
@@ -18,7 +23,7 @@ def test_simple_request_simple_request_get(respx_mock: MockRouter):
         return_value=Response(json=mocked_response, status_code=200)
     )
     # When
-    response = client.simple_request_simple_request_get()
+    response = await client.simple_request_simple_request_get()
     # Then
     assert isinstance(response, schemas.SimpleResponse)
     assert len(respx_mock.calls) == 1
@@ -26,8 +31,11 @@ def test_simple_request_simple_request_get(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_simple_request_simple_request_get_raises_exception(respx_mock: MockRouter):
+async def test_simple_request_simple_request_get_raises_exception(
+    respx_mock: MockRouter,
+):
     # Given
     mocked_response = {"bad": "response"}
     mock_path = "/simple-request"
@@ -36,7 +44,7 @@ def test_simple_request_simple_request_get_raises_exception(respx_mock: MockRout
     )
     # Then
     with pytest.raises(http.APIException) as raised_exception:
-        client.simple_request_simple_request_get()
+        await client.simple_request_simple_request_get()
     assert isinstance(raised_exception.value, http.APIException)
     # Make sure we have the response on the exception
     assert raised_exception.value.response.status_code == 404
@@ -45,8 +53,11 @@ def test_simple_request_simple_request_get_raises_exception(respx_mock: MockRout
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_optional_parameters_request_optional_parameters_get(respx_mock: MockRouter):
+async def test_optional_parameters_request_optional_parameters_get(
+    respx_mock: MockRouter,
+):
     # Given
     mocked_response = {"optional_parameter": None, "required_parameter": "Hello"}
     mock_path = "/optional-parameters"
@@ -54,7 +65,7 @@ def test_optional_parameters_request_optional_parameters_get(respx_mock: MockRou
         return_value=Response(json=mocked_response, status_code=200)
     )
     # When
-    response = client.optional_parameters_request_optional_parameters_get()
+    response = await client.optional_parameters_request_optional_parameters_get()
     # Then
     assert isinstance(response, schemas.OptionalParametersResponse)
     assert len(respx_mock.calls) == 1
@@ -62,8 +73,9 @@ def test_optional_parameters_request_optional_parameters_get(respx_mock: MockRou
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_parameter_request_simple_request(respx_mock: MockRouter):
+async def test_parameter_request_simple_request(respx_mock: MockRouter):
     # Given
     your_input = "hello world"
     mocked_response = {"your_input": your_input}
@@ -72,7 +84,7 @@ def test_parameter_request_simple_request(respx_mock: MockRouter):
         return_value=Response(json=mocked_response, status_code=200)
     )
     # When
-    response = client.parameter_request_simple_request(your_input=your_input)
+    response = await client.parameter_request_simple_request(your_input=your_input)
     # Then
     assert isinstance(response, schemas.ParameterResponse)
     assert len(respx_mock.calls) == 1
@@ -80,8 +92,9 @@ def test_parameter_request_simple_request(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_query_request_simple_query_get(respx_mock: MockRouter):
+async def test_query_request_simple_query_get(respx_mock: MockRouter):
     # Given
     your_input = "hello world"
     mocked_response = {"your_query": your_input}
@@ -90,7 +103,7 @@ def test_query_request_simple_query_get(respx_mock: MockRouter):
         return_value=Response(json=mocked_response, status_code=200)
     )
     # When
-    response = client.query_request_simple_query_get(your_input=your_input)
+    response = await client.query_request_simple_query_get(your_input=your_input)
     # Then
     assert isinstance(response, schemas.SimpleQueryParametersResponse)
     assert len(respx_mock.calls) == 1
@@ -98,8 +111,9 @@ def test_query_request_simple_query_get(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter):
+async def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter):
     # Given
     mocked_response = {
         "a_dict_response": {"dict": "response"},
@@ -117,7 +131,7 @@ def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter)
         return_value=Response(json=mocked_response, status_code=200)
     )
     # When
-    response = client.complex_model_request_complex_model_request_get()
+    response = await client.complex_model_request_complex_model_request_get()
     # Then
     assert isinstance(response, schemas.ComplexModelResponse)
     # Get around the enums
@@ -127,8 +141,9 @@ def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter)
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_request_data_request_data_post(respx_mock: MockRouter):
+async def test_request_data_request_data_post(respx_mock: MockRouter):
     # Given
     mocked_response = {"my_input": "test"}
     mock_path = "/request-data"
@@ -137,7 +152,7 @@ def test_request_data_request_data_post(respx_mock: MockRouter):
     )
     # When
     data = schemas.RequestDataRequest(my_input="test")
-    response = client.request_data_request_data_post(data=data)
+    response = await client.request_data_request_data_post(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
     assert response.model_dump() == mocked_response
@@ -146,8 +161,9 @@ def test_request_data_request_data_post(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_request_data_request_data_put(respx_mock: MockRouter):
+async def test_request_data_request_data_put(respx_mock: MockRouter):
     # Given
     mocked_response = {"my_input": "test"}
     mock_path = "/request-data"
@@ -156,7 +172,7 @@ def test_request_data_request_data_put(respx_mock: MockRouter):
     )
     # When
     data = schemas.RequestDataRequest(my_input="test")
-    response = client.request_data_request_data_put(data=data)
+    response = await client.request_data_request_data_put(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
     assert response.model_dump() == mocked_response
@@ -165,8 +181,9 @@ def test_request_data_request_data_put(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_request_data_path_request_data(respx_mock: MockRouter):
+async def test_request_data_path_request_data(respx_mock: MockRouter):
     # Given
     path_parameter = "param"
     mocked_response = {"my_input": "test", "path_parameter": path_parameter}
@@ -176,7 +193,7 @@ def test_request_data_path_request_data(respx_mock: MockRouter):
     )
     # When
     data = schemas.RequestDataRequest(my_input="test")
-    response = client.request_data_path_request_data(path_parameter, data=data)
+    response = await client.request_data_path_request_data(path_parameter, data=data)
     # Then
     assert isinstance(response, schemas.RequestDataAndParameterResponse)
     assert response.model_dump() == mocked_response
@@ -185,8 +202,9 @@ def test_request_data_path_request_data(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_request_delete_request_delete_delete(respx_mock: MockRouter):
+async def test_request_delete_request_delete_delete(respx_mock: MockRouter):
     # Given
     mocked_response = {}
     mock_path = "/request-delete"
@@ -194,7 +212,7 @@ def test_request_delete_request_delete_delete(respx_mock: MockRouter):
         return_value=Response(json=mocked_response, status_code=200)
     )
     # When
-    response = client.request_delete_request_delete_delete()
+    response = await client.request_delete_request_delete_delete()
     # Then
     assert isinstance(response, schemas.DeleteResponse)
     assert len(respx_mock.calls) == 1
@@ -202,8 +220,9 @@ def test_request_delete_request_delete_delete(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 
 
+@pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
-def test_header_request_header_request_get(respx_mock: MockRouter):
+async def test_header_request_header_request_get(respx_mock: MockRouter):
     # Given
     input_header = "foo"
     mocked_response = {"x_test": input_header}
@@ -213,7 +232,7 @@ def test_header_request_header_request_get(respx_mock: MockRouter):
     )
     # When
     headers = schemas.HeaderRequestHeaderRequestGetHeaders(x_test=input_header)
-    response = client.header_request_header_request_get(headers=headers)
+    response = await client.header_request_header_request_get(headers=headers)
     # Then
     assert isinstance(response, schemas.HeadersResponse)
     assert response.model_dump() == mocked_response
