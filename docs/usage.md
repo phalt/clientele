@@ -12,7 +12,7 @@ clientele validate -u http://path.com/to/openapi.json
 Alternatively you can provide a local file:
 
 ```sh
-clinetele validate -f /path/to/openapi.json
+clientele validate -f /path/to/openapi.json
 ```
 
 ## Generate

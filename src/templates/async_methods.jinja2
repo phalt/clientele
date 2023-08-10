@@ -8,3 +8,6 @@ async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> h
 
 async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     return await client.delete(parse_url(url), headers=headers)
+
+async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return await client.put(parse_url(url), json=data, headers=headers)

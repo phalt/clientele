@@ -50,20 +50,24 @@ def handle_response(func, response):
 auth_key = c.get_bearer_token()
 headers = c.additional_headers()
 headers.update(Authorization="Bearer " + auth_key)
-client = httpx.Client(headers=headers)
+client = httpx.AsyncClient(headers=headers)
 
 
-def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    return client.get(parse_url(url), headers=headers)
+async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return await client.get(parse_url(url), headers=headers)
 
 
-def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    return client.post(parse_url(url), json=data, headers=headers)
+async def post(
+    url: str, data: dict, headers: typing.Optional[dict] = None
+) -> httpx.Response:
+    return await client.post(parse_url(url), json=data, headers=headers)
 
 
-def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    return client.put(parse_url(url), json=data, headers=headers)
+async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    return await client.delete(parse_url(url), headers=headers)
 
 
-def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    return client.delete(parse_url(url), headers=headers)
+async def put(
+    url: str, data: dict, headers: typing.Optional[dict] = None
+) -> httpx.Response:
+    return await client.put(parse_url(url), json=data, headers=headers)

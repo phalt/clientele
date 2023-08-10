@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "clientele"
-version = "0.5.0"
-description = "Typed API Clients from OpenAPI schemas"
+version = "0.5.1"
+description = "Loveable API Clients from OpenAPI schemas"
 authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -31,6 +31,7 @@ ipython = "^8.14.0"
 mkdocs-material = "^9.1.19"
 respx = "^0.20.2"
 pytest = "^7.4.0"
+pytest-asyncio = "^0.21.1"
 
 [build-system]
 requires = ["poetry-core"]

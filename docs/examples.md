@@ -62,20 +62,7 @@ client.simple_request_simple_request_get()
 >>> SimpleResponse(name='Paul')
 ```
 
-#### URL and Query parameters
-
-If your endpoint takes [path parameters](https://learn.openapis.org/specification/parameters.html#parameter-location) (aka URL parameters) then clientele will turn them into parameters in the function:
-
-```py
-from my_client import client
-
-client.parameter_request_simple_request(your_input="gibberish")
->>> ParameterResponse(your_input='gibberish')
-```
-
-Query parameters will also be generated the same way. See [this example](https://github.com/phalt/clientele/blob/0.4.4/tests/test_client/client.py#L71) for a function that takes a required query parameter.
-
-### POST functions
+### POST and PUT functions
 
 A more complex example is shown just below. This is for an HTTP POST method, and it requires an input property called `data` that is an instance of a schema, and returns a union of responses. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function alongside the `data` argument.
 
@@ -98,6 +85,31 @@ data = schemas.RequestDataRequest(my_input="Hello, world")
 response = client.request_data_request_data_post(data=data)
 >>> RequestDataResponse(your_input='Hello, world')
 ```
+
+Clientele also supports HTTP PUT functionality in the exact same way as HTTP POST:
+
+```py
+from my_client import client, schemas
+
+data = schemas.RequestDataRequest(my_input="Hello, world")
+response = client.request_data_request_data_put(data=data)
+>>> RequestDataResponse(your_input='Hello, world')
+```
+
+### URL and Query parameters
+
+If your endpoint takes [path parameters](https://learn.openapis.org/specification/parameters.html#parameter-location) (aka URL parameters) then clientele will turn them into parameters in the function:
+
+```py
+from my_client import client
+
+client.parameter_request_simple_request(your_input="gibberish")
+>>> ParameterResponse(your_input='gibberish')
+```
+
+Query parameters will also be generated the same way. See [this example](https://github.com/phalt/clientele/blob/0.4.4/tests/test_client/client.py#L71) for a function that takes a required query parameter.
+
+### Handling responses
 
 Because we're using Pydantic to manage the input data, we get a strongly-typed response object.
 This works beautifully with the new [structural pattern matching](https://peps.python.org/pep-0636/) feature in Python 3.10:
