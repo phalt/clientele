@@ -73,10 +73,10 @@ clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if s
 
     def generate(self) -> None:
         copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
-        if not exists(f"{self.output_dir}constants.py"):
+        if not exists(f"{self.output_dir}/constants.py"):
             copyfile(
                 f"{CONSTANTS_ROOT}/constants_template.py",
-                f"{self.output_dir}constants.py",
+                f"{self.output_dir}/constants.py",
             )
         self.generate_manifest()
         self.schemas_generator.generate_schema_classes()
