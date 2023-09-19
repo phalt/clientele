@@ -97,7 +97,7 @@ def simple_request_simple_request_get() -> schemas.SimpleResponse:
 
 def parameter_request_simple_request(
     your_input: str,
-) -> typing.Union[schemas.ParameterResponse, schemas.HTTPValidationError]:
+) -> typing.Union[schemas.HTTPValidationError, schemas.ParameterResponse]:
     """Parameter Request"""
 
     response = http.get(url=f"/simple-request/{your_input}")
