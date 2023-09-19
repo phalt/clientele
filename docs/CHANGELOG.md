@@ -1,5 +1,10 @@
 # Change log
 
+## 0.5.2
+
+* Fix pathing for `constants.py` - thanks to @matthewknight for the contribution!
+* Added `CONTRIBUTORS.md`
+
 ## 0.5.1
 
 * Support for HTTP PUT methods
