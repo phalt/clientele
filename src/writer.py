@@ -1,4 +1,4 @@
-from pathlib import Path, PosixPath
+from pathlib import Path
 
 
 def write_to_schemas(content: str, output_dir: str) -> None:
@@ -22,7 +22,7 @@ def write_to_manifest(content: str, output_dir: str) -> None:
 
 
 def _write_to(
-    path: PosixPath,
+    path: Path,
     content: str,
 ) -> None:
     with path.open("a") as f:

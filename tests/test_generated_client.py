@@ -40,6 +40,7 @@ def test_simple_request_simple_request_get_raises_exception(respx_mock: MockRout
     assert isinstance(raised_exception.value, http.APIException)
     # Make sure we have the response on the exception
     assert raised_exception.value.response.status_code == 404
+    assert raised_exception.value.reason == "An unexpected status code was received"
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path
