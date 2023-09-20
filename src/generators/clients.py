@@ -5,6 +5,7 @@ from openapi_core import Spec
 from pydantic import BaseModel
 from rich.console import Console
 
+from src.generators.http import HTTPGenerator
 from src.generators.schemas import SchemasGenerator
 from src.settings import templates
 from src.utils import (
@@ -45,18 +46,21 @@ class ClientsGenerator:
     spec: Spec
     output_dir: str
     schemas_generator: SchemasGenerator
+    http_generator: HTTPGenerator
 
     def __init__(
         self,
         spec: Spec,
         output_dir: str,
         schemas_generator: SchemasGenerator,
+        http_generator: HTTPGenerator,
         asyncio: bool,
     ) -> None:
         self.spec = spec
         self.output_dir = output_dir
         self.results = defaultdict(int)
         self.schemas_generator = schemas_generator
+        self.http_generator = http_generator
         self.asyncio = asyncio
         self.method_template_map = dict(
             get="get_method.jinja2",
@@ -119,7 +123,11 @@ class ClientsGenerator:
     def get_response_class_names(self, responses: dict, func_name: str) -> list[str]:
         """
         Generates a list of response class for this operation.
+        For each response found, also generate the schema by calling
+        the schema generator.
+        Returns a list of names of the classes generated.
         """
+        status_code_map: dict[str, str] = {}
         response_classes = []
         for status_code, details in responses.items():
             for _, content in details.get("content", {}).items():
@@ -144,8 +152,12 @@ class ClientsGenerator:
                         func_name + status_code + "Response",
                         schema={"properties": {"test": content["schema"]}},
                     )
+                status_code_map[status_code] = class_name
                 response_classes.append(class_name)
-        return list(set(response_classes))
+        self.http_generator.add_status_codes_to_bundle(
+            func_name=func_name, status_code_map=status_code_map
+        )
+        return sorted(list(set(response_classes)))
 
     def get_input_class_names(self, inputs: dict) -> list[str]:
         """
@@ -210,9 +222,9 @@ class ClientsGenerator:
             api_url = url + create_query_args(list(query_args.keys()))
         else:
             api_url = url
-        if method in ["post"] and not operation.get("requestBody"):
+        if method in ["post", "put"] and not operation.get("requestBody"):
             data_class_name = "None"
-        elif method in ["post"]:
+        elif method in ["post", "put"]:
             data_class_name = self.generate_input_types(
                 operation.get("requestBody", {})
             )
@@ -243,7 +255,7 @@ class ClientsGenerator:
     def write_path_to_client(self, path: dict) -> None:
         url, operations = path
         for method, operation in operations.items():
-            if method in self.method_template_map.keys():
+            if method.lower() in self.method_template_map.keys():
                 self.generate_function(
                     operation=operation,
                     method=method,

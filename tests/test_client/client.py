@@ -36,7 +36,7 @@ def optional_parameters_request_optional_parameters_get() -> (
 
 def request_data_request_data_post(
     data: schemas.RequestDataRequest,
-) -> typing.Union[schemas.RequestDataResponse, schemas.HTTPValidationError]:
+) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
     """Request Data"""
 
     response = http.post(url="/request-data", data=data.model_dump())
@@ -44,8 +44,8 @@ def request_data_request_data_post(
 
 
 def request_data_request_data_put(
-    data: None,
-) -> typing.Union[schemas.RequestDataResponse, schemas.HTTPValidationError]:
+    data: schemas.RequestDataRequest,
+) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
     """Request Data"""
 
     response = http.put(url="/request-data", data=data.model_dump())
@@ -54,7 +54,7 @@ def request_data_request_data_put(
 
 def request_data_path_request_data(
     path_parameter: str, data: schemas.RequestDataRequest
-) -> typing.Union[schemas.RequestDataAndParameterResponse, schemas.HTTPValidationError]:
+) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataAndParameterResponse]:
     """Request Data Path"""
 
     response = http.post(url=f"/request-data/{path_parameter}", data=data.model_dump())
@@ -81,7 +81,7 @@ def security_required_request_security_required_get() -> (
 
 def query_request_simple_query_get(
     your_input: str,
-) -> typing.Union[schemas.SimpleQueryParametersResponse, schemas.HTTPValidationError]:
+) -> typing.Union[schemas.HTTPValidationError, schemas.SimpleQueryParametersResponse]:
     """Query Request"""
 
     response = http.get(url=f"/simple-query?your_input={your_input}")

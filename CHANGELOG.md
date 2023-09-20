@@ -1,5 +1,12 @@
 # Change log
 
+## 0.6.0
+
+* Significantly improved handling for response schemas. Responses from API endpoints now look at the HTTP status code to pick the correct response schema to generate from the HTTP json data. When regenerating, you will notice a bit more logic generated in the `http.py` file to handle this.
+* Significantly improved coverage of exceptions raised when trying to generate response schemas.
+* Response types for a class are now sorted.
+* Fixed a bug where `put` methods did not generate input data correctly.
+
 ## 0.5.2
 
 * Fix pathing for `constants.py` - thanks to @matthewknight for the contribution!

@@ -34,15 +34,16 @@ class Generator:
         url: Optional[str],
         file: Optional[str],
     ) -> None:
+        self.http_generator = HTTPGenerator(
+            spec=spec, output_dir=output_dir, asyncio=asyncio
+        )
         self.schemas_generator = SchemasGenerator(spec=spec, output_dir=output_dir)
         self.clients_generator = ClientsGenerator(
             spec=spec,
             output_dir=output_dir,
             schemas_generator=self.schemas_generator,
+            http_generator=self.http_generator,
             asyncio=asyncio,
-        )
-        self.http_generator = HTTPGenerator(
-            spec=spec, output_dir=output_dir, asyncio=asyncio
         )
         self.spec = spec
         self.asyncio = asyncio
