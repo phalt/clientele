@@ -338,6 +338,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#060" class="md-nav__link">
+    0.6.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#052" class="md-nav__link">
     0.5.2
   </a>
@@ -476,6 +483,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#060" class="md-nav__link">
+    0.6.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#052" class="md-nav__link">
     0.5.2
   </a>
@@ -598,6 +612,13 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="060">0.6.0</h2>
+<ul>
+<li>Significantly improved handling for response schemas. Responses from API endpoints now look at the HTTP status code to pick the correct response schema to generate from the HTTP json data. When regenerating, you will notice a bit more logic generated in the <code>http.py</code> file to handle this.</li>
+<li>Significantly improved coverage of exceptions raised when trying to generate response schemas.</li>
+<li>Response types for a class are now sorted.</li>
+<li>Fixed a bug where <code>put</code> methods did not generate input data correctly.</li>
+</ul>
 <h2 id="052">0.5.2</h2>
 <ul>
 <li>Fix pathing for <code>constants.py</code> - thanks to @matthewknight for the contribution!</li>
