@@ -93,6 +93,15 @@ def query_request_simple_query_get(
     return http.handle_response(query_request_simple_query_get, response)
 
 
+def query_request_optional_query_get(
+    your_input: typing.Optional[str],
+) -> typing.Union[schemas.HTTPValidationError, schemas.OptionalQueryParametersResponse]:
+    """Optional Query Request"""
+
+    response = http.get(url=f"/optional-query?your_input={your_input}")
+    return http.handle_response(query_request_optional_query_get, response)
+
+
 def simple_request_simple_request_get() -> schemas.SimpleResponse:
     """Simple Request"""
 

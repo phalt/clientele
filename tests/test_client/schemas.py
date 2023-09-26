@@ -70,6 +70,10 @@ class SimpleQueryParametersResponse(pydantic.BaseModel):
     your_query: str
 
 
+class OptionalQueryParametersResponse(pydantic.BaseModel):
+    your_query: str
+
+
 class SimpleResponse(pydantic.BaseModel):
     status: str
 

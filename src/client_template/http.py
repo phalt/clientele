@@ -1,5 +1,5 @@
 import typing
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import httpx  # noqa
 
@@ -20,11 +20,26 @@ class APIException(Exception):
 
 def parse_url(url: str) -> str:
     """
-    Returns the base API URL for this service
+    Returns the full URL from a string.
+    Will omit any optional query parameters passed.
     """
     api_url = f"{c.api_base_url()}{url}"
     url_parts = urlparse(url=api_url)
-    return url_parts.geturl()
+    # Filter out "None" optional query parameters
+    filtered_query_params = {
+        k: v for k, v in parse_qs(url_parts.query).items() if v[0] not in ["None", ""]
+    }
+    filtered_query_string = urlencode(filtered_query_params, doseq=True)
+    return urlunparse(
+        (
+            url_parts.scheme,
+            url_parts.netloc,
+            url_parts.path,
+            url_parts.params,
+            filtered_query_string,
+            url_parts.fragment,
+        )
+    )
 
 
 def handle_response(func, response):

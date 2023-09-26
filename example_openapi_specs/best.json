@@ -229,6 +229,18 @@
                 "title": "SimpleQueryParametersResponse",
                 "type": "object"
             },
+            "OptionalQueryParametersResponse": {
+                "description": "A response for query parameters request that has an optional parameter",
+                "properties": {
+                    "your_query": {
+                        "title": "Your Query",
+                        "type": "string"
+                    }
+                },
+                "required": ["your_query"],
+                "title": "OptionalQueryParametersResponse",
+                "type": "object"
+            },
             "SimpleResponse": {
                 "description": "A simple response",
                 "properties": {
@@ -573,6 +585,46 @@
                     }
                 },
                 "summary": "Query Request"
+            }
+        },
+        "/optional-query": {
+            "get": {
+                "description": "A request with a query parameters that are optional",
+                "operationId": "query_request_optional_query_get",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "your_input",
+                        "required": false,
+                        "schema": {
+                            "title": "Your Input",
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OptionalQueryParametersResponse"
+                                }
+                            }
+                        },
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
+                    }
+                },
+                "summary": "Optional Query Request"
             }
         },
         "/simple-request": {
