@@ -1,7 +1,10 @@
-import typing  # noqa
-import pydantic  # noqa
-from enum import Enum  # noqa
+from __future__ import annotations
+
 import inspect  # noqa
+import typing  # noqa
+from enum import Enum  # noqa
+
+import pydantic  # noqa
 
 
 class AnotherModel(pydantic.BaseModel):

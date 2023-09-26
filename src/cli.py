@@ -4,7 +4,8 @@ import click
 @click.group()
 def cli_group():
     """
-    Clientele:  Loveable API Clients from OpenAPI schemas
+    Clientele:  Generate loveable Python HTTP API Clients
+    https://github.com/phalt/clientele
     """
 
 
@@ -49,7 +50,7 @@ def validate(url, file):
         with open(file, "r") as f:
             Spec.from_file(f)
     console.log(
-        f"Found API specification for {spec['info']['title']} | version {spec['info']['version']}"
+        f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}"
     )
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
@@ -97,7 +98,7 @@ def generate(url, file, output, asyncio):
         with open(file, "r") as f:
             spec = Spec.from_file(f)
     console.log(
-        f"Found API specification for {spec['info']['title']} | version {spec['info']['version']}"
+        f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}"
     )
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
@@ -108,6 +109,10 @@ def generate(url, file, output, asyncio):
     Generator(
         spec=spec, asyncio=asyncio, output_dir=output, url=url, file=file
     ).generate()
+    console.log("\n[green]⚜️ Client generated! ⚜️ \n")
+    console.log(
+        "[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client"
+    )
 
 
 cli_group.add_command(generate)

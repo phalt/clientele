@@ -64,7 +64,7 @@ class HTTPGenerator:
                             client_type=client_type,
                         )
                     console.log(
-                        f"[yellow]Please see {self.output_dir}/constants.py to set authentication variables"
+                        f"[yellow]Please see {self.output_dir}constants.py to set authentication variables"
                     )
                 elif info["type"] == "oauth2":
                     template = templates.get_template("bearer_client.jinja2")

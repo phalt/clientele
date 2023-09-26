@@ -1,5 +1,12 @@
 # Change log
 
+## 0.6.1
+
+* Added `from __future__ import annotations` in files to help with typing evaluation.
+* Update to use pydantic 2.4.
+* A bunch of documentation and readme updates.
+* Small wording and grammar fixes.
+
 ## 0.6.0
 
 * Significantly improved handling for response schemas. Responses from API endpoints now look at the HTTP status code to pick the correct response schema to generate from the HTTP json data. When regenerating, you will notice a bit more logic generated in the `http.py` file to handle this.
