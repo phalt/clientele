@@ -98,7 +98,7 @@ async def test_query_request_simple_query_get(respx_mock: MockRouter):
     # Given
     your_input = "hello world"
     mocked_response = {"your_query": your_input}
-    mock_path = f"/simple-query?your_input={your_input}"
+    mock_path = "/simple-query?your_input=hello+world"
     respx_mock.get(mock_path).mock(
         return_value=Response(json=mocked_response, status_code=200)
     )
@@ -106,6 +106,26 @@ async def test_query_request_simple_query_get(respx_mock: MockRouter):
     response = await client.query_request_simple_query_get(your_input=your_input)
     # Then
     assert isinstance(response, schemas.SimpleQueryParametersResponse)
+    assert len(respx_mock.calls) == 1
+    call = respx_mock.calls[0]
+    assert call.request.url == BASE_URL + mock_path
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_query_request_optional_query_get(respx_mock: MockRouter):
+    # Given
+    your_input = None
+    mocked_response = {"your_query": "test"}
+    # NOTE: omits None query parameter
+    mock_path = "/optional-query"
+    respx_mock.get(mock_path).mock(
+        return_value=Response(json=mocked_response, status_code=200)
+    )
+    # When
+    response = await client.query_request_optional_query_get(your_input=your_input)
+    # Then
+    assert isinstance(response, schemas.OptionalQueryParametersResponse)
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path

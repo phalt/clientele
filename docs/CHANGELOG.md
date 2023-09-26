@@ -1,5 +1,9 @@
 # Change log
 
+## 0.6.2
+
+* Ignore optional URL query parameters if they are `None`.
+
 ## 0.6.1
 
 * Added `from __future__ import annotations` in files to help with typing evaluation.
