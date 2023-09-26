@@ -1,6 +1,11 @@
+from __future__ import annotations
+
 import typing  # noqa
-from . import schemas  # noqa
-from . import http  # noqa
+
+from . import (
+    http,  # noqa
+    schemas,  # noqa
+)
 
 
 async def complex_model_request_complex_model_request_get() -> schemas.ComplexModelResponse:

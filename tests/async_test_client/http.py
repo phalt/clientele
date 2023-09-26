@@ -2,7 +2,6 @@ import typing
 from urllib.parse import urlparse
 
 import httpx  # noqa
-from pydantic import ValidationError  # noqa
 
 from . import constants as c  # noqa
 
@@ -28,14 +27,14 @@ def parse_url(url: str) -> str:
     return url_parts.geturl()
 
 
-def handle_response(func: typing.Callable, response: httpx.Response):
+def handle_response(func, response):
     """
     Returns a response that matches the data neatly for a function
     If it can't - raises an error with details of the response.
     """
     status_code = response.status_code
     # Get the response types
-    response_types = typing.get_type_hints(func).get("return")
+    response_types = typing.get_type_hints(func)["return"]
     if typing.get_origin(response_types) == typing.Union:
         response_types = list(typing.get_args(response_types))
     else:
