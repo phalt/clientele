@@ -3,15 +3,15 @@ from typing import Optional
 from openapi_core import Spec
 from rich.console import Console
 
-from src.settings import templates
-from src.utils import (
+from clientele.settings import templates
+from clientele.utils import (
     class_name_titled,
     clean_prop,
     get_schema_from_ref,
     get_type,
     schema_ref,
 )
-from src.writer import write_to_schemas
+from clientele.writer import write_to_schemas
 
 console = Console()
 

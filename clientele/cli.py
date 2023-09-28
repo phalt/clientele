@@ -14,7 +14,7 @@ def version():
     """
     Print the current version of clientele
     """
-    from src.settings import VERSION
+    from clientele.settings import VERSION
 
     print(f"clientele {VERSION}")
 
@@ -81,7 +81,7 @@ def generate(url, file, output, asyncio):
 
     console = Console()
 
-    from src.generator import Generator
+    from clientele.generator import Generator
 
     assert url or file, "Must pass either a URL or a file"
 

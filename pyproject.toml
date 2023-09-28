@@ -1,15 +1,20 @@
 [tool.poetry]
 name = "clientele"
-version = "0.6.2"
+version = "0.6.3"
 description = "Generate loveable Python HTTP API Clients"
 authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "src"}]
+packages = [{include = "clientele"}]
 homepage = "https://phalt.github.io/clientele/"
 
+[tool.poetry.urls]
+changelog = "https://phalt.github.io/clientele/CHANGELOG/"
+documentation = "https://phalt.github.io/clientele/"
+issues = "https://github.com/phalt/clientele/issues"
+
 [tool.poetry.scripts]
-clientele = "src.cli:cli_group"
+clientele = "clientele.cli:cli_group"
 
 [tool.poetry.dependencies]
 python = "^3.9"

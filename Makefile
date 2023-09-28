@@ -16,7 +16,7 @@ release:  ## Build a new version and release it
 	poetry publish
 
 mypy: ## Run a static syntax check
-	poetry run mypy src/
+	poetry run mypy .
 
 lint: ## Format the code correctly
 	poetry run black .
