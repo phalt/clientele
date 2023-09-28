@@ -1,5 +1,10 @@
 # Change log
 
+## 0.6.3
+
+* Packaged application installs in the correct location. Resolving [#6](https://github.com/phalt/clientele/issues/6)
+* Updated pyproject.toml to include a better selection of links.
+
 ## 0.6.2
 
 * Ignore optional URL query parameters if they are `None`.

@@ -3,8 +3,8 @@ from collections import defaultdict
 from openapi_core import Spec
 from rich.console import Console
 
-from src.settings import templates
-from src.writer import write_to_http
+from clientele.settings import templates
+from clientele.writer import write_to_http
 
 console = Console()
 

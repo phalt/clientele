@@ -5,11 +5,11 @@ from typing import Optional
 
 from openapi_core import Spec
 
-from src.generators.clients import ClientsGenerator
-from src.generators.http import HTTPGenerator
-from src.generators.schemas import SchemasGenerator
-from src.settings import CLIENT_TEMPLATE_ROOT, CONSTANTS_ROOT, VERSION
-from src.writer import write_to_manifest
+from clientele.generators.clients import ClientsGenerator
+from clientele.generators.http import HTTPGenerator
+from clientele.generators.schemas import SchemasGenerator
+from clientele.settings import CLIENT_TEMPLATE_ROOT, CONSTANTS_ROOT, VERSION
+from clientele.writer import write_to_manifest
 
 
 class Generator:
