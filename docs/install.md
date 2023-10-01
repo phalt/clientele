@@ -5,3 +5,10 @@ We recommend installing with [pipx](https://github.com/pypa/pipx) as a global CL
 ```sh
 pipx install clientele
 ```
+
+Once installed you can run `clientele version` to make sure you have the latest version:
+
+```sh
+> clientele version
+clientele 0.6.3
+```
