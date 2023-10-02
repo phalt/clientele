@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#compatability" class="md-skip">
+        <a href="#compatibility" class="md-skip">
           Skip to content
         </a>
       
@@ -365,15 +365,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#works-well-with" class="md-nav__link">
-    Works well with
+  <a href="#great-compatibility" class="md-nav__link">
+    Great compatibility
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#does-not-work" class="md-nav__link">
-    Does not work
+  <a href="#no-compatibility" class="md-nav__link">
+    No compatibility
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-note-on-compatbility" class="md-nav__link">
+    A note on compatbility
   </a>
   
 </li>
@@ -432,15 +439,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#works-well-with" class="md-nav__link">
-    Works well with
+  <a href="#great-compatibility" class="md-nav__link">
+    Great compatibility
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#does-not-work" class="md-nav__link">
-    Does not work
+  <a href="#no-compatibility" class="md-nav__link">
+    No compatibility
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#a-note-on-compatbility" class="md-nav__link">
+    A note on compatbility
   </a>
   
 </li>
@@ -463,19 +477,21 @@
   
 
 
-<h1 id="compatability">💱 Compatability</h1>
+<h1 id="compatibility">💱 Compatibility</h1>
+<h2 id="great-compatibility">Great compatibility</h2>
+<p>Any standard <code>3.0.x</code> implementation works very well.</p>
+<p>We have tested Clientele with:</p>
+<ul>
+<li><a href="https://fastapi.tiangolo.com/tutorial/first-steps/?h=openapi#what-is-openapi-for">FastAPI</a> - our target audience, so 100% compatibility guaranteed.</li>
+<li><a href="https://learn.microsoft.com/en-us/azure/api-management/import-api-from-oas?tabs=portal">Microsoft's OpenAPI spec</a> has also been battle tested and works well.</li>
+</ul>
+<h2 id="no-compatibility">No compatibility</h2>
+<p>We do not support <code>2.x</code> aka "Swagger" - this format is quite different and deprecated.</p>
+<h2 id="a-note-on-compatbility">A note on compatbility</h2>
 <p>When we were building Clientele, we discovered that, despite a fantastic <a href="https://www.openapis.org/">specification</a>, OpenAPI has a lot of poor implementations.</p>
 <p>As pythonistas, we started with the auto-generated OpenAPI schemas provided by <a href="https://fastapi.tiangolo.com/">FastAPI</a>, and then we branched out to large APIs like <a href="https://www.twilio.com/docs/openapi">Twilio</a> to test what we built.</p>
-<p>Despite the effort, we still keep finding subtly different OpenAPI implementations. </p>
-<p>Because of this we cannot guarentee 100% compatability with an API, but we can give you a good indication of what we've tested.</p>
-<h2 id="works-well-with">Works well with</h2>
-<p>Any bog-standard <code>3.0.x</code> implementation works very well.</p>
-<ul>
-<li><a href="https://fastapi.tiangolo.com/tutorial/first-steps/?h=openapi#what-is-openapi-for">FastAPI</a>'s OpenAPI schema is very well supported.</li>
-<li><a href="https://learn.microsoft.com/en-us/azure/api-management/import-api-from-oas?tabs=portal">Microsoft's OpenAPI spec</a> has also been battle tested on an internal project, and works well.</li>
-</ul>
-<h2 id="does-not-work">Does not work</h2>
-<p>We do not support <code>2.x</code> aka "Swagger" - this format is quite different and deprecated.</p>
+<p>Despite the effort, we still keep finding subtly different OpenAPI implementations.</p>
+<p>Because of this we cannot guarentee 100% compatibility with an API, but we can give you a good indication of what we've tested.</p>
 
 
 
