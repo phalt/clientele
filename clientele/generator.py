@@ -1,5 +1,6 @@
 from distutils.dir_util import copy_tree
 from os.path import exists
+from os import remove
 from shutil import copyfile
 from typing import Optional
 
@@ -8,8 +9,14 @@ from openapi_core import Spec
 from clientele.generators.clients import ClientsGenerator
 from clientele.generators.http import HTTPGenerator
 from clientele.generators.schemas import SchemasGenerator
-from clientele.settings import CLIENT_TEMPLATE_ROOT, CONSTANTS_ROOT, VERSION
-from clientele.writer import write_to_manifest
+from clientele.settings import (
+    CLIENT_TEMPLATE_ROOT,
+    CONSTANTS_ROOT,
+    VERSION,
+    PY_VERSION,
+    templates,
+)
+from clientele.writer import write_to_manifest, write_to_http
 
 
 class Generator:
@@ -51,6 +58,16 @@ class Generator:
         self.file = file
         self.url = url
 
+    def generate_http_py(self):
+        if exists(f"{self.output_dir}/http.py"):
+            remove(f"{self.output_dir}/http.py")
+        new_unions = PY_VERSION[1] > 10
+        template = templates.get_template("http_py.jinja2")
+        content = template.render(
+            new_unions=new_unions,
+        )
+        write_to_http(content, output_dir=self.output_dir)
+
     def generate_manifest(self):
         """
         A manifest file with useful information
@@ -79,6 +96,7 @@ clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if s
                 f"{CONSTANTS_ROOT}/config_template.py",
                 f"{self.output_dir}/config.py",
             )
+        self.generate_http_py()
         self.generate_manifest()
         self.schemas_generator.generate_schema_classes()
         self.clients_generator.generate_paths()

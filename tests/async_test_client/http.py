@@ -1,3 +1,4 @@
+import types
 import typing
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
@@ -50,7 +51,8 @@ def handle_response(func, response):
     status_code = response.status_code
     # Get the response types
     response_types = typing.get_type_hints(func)["return"]
-    if typing.get_origin(response_types) == typing.Union:
+
+    if typing.get_origin(response_types) in [typing.Union, types.UnionType]:
         response_types = list(typing.get_args(response_types))
     else:
         response_types = [response_types]
@@ -72,6 +74,7 @@ def handle_response(func, response):
     return response_type.model_validate(data)
 
 
+# Func map
 func_response_code_maps = {
     "complex_model_request_complex_model_request_get": {"200": "ComplexModelResponse"},
     "header_request_header_request_get": {
