@@ -22,7 +22,7 @@ Run it now and you will see this output:
 my_client/
     __init__.py
     client.py
-    constants.py
+    config.py
     http.py
     MANIFEST
     schemas.py
@@ -179,9 +179,9 @@ class ExampleEnum(str, Enum):
 One of the problems with auto-generated clients is that you often need to configure them, and
 if you try and regenerate the client at some point then your configuration gets wiped clean and you have to do it all over again.
 
-Clientele solves this problem by providing an entry point for configuration that will never be overwritten - `constants.py`.
+Clientele solves this problem by providing an entry point for configuration that will never be overwritten - `config.py`.
 
-When you first generate the project, you will see a file called `constants.py` and it will offer configuration functions a bit like this:
+When you first generate the project, you will see a file called `config.py` and it will offer configuration functions a bit like this:
 
 ```python
 """
@@ -228,10 +228,10 @@ Then clientele will provide you information on the environment variables you nee
 make this work during the generation. For example:
 
 ```sh
-Please see my_client/constants.py to set authentication variables
+Please see my_client/config.py to set authentication variables
 ```
 
-The `constants.py` file will have entry points for you to configure, for example, HTTP Bearer authentication will need the `get_bearer_token` function to be updated, something like this:
+The `config.py` file will have entry points for you to configure, for example, HTTP Bearer authentication will need the `get_bearer_token` function to be updated, something like this:
 
 ```py
 
@@ -247,7 +247,7 @@ def get_bearer_token() -> str:
 
 ### Additional headers
 
-If you want to pass specific headers with all requests made by the client, you can configure the `additional_headers` function in `constants.py` to do this.
+If you want to pass specific headers with all requests made by the client, you can configure the `additional_headers` function in `config.py` to do this.
 
 ```py
 def additional_headers() -> dict:
