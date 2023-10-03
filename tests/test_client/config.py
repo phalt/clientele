@@ -8,7 +8,7 @@ DO NOT CHANGE THE FUNCTION NAMES
 
 def additional_headers() -> dict:
     """
-    Modify this function ot provide additional headers to all
+    Modify this function to provide additional headers to all
     HTTP requests made by this client.
     """
     return {}
