@@ -1,9 +1,9 @@
 # Change log
 
-
 ## 0.7.0
 
 * `constants.py` has been renamed to `config.py` to better reflect how it is used.
+* If you are using Python 3.10 or later, the `typing.Unions` types will generate as the short hand `|` instead. This required a big rework of the code to enable templating.
 
 ## 0.6.3
 

@@ -2,6 +2,8 @@ import re
 
 from openapi_core import Spec
 
+from clientele import settings
+
 
 class DataType:
     INTEGER = "integer"
@@ -107,3 +109,11 @@ def get_param_from_ref(spec: Spec, param: dict) -> dict:
 def get_schema_from_ref(spec: Spec, ref: str) -> dict:
     stripped_name = schema_ref(ref)
     return spec["components"]["schemas"][stripped_name]
+
+
+def union_for_py_ver(union_items: list) -> str:
+    minor = settings.PY_VERSION[1]
+    if int(minor) >= 10:
+        return " | ".join(union_items)
+    else:
+        return f"typing.Union[{', '.join(union_items)}]"

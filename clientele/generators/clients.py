@@ -16,6 +16,7 @@ from clientele.utils import (
     get_param_from_ref,
     get_type,
     schema_ref,
+    union_for_py_ver,
 )
 from clientele.writer import write_to_client
 
@@ -183,7 +184,7 @@ class ClientsGenerator:
             responses=responses, func_name=func_name
         )
         if len(response_class_names) > 1:
-            return f"""typing.Union[{', '.join([f'schemas.{r}' for r in response_class_names])}]"""
+            return union_for_py_ver([f"schemas.{r}" for r in response_class_names])
         elif len(response_class_names) == 0:
             return "None"
         else:
@@ -196,7 +197,7 @@ class ClientsGenerator:
                 # It doesn't exist! Generate the schema for it
                 self.schemas_generator.generate_input_class(schema=request_body)
         if len(input_class_names) > 1:
-            return f"""typing.Union[{', '.join([f'schemas.{r}' for r in input_class_names])}]"""
+            return union_for_py_ver([f"schemas.{r}" for r in input_class_names])
         elif len(input_class_names) == 0:
             return "None"
         else:

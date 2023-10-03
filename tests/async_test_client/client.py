@@ -19,7 +19,7 @@ async def complex_model_request_complex_model_request_get() -> schemas.ComplexMo
 
 async def header_request_header_request_get(
     headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders],
-) -> typing.Union[schemas.HTTPValidationError, schemas.HeadersResponse]:
+) -> schemas.HTTPValidationError | schemas.HeadersResponse:
     """Header Request"""
     headers_dict = (
         headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
@@ -39,7 +39,7 @@ async def optional_parameters_request_optional_parameters_get() -> schemas.Optio
 
 async def request_data_request_data_post(
     data: schemas.RequestDataRequest,
-) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
+) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data"""
 
     response = await http.post(url="/request-data", data=data.model_dump())
@@ -48,7 +48,7 @@ async def request_data_request_data_post(
 
 async def request_data_request_data_put(
     data: schemas.RequestDataRequest,
-) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
+) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data"""
 
     response = await http.put(url="/request-data", data=data.model_dump())
@@ -57,7 +57,7 @@ async def request_data_request_data_put(
 
 async def request_data_path_request_data(
     path_parameter: str, data: schemas.RequestDataRequest
-) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataAndParameterResponse]:
+) -> schemas.HTTPValidationError | schemas.RequestDataAndParameterResponse:
     """Request Data Path"""
 
     response = await http.post(
@@ -84,7 +84,7 @@ async def security_required_request_security_required_get() -> schemas.SecurityR
 
 async def query_request_simple_query_get(
     your_input: str,
-) -> typing.Union[schemas.HTTPValidationError, schemas.SimpleQueryParametersResponse]:
+) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request"""
 
     response = await http.get(url=f"/simple-query?your_input={your_input}")
@@ -93,7 +93,7 @@ async def query_request_simple_query_get(
 
 async def query_request_optional_query_get(
     your_input: typing.Optional[str],
-) -> typing.Union[schemas.HTTPValidationError, schemas.OptionalQueryParametersResponse]:
+) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
     """Optional Query Request"""
 
     response = await http.get(url=f"/optional-query?your_input={your_input}")
@@ -109,7 +109,7 @@ async def simple_request_simple_request_get() -> schemas.SimpleResponse:
 
 async def parameter_request_simple_request(
     your_input: str,
-) -> typing.Union[schemas.HTTPValidationError, schemas.ParameterResponse]:
+) -> schemas.HTTPValidationError | schemas.ParameterResponse:
     """Parameter Request"""
 
     response = await http.get(url=f"/simple-request/{your_input}")
