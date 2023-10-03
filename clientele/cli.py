@@ -62,13 +62,16 @@ def validate(url, file):
 
 
 @click.command()
-@click.option("-u", "--url", help="URL to openapi schema (json file)", required=False)
-@click.option("-f", "--file", help="Path to openapi schema (json file)", required=False)
+@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
+@click.option(
+    "-f", "--file", help="Path to openapi schema (json or yaml file)", required=False
+)
 @click.option(
     "-o", "--output", help="Directory for the generated client", required=True
 )
-@click.option("-a", "--asyncio", help="Use Async.IO", required=False)
-def generate(url, file, output, asyncio):
+@click.option("-a", "--asyncio", help="Generate async client", required=False)
+@click.option("-r", "--regen", help="Regenerate client", required=False)
+def generate(url, file, output, asyncio, regen):
     """
     Generate a new client from an OpenAPI schema
     """
@@ -106,13 +109,15 @@ def generate(url, file, output, asyncio):
             f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
         )
         return
-    Generator(
-        spec=spec, asyncio=asyncio, output_dir=output, url=url, file=file
-    ).generate()
-    console.log("\n[green]⚜️ Client generated! ⚜️ \n")
-    console.log(
-        "[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client"
+    generator = Generator(
+        spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file
     )
+    if generator.prevent_accidental_regens():
+        generator.generate()
+        console.log("\n[green]⚜️ Client generated! ⚜️ \n")
+        console.log(
+            "[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client"
+        )
 
 
 cli_group.add_command(generate)

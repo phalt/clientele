@@ -5,6 +5,7 @@ from shutil import copyfile
 from typing import Optional
 
 from openapi_core import Spec
+from rich.console import Console
 
 from clientele.generators.clients import ClientsGenerator
 from clientele.generators.http import HTTPGenerator
@@ -18,6 +19,8 @@ from clientele.settings import (
 )
 from clientele.writer import write_to_manifest, write_to_http
 
+console = Console()
+
 
 class Generator:
     """
@@ -26,6 +29,7 @@ class Generator:
 
     spec: Spec
     asyncio: bool
+    regen: bool
     schemas_generator: SchemasGenerator
     clients_generator: ClientsGenerator
     http_generator: HTTPGenerator
@@ -38,6 +42,7 @@ class Generator:
         spec: Spec,
         output_dir: str,
         asyncio: bool,
+        regen: bool,
         url: Optional[str],
         file: Optional[str],
     ) -> None:
@@ -54,6 +59,7 @@ class Generator:
         )
         self.spec = spec
         self.asyncio = asyncio
+        self.regen = regen
         self.output_dir = output_dir
         self.file = file
         self.url = url
@@ -80,14 +86,23 @@ class Generator:
         # ruff: noqa
         write_to_manifest(
             f"""
-Generated using this command:
+Regnerate using this command:
 
 ```sh
-clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""}
+clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""} --regen t
 ```
 """,
             self.output_dir,
         )
+
+    def prevent_accidental_regens(self) -> bool:
+        if exists(self.output_dir):
+            if not self.regen:
+                console.log(
+                    "[red]WARNING! If you want to regenerate, please pass --regen t"
+                )
+                return False
+        return True
 
     def generate(self) -> None:
         copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
