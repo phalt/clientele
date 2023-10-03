@@ -7,6 +7,6 @@ CLIENT_TEMPLATE_ROOT = (
 )
 TEMPLATES_ROOT = dirname(dirname(abspath(__file__))) + "/clientele/templates/"
 CONSTANTS_ROOT = dirname(dirname(abspath(__file__))) + "/clientele/"
-VERSION = "0.6.3"
+VERSION = "0.7.0"
 
 templates = Environment(loader=PackageLoader("clientele", "templates"))

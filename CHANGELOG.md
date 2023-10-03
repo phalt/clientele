@@ -1,5 +1,10 @@
 # Change log
 
+
+## 0.7.0
+
+* `constants.py` has been renamed to `config.py` to better reflect how it is used.
+
 ## 0.6.3
 
 * Packaged application installs in the correct location. Resolving [#6](https://github.com/phalt/clientele/issues/6)
