@@ -36,7 +36,7 @@ class HTTPGenerator:
         self.function_and_status_codes_bundle[func_name] = status_code_map
 
     def writeable_function_and_status_codes_bundle(self) -> str:
-        return f"func_response_code_maps = {self.function_and_status_codes_bundle}"
+        return f"\nfunc_response_code_maps = {self.function_and_status_codes_bundle}"
 
     def generate_http_content(self) -> None:
         write_to_http(
