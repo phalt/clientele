@@ -114,7 +114,7 @@ func_response_code_maps = {
 
 auth_key = c.get_bearer_token()
 headers = c.additional_headers()
-headers.update(Authorization="Bearer " + auth_key)
+headers.update(Authorization=f"Bearer " + auth_key)
 client = httpx.Client(headers=headers)
 
 

@@ -11,7 +11,7 @@ from . import (
 async def complex_model_request_complex_model_request_get() -> schemas.ComplexModelResponse:
     """Complex Model Request"""
 
-    response = await http.get(url="/complex-model-request")
+    response = await http.get(url=f"/complex-model-request")
     return http.handle_response(
         complex_model_request_complex_model_request_get, response
     )
@@ -24,14 +24,14 @@ async def header_request_header_request_get(
     headers_dict = (
         headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
     )
-    response = await http.get(url="/header-request", headers=headers_dict)
+    response = await http.get(url=f"/header-request", headers=headers_dict)
     return http.handle_response(header_request_header_request_get, response)
 
 
 async def optional_parameters_request_optional_parameters_get() -> schemas.OptionalParametersResponse:
     """Optional Parameters Request"""
 
-    response = await http.get(url="/optional-parameters")
+    response = await http.get(url=f"/optional-parameters")
     return http.handle_response(
         optional_parameters_request_optional_parameters_get, response
     )
@@ -42,7 +42,7 @@ async def request_data_request_data_post(
 ) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
     """Request Data"""
 
-    response = await http.post(url="/request-data", data=data.model_dump())
+    response = await http.post(url=f"/request-data", data=data.model_dump())
     return http.handle_response(request_data_request_data_post, response)
 
 
@@ -51,7 +51,7 @@ async def request_data_request_data_put(
 ) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
     """Request Data"""
 
-    response = await http.put(url="/request-data", data=data.model_dump())
+    response = await http.put(url=f"/request-data", data=data.model_dump())
     return http.handle_response(request_data_request_data_put, response)
 
 
@@ -69,14 +69,14 @@ async def request_data_path_request_data(
 async def request_delete_request_delete_delete() -> schemas.DeleteResponse:
     """Request Delete"""
 
-    response = await http.delete(url="/request-delete")
+    response = await http.delete(url=f"/request-delete")
     return http.handle_response(request_delete_request_delete_delete, response)
 
 
 async def security_required_request_security_required_get() -> schemas.SecurityRequiredResponse:
     """Security Required Request"""
 
-    response = await http.get(url="/security-required")
+    response = await http.get(url=f"/security-required")
     return http.handle_response(
         security_required_request_security_required_get, response
     )
@@ -103,7 +103,7 @@ async def query_request_optional_query_get(
 async def simple_request_simple_request_get() -> schemas.SimpleResponse:
     """Simple Request"""
 
-    response = await http.get(url="/simple-request")
+    response = await http.get(url=f"/simple-request")
     return http.handle_response(simple_request_simple_request_get, response)
 
 
