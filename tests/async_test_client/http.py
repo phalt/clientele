@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
 import httpx  # noqa
 
-from . import config as c  # noqa
+from tests.async_test_client import config as c  # noqa
 
 
 class APIException(Exception):
