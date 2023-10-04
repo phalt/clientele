@@ -21,6 +21,11 @@ def write_to_manifest(content: str, output_dir: str) -> None:
     _write_to(path, content)
 
 
+def write_to_config(content: str, output_dir: str) -> None:
+    path = Path(output_dir) / "config.py"
+    _write_to(path, content)
+
+
 def _write_to(
     path: Path,
     content: str,

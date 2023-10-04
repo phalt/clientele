@@ -2,8 +2,9 @@
 
 ## 0.7.0
 
-* `constants.py` has been renamed to `config.py` to better reflect how it is used.
-* If you are using Python 3.10 or later, the `typing.Unions` types will generate as the short hand `|` instead. This required a big rework of the code to enable templating.
+* Updated some templated files to use the templates engine.
+* `constants.py` has been renamed to `config.py` to better reflect how it is used. It is not generated from a template like the other files.
+* If you are using Python 3.10 or later, the `typing.Unions` types will generate as the short hand `|` instead.
 * To regenerate a client (and to prevent accidental overrides) you must now pass `--regen t` or `-r t` to the `generate` command. This is automatically added to the line in `MANIFEST.md` to  help.
 * Clientele will now automatically run [black](https://black.readthedocs.io/en/stable/) code formatter once a client is generated or regenerated.
 * Clientele will now generate absolute paths to refer to adjacent files in the generated client, instead of relative paths. This assumes you are running the `clientele` command in the root directory of your project.
