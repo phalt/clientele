@@ -6,6 +6,7 @@
 * If you are using Python 3.10 or later, the `typing.Unions` types will generate as the short hand `|` instead. This required a big rework of the code to enable templating.
 * To regenerate a client (and to prevent accidental overrides) you must now pass `--regen t` or `-r t` to the `generate` command. This is automatically added to the line in `MANIFEST.md` to  help.
 * Clientele will now automatically run [black](https://black.readthedocs.io/en/stable/) code formatter once a client is generated or regenerated.
+* Clientele will now generate absolute paths to refer to adjacent files in the generated client, instead of relative paths. This assumes you are running the `clientele` command in the root directory of your project.
 
 ## 0.6.3
 
