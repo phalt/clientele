@@ -37,3 +37,9 @@ test:  ## Run tests
 
 shell:  ## Run an ipython shell
 	poetry run ipython
+
+generate-test-clients:  ## regenerate the test clients in the tests/ directory
+	poetry install
+	clientele generate -f example_openapi_specs/best.json -o tests/test_client/ 
+	clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t
+	black tests/
