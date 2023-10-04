@@ -13,12 +13,16 @@ from clientele.generators.http import HTTPGenerator
 from clientele.generators.schemas import SchemasGenerator
 from clientele.settings import (
     CLIENT_TEMPLATE_ROOT,
-    CONSTANTS_ROOT,
     VERSION,
     PY_VERSION,
     templates,
 )
-from clientele.writer import write_to_manifest, write_to_http, write_to_client
+from clientele.writer import (
+    write_to_manifest,
+    write_to_http,
+    write_to_client,
+    write_to_config,
+)
 from clientele.utils import get_client_project_directory_path
 
 console = Console()
@@ -73,10 +77,9 @@ class Generator:
         )
         copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
         if not exists(f"{self.output_dir}/config.py"):
-            copyfile(
-                f"{CONSTANTS_ROOT}/config_template.py",
-                f"{self.output_dir}/config.py",
-            )
+            template = templates.get_template("config_py.jinja2")
+            content = template.render()
+            write_to_config(content, output_dir=self.output_dir)
         # client file
         if exists(f"{self.output_dir}/client.py"):
             remove(f"{self.output_dir}/client.py")
