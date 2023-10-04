@@ -22,7 +22,7 @@
     
     
       
-        <title>Commands - ⚜️ Clientele</title>
+        <title>Use - ⚜️ Clientele</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#commands" class="md-skip">
+        <a href="#use-clientele" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Commands
+              Use
             
           </span>
         </div>
@@ -275,7 +275,7 @@
           
   
   <span class="md-ellipsis">
-    Commands
+    Use
   </span>
   
 
@@ -286,7 +286,7 @@
         
   
   <span class="md-ellipsis">
-    Commands
+    Use
   </span>
   
 
@@ -308,18 +308,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#validate" class="md-nav__link">
-    Validate
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#generate" class="md-nav__link">
-    Generate
+    generate
   </a>
   
-    <nav class="md-nav" aria-label="Generate">
+    <nav class="md-nav" aria-label="generate">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -337,14 +330,48 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#async-client" class="md-nav__link">
-    Async Client
+  <a href="#asyncio" class="md-nav__link">
+    Async.io
   </a>
   
 </li>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    validate
+  </a>
+  
+    <nav class="md-nav" aria-label="validate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-a-url_1" class="md-nav__link">
+    From a URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-a-file-path" class="md-nav__link">
+    From a file path
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version" class="md-nav__link">
+    version
+  </a>
   
 </li>
       
@@ -459,18 +486,11 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#validate" class="md-nav__link">
-    Validate
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#generate" class="md-nav__link">
-    Generate
+    generate
   </a>
   
-    <nav class="md-nav" aria-label="Generate">
+    <nav class="md-nav" aria-label="generate">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -488,14 +508,48 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#async-client" class="md-nav__link">
-    Async Client
+  <a href="#asyncio" class="md-nav__link">
+    Async.io
   </a>
   
 </li>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate" class="md-nav__link">
+    validate
+  </a>
+  
+    <nav class="md-nav" aria-label="validate">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-a-url_1" class="md-nav__link">
+    From a URL
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-a-file-path" class="md-nav__link">
+    From a file path
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#version" class="md-nav__link">
+    version
+  </a>
   
 </li>
       
@@ -517,35 +571,51 @@
   
 
 
-<h1 id="commands">📝 Commands</h1>
-<h2 id="validate">Validate</h2>
-<p>Validate lets you check if an OpenAPI schema will work with clientele. Some OpenAPI schema generators do not comply properly with the specification and it is a good way to check if your schema is correct.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-u<span class="w"> </span>http://path.com/to/openapi.json
-</span></code></pre></div>
-<p>Alternatively you can provide a local file:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-f<span class="w"> </span>/path/to/openapi.json
-</span></code></pre></div>
-<h2 id="generate">Generate</h2>
+<h1 id="use-clientele">📝 Use Clientele</h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can type <code>clientele COMMAND --help</code> at anytime to see explicit information about the available arguments.</p>
+</div>
+<h2 id="generate"><code>generate</code></h2>
+<p>Generate a Python HTTP Client from an OpenAPI Schema.</p>
 <h3 id="from-a-url">From a URL</h3>
-<p>Assuming the OpenAPI schema is available on the internet somewhere, you can query it to generate your client.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+<p>Use the <code>-u</code> or <code>--url</code> argument.</p>
+<p><code>-o</code> or <code>--output</code> is the target directory for the generate client.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </span></code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The example above uses a test OpenAPI format, and will work if you copy/paste it!</p>
+<p>The example above uses one of our test schemas, and will work if you copy/paste it!</p>
 </div>
 <h3 id="from-a-file">From a file</h3>
-<p>Alternatively, if you have a local file you can use it to generate your client.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+<p>Alternatively you can provide a local file using the <code>-f</code> or <code>--file</code> argument.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </span></code></pre></div>
-<h3 id="async-client">Async Client</h3>
+<h3 id="asyncio">Async.io</h3>
 <p>If you prefer an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> client, just pass <code>--asyncio t</code> to your command.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
 </span></code></pre></div>
+<h2 id="validate"><code>validate</code></h2>
+<p>Validate lets you check if an OpenAPI schema will work with clientele.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can use this command later to swap between a sync and async client so long as the OpenAPI schema remains the same, so don't worry about making a hard decision now.</p>
+<p>Some OpenAPI schema generators do not conform to the <a href="https://spec.openapis.org/oas/v3.1.0">specification</a>.</p>
+<p>Clientele uses <a href="https://openapi-core.readthedocs.io/en/latest/">openapi-core</a> to validate the schema.</p>
 </div>
+<h3 id="from-a-url_1">From a URL</h3>
+<p>Use the <code>-u</code> or <code>--url</code> argument.</p>
+<p><code>-o</code> or <code>--output</code> is the target directory for the generate client.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-u<span class="w"> </span>http://path.com/to/openapi.json
+</span></code></pre></div>
+<h3 id="from-a-file-path">From a file path</h3>
+<p>Alternatively you can provide a local file using the <code>-f</code> or <code>--file</code> argument.</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-f<span class="w"> </span>/path/to/openapi.json
+</span></code></pre></div>
+<h2 id="version"><code>version</code></h2>
+<p>Print the current version of Clientele:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&gt;<span class="w"> </span>clientele<span class="w"> </span>version
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Clientele<span class="w"> </span><span class="m">0</span>.7.0
+</span></code></pre></div>
 
 
 
