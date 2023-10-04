@@ -9,6 +9,10 @@
 
 Generate a Python HTTP Client from an OpenAPI Schema.
 
+!!! note
+
+    Clientele will use [black](* Automatically formats the generated client with [black](https://black.readthedocs.io/en/stable/index.html).) to format the generated client for you.
+
 ### From a URL
 
 Use the `-u` or `--url` argument.
