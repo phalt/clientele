@@ -10,7 +10,7 @@ repo_url: https://github.com/phalt/clientele
 nav:
   - Home: index.md
   - Install: install.md
-  - Commands: usage.md
+  - Use: usage.md
   - Client Example: examples.md
   - Testing: testing.md
   - Compatibility: compatibility.md
