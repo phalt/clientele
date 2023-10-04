@@ -43,6 +43,20 @@ If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) clien
 clientele generate -f path/to/file.json -o my_client/ --asyncio t
 ```
 
+### Regenerating
+
+At times you may wish to regenerate the client. This could be because the API has updated or you just want to use a newer version of clientele.
+
+To force a regeneration you must pass the `--regen` or `-r` argument, for example:
+
+```sh
+clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
+```
+
+!!! note
+
+    You can copy and paste the command from the `MANIFEST.md` file in your previously-generated client for a quick and easy regeneration.
+
 ## `validate`
 
 Validate lets you check if an OpenAPI schema will work with clientele.
