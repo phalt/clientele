@@ -6,6 +6,7 @@ from typing import Optional
 
 from openapi_core import Spec
 from rich.console import Console
+import subprocess
 
 from clientele.generators.clients import ClientsGenerator
 from clientele.generators.http import HTTPGenerator
@@ -104,6 +105,13 @@ clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if s
                 return False
         return True
 
+    def format_client(self) -> None:
+        subprocess.run(
+            ["black", self.output_dir],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+
     def generate(self) -> None:
         copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
         if not exists(f"{self.output_dir}/config.py"):
@@ -117,3 +125,4 @@ clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if s
         self.clients_generator.generate_paths()
         self.http_generator.generate_http_content()
         self.schemas_generator.write_helpers()
+        self.format_client()
