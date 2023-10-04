@@ -22,7 +22,8 @@ class APIException(Exception):
 def parse_url(url: str) -> str:
     """
     Returns the full URL from a string.
-    Will omit any optional query parameters passed.
+
+    Will filter out any optional query parameters if they are None.
     """
     api_url = f"{c.api_base_url()}{url}"
     url_parts = urlparse(url=api_url)
@@ -45,8 +46,9 @@ def parse_url(url: str) -> str:
 
 def handle_response(func, response):
     """
-    Returns a response that matches the data neatly for a function
-    If it can't - raises an error with details of the response.
+    Returns a schema object that matches the JSON data from the response.
+
+    If it can't find a matching schema it will raise an error with details of the response.
     """
     status_code = response.status_code
     # Get the response types
@@ -122,16 +124,20 @@ client = httpx.Client(headers=headers)
 
 
 def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP GET request"""
     return client.get(parse_url(url), headers=headers)
 
 
 def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP POST request"""
     return client.post(parse_url(url), json=data, headers=headers)
 
 
 def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP PUT request"""
     return client.put(parse_url(url), json=data, headers=headers)
 
 
 def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP DELETE request"""
     return client.delete(parse_url(url), headers=headers)

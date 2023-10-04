@@ -23,7 +23,8 @@ class APIException(Exception):
 def parse_url(url: str) -> str:
     """
     Returns the full URL from a string.
-    Will omit any optional query parameters passed.
+
+    Will filter out any optional query parameters if they are None.
     """
     api_url = f"{c.api_base_url()}{url}"
     url_parts = urlparse(url=api_url)
@@ -46,8 +47,9 @@ def parse_url(url: str) -> str:
 
 def handle_response(func, response):
     """
-    Returns a response that matches the data neatly for a function
-    If it can't - raises an error with details of the response.
+    Returns a schema object that matches the JSON data from the response.
+    
+    If it can't find a matching schema it will raise an error with details of the response.
     """
     status_code = response.status_code
     # Get the response types
