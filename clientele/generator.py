@@ -18,7 +18,8 @@ from clientele.settings import (
     PY_VERSION,
     templates,
 )
-from clientele.writer import write_to_manifest, write_to_http
+from clientele.writer import write_to_manifest, write_to_http, write_to_client
+from clientele.utils import get_client_project_directory_path
 
 console = Console()
 
@@ -65,13 +66,32 @@ class Generator:
         self.file = file
         self.url = url
 
-    def generate_http_py(self):
+    def generate_templates_files(self):
+        new_unions = PY_VERSION[1] > 10
+        client_project_directory_path = get_client_project_directory_path(
+            output_dir=self.output_dir
+        )
+        copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
+        if not exists(f"{self.output_dir}/config.py"):
+            copyfile(
+                f"{CONSTANTS_ROOT}/config_template.py",
+                f"{self.output_dir}/config.py",
+            )
+        # client file
+        if exists(f"{self.output_dir}/client.py"):
+            remove(f"{self.output_dir}/client.py")
+        template = templates.get_template("client_py.jinja2")
+        content = template.render(
+            client_project_directory_path=client_project_directory_path
+        )
+        write_to_client(content, output_dir=self.output_dir)
+        # http file
         if exists(f"{self.output_dir}/http.py"):
             remove(f"{self.output_dir}/http.py")
-        new_unions = PY_VERSION[1] > 10
         template = templates.get_template("http_py.jinja2")
         content = template.render(
             new_unions=new_unions,
+            client_project_directory_path=client_project_directory_path,
         )
         write_to_http(content, output_dir=self.output_dir)
 
@@ -113,13 +133,7 @@ clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if s
         )
 
     def generate(self) -> None:
-        copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
-        if not exists(f"{self.output_dir}/config.py"):
-            copyfile(
-                f"{CONSTANTS_ROOT}/config_template.py",
-                f"{self.output_dir}/config.py",
-            )
-        self.generate_http_py()
+        self.generate_templates_files()
         self.generate_manifest()
         self.schemas_generator.generate_schema_classes()
         self.clients_generator.generate_paths()
