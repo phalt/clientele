@@ -2,5 +2,5 @@
 
 auth_key = c.get_bearer_token()
 headers = c.additional_headers()
-headers.update(Authorization=f'Bearer ' + auth_key)
+headers.update(Authorization=f'Bearer {auth_key}')
 client = httpx.{{client_type}}(headers=headers)
