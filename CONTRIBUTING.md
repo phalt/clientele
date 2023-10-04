@@ -81,6 +81,8 @@ Format and lint the code:
 make lint
 ```
 
+Note that, the auto-generated black formatted code will be changed again because this project uses `ruff` for additional formatting. That's okay.
+
 Make sure you add to `CHANGELOG.md` and `docs/CHANGELOG.md` what changes you have made.
 
 Make sure you add your name to `CONTRIBUTORS.md` as well!
