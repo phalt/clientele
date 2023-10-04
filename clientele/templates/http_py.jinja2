@@ -5,7 +5,7 @@ import types
 {% endif %}
 import httpx  # noqa
 
-from . import config as c  # noqa
+from {{client_project_directory_path}} import config as c  # noqa
 
 
 class APIException(Exception):
