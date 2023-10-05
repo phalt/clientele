@@ -1,8 +1,9 @@
-import subprocess
 from os import remove
 from os.path import exists
+from pathlib import Path
 from typing import Optional
 
+import black
 from openapi_core import Spec
 from rich.console import Console
 
@@ -130,11 +131,11 @@ class Generator:
         return True
 
     def format_client(self) -> None:
-        subprocess.run(
-            ["black", self.output_dir],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
+        directory = Path(self.output_dir)
+        for f in directory.glob("*.py"):
+            black.format_file_in_place(
+                f, fast=False, mode=black.Mode(), write_back=black.WriteBack.YES
+            )
 
     def generate(self) -> None:
         self.generate_templates_files()
