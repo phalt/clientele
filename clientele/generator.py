@@ -1,29 +1,28 @@
-from distutils.dir_util import copy_tree
-from os.path import exists
+import subprocess
 from os import remove
-from shutil import copyfile
+from os.path import exists
 from typing import Optional
 
 from openapi_core import Spec
 from rich.console import Console
-import subprocess
 
 from clientele.generators.clients import ClientsGenerator
 from clientele.generators.http import HTTPGenerator
 from clientele.generators.schemas import SchemasGenerator
 from clientele.settings import (
-    CLIENT_TEMPLATE_ROOT,
-    VERSION,
     PY_VERSION,
+    VERSION,
     templates,
 )
+from clientele.utils import get_client_project_directory_path
 from clientele.writer import (
-    write_to_manifest,
-    write_to_http,
     write_to_client,
     write_to_config,
+    write_to_http,
+    write_to_init,
+    write_to_manifest,
+    write_to_schemas,
 )
-from clientele.utils import get_client_project_directory_path
 
 console = Console()
 
@@ -75,7 +74,7 @@ class Generator:
         client_project_directory_path = get_client_project_directory_path(
             output_dir=self.output_dir
         )
-        copy_tree(src=CLIENT_TEMPLATE_ROOT, dst=self.output_dir)
+        write_to_init(output_dir=self.output_dir)
         if not exists(f"{self.output_dir}/config.py"):
             template = templates.get_template("config_py.jinja2")
             content = template.render()
@@ -97,27 +96,27 @@ class Generator:
             client_project_directory_path=client_project_directory_path,
         )
         write_to_http(content, output_dir=self.output_dir)
-
-    def generate_manifest(self):
-        """
-        A manifest file with useful information
-        """
-        write_to_manifest(
-            f"\nAPI VERSION: {self.spec['info']['version']}\n", self.output_dir
+        # schemas file
+        if exists(f"{self.output_dir}/schemas.py"):
+            remove(f"{self.output_dir}/schemas.py")
+        template = templates.get_template("schemas_py.jinja2")
+        content = template.render()
+        write_to_schemas(content, output_dir=self.output_dir)
+        # Manifest file
+        if exists(f"{self.output_dir}/MANIFEST.md"):
+            remove(f"{self.output_dir}/MANIFEST.md")
+        template = templates.get_template("manifest.jinja2")
+        generate_command = f'{f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""} --regen t'  # noqa
+        content = (
+            template.render(
+                api_version=self.spec["info"]["version"],
+                openapi_version=self.spec["openapi"],
+                clientele_version=VERSION,
+                command=generate_command,
+            )
+            + "\n"
         )
-        write_to_manifest(f"OPENAPI VERSION: {self.spec['openapi']}\n", self.output_dir)
-        write_to_manifest(f"CLIENTELE VERSION: {VERSION}\n", self.output_dir)
-        # ruff: noqa
-        write_to_manifest(
-            f"""
-Regnerate using this command:
-
-```sh
-clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""} --regen t
-```
-""",
-            self.output_dir,
-        )
+        write_to_manifest(content, output_dir=self.output_dir)
 
     def prevent_accidental_regens(self) -> bool:
         if exists(self.output_dir):
@@ -137,7 +136,6 @@ clientele generate {f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if s
 
     def generate(self) -> None:
         self.generate_templates_files()
-        self.generate_manifest()
         self.schemas_generator.generate_schema_classes()
         self.clients_generator.generate_paths()
         self.http_generator.generate_http_content()

@@ -3,9 +3,6 @@ from os.path import abspath, dirname
 
 from jinja2 import Environment, PackageLoader
 
-CLIENT_TEMPLATE_ROOT = (
-    dirname(dirname(abspath(__file__))) + "/clientele/client_template/"
-)
 TEMPLATES_ROOT = dirname(dirname(abspath(__file__))) + "/clientele/templates/"
 VERSION = "0.7.0"
 
