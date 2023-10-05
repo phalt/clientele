@@ -5,10 +5,9 @@ from openapi_core import Spec
 from pydantic import BaseModel
 from rich.console import Console
 
-from clientele.generators.http import HTTPGenerator
-from clientele.generators.schemas import SchemasGenerator
-from clientele.settings import templates
-from clientele.utils import (
+from clientele.generators.standard.generators.http import HTTPGenerator
+from clientele.generators.standard.generators.schemas import SchemasGenerator
+from clientele.generators.standard.utils import (
     class_name_titled,
     clean_prop,
     create_query_args,
@@ -18,7 +17,7 @@ from clientele.utils import (
     schema_ref,
     union_for_py_ver,
 )
-from clientele.writer import write_to_client
+from clientele.generators.standard.writer import templates, write_to_client
 
 console = Console()
 
