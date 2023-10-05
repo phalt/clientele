@@ -62,6 +62,12 @@ class Generator:
         self.output_dir = output_dir
         self.file = file
         self.url = url
+        self.file_name_writer_tuple = (
+            ("config.py", "config_py.jinja2", writer.write_to_config),
+            ("client.py", "client_py.jinja2", writer.write_to_client),
+            ("http.py", "http_py.jinja2", writer.write_to_http),
+            ("schemas.py", "schemas_py.jinja2", writer.write_to_schemas),
+        )
 
     def generate_templates_files(self):
         new_unions = PY_VERSION[1] > 10
@@ -69,33 +75,19 @@ class Generator:
             output_dir=self.output_dir
         )
         writer.write_to_init(output_dir=self.output_dir)
-        if not exists(f"{self.output_dir}/config.py"):
-            template = writer.templates.get_template("config_py.jinja2")
-            content = template.render()
-            writer.write_to_config(content, output_dir=self.output_dir)
-        # client file
-        if exists(f"{self.output_dir}/client.py"):
-            remove(f"{self.output_dir}/client.py")
-        template = writer.templates.get_template("client_py.jinja2")
-        content = template.render(
-            client_project_directory_path=client_project_directory_path
-        )
-        writer.write_to_client(content, output_dir=self.output_dir)
-        # http file
-        if exists(f"{self.output_dir}/http.py"):
-            remove(f"{self.output_dir}/http.py")
-        template = writer.templates.get_template("http_py.jinja2")
-        content = template.render(
-            new_unions=new_unions,
-            client_project_directory_path=client_project_directory_path,
-        )
-        writer.write_to_http(content, output_dir=self.output_dir)
-        # schemas file
-        if exists(f"{self.output_dir}/schemas.py"):
-            remove(f"{self.output_dir}/schemas.py")
-        template = writer.templates.get_template("schemas_py.jinja2")
-        content = template.render()
-        writer.write_to_schemas(content, output_dir=self.output_dir)
+        for (
+            client_file,
+            client_template_file,
+            write_func,
+        ) in self.file_name_writer_tuple:
+            if exists(f"{self.output_dir}/{client_file}"):
+                remove(f"{self.output_dir}/{client_file}")
+            template = writer.templates.get_template(client_template_file)
+            content = template.render(
+                client_project_directory_path=client_project_directory_path,
+                new_unions=new_unions,
+            )
+            write_func(content, output_dir=self.output_dir)
         # Manifest file
         if exists(f"{self.output_dir}/MANIFEST.md"):
             remove(f"{self.output_dir}/MANIFEST.md")
