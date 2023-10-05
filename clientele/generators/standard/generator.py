@@ -7,19 +7,8 @@ import black
 from openapi_core import Spec
 from rich.console import Console
 
-from clientele.generators.standard.generators.clients import ClientsGenerator
-from clientele.generators.standard.generators.http import HTTPGenerator
-from clientele.generators.standard.generators.schemas import SchemasGenerator
-from clientele.generators.standard.utils import get_client_project_directory_path
-from clientele.generators.standard.writer import (
-    templates,
-    write_to_client,
-    write_to_config,
-    write_to_http,
-    write_to_init,
-    write_to_manifest,
-    write_to_schemas,
-)
+from clientele.generators.standard import utils, writer
+from clientele.generators.standard.generators import clients, http, schemas
 from clientele.settings import (
     PY_VERSION,
     VERSION,
@@ -38,9 +27,9 @@ class Generator:
     spec: Spec
     asyncio: bool
     regen: bool
-    schemas_generator: SchemasGenerator
-    clients_generator: ClientsGenerator
-    http_generator: HTTPGenerator
+    schemas_generator: schemas.SchemasGenerator
+    clients_generator: clients.ClientsGenerator
+    http_generator: http.HTTPGenerator
     output_dir: str
     file: Optional[str]
     url: Optional[str]
@@ -54,11 +43,13 @@ class Generator:
         url: Optional[str],
         file: Optional[str],
     ) -> None:
-        self.http_generator = HTTPGenerator(
+        self.http_generator = http.HTTPGenerator(
             spec=spec, output_dir=output_dir, asyncio=asyncio
         )
-        self.schemas_generator = SchemasGenerator(spec=spec, output_dir=output_dir)
-        self.clients_generator = ClientsGenerator(
+        self.schemas_generator = schemas.SchemasGenerator(
+            spec=spec, output_dir=output_dir
+        )
+        self.clients_generator = clients.ClientsGenerator(
             spec=spec,
             output_dir=output_dir,
             schemas_generator=self.schemas_generator,
@@ -74,41 +65,41 @@ class Generator:
 
     def generate_templates_files(self):
         new_unions = PY_VERSION[1] > 10
-        client_project_directory_path = get_client_project_directory_path(
+        client_project_directory_path = utils.get_client_project_directory_path(
             output_dir=self.output_dir
         )
-        write_to_init(output_dir=self.output_dir)
+        writer.write_to_init(output_dir=self.output_dir)
         if not exists(f"{self.output_dir}/config.py"):
-            template = templates.get_template("config_py.jinja2")
+            template = writer.templates.get_template("config_py.jinja2")
             content = template.render()
-            write_to_config(content, output_dir=self.output_dir)
+            writer.write_to_config(content, output_dir=self.output_dir)
         # client file
         if exists(f"{self.output_dir}/client.py"):
             remove(f"{self.output_dir}/client.py")
-        template = templates.get_template("client_py.jinja2")
+        template = writer.templates.get_template("client_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path
         )
-        write_to_client(content, output_dir=self.output_dir)
+        writer.write_to_client(content, output_dir=self.output_dir)
         # http file
         if exists(f"{self.output_dir}/http.py"):
             remove(f"{self.output_dir}/http.py")
-        template = templates.get_template("http_py.jinja2")
+        template = writer.templates.get_template("http_py.jinja2")
         content = template.render(
             new_unions=new_unions,
             client_project_directory_path=client_project_directory_path,
         )
-        write_to_http(content, output_dir=self.output_dir)
+        writer.write_to_http(content, output_dir=self.output_dir)
         # schemas file
         if exists(f"{self.output_dir}/schemas.py"):
             remove(f"{self.output_dir}/schemas.py")
-        template = templates.get_template("schemas_py.jinja2")
+        template = writer.templates.get_template("schemas_py.jinja2")
         content = template.render()
-        write_to_schemas(content, output_dir=self.output_dir)
+        writer.write_to_schemas(content, output_dir=self.output_dir)
         # Manifest file
         if exists(f"{self.output_dir}/MANIFEST.md"):
             remove(f"{self.output_dir}/MANIFEST.md")
-        template = templates.get_template("manifest.jinja2")
+        template = writer.templates.get_template("manifest.jinja2")
         generate_command = f'{f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""} --regen t'  # noqa
         content = (
             template.render(
@@ -119,7 +110,7 @@ class Generator:
             )
             + "\n"
         )
-        write_to_manifest(content, output_dir=self.output_dir)
+        writer.write_to_manifest(content, output_dir=self.output_dir)
 
     def prevent_accidental_regens(self) -> bool:
         if exists(self.output_dir):
