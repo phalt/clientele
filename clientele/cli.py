@@ -84,7 +84,7 @@ def generate(url, file, output, asyncio, regen):
 
     console = Console()
 
-    from clientele.generator import Generator
+    from clientele.generators.standard.generator import Generator
 
     assert url or file, "Must pass either a URL or a file"
 

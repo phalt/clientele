@@ -3,6 +3,7 @@
 ## 0.7.0
 
 * Updated all files to use the templates engine.
+* Generator files have been reorganised in clientele to support future templates.
 * `constants.py` has been renamed to `config.py` to better reflect how it is used. It is not generated from a template like the other files.
 * If you are using Python 3.10 or later, the `typing.Unions` types will generate as the short hand `|` instead.
 * To regenerate a client (and to prevent accidental overrides) you must now pass `--regen t` or `-r t` to the `generate` command. This is automatically added to the line in `MANIFEST.md` to  help.

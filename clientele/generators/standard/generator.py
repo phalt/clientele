@@ -6,16 +6,12 @@ from typing import Optional
 from openapi_core import Spec
 from rich.console import Console
 
-from clientele.generators.clients import ClientsGenerator
-from clientele.generators.http import HTTPGenerator
-from clientele.generators.schemas import SchemasGenerator
-from clientele.settings import (
-    PY_VERSION,
-    VERSION,
+from clientele.generators.standard.generators.clients import ClientsGenerator
+from clientele.generators.standard.generators.http import HTTPGenerator
+from clientele.generators.standard.generators.schemas import SchemasGenerator
+from clientele.generators.standard.utils import get_client_project_directory_path
+from clientele.generators.standard.writer import (
     templates,
-)
-from clientele.utils import get_client_project_directory_path
-from clientele.writer import (
     write_to_client,
     write_to_config,
     write_to_http,
@@ -23,13 +19,19 @@ from clientele.writer import (
     write_to_manifest,
     write_to_schemas,
 )
+from clientele.settings import (
+    PY_VERSION,
+    VERSION,
+)
 
 console = Console()
 
 
 class Generator:
     """
-    Top-level generator.
+    The standard Clientele generator.
+
+    Produces a Python HTTP Client library.
     """
 
     spec: Spec
