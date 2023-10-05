@@ -126,5 +126,4 @@ def get_client_project_directory_path(output_dir: str) -> str:
     Assumes that the `clientele` command is being run in the
     project root directory.
     """
-    dot_notation = ".".join(os.path.join(output_dir).split("/")[:-1])
-    return dot_notation
+    return ".".join(os.path.join(output_dir).split("/")[:-1])
