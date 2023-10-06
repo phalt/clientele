@@ -26,9 +26,11 @@ And this was our summary of the landscape:
 
 * There are a lot of options for generating clients. They all meet the need of "generating a python client using the schema". But, they all have a poor developer experience.
 
-After evaluation many python code generators, we opted to use none of them and hand craft the API client ourselves. We used the OpenAPI schema as a source to develop the input and output objects.  Then we wrote a small functional abstraction over the paths.
+After evaluating many python code generators, we opted to use none of them and hand craft the API client ourselves. We used the OpenAPI schema as a source to develop the input and output objects.  Then we wrote a small functional abstraction over the paths.
 
-Looking back over our organised, pythonic, minimal client integration, we had an idea. If we want a code generator to produce something like this; how hard could it be craft a code generator to product it?
+Looking back over our organised, pythonic, minimal client integration, we had an idea.
+
+If we want a code generator to produce something like this; how hard could it be craft a code generator to product it?
 
 This, was the start of Clientele.
 
@@ -39,3 +41,41 @@ As python developers ourselves, we know what makes good, readable, idiomatic pyt
 We also feel like we have a grasp on the best tools to be using in our python projects.
 
 By starting with a client library that we _like_ to use, and working backwards, we were able to build a code generator that produced something that python developers actually wanted.
+
+But what is it exactly that we aimed to do with Clientele, why is this the OpenAPI Python client that you should use?
+
+### Strongly-typed inputs and outputs
+
+OpenAPI prides itself on being able to describe the input and output objects in it's schema.
+
+This means you can build strongly-typed interfaces to the API. This helps to solve some common niggles when using an API - such as casting a value to a string when it should be an integer.
+
+With Clientele, we opted to use [Pydantic](https://docs.pydantic.dev/latest/) to build these models.
+
+Pydantic doesn't only describe the shape of an object, it also validates the attributes as well. If an API sends back the wrong attributes, Pydantic will provide a useful error about what went wrong.
+
+### Idiomatic Python
+
+A lot of the code generators we tested produced, quite frankly, horrendous output.
+
+It was clear in a few cases that the code generator was built without understanding or knowledge of good [python conventions](https://realpython.com/lessons/zen-of-python/).
+
+In more than one case we also discovered the code generator would work by reading a file at run time to produce the client. This is a very cool piece of engineering, but it is impractical to use. When you develop with these clients, the available functions and objects don't exist and you can't use an IDE's auto-complete feature.
+
+Clientele set out to be as pythonic as possible. We use modern tools,  idiomatic conventions, and provide some helpful bonuses like [Black](https://github.com/psf/black/) auto-formatting.
+
+### Easy to understand
+
+Eventually a developer will need to do some debugging, and sometimes they'll need to do it in the generate code.
+
+A lot of the other code generators we tested would make obscure or obtuse code that was hard to pick apart and debug.
+
+Now, there is a valid suggestion that developers shouldn't _have to_ look at this, and that is fair.
+
+But the reality doesn't match that expectation. And personally; we like to know what generated code is doing. We want to trust that it will work, and that we can adapt around it if needs be. An interesting quirk of code generators is you can't always inspect their source when evaluating to use it. Any other tool - you'd just go to GitHub and have a read around, but you can't with code generators.
+
+So the code that is generated, needs to be easy to understand.
+
+Clientele doesn't do any tricks, or magic, or anything complex. The generated code has documentation and is designed to be readable. It is only a small layer on top of already well established tools, such as [HTTPX](https://github.com/encode/httpx).
+
+It is that way because we know you will need to inspect it in the future. We want to build your trust that this is a sane and sensible too.
