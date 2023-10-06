@@ -11,6 +11,7 @@ nav:
   - Home: index.md
   - Install: install.md
   - Use: usage.md
+  - Design: design.md
   - Client Example: examples.md
   - Testing: testing.md
   - Compatibility: compatibility.md
