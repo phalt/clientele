@@ -78,4 +78,4 @@ So the code that is generated, needs to be easy to understand.
 
 Clientele doesn't do any tricks, or magic, or anything complex. The generated code has documentation and is designed to be readable. It is only a small layer on top of already well established tools, such as [HTTPX](https://github.com/encode/httpx).
 
-It is that way because we know you will need to inspect it in the future. We want to build your trust that this is a sane and sensible too.
+It is that way because we know you will need to inspect it in the future. We want you to know that this is a sane and sensible tool.
