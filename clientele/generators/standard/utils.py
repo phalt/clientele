@@ -23,26 +23,37 @@ def class_name_titled(input_str: str) -> str:
     """
     # Capitalize the first letter always
     input_str = input_str[:1].title() + input_str[1:]
+    # Remove any bad characters with an empty space
     for badstr in [".", "-", "_", ">", "<", "/"]:
         input_str = input_str.replace(badstr, " ")
     if " " in input_str:
         # Capitalize all the spaces
         input_str = input_str.title()
+    # Remove all the spaces!
     input_str = input_str.replace(" ", "")
     return input_str
 
 
-def clean_prop(input_str: str) -> str:
+def snake_case_prop(input_str: str) -> str:
     """
-    Clean a property to not have invalid characters
+    Clean a property to not have invalid characters.
+    Returns a "snake_case" version of the input string
     """
+    # These strings appear in some OpenAPI schemas
     for dropchar in [">", "<"]:
         input_str = input_str.replace(dropchar, "")
+    # These we can just convert to an underscore
     for badstr in ["-", "."]:
         input_str = input_str.replace(badstr, "_")
+    # python keywords need to be converted
     reserved_words = ["from"]
     if input_str in reserved_words:
         input_str = input_str + "_"
+    # Retain all-uppercase strings, otherwise convert to camel case
+    if not input_str.isupper():
+        input_str = "".join(
+            ["_" + i.lower() if i.isupper() else i for i in input_str]
+        ).lstrip("_")
     return input_str
 
 
@@ -86,6 +97,7 @@ def get_type(t):
     if t_type is None:
         # In this case, make it an "Any"
         return "typing.Any"
+    # Note: enums have type {'type': '"EXAMPLE"'} so fall through here
     return t_type
 
 

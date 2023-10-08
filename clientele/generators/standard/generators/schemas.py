@@ -32,7 +32,7 @@ class SchemasGenerator:
         for arg, arg_details in properties.items():
             content = (
                 content
-                + f"""    {utils.clean_prop(arg.upper())} = {utils.get_type(arg_details)}\n"""
+                + f"""    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"""
             )
         return content
 
@@ -47,7 +47,7 @@ class SchemasGenerator:
         template = writer.templates.get_template("schema_class.jinja2")
         class_name = f"{utils.class_name_titled(func_name)}Headers"
         string_props = "\n".join(
-            f'    {utils.clean_prop(k)}: {v} = pydantic.Field(serialization_alias="{k}")'
+            f'    {utils.snake_case_prop(k)}: {v} = pydantic.Field(serialization_alias="{k}")'
             for k, v in properties.items()
         )
         content = template.render(
@@ -69,10 +69,8 @@ class SchemasGenerator:
         for arg, arg_details in properties.items():
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
-            content = (
-                content
-                + f"""    {utils.clean_prop(arg)}: {is_optional and f"typing.Optional[{arg_type}]" or arg_type}\n"""
-            )
+            type_string = is_optional and f"typing.Optional[{arg_type}]" or arg_type
+            content = content + f"""    {utils.snake_case_prop(arg)}: {type_string}\n"""
         return content
 
     def generate_input_class(self, schema: dict) -> None:
