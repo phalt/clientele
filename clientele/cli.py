@@ -84,7 +84,7 @@ def generate(url, file, output, asyncio, regen):
 
     console = Console()
 
-    from clientele.generators.standard.generator import Generator
+    from clientele.generators.standard.generator import StandardGenerator
 
     assert url or file, "Must pass either a URL or a file"
 
@@ -109,7 +109,7 @@ def generate(url, file, output, asyncio, regen):
             f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
         )
         return
-    generator = Generator(
+    generator = StandardGenerator(
         spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file
     )
     if generator.prevent_accidental_regens():
