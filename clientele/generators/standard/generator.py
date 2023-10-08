@@ -17,7 +17,7 @@ from clientele.settings import (
 console = Console()
 
 
-class Generator:
+class StandardGenerator:
     """
     The standard Clientele generator.
 
