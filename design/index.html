@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://phalt.github.io/clientele/testing/">
+        <link rel="canonical" href="https://phalt.github.io/clientele/design/">
       
       
-        <link rel="prev" href="../examples/">
+        <link rel="prev" href="../usage/">
       
       
-        <link rel="next" href="../compatibility/">
+        <link rel="next" href="../examples/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Testing - ⚜️ Clientele</title>
+        <title>Design - ⚜️ Clientele</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#testing" class="md-skip">
+        <a href="#design" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Testing
+              Design
             
           </span>
         </div>
@@ -279,9 +279,29 @@
       
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../design/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Design
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -290,6 +310,74 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#openapi-code-generators" class="md-nav__link">
+    OpenAPI code generators
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-landscape-in-2023" class="md-nav__link">
+    The landscape in 2023
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clientele" class="md-nav__link">
+    Clientele
+  </a>
+  
+    <nav class="md-nav" aria-label="Clientele">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strongly-typed-inputs-and-outputs" class="md-nav__link">
+    Strongly-typed inputs and outputs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idiomatic-python" class="md-nav__link">
+    Idiomatic Python
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy-to-understand" class="md-nav__link">
+    Easy to understand
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -317,18 +405,9 @@
       
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -337,7 +416,6 @@
   
 
       </a>
-      
     </li>
   
 
@@ -400,6 +478,62 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#openapi-code-generators" class="md-nav__link">
+    OpenAPI code generators
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-landscape-in-2023" class="md-nav__link">
+    The landscape in 2023
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clientele" class="md-nav__link">
+    Clientele
+  </a>
+  
+    <nav class="md-nav" aria-label="Clientele">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strongly-typed-inputs-and-outputs" class="md-nav__link">
+    Strongly-typed inputs and outputs
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#idiomatic-python" class="md-nav__link">
+    Idiomatic Python
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#easy-to-understand" class="md-nav__link">
+    Easy to understand
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -416,34 +550,63 @@
   
 
 
-<h1 id="testing">Testing</h1>
-<p>Clientele is designed for easy testing, and our <a href="https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py">own test suite</a> is a great example of how easily you can write mock tests for your API Client.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span> <span class="nn">pytest</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span> <span class="nn">httpx</span> <span class="kn">import</span> <span class="n">Response</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span> <span class="nn">respx</span> <span class="kn">import</span> <span class="n">MockRouter</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kn">from</span> <span class="nn">.test_client</span> <span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">schemas</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">BASE_URL</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">api_base_url</span><span class="p">()</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">respx</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">BASE_URL</span><span class="p">)</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">def</span> <span class="nf">test_simple_request_simple_request_get</span><span class="p">(</span><span class="n">respx_mock</span><span class="p">:</span> <span class="n">MockRouter</span><span class="p">):</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="c1"># Given</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">mocked_response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;hello world&quot;</span><span class="p">}</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">mock_path</span> <span class="o">=</span> <span class="s2">&quot;/simple-request&quot;</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">respx_mock</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mock_path</span><span class="p">)</span><span class="o">.</span><span class="n">mock</span><span class="p">(</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="n">return_value</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">=</span><span class="n">mocked_response</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="p">)</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="c1"># When</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="c1"># Then</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">SimpleResponse</span><span class="p">)</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">call</span> <span class="o">=</span> <span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="k">assert</span> <span class="n">call</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="n">mock_path</span>
-</span></code></pre></div>
-<p>We recommend you install <a href="https://lundberg.github.io/respx/">respx</a> for writing your tests.</p>
+<h1 id="design">🎨 Design</h1>
+<h2 id="openapi-code-generators">OpenAPI code generators</h2>
+<p>Every few years we check the HTTP API landscape to see what has changed, and what new tooling is available. A part of this research is seeing how far <a href="https://www.openapis.org/">OpenAPI client generators</a> have come.  </p>
+<p>In the early years of OpenAPI, the "last mile" (i.e. - generating, and using, a client library) had a pretty poor experience:</p>
+<ul>
+<li>
+<p>The generated code was difficult to read, leading to problems when debugging the code. It was often not idiomatic to the language.</p>
+</li>
+<li>
+<p>It was often bloated and repetitive, making changes tedious to support your specific project.</p>
+</li>
+<li>
+<p>Also, you had to install a lot of things like Java to generate the code.</p>
+</li>
+<li>
+<p>And finally, some API services still weren't publishing an OpenAPI schema. Or, the schema they published was different from the standard, so would not work with code generators.</p>
+</li>
+</ul>
+<p>This experience wasn't ideal, and was often such an impedance that it put us off using them. We would prefer instead to take a template of our own choosing, refined from years of working with HTTP APIs, and adapt it to whatever new API we were consuming.</p>
+<h2 id="the-landscape-in-2023">The landscape in 2023</h2>
+<p>In the early part of 2023, we had to build an integration with a new HTTP API. So, like we did in the past, we used it as an opportunity to asses the landscape of OpenAPI client generators.</p>
+<p>And this was our summary at the time of writing:</p>
+<ul>
+<li>
+<p>API tools and providers had adopted OpenAPI very well. For example - tools like <a href="https://fastapi.tiangolo.com/">FastAPI</a> and <a href="https://github.com/tfranzel/drf-spectacular">drf-spectacular</a> now make it easy for the most popular python web frameworks to publish OpenAPI schemas.</p>
+</li>
+<li>
+<p>There are a lot of options for generating clients. They all meet the need of "generating a python client using the schema". But, almost universally, they have a poor developer experience.</p>
+</li>
+</ul>
+<p>After evaluating many python client generators, we opted to use <strong>none</strong> of them and hand craft the API client ourselves. We used the OpenAPI schema as a source to develop the input and output objects.  Then we wrote a small functional abstraction over the paths.</p>
+<p>Looking back over our organised, pythonic, minimal client integration, we had an idea:</p>
+<p>If this is the type of client we would like a generator to produce; how hard could it be to work backwards and build one?</p>
+<p>This was the start of Clientele.</p>
+<h2 id="clientele">Clientele</h2>
+<p>As python developers ourselves, we know what makes good, readable, idiomatic python.</p>
+<p>We also feel like we have a grasp on the best tools to be using in our python projects.</p>
+<p>By starting with a client library that we <em>like</em> to use, and working backwards, we were able to build a client generator that produced something that python developers actually wanted.</p>
+<p>But what is it exactly that we aimed to do with Clientele, why is this the OpenAPI Python client that you should use?</p>
+<h3 id="strongly-typed-inputs-and-outputs">Strongly-typed inputs and outputs</h3>
+<p>OpenAPI prides itself on being able to describe the input and output objects in it's schema.</p>
+<p>This means you can build strongly-typed interfaces to the API. This helps to solve some common niggles when using an API - such as casting a value to a string when it should be an integer.</p>
+<p>With Clientele, we opted to use <a href="https://docs.pydantic.dev/latest/">Pydantic</a> to build the models from the OpenAPI schema.</p>
+<p>Pydantic doesn't only describe the shape of an object, it also validates the attributes as well. If an API sends back the wrong attributes at run time, Pydantic will error and provide a detail description about what went wrong.</p>
+<h3 id="idiomatic-python">Idiomatic Python</h3>
+<p>A lot of the client generators we tested produced a lot of poor code.</p>
+<p>It was clear in a few cases that the client generator was built without understanding or knowledge of good <a href="https://realpython.com/lessons/zen-of-python/">python conventions</a>.</p>
+<p>In more than one case we also discovered the client generator would work by reading a file at run time. This is a very cool piece of engineering, but it is impractical to use. When you develop with these clients, the available functions and objects don't exist and you can't use an IDE's auto-complete feature.</p>
+<p>Clientele set out to be as pythonic as possible. We use modern tools,  idiomatic conventions, and provide some helpful bonuses like <a href="https://github.com/psf/black/">Black</a> auto-formatting.</p>
+<h3 id="easy-to-understand">Easy to understand</h3>
+<p>Eventually a developer will need to do some debugging, and sometimes they'll need to do it in the generated client code.</p>
+<p>A lot of the other client generators make obscure or obtuse code that is hard to pick apart and debug.</p>
+<p>Now, there is a suggestion that developers shouldn't <em>have to</em> look at this, and that is fair. But the reality doesn't match that expectation. Personally; we like to know what generated code is doing. We want to trust that it will work, and that we can adapt around it if needs be. An interesting quirk of any code generator is you can't always inspect the source when evaluating to use it. Any other tool - you'd just go to GitHub and have a read around, but you can't with code generators.</p>
+<p>So the code that is generated needs to be easy to understand.</p>
+<p>Clientele doesn't do any tricks, or magic, or anything complex. The generated code has documentation and is designed to be readable. It is only a small layer on top of already well established tools, such as <a href="https://github.com/encode/httpx">HTTPX</a>.</p>
+<p>In fact, we have some generated clients in our <a href="https://github.com/phalt/clientele/tree/main/tests">project repository</a> so you can see what it looks like. We even have example <a href="https://github.com/phalt/clientele/blob/main/tests/test_generated_client.py">tests</a> for you to learn how to integrate with it.</p>
+<p>It is that way because we know you will need to inspect it in the future. We want you to know that this is a sane and sensible tool.</p>
 
 
 
