@@ -7,12 +7,9 @@ import black
 from openapi_core import Spec
 from rich.console import Console
 
-from clientele.generators.standard import utils, writer
+from clientele import settings, utils
+from clientele.generators.standard import writer
 from clientele.generators.standard.generators import clients, http, schemas
-from clientele.settings import (
-    PY_VERSION,
-    VERSION,
-)
 
 console = Console()
 
@@ -70,7 +67,7 @@ class StandardGenerator:
         )
 
     def generate_templates_files(self):
-        new_unions = PY_VERSION[1] > 10
+        new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(
             output_dir=self.output_dir
         )
@@ -97,7 +94,7 @@ class StandardGenerator:
             template.render(
                 api_version=self.spec["info"]["version"],
                 openapi_version=self.spec["openapi"],
-                clientele_version=VERSION,
+                clientele_version=settings.VERSION,
                 command=generate_command,
             )
             + "\n"
