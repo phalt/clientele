@@ -1,4 +1,3 @@
-import os
 import re
 
 from openapi_core import Spec
@@ -130,12 +129,3 @@ def union_for_py_ver(union_items: list) -> str:
         return " | ".join(union_items)
     else:
         return f"typing.Union[{', '.join(union_items)}]"
-
-
-def get_client_project_directory_path(output_dir: str) -> str:
-    """
-    Returns a dot-notation path for the client directory.
-    Assumes that the `clientele` command is being run in the
-    project root directory.
-    """
-    return ".".join(os.path.join(output_dir).split("/")[:-1])
