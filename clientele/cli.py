@@ -120,7 +120,29 @@ def generate(url, file, output, asyncio, regen):
         )
 
 
+@click.command()
+@click.option(
+    "-o", "--output", help="Directory for the generated client", required=True
+)
+def generate_basic(output):
+    """
+    Generate a "basic" file structure, no code.
+    """
+    from rich.console import Console
+
+    from clientele.generators.basic.generator import BasicGenerator
+
+    console = Console()
+
+    console.log(f"Generating basic client at {output}...")
+
+    generator = BasicGenerator(output_dir=output)
+
+    generator.generate()
+
+
 cli_group.add_command(generate)
+cli_group.add_command(generate_basic)
 cli_group.add_command(version)
 cli_group.add_command(validate)
 

@@ -9,10 +9,6 @@
 
 Generate a Python HTTP Client from an OpenAPI Schema.
 
-!!! note
-
-    Clientele will use [black](* Automatically formats the generated client with [black](https://black.readthedocs.io/en/stable/index.html).) to format the generated client for you.
-
 ### From a URL
 
 Use the `-u` or `--url` argument.
@@ -83,6 +79,21 @@ Alternatively you can provide a local file using the `-f` or `--file` argument.
 
 ```sh
 clientele validate -f /path/to/openapi.json
+```
+
+## generate-basic
+
+The `generate-basic` command can be used to generate a basic file structure for an HTTP client.
+
+It does not required an OpenAPI schema, just a path.
+
+This command serves two reasons:
+
+1) You may have an HTTP API without an OpenAPI schema, but you want to keep a consistent file structure with other Clientele clients.
+2) The generator for this basic client can be extended for your own client in the future, if you choose.
+
+```sh
+clientele generate-basic -o my_client/
 ```
 
 ## `version`

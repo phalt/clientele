@@ -11,6 +11,8 @@
 * Clientele will now generate absolute paths to refer to adjacent files in the generated client, instead of relative paths. This assumes you are running the `clientele` command in the root directory of your project.
 * A lot of documentation and docs strings updates so that code in the generated client is easier to understand.
 * Improved the utility for snake-casing enum keys. Tests added for the functions.
+* Python 3.12 support.
+* Add a "basic" client using the command `generate-basic`. This can be used to keep a consistent file structure for an API that does not use OpenAPI.
 
 ## 0.6.3
 
