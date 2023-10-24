@@ -401,6 +401,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#070" class="md-nav__link">
+    0.7.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#063" class="md-nav__link">
     0.6.3
   </a>
@@ -567,6 +574,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#070" class="md-nav__link">
+    0.7.0
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#063" class="md-nav__link">
     0.6.3
   </a>
@@ -717,6 +731,20 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="070">0.7.0</h2>
+<ul>
+<li>Updated all files to use the templates engine.</li>
+<li>Generator files have been reorganised in clientele to support future templates.</li>
+<li><code>constants.py</code> has been renamed to <code>config.py</code> to better reflect how it is used. It is not generated from a template like the other files.</li>
+<li>If you are using Python 3.10 or later, the <code>typing.Unions</code> types will generate as the short hand <code>|</code> instead.</li>
+<li>To regenerate a client (and to prevent accidental overrides) you must now pass <code>--regen t</code> or <code>-r t</code> to the <code>generate</code> command. This is automatically added to the line in <code>MANIFEST.md</code> to  help.</li>
+<li>Clientele will now automatically run <a href="https://black.readthedocs.io/en/stable/">black</a> code formatter once a client is generated or regenerated.</li>
+<li>Clientele will now generate absolute paths to refer to adjacent files in the generated client, instead of relative paths. This assumes you are running the <code>clientele</code> command in the root directory of your project.</li>
+<li>A lot of documentation and docs strings updates so that code in the generated client is easier to understand.</li>
+<li>Improved the utility for snake-casing enum keys. Tests added for the functions.</li>
+<li>Python 3.12 support.</li>
+<li>Add a "basic" client using the command <code>generate-basic</code>. This can be used to keep a consistent file structure for an API that does not use OpenAPI.</li>
+</ul>
 <h2 id="063">0.6.3</h2>
 <ul>
 <li>Packaged application installs in the correct location. Resolving <a href="https://github.com/phalt/clientele/issues/6">#6</a></li>

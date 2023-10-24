@@ -336,6 +336,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#regenerating" class="md-nav__link">
+    Regenerating
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -365,6 +372,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-basic" class="md-nav__link">
+    generate-basic
+  </a>
   
 </li>
       
@@ -533,6 +547,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#regenerating" class="md-nav__link">
+    Regenerating
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -562,6 +583,13 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-basic" class="md-nav__link">
+    generate-basic
+  </a>
   
 </li>
       
@@ -614,6 +642,15 @@
 <p>If you prefer an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> client, just pass <code>--asyncio t</code> to your command.</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
 </span></code></pre></div>
+<h3 id="regenerating">Regenerating</h3>
+<p>At times you may wish to regenerate the client. This could be because the API has updated or you just want to use a newer version of clientele.</p>
+<p>To force a regeneration you must pass the <code>--regen</code> or <code>-r</code> argument, for example:</p>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w">  </span>--regen<span class="w"> </span>t
+</span></code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can copy and paste the command from the <code>MANIFEST.md</code> file in your previously-generated client for a quick and easy regeneration.</p>
+</div>
 <h2 id="validate"><code>validate</code></h2>
 <p>Validate lets you check if an OpenAPI schema will work with clientele.</p>
 <div class="admonition note">
@@ -624,16 +661,26 @@
 <h3 id="from-a-url_1">From a URL</h3>
 <p>Use the <code>-u</code> or <code>--url</code> argument.</p>
 <p><code>-o</code> or <code>--output</code> is the target directory for the generate client.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-u<span class="w"> </span>http://path.com/to/openapi.json
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-u<span class="w"> </span>http://path.com/to/openapi.json
 </span></code></pre></div>
 <h3 id="from-a-file-path">From a file path</h3>
 <p>Alternatively you can provide a local file using the <code>-f</code> or <code>--file</code> argument.</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-f<span class="w"> </span>/path/to/openapi.json
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>clientele<span class="w"> </span>validate<span class="w"> </span>-f<span class="w"> </span>/path/to/openapi.json
+</span></code></pre></div>
+<h2 id="generate-basic">generate-basic</h2>
+<p>The <code>generate-basic</code> command can be used to generate a basic file structure for an HTTP client.</p>
+<p>It does not required an OpenAPI schema, just a path.</p>
+<p>This command serves two reasons:</p>
+<ol>
+<li>You may have an HTTP API without an OpenAPI schema and you want to keep a consistent file structure with other Clientele clients.</li>
+<li>The generator for this basic client can be extended for your own client in the future, if you choose.</li>
+</ol>
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>clientele<span class="w"> </span>generate-basic<span class="w"> </span>-o<span class="w"> </span>my_client/
 </span></code></pre></div>
 <h2 id="version"><code>version</code></h2>
 <p>Print the current version of Clientele:</p>
-<div class="language-sh highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>&gt;<span class="w"> </span>clientele<span class="w"> </span>version
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Clientele<span class="w"> </span><span class="m">0</span>.7.0
+<div class="language-sh highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&gt;<span class="w"> </span>clientele<span class="w"> </span>version
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Clientele<span class="w"> </span><span class="m">0</span>.7.0
 </span></code></pre></div>
 
 
