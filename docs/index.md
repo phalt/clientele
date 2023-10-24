@@ -59,9 +59,10 @@ response = await client.simple_request_simple_request_get()
 ## Other features
 
 * Written entirely in Python.
-* Designed to work with [FastAPI](https://fastapi.tiangolo.com/)'s OpenAPI schema generator.
+* Designed to work with [FastAPI](https://fastapi.tiangolo.com/)'s and [Ddrf-spectacular](https://github.com/tfranzel/drf-spectacular)'s OpenAPI schema generator.
 * The generated client only depends on [httpx](https://www.python-httpx.org/) and [Pydantic 2.4](https://docs.pydantic.dev/latest/).
 * HTTP Basic and HTTP Bearer authentication support.
 * Support your own configuration - we provide an entry point that will never be overwritten.
 * Designed for easy testing with [respx](https://lundberg.github.io/respx/).
 * API updated? Just run the same command again and check the git diff.
+* Automatically formats the generated client with [black](https://black.readthedocs.io/en/stable/index.html).

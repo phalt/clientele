@@ -4,9 +4,9 @@ import pytest
 from httpx import Response
 from respx import MockRouter
 
-from .test_client import client, constants, http, schemas
+from .test_client import client, config, http, schemas
 
-BASE_URL = constants.api_base_url()
+BASE_URL = config.api_base_url()
 
 
 @pytest.mark.respx(base_url=BASE_URL)
