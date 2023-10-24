@@ -89,8 +89,8 @@ It does not required an OpenAPI schema, just a path.
 
 This command serves two reasons:
 
-1) You may have an HTTP API without an OpenAPI schema, but you want to keep a consistent file structure with other Clientele clients.
-2) The generator for this basic client can be extended for your own client in the future, if you choose.
+1. You may have an HTTP API without an OpenAPI schema and you want to keep a consistent file structure with other Clientele clients.
+2. The generator for this basic client can be extended for your own client in the future, if you choose.
 
 ```sh
 clientele generate-basic -o my_client/
