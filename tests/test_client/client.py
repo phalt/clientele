@@ -2,16 +2,13 @@ from __future__ import annotations
 
 import typing  # noqa
 
-from . import (
-    http,  # noqa
-    schemas,  # noqa
-)
+from tests.test_client import http, schemas  # noqa
 
 
 def complex_model_request_complex_model_request_get() -> schemas.ComplexModelResponse:
     """Complex Model Request"""
 
-    response = http.get(url=f"/complex-model-request")
+    response = http.get(url="/complex-model-request")
     return http.handle_response(
         complex_model_request_complex_model_request_get, response
     )
@@ -19,12 +16,12 @@ def complex_model_request_complex_model_request_get() -> schemas.ComplexModelRes
 
 def header_request_header_request_get(
     headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders],
-) -> typing.Union[schemas.HTTPValidationError, schemas.HeadersResponse]:
+) -> schemas.HTTPValidationError | schemas.HeadersResponse:
     """Header Request"""
     headers_dict = (
         headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
     )
-    response = http.get(url=f"/header-request", headers=headers_dict)
+    response = http.get(url="/header-request", headers=headers_dict)
     return http.handle_response(header_request_header_request_get, response)
 
 
@@ -33,7 +30,7 @@ def optional_parameters_request_optional_parameters_get() -> (
 ):
     """Optional Parameters Request"""
 
-    response = http.get(url=f"/optional-parameters")
+    response = http.get(url="/optional-parameters")
     return http.handle_response(
         optional_parameters_request_optional_parameters_get, response
     )
@@ -41,25 +38,25 @@ def optional_parameters_request_optional_parameters_get() -> (
 
 def request_data_request_data_post(
     data: schemas.RequestDataRequest,
-) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
+) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data"""
 
-    response = http.post(url=f"/request-data", data=data.model_dump())
+    response = http.post(url="/request-data", data=data.model_dump())
     return http.handle_response(request_data_request_data_post, response)
 
 
 def request_data_request_data_put(
     data: schemas.RequestDataRequest,
-) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataResponse]:
+) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data"""
 
-    response = http.put(url=f"/request-data", data=data.model_dump())
+    response = http.put(url="/request-data", data=data.model_dump())
     return http.handle_response(request_data_request_data_put, response)
 
 
 def request_data_path_request_data(
     path_parameter: str, data: schemas.RequestDataRequest
-) -> typing.Union[schemas.HTTPValidationError, schemas.RequestDataAndParameterResponse]:
+) -> schemas.HTTPValidationError | schemas.RequestDataAndParameterResponse:
     """Request Data Path"""
 
     response = http.post(url=f"/request-data/{path_parameter}", data=data.model_dump())
@@ -69,7 +66,7 @@ def request_data_path_request_data(
 def request_delete_request_delete_delete() -> schemas.DeleteResponse:
     """Request Delete"""
 
-    response = http.delete(url=f"/request-delete")
+    response = http.delete(url="/request-delete")
     return http.handle_response(request_delete_request_delete_delete, response)
 
 
@@ -78,7 +75,7 @@ def security_required_request_security_required_get() -> (
 ):
     """Security Required Request"""
 
-    response = http.get(url=f"/security-required")
+    response = http.get(url="/security-required")
     return http.handle_response(
         security_required_request_security_required_get, response
     )
@@ -86,7 +83,7 @@ def security_required_request_security_required_get() -> (
 
 def query_request_simple_query_get(
     your_input: str,
-) -> typing.Union[schemas.HTTPValidationError, schemas.SimpleQueryParametersResponse]:
+) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request"""
 
     response = http.get(url=f"/simple-query?your_input={your_input}")
@@ -95,7 +92,7 @@ def query_request_simple_query_get(
 
 def query_request_optional_query_get(
     your_input: typing.Optional[str],
-) -> typing.Union[schemas.HTTPValidationError, schemas.OptionalQueryParametersResponse]:
+) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
     """Optional Query Request"""
 
     response = http.get(url=f"/optional-query?your_input={your_input}")
@@ -105,13 +102,13 @@ def query_request_optional_query_get(
 def simple_request_simple_request_get() -> schemas.SimpleResponse:
     """Simple Request"""
 
-    response = http.get(url=f"/simple-request")
+    response = http.get(url="/simple-request")
     return http.handle_response(simple_request_simple_request_get, response)
 
 
 def parameter_request_simple_request(
     your_input: str,
-) -> typing.Union[schemas.HTTPValidationError, schemas.ParameterResponse]:
+) -> schemas.HTTPValidationError | schemas.ParameterResponse:
     """Parameter Request"""
 
     response = http.get(url=f"/simple-request/{your_input}")

@@ -7,6 +7,7 @@ Any standard `3.0.x` implementation works very well.
 We have tested Clientele with:
 
 * [FastAPI](https://fastapi.tiangolo.com/tutorial/first-steps/?h=openapi#what-is-openapi-for) - our target audience, so 100% compatibility guaranteed.
+* [drf-spectacular](https://github.com/tfranzel/drf-spectacular) works great as well, you can see which schemas we tested in [this GitHub issue](https://github.com/phalt/clientele/issues/23).
 * [Microsoft's OpenAPI spec](https://learn.microsoft.com/en-us/azure/api-management/import-api-from-oas?tabs=portal) has also been battle tested and works well.
 
 ## No compatibility

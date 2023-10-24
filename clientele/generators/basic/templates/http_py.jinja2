@@ -1,0 +1,68 @@
+"""
+HTTP layer management.
+"""
+
+import typing
+from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+import httpx  # noqa
+
+from {{client_project_directory_path}} import config as c  # noqa
+
+
+class APIException(Exception):
+    """Could not match API response to return type of this function"""
+
+    reason: str
+    response: httpx.Response
+
+    def __init__(self, response: httpx.Response, reason: str, *args: object) -> None:
+        self.response = response
+        self.reason = reason
+        super().__init__(*args)
+
+
+def parse_url(url: str) -> str:
+    """
+    Returns the full URL from a string.
+
+    Will filter out any optional query parameters if they are None.
+    """
+    api_url = f"{c.api_base_url()}{url}"
+    url_parts = urlparse(url=api_url)
+    # Filter out "None" optional query parameters
+    filtered_query_params = {
+        k: v for k, v in parse_qs(url_parts.query).items() if v[0] not in ["None", ""]
+    }
+    filtered_query_string = urlencode(filtered_query_params, doseq=True)
+    return urlunparse(
+        (
+            url_parts.scheme,
+            url_parts.netloc,
+            url_parts.path,
+            url_parts.params,
+            filtered_query_string,
+            url_parts.fragment,
+        )
+    )
+
+client = httpx.Client()
+
+
+def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP GET request"""
+    return client.get(parse_url(url), headers=headers)
+
+
+def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP POST request"""
+    return client.post(parse_url(url), json=data, headers=headers)
+
+
+def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP PUT request"""
+    return client.put(parse_url(url), json=data, headers=headers)
+
+
+def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP DELETE request"""
+    return client.delete(parse_url(url), headers=headers)

@@ -1,12 +1,10 @@
-from os.path import abspath, dirname
+import platform
 
-from jinja2 import Environment, PackageLoader
+VERSION = "0.7.0"
 
-CLIENT_TEMPLATE_ROOT = (
-    dirname(dirname(abspath(__file__))) + "/clientele/client_template/"
-)
-TEMPLATES_ROOT = dirname(dirname(abspath(__file__))) + "/clientele/templates/"
-CONSTANTS_ROOT = dirname(dirname(abspath(__file__))) + "/clientele/"
-VERSION = "0.6.3"
 
-templates = Environment(loader=PackageLoader("clientele", "templates"))
+def split_ver():
+    return [int(v) for v in platform.python_version().split(".")]
+
+
+PY_VERSION = split_ver()

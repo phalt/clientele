@@ -39,6 +39,20 @@ If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) clien
 clientele generate -f path/to/file.json -o my_client/ --asyncio t
 ```
 
+### Regenerating
+
+At times you may wish to regenerate the client. This could be because the API has updated or you just want to use a newer version of clientele.
+
+To force a regeneration you must pass the `--regen` or `-r` argument, for example:
+
+```sh
+clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
+```
+
+!!! note
+
+    You can copy and paste the command from the `MANIFEST.md` file in your previously-generated client for a quick and easy regeneration.
+
 ## `validate`
 
 Validate lets you check if an OpenAPI schema will work with clientele.
@@ -65,6 +79,21 @@ Alternatively you can provide a local file using the `-f` or `--file` argument.
 
 ```sh
 clientele validate -f /path/to/openapi.json
+```
+
+## generate-basic
+
+The `generate-basic` command can be used to generate a basic file structure for an HTTP client.
+
+It does not required an OpenAPI schema, just a path.
+
+This command serves two reasons:
+
+1. You may have an HTTP API without an OpenAPI schema and you want to keep a consistent file structure with other Clientele clients.
+2. The generator for this basic client can be extended for your own client in the future, if you choose.
+
+```sh
+clientele generate-basic -o my_client/
 ```
 
 ## `version`
