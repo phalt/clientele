@@ -63,7 +63,7 @@ class SchemasGenerator:
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
             type_string = is_optional and f"typing.Optional[{arg_type}]" or arg_type
-            content = content + f"""    {utils.snake_case_prop(arg)}: {type_string}\n"""
+            content = content + f"""    {arg}: {type_string}\n"""
         return content
 
     def generate_input_class(self, schema: dict) -> None:
