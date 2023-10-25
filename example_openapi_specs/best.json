@@ -185,10 +185,15 @@
                     "my_input": {
                         "title": "My Input",
                         "type": "string"
-                    }
+                    },
+                    "my_decimal_input": {
+                        "title": "A Decimal input",
+                        "type": "number",
+                        "format": "decimal"
+                    },
                 },
                 "required": [
-                    "my_input"
+                    "my_input", "my_decimal_input"
                 ],
                 "title": "RequestDataRequest",
                 "type": "object"

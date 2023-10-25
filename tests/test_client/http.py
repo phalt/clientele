@@ -1,10 +1,19 @@
+from __future__ import annotations
+
+import json
 import types
 import typing
+from decimal import Decimal
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-import httpx  # noqa
+import httpx
 
 from tests.test_client import config as c  # noqa
+
+
+def json_serializer(obj):
+    if isinstance(obj, Decimal):
+        return str(obj)
 
 
 class APIException(Exception):
@@ -120,12 +129,14 @@ def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
 
 def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP POST request"""
-    return client.post(parse_url(url), json=data, headers=headers)
+    json_data = json.dumps(data, default=json_serializer)
+    return client.post(parse_url(url), json=json_data, headers=headers)
 
 
 def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PUT request"""
-    return client.put(parse_url(url), json=data, headers=headers)
+    json_data = json.dumps(data, default=json_serializer)
+    return client.put(parse_url(url), json=json_data, headers=headers)
 
 
 def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
