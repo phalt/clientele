@@ -63,6 +63,11 @@
                         "title": "A String",
                         "type": "string"
                     },
+                    "a_decimal": {
+                        "title": "A Decimal",
+                        "type": "number",
+                        "format": "decimal"
+                    },
                     "another_model": {
                         "$ref": "#/components/schemas/AnotherModel"
                     }
@@ -70,6 +75,7 @@
                 "required": [
                     "a_string",
                     "a_number",
+                    "a_decimal",
                     "a_list_of_strings",
                     "a_list_of_numbers",
                     "another_model",
