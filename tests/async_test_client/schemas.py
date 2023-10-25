@@ -3,6 +3,7 @@ from __future__ import annotations
 import inspect  # noqa
 import typing  # noqa
 from enum import Enum  # noqa
+from decimal import Decimal  # noqa
 
 import pydantic  # noqa
 
@@ -20,6 +21,7 @@ class ComplexModelResponse(pydantic.BaseModel):
     a_list_of_strings: list[str]
     a_number: int
     a_string: str
+    a_decimal: Decimal
     another_model: "AnotherModel"
 
 

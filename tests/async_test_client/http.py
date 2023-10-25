@@ -1,6 +1,7 @@
-import types
 import typing
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+
+import types
 
 import httpx  # noqa
 
