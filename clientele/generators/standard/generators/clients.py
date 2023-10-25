@@ -66,9 +66,7 @@ class ClientsGenerator:
         console.log(f"Generated {self.results['put']} PUT methods...")
         console.log(f"Generated {self.results['delete']} DELETE methods...")
 
-    def generate_parameters(
-        self, parameters: list[dict], additional_parameters: list[dict]
-    ) -> ParametersResponse:
+    def generate_parameters(self, parameters: list[dict], additional_parameters: list[dict]) -> ParametersResponse:
         param_keys = []
         query_args = {}
         path_args = {}
@@ -88,17 +86,13 @@ class ClientsGenerator:
                 if required:
                     query_args[clean_key] = utils.get_type(param["schema"])
                 else:
-                    query_args[
-                        clean_key
-                    ] = f"typing.Optional[{utils.get_type(param['schema'])}]"
+                    query_args[clean_key] = f"typing.Optional[{utils.get_type(param['schema'])}]"
             elif in_ == "path":
                 # Function arguments
                 if required:
                     path_args[clean_key] = utils.get_type(param["schema"])
                 else:
-                    path_args[
-                        clean_key
-                    ] = f"typing.Optional[{utils.get_type(param['schema'])}]"
+                    path_args[clean_key] = f"typing.Optional[{utils.get_type(param['schema'])}]"
             elif in_ == "header":
                 # Header object arguments
                 headers_args[param["name"]] = utils.get_type(param["schema"])
@@ -129,15 +123,11 @@ class ClientsGenerator:
                     # This usually means we have an object that isn't
                     # $ref so we need to create the schema class here
                     class_name = utils.class_name_titled(title)
-                    self.schemas_generator.make_schema_class(
-                        class_name, schema=content["schema"]
-                    )
+                    self.schemas_generator.make_schema_class(class_name, schema=content["schema"])
                 else:
                     # At this point we're just making things up!
                     # It is likely it isn't an object it is just a simple resonse.
-                    class_name = utils.class_name_titled(
-                        func_name + status_code + "Response"
-                    )
+                    class_name = utils.class_name_titled(func_name + status_code + "Response")
                     # We need to generate the class at this point because it does not exist
                     self.schemas_generator.make_schema_class(
                         func_name + status_code + "Response",
@@ -145,9 +135,7 @@ class ClientsGenerator:
                     )
                 status_code_map[status_code] = class_name
                 response_classes.append(class_name)
-        self.http_generator.add_status_codes_to_bundle(
-            func_name=func_name, status_code_map=status_code_map
-        )
+        self.http_generator.add_status_codes_to_bundle(func_name=func_name, status_code_map=status_code_map)
         return sorted(list(set(response_classes)))
 
     def get_input_class_names(self, inputs: dict) -> list[str]:
@@ -170,13 +158,9 @@ class ClientsGenerator:
         return list(set(input_classes))
 
     def generate_response_types(self, responses: dict, func_name: str) -> str:
-        response_class_names = self.get_response_class_names(
-            responses=responses, func_name=func_name
-        )
+        response_class_names = self.get_response_class_names(responses=responses, func_name=func_name)
         if len(response_class_names) > 1:
-            return utils.union_for_py_ver(
-                [f"schemas.{r}" for r in response_class_names]
-            )
+            return utils.union_for_py_ver([f"schemas.{r}" for r in response_class_names])
         elif len(response_class_names) == 0:
             return "None"
         else:
@@ -204,9 +188,7 @@ class ClientsGenerator:
         summary: Optional[str],
     ):
         func_name = utils.get_func_name(operation, url)
-        response_types = self.generate_response_types(
-            responses=operation["responses"], func_name=func_name
-        )
+        response_types = self.generate_response_types(responses=operation["responses"], func_name=func_name)
         function_arguments = self.generate_parameters(
             parameters=operation.get("parameters", []),
             additional_parameters=additional_parameters,
@@ -218,9 +200,7 @@ class ClientsGenerator:
         if method in ["post", "put"] and not operation.get("requestBody"):
             data_class_name = "None"
         elif method in ["post", "put"]:
-            data_class_name = self.generate_input_types(
-                operation.get("requestBody", {})
-            )
+            data_class_name = self.generate_input_types(operation.get("requestBody", {}))
         else:
             data_class_name = None
         self.results[method] += 1

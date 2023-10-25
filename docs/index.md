@@ -43,7 +43,7 @@ match response:
         ...
 ```
 
-The generated code is tiny - the [example schema](https://github.com/phalt/clientele/blob/0.4.4/example_openapi_specs/best.json) we use for documentation and testing only requires [250 lines of code](https://github.com/phalt/clientele/tree/0.4.4/tests/test_client) and 5 files.
+The generated code is tiny - the [example schema](https://github.com/phalt/clientele/blob/main/example_openapi_specs/best.json) we use for documentation and testing only requires [250 lines of code](https://github.com/phalt/clientele/tree/main/tests/test_client) and 5 files.
 
 ## Async support
 
