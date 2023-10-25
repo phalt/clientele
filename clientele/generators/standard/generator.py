@@ -40,12 +40,8 @@ class StandardGenerator:
         url: Optional[str],
         file: Optional[str],
     ) -> None:
-        self.http_generator = http.HTTPGenerator(
-            spec=spec, output_dir=output_dir, asyncio=asyncio
-        )
-        self.schemas_generator = schemas.SchemasGenerator(
-            spec=spec, output_dir=output_dir
-        )
+        self.http_generator = http.HTTPGenerator(spec=spec, output_dir=output_dir, asyncio=asyncio)
+        self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir)
         self.clients_generator = clients.ClientsGenerator(
             spec=spec,
             output_dir=output_dir,
@@ -68,9 +64,7 @@ class StandardGenerator:
 
     def generate_templates_files(self):
         new_unions = settings.PY_VERSION[1] > 10
-        client_project_directory_path = utils.get_client_project_directory_path(
-            output_dir=self.output_dir
-        )
+        client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
         writer.write_to_init(output_dir=self.output_dir)
         for (
             client_file,
@@ -104,18 +98,14 @@ class StandardGenerator:
     def prevent_accidental_regens(self) -> bool:
         if exists(self.output_dir):
             if not self.regen:
-                console.log(
-                    "[red]WARNING! If you want to regenerate, please pass --regen t"
-                )
+                console.log("[red]WARNING! If you want to regenerate, please pass --regen t")
                 return False
         return True
 
     def format_client(self) -> None:
         directory = Path(self.output_dir)
         for f in directory.glob("*.py"):
-            black.format_file_in_place(
-                f, fast=False, mode=black.Mode(), write_back=black.WriteBack.YES
-            )
+            black.format_file_in_place(f, fast=False, mode=black.Mode(), write_back=black.WriteBack.YES)
 
     def generate(self) -> None:
         self.generate_templates_files()

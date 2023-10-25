@@ -9,31 +9,23 @@ def complex_model_request_complex_model_request_get() -> schemas.ComplexModelRes
     """Complex Model Request"""
 
     response = http.get(url="/complex-model-request")
-    return http.handle_response(
-        complex_model_request_complex_model_request_get, response
-    )
+    return http.handle_response(complex_model_request_complex_model_request_get, response)
 
 
 def header_request_header_request_get(
     headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders],
 ) -> schemas.HTTPValidationError | schemas.HeadersResponse:
     """Header Request"""
-    headers_dict = (
-        headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
-    )
+    headers_dict = headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
     response = http.get(url="/header-request", headers=headers_dict)
     return http.handle_response(header_request_header_request_get, response)
 
 
-def optional_parameters_request_optional_parameters_get() -> (
-    schemas.OptionalParametersResponse
-):
+def optional_parameters_request_optional_parameters_get() -> schemas.OptionalParametersResponse:
     """Optional Parameters Request"""
 
     response = http.get(url="/optional-parameters")
-    return http.handle_response(
-        optional_parameters_request_optional_parameters_get, response
-    )
+    return http.handle_response(optional_parameters_request_optional_parameters_get, response)
 
 
 def request_data_request_data_post(
@@ -70,15 +62,11 @@ def request_delete_request_delete_delete() -> schemas.DeleteResponse:
     return http.handle_response(request_delete_request_delete_delete, response)
 
 
-def security_required_request_security_required_get() -> (
-    schemas.SecurityRequiredResponse
-):
+def security_required_request_security_required_get() -> schemas.SecurityRequiredResponse:
     """Security Required Request"""
 
     response = http.get(url="/security-required")
-    return http.handle_response(
-        security_required_request_security_required_get, response
-    )
+    return http.handle_response(security_required_request_security_required_get, response)
 
 
 def query_request_simple_query_get(
