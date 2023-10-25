@@ -102,5 +102,5 @@ Print the current version of Clientele:
 
 ```sh
 > clientele version
-Clientele 0.7.0
+Clientele 0.7.1
 ```

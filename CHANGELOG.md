@@ -1,5 +1,9 @@
 # Change log
 
+## 0.7.1
+
+- Support for `Decimal` types.
+
 ## 0.7.0
 
 * Updated all files to use the templates engine.
