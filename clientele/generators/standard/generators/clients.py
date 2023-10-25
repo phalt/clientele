@@ -76,7 +76,7 @@ class ClientsGenerator:
             if param.get("$ref"):
                 # Get the actual parameter it is referencing
                 param = utils.get_param_from_ref(spec=self.spec, param=param)
-            clean_key = utils.snake_case_prop(param["name"])
+            clean_key = param["name"]
             if clean_key in param_keys:
                 continue
             in_ = param.get("in")

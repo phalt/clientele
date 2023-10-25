@@ -70,20 +70,20 @@ def security_required_request_security_required_get() -> schemas.SecurityRequire
 
 
 def query_request_simple_query_get(
-    your_input: str,
+    yourInput: str,
 ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request"""
 
-    response = http.get(url=f"/simple-query?your_input={your_input}")
+    response = http.get(url=f"/simple-query?yourInput={yourInput}")
     return http.handle_response(query_request_simple_query_get, response)
 
 
 def query_request_optional_query_get(
-    your_input: typing.Optional[str],
+    yourInput: typing.Optional[str],
 ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
     """Optional Query Request"""
 
-    response = http.get(url=f"/optional-query?your_input={your_input}")
+    response = http.get(url=f"/optional-query?yourInput={yourInput}")
     return http.handle_response(query_request_optional_query_get, response)
 
 

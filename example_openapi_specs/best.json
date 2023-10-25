@@ -565,7 +565,7 @@
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "your_input",
+                        "name": "yourInput",
                         "required": true,
                         "schema": {
                             "title": "Your Input",
@@ -605,7 +605,7 @@
                 "parameters": [
                     {
                         "in": "query",
-                        "name": "your_input",
+                        "name": "yourInput",
                         "required": false,
                         "schema": {
                             "title": "Your Input",
