@@ -25,9 +25,7 @@ class HTTPGenerator:
         self.asyncio = asyncio
         self.function_and_status_codes_bundle: dict[str, dict[str, str]] = {}
 
-    def add_status_codes_to_bundle(
-        self, func_name: str, status_code_map: dict[str, str]
-    ) -> None:
+    def add_status_codes_to_bundle(self, func_name: str, status_code_map: dict[str, str]) -> None:
         """
         Build a huge map of each function and it's status code responses.
         At the end of the client generation you should call http_generator.generate_http_content()
@@ -38,9 +36,7 @@ class HTTPGenerator:
         return f"\nfunc_response_code_maps = {self.function_and_status_codes_bundle}"
 
     def generate_http_content(self) -> None:
-        writer.write_to_http(
-            self.writeable_function_and_status_codes_bundle(), self.output_dir
-        )
+        writer.write_to_http(self.writeable_function_and_status_codes_bundle(), self.output_dir)
         client_generated = False
         client_type = "AsyncClient" if self.asyncio else "Client"
         if security_schemes := self.spec["components"].get("securitySchemes"):
@@ -62,9 +58,7 @@ class HTTPGenerator:
                         content = template.render(
                             client_type=client_type,
                         )
-                    console.log(
-                        f"[yellow]Please see {self.output_dir}config.py to set authentication variables"
-                    )
+                    console.log(f"[yellow]Please see {self.output_dir}config.py to set authentication variables")
                 elif info["type"] == "oauth2":
                     template = writer.templates.get_template("bearer_client.jinja2")
                     content = template.render(

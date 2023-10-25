@@ -49,26 +49,18 @@ def validate(url, file):
     else:
         with open(file, "r") as f:
             Spec.from_file(f)
-    console.log(
-        f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}"
-    )
+    console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
-        console.log(
-            f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
-        )
+        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
         return
     console.log("schema validated successfully! You can generate a client with it")
 
 
 @click.command()
 @click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
-@click.option(
-    "-f", "--file", help="Path to openapi schema (json or yaml file)", required=False
-)
-@click.option(
-    "-o", "--output", help="Directory for the generated client", required=True
-)
+@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
+@click.option("-o", "--output", help="Directory for the generated client", required=True)
 @click.option("-a", "--asyncio", help="Generate async client", required=False)
 @click.option("-r", "--regen", help="Regenerate client", required=False)
 def generate(url, file, output, asyncio, regen):
@@ -100,30 +92,20 @@ def generate(url, file, output, asyncio, regen):
     else:
         with open(file, "r") as f:
             spec = Spec.from_file(f)
-    console.log(
-        f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}"
-    )
+    console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
-        console.log(
-            f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}"
-        )
+        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
         return
-    generator = StandardGenerator(
-        spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file
-    )
+    generator = StandardGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ Client generated! ⚜️ \n")
-        console.log(
-            "[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client"
-        )
+        console.log("[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client")
 
 
 @click.command()
-@click.option(
-    "-o", "--output", help="Directory for the generated client", required=True
-)
+@click.option("-o", "--output", help="Directory for the generated client", required=True)
 def generate_basic(output):
     """
     Generate a "basic" file structure, no code.

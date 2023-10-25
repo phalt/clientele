@@ -78,7 +78,7 @@ Check your `git diff` to see if anything drastic has changed. If changes happen 
 Format and lint the code:
 
 ```sh
-make lint
+make format
 ```
 
 Note that, the auto-generated black formatted code will be changed again because this project uses `ruff` for additional formatting. That's okay.
