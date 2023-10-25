@@ -33,7 +33,7 @@ clean:  ## Clear any cache files and test files
 	rm -rf **/*.pyc
 
 test:  ## Run tests
-	pytest -vv 
+	pytest -vvv
 
 shell:  ## Run an ipython shell
 	poetry run ipython

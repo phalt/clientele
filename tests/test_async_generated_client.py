@@ -2,7 +2,8 @@
 Identical to the normal tests but just using
 the async client instead
 """
-import json
+
+from decimal import Decimal
 
 import pytest
 from httpx import Response
@@ -143,6 +144,7 @@ async def test_complex_model_request_complex_model_request_get(respx_mock: MockR
         "a_list_of_other_models": [{"key": "first"}],
         "a_list_of_strings": ["hello", "world"],
         "a_number": 13,
+        "a_decimal": 0.4,
         "a_string": "hello world",
         "another_model": {"key": "value"},
     }
@@ -154,8 +156,19 @@ async def test_complex_model_request_complex_model_request_get(respx_mock: MockR
     response = await client.complex_model_request_complex_model_request_get()
     # Then
     assert isinstance(response, schemas.ComplexModelResponse)
-    # Get around the enums
-    json.loads(json.dumps(response.model_dump())) == mocked_response
+    expected_dump_data = {
+        "a_dict_response": {"dict": "response"},
+        "a_enum": schemas.ExampleEnum.ONE,
+        "a_list_of_enums": [schemas.ExampleEnum.ONE, schemas.ExampleEnum.TWO],
+        "a_list_of_numbers": [1, 2, 3],
+        "a_list_of_other_models": [{"key": "first"}],
+        "a_list_of_strings": ["hello", "world"],
+        "a_number": 13,
+        "a_decimal": Decimal("0.4"),
+        "a_string": "hello world",
+        "another_model": {"key": "value"},
+    }
+    assert response.model_dump() == expected_dump_data
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path
