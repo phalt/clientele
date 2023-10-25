@@ -48,12 +48,12 @@ jobs:
       #----------------------------------------------
       # Do the actuall checks
       #----------------------------------------------
-      - name: Black check
+      - name: Ruff format
         run: |
-          poetry run black clientele/ --check
-      - name: Ruff check
+          poetry run ruff format --check .
+      - name: Ruff linting
         run: |
-          poetry run ruff clientele/
+          poetry run ruff .
       - name: Test with pytest
         run: |
           poetry run pytest -vv
