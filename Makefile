@@ -18,8 +18,8 @@ release:  ## Build a new version and release it
 mypy: ## Run a static syntax check
 	poetry run mypy .
 
-lint: ## Format the code correctly
-	poetry run black .
+format: ## Format the code correctly
+	poetry run ruff format .
 	poetry run ruff --fix .
 
 clean:  ## Clear any cache files and test files
