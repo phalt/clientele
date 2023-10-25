@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import inspect  # noqa
-import typing  # noqa
+import inspect
+import typing
 from decimal import Decimal  # noqa
 from enum import Enum  # noqa
 
-import pydantic  # noqa
+import pydantic
 
 
 class AnotherModel(pydantic.BaseModel):
@@ -58,6 +58,7 @@ class RequestDataAndParameterResponse(pydantic.BaseModel):
 
 class RequestDataRequest(pydantic.BaseModel):
     my_input: str
+    my_decimal_input: Decimal
 
 
 class RequestDataResponse(pydantic.BaseModel):

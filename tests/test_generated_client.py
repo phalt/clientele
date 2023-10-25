@@ -152,7 +152,7 @@ def test_request_data_request_data_post(respx_mock: MockRouter):
     mock_path = "/request-data"
     respx_mock.post(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
-    data = schemas.RequestDataRequest(my_input="test")
+    data = schemas.RequestDataRequest(my_input="test", my_decimal_input=Decimal(0.1))
     response = client.request_data_request_data_post(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
@@ -169,7 +169,7 @@ def test_request_data_request_data_put(respx_mock: MockRouter):
     mock_path = "/request-data"
     respx_mock.put(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
-    data = schemas.RequestDataRequest(my_input="test")
+    data = schemas.RequestDataRequest(my_input="test", my_decimal_input=Decimal(0.1))
     response = client.request_data_request_data_put(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
@@ -187,7 +187,7 @@ def test_request_data_path_request_data(respx_mock: MockRouter):
     mock_path = f"/request-data/{path_parameter}"
     respx_mock.post(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
-    data = schemas.RequestDataRequest(my_input="test")
+    data = schemas.RequestDataRequest(my_input="test", my_decimal_input=Decimal(0.1))
     response = client.request_data_path_request_data(path_parameter, data=data)
     # Then
     assert isinstance(response, schemas.RequestDataAndParameterResponse)

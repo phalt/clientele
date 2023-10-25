@@ -4,6 +4,7 @@
 
 - Improved support for Async clients which prevents a weird bug when running more than one event loop. Based on the suggestions from [this httpx issue](https://github.com/encode/httpcore/discussions/659).
 - We now use [`ruff format`](https://astral.sh/blog/the-ruff-formatter) for coding formatting (not the client output).
+- `Decimal` support now extends to Decimal input values.
 
 ## 0.7.1
 
