@@ -1,17 +1,22 @@
 
 
 def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP GET request """
+    """Issue an HTTP GET request"""
     return client.get(parse_url(url), headers=headers)
 
+
 def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP POST request """
-    return client.post(parse_url(url), json=data, headers=headers)
+    """Issue an HTTP POST request"""
+    json_data = json.dumps(data, default=json_serializer)
+    return client.post(parse_url(url), json=json_data, headers=headers)
+
 
 def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP PUT request """
-    return client.put(parse_url(url), json=data, headers=headers)
+    """Issue an HTTP PUT request"""
+    json_data = json.dumps(data, default=json_serializer)
+    return client.put(parse_url(url), json=json_data, headers=headers)
+
 
 def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP DELETE request """
+    """Issue an HTTP DELETE request"""
     return client.delete(parse_url(url), headers=headers)
