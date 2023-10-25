@@ -9,7 +9,7 @@ pipx install clientele
 
 API VERSION: 0.1.0
 OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 0.8.0
+CLIENTELE VERSION: 0.8.1
 
 Regnerate using this command:
 

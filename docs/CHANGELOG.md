@@ -1,5 +1,9 @@
 # Change log
 
+## 0.8.1
+
+- Function parameters no longer format to snake_case to maintain consistency with the OpenAPI schema.
+
 ## 0.8.0
 
 - Improved support for Async clients which prevents a weird bug when running more than one event loop. Based on the suggestions from [this httpx issue](https://github.com/encode/httpcore/discussions/659).
