@@ -1,5 +1,16 @@
 # Change log
 
+## 0.8.0
+
+- Improved support for Async clients which prevents a weird bug when running more than one event loop. Based on the suggestions from [this httpx issue](https://github.com/encode/httpcore/discussions/659).
+- We now use [`ruff format`](https://astral.sh/blog/the-ruff-formatter) for coding formatting (not the client output).
+- `Decimal` support now extends to Decimal input values.
+- Input and Output schemas will now have properties that directly match those provided by the OpenAPI schema. This fixes a bug where previously, the snake-case formatting did not match up with what the API expected to send or receive.
+
+## 0.7.1
+
+- Support for `Decimal` types.
+
 ## 0.7.0
 
 * Updated all files to use the templates engine.

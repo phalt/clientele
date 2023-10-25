@@ -14,9 +14,7 @@ def test_simple_request_simple_request_get(respx_mock: MockRouter):
     # Given
     mocked_response = {"status": "hello world"}
     mock_path = "/simple-request"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     response = client.simple_request_simple_request_get()
     # Then
@@ -31,9 +29,7 @@ def test_simple_request_simple_request_get_raises_exception(respx_mock: MockRout
     # Given
     mocked_response = {"bad": "response"}
     mock_path = "/simple-request"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=404)
-    )
+    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=404))
     # Then
     with pytest.raises(http.APIException) as raised_exception:
         client.simple_request_simple_request_get()
@@ -51,9 +47,7 @@ def test_optional_parameters_request_optional_parameters_get(respx_mock: MockRou
     # Given
     mocked_response = {"optional_parameter": None, "required_parameter": "Hello"}
     mock_path = "/optional-parameters"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     response = client.optional_parameters_request_optional_parameters_get()
     # Then
@@ -69,9 +63,7 @@ def test_parameter_request_simple_request(respx_mock: MockRouter):
     your_input = "hello world"
     mocked_response = {"your_input": your_input}
     mock_path = f"/simple-request/{your_input}"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     response = client.parameter_request_simple_request(your_input=your_input)
     # Then
@@ -87,9 +79,7 @@ def test_query_request_simple_query_get(respx_mock: MockRouter):
     your_input = "hello world"
     mocked_response = {"your_query": your_input}
     mock_path = "/simple-query?your_input=hello+world"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     response = client.query_request_simple_query_get(your_input=your_input)
     # Then
@@ -106,9 +96,7 @@ def test_query_request_optional_query_get(respx_mock: MockRouter):
     mocked_response = {"your_query": "test"}
     # NOTE: omits None query parameter
     mock_path = "/optional-query"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     response = client.query_request_optional_query_get(your_input=your_input)
     # Then
@@ -134,9 +122,7 @@ def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter)
         "another_model": {"key": "value"},
     }
     mock_path = "/complex-model-request"
-    respx_mock.get(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     response = client.complex_model_request_complex_model_request_get()
     # Then
@@ -164,11 +150,12 @@ def test_request_data_request_data_post(respx_mock: MockRouter):
     # Given
     mocked_response = {"my_input": "test"}
     mock_path = "/request-data"
-    respx_mock.post(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.post(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
-    data = schemas.RequestDataRequest(my_input="test")
+    data = schemas.RequestDataRequest(
+        my_input="test",
+        my_decimal_input=Decimal(0.1),
+    )
     response = client.request_data_request_data_post(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
@@ -183,11 +170,9 @@ def test_request_data_request_data_put(respx_mock: MockRouter):
     # Given
     mocked_response = {"my_input": "test"}
     mock_path = "/request-data"
-    respx_mock.put(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.put(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
-    data = schemas.RequestDataRequest(my_input="test")
+    data = schemas.RequestDataRequest(my_input="test", my_decimal_input=Decimal(0.1))
     response = client.request_data_request_data_put(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
@@ -203,11 +188,9 @@ def test_request_data_path_request_data(respx_mock: MockRouter):
     path_parameter = "param"
     mocked_response = {"my_input": "test", "path_parameter": path_parameter}
     mock_path = f"/request-data/{path_parameter}"
-    respx_mock.post(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.post(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
-    data = schemas.RequestDataRequest(my_input="test")
+    data = schemas.RequestDataRequest(my_input="test", my_decimal_input=Decimal(0.1))
     response = client.request_data_path_request_data(path_parameter, data=data)
     # Then
     assert isinstance(response, schemas.RequestDataAndParameterResponse)
@@ -222,9 +205,7 @@ def test_request_delete_request_delete_delete(respx_mock: MockRouter):
     # Given
     mocked_response = {}
     mock_path = "/request-delete"
-    respx_mock.delete(mock_path).mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
+    respx_mock.delete(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     response = client.request_delete_request_delete_delete()
     # Then

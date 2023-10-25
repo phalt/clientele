@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clientele"
-version = "0.7.1"
+version = "0.8.0"
 description = "Generate loveable Python HTTP API Clients"
 authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
@@ -29,14 +29,14 @@ jinja2 = "^3.1.2"
 black = "^23.9.1"
 
 [tool.poetry.group.dev.dependencies]
-mypy = "1.4.0"
-ruff = "^0.0.272"
+mypy = "^1.4.0"
 mkdocs = "^1.4.3"
 ipython = "^8.14.0"
 mkdocs-material = "^9.1.19"
 respx = "^0.20.2"
 pytest = "^7.4.0"
 pytest-asyncio = "^0.21.1"
+ruff = "^0.1.2"
 
 [build-system]
 requires = ["poetry-core"]

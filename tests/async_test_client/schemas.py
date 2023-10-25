@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import inspect  # noqa
-import typing  # noqa
+import inspect
+import typing
 from decimal import Decimal  # noqa
 from enum import Enum  # noqa
 
-import pydantic  # noqa
+import pydantic
 
 
 class AnotherModel(pydantic.BaseModel):
@@ -58,6 +58,7 @@ class RequestDataAndParameterResponse(pydantic.BaseModel):
 
 class RequestDataRequest(pydantic.BaseModel):
     my_input: str
+    my_decimal_input: Decimal
 
 
 class RequestDataResponse(pydantic.BaseModel):
@@ -105,11 +106,7 @@ def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:
 
     subclasses = []
     for _, c in inspect.getmembers(module):
-        if (
-            inspect.isclass(c)
-            and issubclass(c, pydantic.BaseModel)
-            and c != pydantic.BaseModel
-        ):
+        if inspect.isclass(c) and issubclass(c, pydantic.BaseModel) and c != pydantic.BaseModel:
             subclasses.append(c)
 
     return subclasses

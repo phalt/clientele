@@ -1,17 +1,26 @@
 
 
 async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP GET request """
-    return await client.get(parse_url(url), headers=headers)
+    """Issue an HTTP GET request"""
+    async with httpx.AsyncClient(headers=headers) as async_client:
+        return await async_client.get(parse_url(url), headers=headers)
+
 
 async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP POST request """
-    return await client.post(parse_url(url), json=data, headers=headers)
+    """Issue an HTTP POST request"""
+    json_data = json.dumps(data, default=json_serializer)
+    async with httpx.AsyncClient(headers=headers) as async_client:
+        return await async_client.post(parse_url(url), json=json_data, headers=headers)
+
 
 async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP PUT request """
-    return await client.put(parse_url(url), json=data, headers=headers)
+    """Issue an HTTP PUT request"""
+    json_data = json.dumps(data, default=json_serializer)
+    async with httpx.AsyncClient(headers=headers) as async_client:
+        return await async_client.put(parse_url(url), json=json_data, headers=headers)
+
 
 async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """ Issue an HTTP DELETE request """
-    return await client.delete(parse_url(url), headers=headers)
+    """Issue an HTTP DELETE request"""
+    async with httpx.AsyncClient(headers=headers) as async_client:
+        return await async_client.delete(parse_url(url), headers=headers)

@@ -50,9 +50,7 @@ def snake_case_prop(input_str: str) -> str:
         input_str = input_str + "_"
     # Retain all-uppercase strings, otherwise convert to camel case
     if not input_str.isupper():
-        input_str = "".join(
-            ["_" + i.lower() if i.isupper() else i for i in input_str]
-        ).lstrip("_")
+        input_str = "".join(["_" + i.lower() if i.isupper() else i for i in input_str]).lstrip("_")
     return input_str
 
 

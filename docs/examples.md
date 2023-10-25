@@ -145,7 +145,7 @@ The `response` object will be attached to this exception class for your own debu
 
 ## Schemas
 
-The `schemas.py` file has all the possible schemas, request and response, and even Enums, for the API. These are taken from OpenAPI's  schemas objects and turned into Python classes. They are all subclassed from pydantic's `BaseModel`. 
+The `schemas.py` file has all the possible schemas, request and response, and even Enums, for the API. These are taken from OpenAPI's  schemas objects and turned into Python classes. They are all subclassed from pydantic's `BaseModel`.
 
 Here are a few examples:
 

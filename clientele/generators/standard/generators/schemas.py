@@ -30,10 +30,7 @@ class SchemasGenerator:
         """
         content = ""
         for arg, arg_details in properties.items():
-            content = (
-                content
-                + f"""    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"""
-            )
+            content = content + f"""    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"""
         return content
 
     def generate_headers_class(self, properties: dict, func_name: str) -> str:
@@ -50,18 +47,14 @@ class SchemasGenerator:
             f'    {utils.snake_case_prop(k)}: {v} = pydantic.Field(serialization_alias="{k}")'
             for k, v in properties.items()
         )
-        content = template.render(
-            class_name=class_name, properties=string_props, enum=False
-        )
+        content = template.render(class_name=class_name, properties=string_props, enum=False)
         writer.write_to_schemas(
             content,
             output_dir=self.output_dir,
         )
         return f"typing.Optional[schemas.{utils.class_name_titled(func_name)}Headers]"
 
-    def generate_class_properties(
-        self, properties: dict, required: Optional[list] = None
-    ) -> str:
+    def generate_class_properties(self, properties: dict, required: Optional[list] = None) -> str:
         """
         Generate a string list of the properties for this pydantic class.
         """
@@ -70,7 +63,7 @@ class SchemasGenerator:
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
             type_string = is_optional and f"typing.Optional[{arg_type}]" or arg_type
-            content = content + f"""    {utils.snake_case_prop(arg)}: {type_string}\n"""
+            content = content + f"""    {arg}: {type_string}\n"""
         return content
 
     def generate_input_class(self, schema: dict) -> None:
@@ -89,9 +82,7 @@ class SchemasGenerator:
                     required=input_schema["schema"].get("required", None),
                 )
                 template = writer.templates.get_template("schema_class.jinja2")
-                out_content = template.render(
-                    class_name=class_name, properties=properties, enum=False
-                )
+                out_content = template.render(class_name=class_name, properties=properties, enum=False)
             writer.write_to_schemas(
                 out_content,
                 output_dir=self.output_dir,
@@ -111,9 +102,7 @@ class SchemasGenerator:
                         properties += self.schemas[other_schema_key]
                     else:
                         # It's a ref but we've just not made it yet
-                        schema_model = utils.get_schema_from_ref(
-                            spec=self.spec, ref=is_ref
-                        )
+                        schema_model = utils.get_schema_from_ref(spec=self.spec, ref=is_ref)
                         properties += self.generate_class_properties(
                             properties=schema_model.get("properties", {}),
                             required=schema_model.get("required", None),
@@ -127,9 +116,7 @@ class SchemasGenerator:
                         )
         elif schema.get("enum"):
             enum = True
-            properties = self.generate_enum_properties(
-                {v: {"type": f'"{v}"'} for v in schema["enum"]}
-            )
+            properties = self.generate_enum_properties({v: {"type": f'"{v}"'} for v in schema["enum"]})
         else:
             properties = self.generate_class_properties(
                 properties=schema.get("properties", {}),
@@ -137,9 +124,7 @@ class SchemasGenerator:
             )
         self.schemas[schema_key] = properties
         template = writer.templates.get_template("schema_class.jinja2")
-        content = template.render(
-            class_name=schema_key, properties=properties, enum=enum
-        )
+        content = template.render(class_name=schema_key, properties=properties, enum=enum)
         writer.write_to_schemas(
             content,
             output_dir=self.output_dir,

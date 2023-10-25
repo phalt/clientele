@@ -27,18 +27,12 @@ class BasicGenerator:
         )
 
     def generate(self) -> None:
-        client_project_directory_path = utils.get_client_project_directory_path(
-            output_dir=self.output_dir
-        )
+        client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
         if exists(f"{self.output_dir}/MANIFEST.md"):
             remove(f"{self.output_dir}/MANIFEST.md")
         manifest_template = writer.templates.get_template("manifest.jinja2")
-        manifest_content = manifest_template.render(
-            command=f"-o {self.output_dir}", clientele_version=settings.VERSION
-        )
-        writer.write_to_manifest(
-            content=manifest_content + "\n", output_dir=self.output_dir
-        )
+        manifest_content = manifest_template.render(command=f"-o {self.output_dir}", clientele_version=settings.VERSION)
+        writer.write_to_manifest(content=manifest_content + "\n", output_dir=self.output_dir)
         writer.write_to_init(output_dir=self.output_dir)
         for (
             client_file,
