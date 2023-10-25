@@ -1,10 +1,19 @@
+from __future__ import annotations
+
+import json
 import types
 import typing
+from decimal import Decimal
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
 
-import httpx  # noqa
+import httpx
 
 from tests.async_test_client import config as c  # noqa
+
+
+def json_serializer(obj):
+    if isinstance(obj, Decimal):
+        return str(obj)
 
 
 class APIException(Exception):
@@ -121,14 +130,16 @@ async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response
 
 async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP POST request"""
+    json_data = json.dumps(data, default=json_serializer)
     async with httpx.AsyncClient(headers=headers) as async_client:
-        return await async_client.post(parse_url(url), json=data, headers=headers)
+        return await async_client.post(parse_url(url), json=json_data, headers=headers)
 
 
 async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PUT request"""
+    json_data = json.dumps(data, default=json_serializer)
     async with httpx.AsyncClient(headers=headers) as async_client:
-        return await async_client.put(parse_url(url), json=data, headers=headers)
+        return await async_client.put(parse_url(url), json=json_data, headers=headers)
 
 
 async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
