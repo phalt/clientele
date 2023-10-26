@@ -1,5 +1,9 @@
 # Change log
 
+## 0.8.3
+
+- Fix bug with headers assignment
+
 ## 0.8.2
 
 - Improved json support
