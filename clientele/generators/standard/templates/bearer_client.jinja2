@@ -1,6 +1,6 @@
 
 
 auth_key = c.get_bearer_token()
-headers = c.additional_headers()
-headers.update(Authorization=f'Bearer {auth_key}')
-client = httpx.{{client_type}}(headers=headers)
+client_headers = c.additional_headers()
+client_headers.update(Authorization=f'Bearer {auth_key}')
+client = httpx.{{client_type}}(headers=client_headers)

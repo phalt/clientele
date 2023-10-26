@@ -1,2 +1,3 @@
 
-client = httpx.{{client_type}}(headers=c.additional_headers())
+client_headers = c.additional_headers()
+client = httpx.{{client_type}}(headers=client_headers)

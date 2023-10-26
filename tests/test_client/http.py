@@ -117,28 +117,36 @@ func_response_code_maps = {
 }
 
 auth_key = c.get_bearer_token()
-headers = c.additional_headers()
-headers.update(Authorization=f"Bearer {auth_key}")
-client = httpx.Client(headers=headers)
+client_headers = c.additional_headers()
+client_headers.update(Authorization=f"Bearer {auth_key}")
+client = httpx.Client(headers=client_headers)
 
 
 def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP GET request"""
-    return client.get(parse_url(url), headers=headers)
+    if headers:
+        client_headers.update(headers)
+    return client.get(parse_url(url), headers=client_headers)
 
 
 def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP POST request"""
+    if headers:
+        client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    return client.post(parse_url(url), json=json_data, headers=headers)
+    return client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
 def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PUT request"""
+    if headers:
+        client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    return client.put(parse_url(url), json=json_data, headers=headers)
+    return client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
 def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
-    return client.delete(parse_url(url), headers=headers)
+    if headers:
+        client_headers.update(headers)
+    return client.delete(parse_url(url), headers=client_headers)

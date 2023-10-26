@@ -117,32 +117,40 @@ func_response_code_maps = {
 }
 
 auth_key = c.get_bearer_token()
-headers = c.additional_headers()
-headers.update(Authorization=f"Bearer {auth_key}")
-client = httpx.AsyncClient(headers=headers)
+client_headers = c.additional_headers()
+client_headers.update(Authorization=f"Bearer {auth_key}")
+client = httpx.AsyncClient(headers=client_headers)
 
 
 async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP GET request"""
-    async with httpx.AsyncClient(headers=headers) as async_client:
-        return await async_client.get(parse_url(url), headers=headers)
+    if headers:
+        client_headers.update(headers)
+    async with httpx.AsyncClient(headers=client_headers) as async_client:
+        return await async_client.get(parse_url(url))
 
 
 async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP POST request"""
+    if headers:
+        client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(headers=headers) as async_client:
-        return await async_client.post(parse_url(url), json=json_data, headers=headers)
+    async with httpx.AsyncClient(headers=client_headers) as async_client:
+        return await async_client.post(parse_url(url), json=json_data)
 
 
 async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PUT request"""
+    if headers:
+        client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(headers=headers) as async_client:
-        return await async_client.put(parse_url(url), json=json_data, headers=headers)
+    async with httpx.AsyncClient(headers=client_headers) as async_client:
+        return await async_client.put(parse_url(url), json=json_data)
 
 
 async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
-    async with httpx.AsyncClient(headers=headers) as async_client:
-        return await async_client.delete(parse_url(url), headers=headers)
+    if headers:
+        client_headers.update(headers)
+    async with httpx.AsyncClient(headers=client_headers) as async_client:
+        return await async_client.delete(parse_url(url))
