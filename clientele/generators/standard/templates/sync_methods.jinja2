@@ -7,13 +7,13 @@ def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
 
 def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP POST request"""
-    json_data = json.dumps(data, default=json_serializer)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
     return client.post(parse_url(url), json=json_data, headers=headers)
 
 
 def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PUT request"""
-    json_data = json.dumps(data, default=json_serializer)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
     return client.put(parse_url(url), json=json_data, headers=headers)
 
 

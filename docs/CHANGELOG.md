@@ -1,5 +1,9 @@
 # Change log
 
+## 0.8.2
+
+- Improved json support
+
 ## 0.8.1
 
 - Function parameters no longer format to snake_case to maintain consistency with the OpenAPI schema.

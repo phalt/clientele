@@ -8,14 +8,14 @@ async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response
 
 async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP POST request"""
-    json_data = json.dumps(data, default=json_serializer)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
     async with httpx.AsyncClient(headers=headers) as async_client:
         return await async_client.post(parse_url(url), json=json_data, headers=headers)
 
 
 async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PUT request"""
-    json_data = json.dumps(data, default=json_serializer)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
     async with httpx.AsyncClient(headers=headers) as async_client:
         return await async_client.put(parse_url(url), json=json_data, headers=headers)
 

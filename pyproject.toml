@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clientele"
-version = "0.8.1"
+version = "0.8.2"
 description = "Generate loveable Python HTTP API Clients"
 authors = ["Paul Hallett <paulandrewhallett@gmail.com>"]
 license = "MIT"
