@@ -56,6 +56,7 @@ class ClientsGenerator:
             delete="get_method.jinja2",
             post="post_method.jinja2",
             put="post_method.jinja2",
+            patch="post_method.jinja2",
         )
 
     def generate_paths(self) -> None:
@@ -64,6 +65,7 @@ class ClientsGenerator:
         console.log(f"Generated {self.results['get']} GET methods...")
         console.log(f"Generated {self.results['post']} POST methods...")
         console.log(f"Generated {self.results['put']} PUT methods...")
+        console.log(f"Generated {self.results['patch']} PATCH methods...")
         console.log(f"Generated {self.results['delete']} DELETE methods...")
 
     def generate_parameters(self, parameters: list[dict], additional_parameters: list[dict]) -> ParametersResponse:
@@ -197,9 +199,9 @@ class ClientsGenerator:
             api_url = url + utils.create_query_args(list(query_args.keys()))
         else:
             api_url = url
-        if method in ["post", "put"] and not operation.get("requestBody"):
+        if method in ["post", "put", "patch"] and not operation.get("requestBody"):
             data_class_name = "None"
-        elif method in ["post", "put"]:
+        elif method in ["post", "put", "patch"]:
             data_class_name = self.generate_input_types(operation.get("requestBody", {}))
         else:
             data_class_name = None

@@ -63,6 +63,11 @@ def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Re
     return client.put(parse_url(url), json=data, headers=headers)
 
 
+def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP PATCH request"""
+    return client.patch(parse_url(url), json=data, headers=headers)
+
+
 def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
     return client.delete(parse_url(url), headers=headers)
