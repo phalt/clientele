@@ -72,6 +72,8 @@ class StandardGenerator:
             write_func,
         ) in self.file_name_writer_tuple:
             if exists(f"{self.output_dir}/{client_file}"):
+                if client_file == "config.py": # do not replace config.py if exists
+                    continue
                 remove(f"{self.output_dir}/{client_file}")
             template = writer.templates.get_template(client_template_file)
             content = template.render(
