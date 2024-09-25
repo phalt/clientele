@@ -145,6 +145,14 @@ def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Re
     return client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
+def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP PATCH request"""
+    if headers:
+        client_headers.update(headers)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
+    return client.patch(parse_url(url), json=json_data, headers=client_headers)
+
+
 def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
     if headers:
