@@ -3,6 +3,7 @@
 ## 0.9.0
 
 - Support `patch` methods
+- Fix `config.py` file being overwritten when generating new clients
 
 ## 0.8.3
 
