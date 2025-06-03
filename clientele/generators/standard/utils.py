@@ -82,10 +82,12 @@ def get_type(t):
 
     if t_type == DataType.STRING:
         return "str"
-    if t_type in [DataType.INTEGER, DataType.NUMBER]:
+    if t_type == DataType.NUMBER:
         # Check formatting for a decimal type
         if t_format == "decimal":
             return "Decimal"
+        return "float"
+    if t_type == DataType.INTEGER:
         return "int"
     if t_type == DataType.BOOLEAN:
         return "bool"
