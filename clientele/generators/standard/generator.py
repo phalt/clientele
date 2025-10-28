@@ -106,8 +106,12 @@ class StandardGenerator:
 
     def format_client(self) -> None:
         directory = Path(self.output_dir)
-        for f in directory.glob("*.py"):
-            black.format_file_in_place(f, fast=False, mode=black.Mode(), write_back=black.WriteBack.YES)
+        # Collect all Python files first to format them efficiently
+        python_files = list(directory.glob("*.py"))
+        # Use fast=True for better performance during code generation
+        mode = black.Mode()
+        for f in python_files:
+            black.format_file_in_place(f, fast=True, mode=mode, write_back=black.WriteBack.YES)
 
     def generate(self) -> None:
         self.generate_templates_files()

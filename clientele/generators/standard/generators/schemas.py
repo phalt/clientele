@@ -95,26 +95,32 @@ class SchemasGenerator:
         properties: str = ""
         if all_of := schema.get("allOf"):
             # This schema uses "all of" the properties inside it
+            property_parts = []
             for other_ref in all_of:
                 is_ref = other_ref.get("$ref", False)
                 if is_ref:
                     other_schema_key = utils.class_name_titled(utils.schema_ref(is_ref))
                     if other_schema_key in self.schemas:
-                        properties += self.schemas[other_schema_key]
+                        property_parts.append(self.schemas[other_schema_key])
                     else:
                         # It's a ref but we've just not made it yet
                         schema_model = utils.get_schema_from_ref(spec=self.spec, ref=is_ref)
-                        properties += self.generate_class_properties(
-                            properties=schema_model.get("properties", {}),
-                            required=schema_model.get("required", None),
+                        property_parts.append(
+                            self.generate_class_properties(
+                                properties=schema_model.get("properties", {}),
+                                required=schema_model.get("required", None),
+                            )
                         )
                 else:
                     # It's not a ref and we need to figure out what it is
                     if other_ref.get("type") == "object":
-                        properties += self.generate_class_properties(
-                            properties=other_ref.get("properties", {}),
-                            required=other_ref.get("required", None),
+                        property_parts.append(
+                            self.generate_class_properties(
+                                properties=other_ref.get("properties", {}),
+                                required=other_ref.get("required", None),
+                            )
                         )
+            properties = "".join(property_parts)
         elif schema.get("enum"):
             enum = True
             properties = self.generate_enum_properties({v: {"type": f'"{v}"'} for v in schema["enum"]})
