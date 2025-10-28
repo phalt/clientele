@@ -158,8 +158,8 @@ class ClientsGenerator:
                     class_name = encoding
                 class_name = utils.class_name_titled(class_name)
                 input_classes.append(class_name)
-        # Deduplicate while preserving insertion order
-        return list(dict.fromkeys(input_classes))
+        # Return deduplicated list - order doesn't matter for this use case
+        return list(set(input_classes))
 
     def generate_response_types(self, responses: dict, func_name: str) -> str:
         response_class_names = self.get_response_class_names(responses=responses, func_name=func_name)
