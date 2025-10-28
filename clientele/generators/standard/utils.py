@@ -1,4 +1,5 @@
 import re
+from functools import lru_cache
 
 from openapi_core import Spec
 
@@ -16,34 +17,32 @@ class DataType:
     ANY_OF = "anyOf"
 
 
+@lru_cache(maxsize=256)
 def class_name_titled(input_str: str) -> str:
     """
     Make the input string suitable for a class name
     """
     # Capitalize the first letter always
     input_str = input_str[:1].title() + input_str[1:]
-    # Remove any bad characters with an empty space
-    for badstr in [".", "-", "_", ">", "<", "/"]:
-        input_str = input_str.replace(badstr, " ")
+    # Remove any bad characters with an empty space in a single pass
+    trans_table = str.maketrans(".-_></", "      ")
+    input_str = input_str.translate(trans_table)
     if " " in input_str:
         # Capitalize all the spaces
         input_str = input_str.title()
     # Remove all the spaces!
-    input_str = input_str.replace(" ", "")
-    return input_str
+    return input_str.replace(" ", "")
 
 
+@lru_cache(maxsize=256)
 def snake_case_prop(input_str: str) -> str:
     """
     Clean a property to not have invalid characters.
     Returns a "snake_case" version of the input string
     """
-    # These strings appear in some OpenAPI schemas
-    for dropchar in [">", "<"]:
-        input_str = input_str.replace(dropchar, "")
-    # These we can just convert to an underscore
-    for badstr in ["-", "."]:
-        input_str = input_str.replace(badstr, "_")
+    # Replace characters in a single pass using translate
+    trans_table = str.maketrans({">": "", "<": "", "-": "_", ".": "_"})
+    input_str = input_str.translate(trans_table)
     # python keywords need to be converted
     reserved_words = ["from"]
     if input_str in reserved_words:
@@ -62,12 +61,11 @@ def _split_upper(s):
 
 
 def _snake_case(s):
-    for badchar in ["/", "-", "."]:
-        s = s.replace(badchar, "_")
+    # Replace characters in a single pass
+    trans_table = str.maketrans("/-.", "___")
+    s = s.translate(trans_table)
     s = _split_upper(s)
-    if s[0] == "_":
-        s = s[1:]
-    return s.lower()
+    return s[1:].lower() if s and s[0] == "_" else s.lower()
 
 
 def get_func_name(operation: dict, path: str) -> str:
@@ -107,10 +105,12 @@ def create_query_args(query_args: list[str]) -> str:
     return "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
 
 
+@lru_cache(maxsize=128)
 def schema_ref(ref: str) -> str:
     return ref.replace("#/components/schemas/", "")
 
 
+@lru_cache(maxsize=128)
 def param_ref(ref: str) -> str:
     return ref.replace("#/components/parameters/", "")
 
