@@ -8,13 +8,14 @@ from openapi_core import Spec
 from rich.console import Console
 
 from clientele import settings, utils
+from clientele.generators import Generator
 from clientele.generators.standard import writer
 from clientele.generators.standard.generators import clients, http, schemas
 
 console = Console()
 
 
-class StandardGenerator:
+class StandardGenerator(Generator):
     """
     The standard Clientele generator.
 
