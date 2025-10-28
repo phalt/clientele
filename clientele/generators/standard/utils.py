@@ -1,4 +1,5 @@
 import re
+from functools import lru_cache
 
 from openapi_core import Spec
 
@@ -16,6 +17,7 @@ class DataType:
     ANY_OF = "anyOf"
 
 
+@lru_cache(maxsize=256)
 def class_name_titled(input_str: str) -> str:
     """
     Make the input string suitable for a class name
@@ -32,6 +34,7 @@ def class_name_titled(input_str: str) -> str:
     return input_str.replace(" ", "")
 
 
+@lru_cache(maxsize=256)
 def snake_case_prop(input_str: str) -> str:
     """
     Clean a property to not have invalid characters.
@@ -102,10 +105,12 @@ def create_query_args(query_args: list[str]) -> str:
     return "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
 
 
+@lru_cache(maxsize=128)
 def schema_ref(ref: str) -> str:
     return ref.replace("#/components/schemas/", "")
 
 
+@lru_cache(maxsize=128)
 def param_ref(ref: str) -> str:
     return ref.replace("#/components/parameters/", "")
 
