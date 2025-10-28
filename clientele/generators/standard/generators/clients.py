@@ -138,7 +138,8 @@ class ClientsGenerator:
                 status_code_map[status_code] = class_name
                 response_classes.append(class_name)
         self.http_generator.add_status_codes_to_bundle(func_name=func_name, status_code_map=status_code_map)
-        return sorted(list(set(response_classes)))
+        # Use set to deduplicate, then sorted for consistent ordering
+        return sorted(set(response_classes))
 
     def get_input_class_names(self, inputs: dict) -> list[str]:
         """
@@ -157,6 +158,7 @@ class ClientsGenerator:
                     class_name = encoding
                 class_name = utils.class_name_titled(class_name)
                 input_classes.append(class_name)
+        # Return deduplicated list - order doesn't matter for this use case
         return list(set(input_classes))
 
     def generate_response_types(self, responses: dict, func_name: str) -> str:

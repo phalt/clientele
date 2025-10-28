@@ -1,6 +1,33 @@
 import click
 
 
+def _load_openapi_spec(url: str = None, file: str = None):
+    """
+    Load OpenAPI spec from URL or file.
+    Returns the spec object and handles JSON/YAML parsing.
+    """
+    from json import JSONDecodeError
+
+    import yaml
+    from httpx import Client
+    from openapi_core import Spec
+
+    assert url or file, "Must pass either a URL or a file"
+
+    if url:
+        with Client() as client:  # Use context manager for proper cleanup
+            response = client.get(url)
+            try:
+                data = response.json()
+            except JSONDecodeError:
+                # It's probably yaml
+                data = yaml.safe_load(response.content)
+        return Spec.from_dict(data)
+    else:
+        with open(file, "r") as f:
+            return Spec.from_file(f)
+
+
 @click.group()
 def cli_group():
     """
@@ -26,29 +53,11 @@ def validate(url, file):
     """
     Validate an OpenAPI schema. Will error if anything is wrong with the schema
     """
-    from json import JSONDecodeError
-
-    import yaml
-    from httpx import Client
-    from openapi_core import Spec
     from rich.console import Console
 
     console = Console()
 
-    assert url or file, "Must pass either a URL or a file"
-
-    if url:
-        client = Client()
-        response = client.get(url)
-        try:
-            data = response.json()
-        except JSONDecodeError:
-            # It's probably yaml
-            data = yaml.safe_load(response.content)
-        spec = Spec.from_dict(data)
-    else:
-        with open(file, "r") as f:
-            Spec.from_file(f)
+    spec = _load_openapi_spec(url=url, file=file)
     console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
@@ -67,31 +76,13 @@ def generate(url, file, output, asyncio, regen):
     """
     Generate a new client from an OpenAPI schema
     """
-    from json import JSONDecodeError
-
-    import yaml
-    from httpx import Client
-    from openapi_core import Spec
     from rich.console import Console
 
     console = Console()
 
     from clientele.generators.standard.generator import StandardGenerator
 
-    assert url or file, "Must pass either a URL or a file"
-
-    if url:
-        client = Client()
-        response = client.get(url)
-        try:
-            data = response.json()
-        except JSONDecodeError:
-            # It's probably yaml
-            data = yaml.safe_load(response.content)
-        spec = Spec.from_dict(data)
-    else:
-        with open(file, "r") as f:
-            spec = Spec.from_file(f)
+    spec = _load_openapi_spec(url=url, file=file)
     console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
     major, _, _ = spec["openapi"].split(".")
     if int(major) < 3:
