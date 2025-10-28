@@ -1,5 +1,9 @@
 # Change log
 
+## 0.10.0
+
+- Add ABC (Abstract Base Class) pattern to generators with a `Generator` base class that all generators inherit from.
+
 ## 0.9.0
 
 - Support `patch` methods

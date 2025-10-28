@@ -2,10 +2,11 @@ from os import remove
 from os.path import exists
 
 from clientele import settings, utils
+from clientele.generators import Generator
 from clientele.generators.basic import writer
 
 
-class BasicGenerator:
+class BasicGenerator(Generator):
     """
     Generates a "basic" HTTP client, which is just a file structure
     and some useful imports.
