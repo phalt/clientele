@@ -1,3 +1,13 @@
+from __future__ import annotations
+
+import inspect
+import typing
+from enum import Enum  # noqa
+from decimal import Decimal  # noqa
+
+import pydantic
+
+
 class AnotherModel(pydantic.BaseModel):
     key: str
 

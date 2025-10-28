@@ -87,3 +87,87 @@ def handle_response(func, response):
 
 
 # Func map
+func_response_code_maps = {
+    "complex_model_request_complex_model_request_get": {"200": "ComplexModelResponse"},
+    "header_request_header_request_get": {
+        "200": "HeadersResponse",
+        "422": "HTTPValidationError",
+    },
+    "optional_parameters_request_optional_parameters_get": {
+        "200": "OptionalParametersResponse"
+    },
+    "request_data_request_data_post": {
+        "200": "RequestDataResponse",
+        "422": "HTTPValidationError",
+    },
+    "request_data_request_data_put": {
+        "200": "RequestDataResponse",
+        "422": "HTTPValidationError",
+    },
+    "request_data_path_request_data": {
+        "200": "RequestDataAndParameterResponse",
+        "422": "HTTPValidationError",
+    },
+    "request_delete_request_delete_delete": {"200": "DeleteResponse"},
+    "security_required_request_security_required_get": {
+        "200": "SecurityRequiredResponse"
+    },
+    "query_request_simple_query_get": {
+        "200": "SimpleQueryParametersResponse",
+        "422": "HTTPValidationError",
+    },
+    "query_request_optional_query_get": {
+        "200": "OptionalQueryParametersResponse",
+        "422": "HTTPValidationError",
+    },
+    "simple_request_simple_request_get": {"200": "SimpleResponse"},
+    "parameter_request_simple_request": {
+        "200": "ParameterResponse",
+        "422": "HTTPValidationError",
+    },
+}
+
+auth_key = c.get_bearer_token()
+client_headers = c.additional_headers()
+client_headers.update(Authorization=f"Bearer {auth_key}")
+client = httpx.Client(headers=client_headers)
+
+
+def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP GET request"""
+    if headers:
+        client_headers.update(headers)
+    return client.get(parse_url(url), headers=client_headers)
+
+
+def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP POST request"""
+    if headers:
+        client_headers.update(headers)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
+    return client.post(parse_url(url), json=json_data, headers=client_headers)
+
+
+def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP PUT request"""
+    if headers:
+        client_headers.update(headers)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
+    return client.put(parse_url(url), json=json_data, headers=client_headers)
+
+
+def patch(
+    url: str, data: dict, headers: typing.Optional[dict] = None
+) -> httpx.Response:
+    """Issue an HTTP PATCH request"""
+    if headers:
+        client_headers.update(headers)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
+    return client.patch(parse_url(url), json=json_data, headers=client_headers)
+
+
+def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP DELETE request"""
+    if headers:
+        client_headers.update(headers)
+    return client.delete(parse_url(url), headers=client_headers)

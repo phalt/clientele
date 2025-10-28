@@ -8,7 +8,7 @@ from rich.console import Console
 from clientele.generators.classbase import writer
 from clientele.generators.classbase import utils as classbase_utils
 from clientele.generators.classbase.generators import schemas
-from clientele.generators.standard.generators import http
+from clientele.generators.classbase.generators import http
 
 # Use classbase utils for this generator
 utils = classbase_utils

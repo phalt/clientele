@@ -10,8 +10,9 @@ _schemas_buffer = []
 
 
 def write_to_schemas(content: str, output_dir: str) -> None:
-    """Buffer schema content for later writing"""
-    _schemas_buffer.append(content)
+    """Write schema content immediately to file"""
+    path = Path(output_dir) / "schemas.py"
+    _write_to(path, content)
 
 
 def write_to_http(content: str, output_dir: str) -> None:
