@@ -115,4 +115,5 @@ class StandardGenerator:
         self.clients_generator.generate_paths()
         self.http_generator.generate_http_content()
         self.schemas_generator.write_helpers()
+        writer.flush_buffers()  # Write all buffered content at once
         self.format_client()

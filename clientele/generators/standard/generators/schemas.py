@@ -28,10 +28,11 @@ class SchemasGenerator:
         """
         Generate a string list of the properties for this enum.
         """
-        content = ""
-        for arg, arg_details in properties.items():
-            content = content + f"""    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"""
-        return content
+        lines = [
+            f"    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"
+            for arg, arg_details in properties.items()
+        ]
+        return "".join(lines)
 
     def generate_headers_class(self, properties: dict, func_name: str) -> str:
         """
@@ -58,13 +59,13 @@ class SchemasGenerator:
         """
         Generate a string list of the properties for this pydantic class.
         """
-        content = ""
+        lines = []
         for arg, arg_details in properties.items():
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
-            type_string = is_optional and f"typing.Optional[{arg_type}]" or arg_type
-            content = content + f"""    {arg}: {type_string}\n"""
-        return content
+            type_string = f"typing.Optional[{arg_type}]" if is_optional else arg_type
+            lines.append(f"    {arg}: {type_string}\n")
+        return "".join(lines)
 
     def generate_input_class(self, schema: dict) -> None:
         if content := schema.get("content"):
