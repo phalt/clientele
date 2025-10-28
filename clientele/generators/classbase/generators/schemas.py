@@ -1,10 +1,10 @@
 """
 Wrapper for schemas generator that uses classbase writer.
 """
-from typing import Optional
 from openapi_core import Spec
+
+from clientele.generators.classbase import utils, writer
 from clientele.generators.standard.generators.schemas import SchemasGenerator as StandardSchemasGenerator
-from clientele.generators.classbase import writer, utils
 
 
 class SchemasGenerator(StandardSchemasGenerator):
@@ -12,14 +12,14 @@ class SchemasGenerator(StandardSchemasGenerator):
     Schemas generator that uses the classbase writer instead of standard writer.
     Overrides methods that write to schemas to use our writer.
     """
-    
+
     def __init__(self, spec: Spec, output_dir: str) -> None:
         # Initialize parent but we'll override writer calls
         self.spec = spec
         self.schemas = {}
         self.output_dir = output_dir
         self.generated_response_class_names = []
-    
+
     def generate_headers_class(self, properties: dict, func_name: str) -> str:
         """
         Generate a headers class that can be used by a function.
@@ -37,7 +37,7 @@ class SchemasGenerator(StandardSchemasGenerator):
             output_dir=self.output_dir,
         )
         return f"typing.Optional[schemas.{utils.class_name_titled(func_name)}Headers]"
-    
+
     def make_schema_class(self, schema_key: str, schema: dict) -> None:
         """
         Make a schema class. Uses classbase writer.
@@ -45,7 +45,7 @@ class SchemasGenerator(StandardSchemasGenerator):
         schema_key = utils.class_name_titled(schema_key)
         if schema_key in self.schemas.keys():
             return
-        
+
         enum = False
         properties: str = ""
         if all_of := schema.get("allOf"):
@@ -85,11 +85,11 @@ class SchemasGenerator(StandardSchemasGenerator):
                 required=schema.get("required", None),
             )
         self.schemas[schema_key] = properties
-        
+
         template = writer.templates.get_template("schema_class.jinja2")
         content = template.render(class_name=schema_key, properties=properties, enum=enum)
         writer.write_to_schemas(content, output_dir=self.output_dir)
-    
+
     def generate_input_class(self, schema: dict) -> None:
         """Generate input class. Uses classbase writer."""
         if content := schema.get("content"):
@@ -112,7 +112,7 @@ class SchemasGenerator(StandardSchemasGenerator):
                 out_content,
                 output_dir=self.output_dir,
             )
-    
+
     def write_helpers(self):
         """
         Write helper functions to schemas. Uses classbase writer.
@@ -120,4 +120,3 @@ class SchemasGenerator(StandardSchemasGenerator):
         template = writer.templates.get_template("schema_helpers.jinja2")
         content = template.render()
         writer.write_to_schemas(content, output_dir=self.output_dir)
-
