@@ -77,16 +77,15 @@ async def test_optional_parameters_request_optional_parameters_get(
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_parameter_request_simple_request(respx_mock: MockRouter):
     # Given
-    mocked_response = {"status": "hello world"}
-    mock_path = "/simple-request/test_parameter"
+    your_input = "hello world"
+    mocked_response = {"your_input": your_input}
+    mock_path = f"/simple-request/{your_input}"
     respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    response = await client.parameter_request_simple_request_parameter_get(
-        parameter="test_parameter"
-    )
+    response = await client.parameter_request_simple_request(your_input=your_input)
     # Then
-    assert isinstance(response, schemas.SimpleResponse)
+    assert isinstance(response, schemas.ParameterResponse)
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path
@@ -96,35 +95,38 @@ async def test_parameter_request_simple_request(respx_mock: MockRouter):
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_query_request_simple_query_get(respx_mock: MockRouter):
     # Given
-    mocked_response = {"response": "hello world"}
-    mock_path = "/simple-query"
+    your_input = "hello world"
+    mocked_response = {"your_query": your_input}
+    mock_path = "/simple-query?yourInput=hello+world"
     respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    response = await client.query_request_simple_query_get(yourInput="test")
+    response = await client.query_request_simple_query_get(yourInput=your_input)
     # Then
     assert isinstance(response, schemas.SimpleQueryParametersResponse)
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
-    assert call.request.url == BASE_URL + mock_path + "?yourInput=test"
+    assert call.request.url == BASE_URL + mock_path
 
 
 @pytest.mark.asyncio
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_query_request_optional_query_get(respx_mock: MockRouter):
     # Given
-    mocked_response = {"response": "hello world"}
+    your_input = None
+    mocked_response = {"your_query": "test"}
+    # NOTE: omits None query parameter
     mock_path = "/optional-query"
     respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    response = await client.query_request_optional_query_get(yourInput=None)
+    response = await client.query_request_optional_query_get(yourInput=your_input)
     # Then
-    assert isinstance(response, schemas.SimpleQueryParametersResponse)
+    assert isinstance(response, schemas.OptionalQueryParametersResponse)
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     # No query parameter should be included in the URL since it's None
-    assert call.request.url.path == "/optional-query"
+    assert call.request.url == BASE_URL + mock_path
 
 
 @pytest.mark.asyncio
@@ -132,15 +134,16 @@ async def test_query_request_optional_query_get(respx_mock: MockRouter):
 async def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter):
     # Given
     mocked_response = {
-        "a_dict_response": {"key1": "value1", "key2": "value2"},
-        "a_enum": "OPTION_A",
-        "a_list_of_enums": ["OPTION_A", "OPTION_B"],
-        "a_list_of_numbers": [1, 2, 3, 4, 5],
-        "a_list_of_other_models": [{"key": "value"}],
-        "a_model": {"key": "value"},
-        "a_number": 42,
-        "a_string": "Hello",
-        "a_decimal": "1.23",
+        "a_dict_response": {"dict": "response"},
+        "a_enum": "ONE",
+        "a_list_of_enums": ["ONE", "TWO"],
+        "a_list_of_numbers": [1, 2, 3],
+        "a_list_of_other_models": [{"key": "first"}],
+        "a_list_of_strings": ["hello", "world"],
+        "a_number": 13,
+        "a_decimal": 0.4,
+        "a_string": "hello world",
+        "another_model": {"key": "value"},
     }
     mock_path = "/complex-model-request"
     respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
@@ -149,9 +152,19 @@ async def test_complex_model_request_complex_model_request_get(respx_mock: MockR
     response = await client.complex_model_request_complex_model_request_get()
     # Then
     assert isinstance(response, schemas.ComplexModelResponse)
-    assert response.a_string == "Hello"
-    assert response.a_number == 42
-    assert response.a_decimal == Decimal("1.23")
+    expected_dump_data = {
+        "a_dict_response": {"dict": "response"},
+        "a_enum": schemas.ExampleEnum.ONE,
+        "a_list_of_enums": [schemas.ExampleEnum.ONE, schemas.ExampleEnum.TWO],
+        "a_list_of_numbers": [1, 2, 3],
+        "a_list_of_other_models": [{"key": "first"}],
+        "a_list_of_strings": ["hello", "world"],
+        "a_number": 13,
+        "a_decimal": Decimal("0.4"),
+        "a_string": "hello world",
+        "another_model": {"key": "value"},
+    }
+    assert response.model_dump() == expected_dump_data
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path
@@ -161,13 +174,16 @@ async def test_complex_model_request_complex_model_request_get(respx_mock: MockR
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_request_data_request_data_post(respx_mock: MockRouter):
     # Given
-    mocked_response = {"my_response": "hello world"}
+    mocked_response = {"my_input": "test"}
     mock_path = "/request-data"
     respx_mock.post(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    request_data = schemas.RequestDataRequest(my_input="test")
-    response = await client.request_data_request_data_post(data=request_data)
+    data = schemas.RequestDataRequest(
+        my_input="test",
+        my_decimal_input=Decimal(0.1),
+    )
+    response = await client.request_data_request_data_post(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
     assert len(respx_mock.calls) == 1
@@ -179,13 +195,16 @@ async def test_request_data_request_data_post(respx_mock: MockRouter):
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_request_data_request_data_put(respx_mock: MockRouter):
     # Given
-    mocked_response = {"my_response": "hello world"}
+    mocked_response = {"my_input": "test"}
     mock_path = "/request-data"
     respx_mock.put(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    request_data = schemas.RequestDataRequest(my_input="test")
-    response = await client.request_data_request_data_put(data=request_data)
+    data = schemas.RequestDataRequest(
+        my_input="test",
+        my_decimal_input=Decimal(0.1),
+    )
+    response = await client.request_data_request_data_put(data=data)
     # Then
     assert isinstance(response, schemas.RequestDataResponse)
     assert len(respx_mock.calls) == 1
@@ -197,17 +216,20 @@ async def test_request_data_request_data_put(respx_mock: MockRouter):
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_request_data_path_request_data(respx_mock: MockRouter):
     # Given
-    mocked_response = {"parameter": "test_parameter", "my_response": "hello world"}
-    mock_path = "/request-data/test_parameter"
+    path_parameter = "param"
+    mocked_response = {"my_input": "test", "path_parameter": path_parameter}
+    mock_path = f"/request-data/{path_parameter}"
     respx_mock.post(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    request_data = schemas.RequestDataRequest(my_input="test")
-    response = await client.request_data_path_request_data(
-        path_parameter="test_parameter", data=request_data
+    data = schemas.RequestDataRequest(
+        my_input="test",
+        my_decimal_input=Decimal(0.1),
     )
+    response = await client.request_data_path_request_data(path_parameter, data=data)
     # Then
     assert isinstance(response, schemas.RequestDataAndParameterResponse)
+    assert response.model_dump() == mocked_response
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path
@@ -234,16 +256,20 @@ async def test_request_delete_request_delete_delete(respx_mock: MockRouter):
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_header_request_header_request_get(respx_mock: MockRouter):
     # Given
-    mocked_response = {"x_my_header": "test"}
+    input_header = "foo"
+    mocked_response = {"x_test": input_header}
     mock_path = "/header-request"
-    respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
+    respx_mock.get(mock_path, headers={"x-test": input_header}).mock(
+        return_value=Response(json=mocked_response, status_code=200)
+    )
     # When
     client = Client()
-    headers = schemas.HeaderRequestHeaderRequestGetHeaders(x_my_header="test")
+    headers = schemas.HeaderRequestHeaderRequestGetHeaders(x_test=input_header)
     response = await client.header_request_header_request_get(headers=headers)
     # Then
     assert isinstance(response, schemas.HeadersResponse)
+    assert response.model_dump() == mocked_response
     assert len(respx_mock.calls) == 1
     call = respx_mock.calls[0]
     assert call.request.url == BASE_URL + mock_path
-    assert call.request.headers.get("x-my-header") == "test"
+    assert call.request.headers.get("x-test") == input_header
