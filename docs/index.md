@@ -24,6 +24,8 @@ The generated code is designed by python developers, for python developers.
 
 It uses modern tooling and has a great developer experience.
 
+### Function-based client
+
 ```py
 from my_api import client, schemas
 
@@ -31,6 +33,33 @@ from my_api import client, schemas
 data = schemas.RequestDataRequest(my_input="test")
 
 # Easy to read client functions
+response = client.request_data_request_data_post(data=data)
+
+# Handle responses elegantly
+match response:
+    case schemas.RequestDataResponse():
+        # Handle valid response
+        ...
+    case schemas.ValidationError():
+        # Handle validation error
+        ...
+```
+
+### Class-based client
+
+Prefer object-oriented programming? Use `clientele generate-class` to generate a client with a `Client` class:
+
+```py
+from my_api.client import Client
+from my_api import schemas
+
+# Instantiate the client
+client = Client()
+
+# Pydantic models for inputs and outputs
+data = schemas.RequestDataRequest(my_input="test")
+
+# Call API methods on the client instance
 response = client.request_data_request_data_post(data=data)
 
 # Handle responses elegantly
