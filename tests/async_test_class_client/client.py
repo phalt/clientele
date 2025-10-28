@@ -20,15 +20,19 @@ class Client:
     ) -> schemas.ComplexModelResponse:
         """Complex Model Request"""
 
-        response = await http.get(url="/complex-model-request")
-        return http.handle_response(self.complex_model_request_complex_model_request_get, response)
+        response = await http.get(url=f"/complex-model-request")
+        return http.handle_response(
+            self.complex_model_request_complex_model_request_get, response
+        )
 
     async def header_request_header_request_get(
         self, headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders]
     ) -> schemas.HTTPValidationError | schemas.HeadersResponse:
         """Header Request"""
-        headers_dict = headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
-        response = await http.get(url="/header-request", headers=headers_dict)
+        headers_dict = (
+            headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
+        )
+        response = await http.get(url=f"/header-request", headers=headers_dict)
         return http.handle_response(self.header_request_header_request_get, response)
 
     async def optional_parameters_request_optional_parameters_get(
@@ -36,15 +40,17 @@ class Client:
     ) -> schemas.OptionalParametersResponse:
         """Optional Parameters Request"""
 
-        response = await http.get(url="/optional-parameters")
-        return http.handle_response(self.optional_parameters_request_optional_parameters_get, response)
+        response = await http.get(url=f"/optional-parameters")
+        return http.handle_response(
+            self.optional_parameters_request_optional_parameters_get, response
+        )
 
     async def request_data_request_data_post(
         self, data: schemas.RequestDataRequest
     ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
         """Request Data"""
 
-        response = await http.post(url="/request-data", data=data.model_dump())
+        response = await http.post(url=f"/request-data", data=data.model_dump())
         return http.handle_response(self.request_data_request_data_post, response)
 
     async def request_data_request_data_put(
@@ -52,7 +58,7 @@ class Client:
     ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
         """Request Data"""
 
-        response = await http.put(url="/request-data", data=data.model_dump())
+        response = await http.put(url=f"/request-data", data=data.model_dump())
         return http.handle_response(self.request_data_request_data_put, response)
 
     async def request_data_path_request_data(
@@ -60,13 +66,15 @@ class Client:
     ) -> schemas.HTTPValidationError | schemas.RequestDataAndParameterResponse:
         """Request Data Path"""
 
-        response = await http.post(url=f"/request-data/{path_parameter}", data=data.model_dump())
+        response = await http.post(
+            url=f"/request-data/{path_parameter}", data=data.model_dump()
+        )
         return http.handle_response(self.request_data_path_request_data, response)
 
     async def request_delete_request_delete_delete(self) -> schemas.DeleteResponse:
         """Request Delete"""
 
-        response = await http.delete(url="/request-delete")
+        response = await http.delete(url=f"/request-delete")
         return http.handle_response(self.request_delete_request_delete_delete, response)
 
     async def security_required_request_security_required_get(
@@ -74,8 +82,10 @@ class Client:
     ) -> schemas.SecurityRequiredResponse:
         """Security Required Request"""
 
-        response = await http.get(url="/security-required")
-        return http.handle_response(self.security_required_request_security_required_get, response)
+        response = await http.get(url=f"/security-required")
+        return http.handle_response(
+            self.security_required_request_security_required_get, response
+        )
 
     async def query_request_simple_query_get(
         self, yourInput: str
@@ -96,7 +106,7 @@ class Client:
     async def simple_request_simple_request_get(self) -> schemas.SimpleResponse:
         """Simple Request"""
 
-        response = await http.get(url="/simple-request")
+        response = await http.get(url=f"/simple-request")
         return http.handle_response(self.simple_request_simple_request_get, response)
 
     async def parameter_request_simple_request(
