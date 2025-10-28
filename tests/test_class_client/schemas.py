@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import inspect
 import typing
-from decimal import Decimal  # noqa
 from enum import Enum  # noqa
+from decimal import Decimal  # noqa
 
 import pydantic
 
@@ -106,7 +106,11 @@ def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:
 
     subclasses = []
     for _, c in inspect.getmembers(module):
-        if inspect.isclass(c) and issubclass(c, pydantic.BaseModel) and c != pydantic.BaseModel:
+        if (
+            inspect.isclass(c)
+            and issubclass(c, pydantic.BaseModel)
+            and c != pydantic.BaseModel
+        ):
             subclasses.append(c)
 
     return subclasses
