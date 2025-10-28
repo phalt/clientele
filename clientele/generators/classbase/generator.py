@@ -12,7 +12,7 @@ from clientele.generators import Generator
 from clientele.generators.classbase import writer
 from clientele.generators.classbase.generators import clients
 from clientele.generators.classbase.generators import schemas
-from clientele.generators.standard.generators import http
+from clientele.generators.classbase.generators import http
 
 console = Console()
 
@@ -79,11 +79,23 @@ class ClassbaseGenerator(Generator):
         )
         writer.write_to_client(content, output_dir=self.output_dir)
         
+        # Generate the schemas.py header
+        if exists(f"{self.output_dir}/schemas.py"):
+            remove(f"{self.output_dir}/schemas.py")
+        template = writer.templates.get_template("schemas_py.jinja2")
+        content = template.render(
+            client_project_directory_path=client_project_directory_path,
+            new_unions=new_unions,
+        )
+        writer.write_to_schemas(content, output_dir=self.output_dir)
+        
         for (
             client_file,
             client_template_file,
             write_func,
         ) in self.file_name_writer_tuple:
+            if client_file == "schemas.py":  # Already handled above
+                continue
             if exists(f"{self.output_dir}/{client_file}"):
                 if client_file == "config.py":  # do not replace config.py if exists
                     continue
@@ -106,6 +118,7 @@ class ClassbaseGenerator(Generator):
                 openapi_version=self.spec["openapi"],
                 clientele_version=settings.VERSION,
                 command=generate_command,
+                generator_type="generate-class",  # Specify this is for class-based generator
             )
             + "\n"
         )
@@ -136,6 +149,5 @@ class ClassbaseGenerator(Generator):
         
         # Flush the client buffer to write all methods to client.py
         writer.flush_client_buffer(output_dir=self.output_dir)
-        writer.flush_schemas_buffer(output_dir=self.output_dir)
         
         self.format_client()

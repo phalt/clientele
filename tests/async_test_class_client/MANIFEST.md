@@ -14,5 +14,5 @@ CLIENTELE VERSION: 0.9.0
 Regenerate using this command:
 
 ```sh
-clientele generate -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
+clientele generate-class -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
 ```
