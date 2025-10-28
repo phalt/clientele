@@ -2,8 +2,10 @@
 Wrapper for HTTP generator that uses classbase writer.
 """
 from collections import defaultdict
+
 from openapi_core import Spec
 from rich.console import Console
+
 from clientele.generators.classbase import writer
 
 console = Console()

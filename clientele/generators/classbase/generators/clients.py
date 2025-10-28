@@ -5,10 +5,9 @@ from openapi_core import Spec
 from pydantic import BaseModel
 from rich.console import Console
 
-from clientele.generators.classbase import writer
 from clientele.generators.classbase import utils as classbase_utils
-from clientele.generators.classbase.generators import schemas
-from clientele.generators.classbase.generators import http
+from clientele.generators.classbase import writer
+from clientele.generators.classbase.generators import http, schemas
 
 # Use classbase utils for this generator
 utils = classbase_utils

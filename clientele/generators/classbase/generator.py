@@ -10,9 +10,7 @@ from rich.console import Console
 from clientele import settings, utils
 from clientele.generators import Generator
 from clientele.generators.classbase import writer
-from clientele.generators.classbase.generators import clients
-from clientele.generators.classbase.generators import schemas
-from clientele.generators.classbase.generators import http
+from clientele.generators.classbase.generators import clients, http, schemas
 
 console = Console()
 
@@ -68,7 +66,7 @@ class ClassbaseGenerator(Generator):
         new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
         writer.write_to_init(output_dir=self.output_dir)
-        
+
         # Generate the client.py header with class definition
         if exists(f"{self.output_dir}/client.py"):
             remove(f"{self.output_dir}/client.py")
@@ -78,7 +76,7 @@ class ClassbaseGenerator(Generator):
             new_unions=new_unions,
         )
         writer.write_to_client(content, output_dir=self.output_dir)
-        
+
         # Generate the schemas.py header
         if exists(f"{self.output_dir}/schemas.py"):
             remove(f"{self.output_dir}/schemas.py")
@@ -88,7 +86,7 @@ class ClassbaseGenerator(Generator):
             new_unions=new_unions,
         )
         writer.write_to_schemas(content, output_dir=self.output_dir)
-        
+
         for (
             client_file,
             client_template_file,
@@ -106,7 +104,7 @@ class ClassbaseGenerator(Generator):
                 new_unions=new_unions,
             )
             write_func(content, output_dir=self.output_dir)
-        
+
         # Manifest file
         if exists(f"{self.output_dir}/MANIFEST.md"):
             remove(f"{self.output_dir}/MANIFEST.md")
@@ -146,8 +144,8 @@ class ClassbaseGenerator(Generator):
         self.clients_generator.generate_paths()
         self.http_generator.generate_http_content()
         self.schemas_generator.write_helpers()
-        
+
         # Flush the client buffer to write all methods to client.py
         writer.flush_client_buffer(output_dir=self.output_dir)
-        
+
         self.format_client()

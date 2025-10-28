@@ -1,8 +1,7 @@
 from __future__ import annotations
+
 import json
-
 import types
-
 import typing
 from decimal import Decimal
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
@@ -38,9 +37,7 @@ def parse_url(url: str) -> str:
     api_url = f"{c.api_base_url()}{url}"
     url_parts = urlparse(url=api_url)
     # Filter out "None" optional query parameters
-    filtered_query_params = {
-        k: v for k, v in parse_qs(url_parts.query).items() if v[0] not in ["None", ""]
-    }
+    filtered_query_params = {k: v for k, v in parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
     filtered_query_string = urlencode(filtered_query_params, doseq=True)
     return urlunparse(
         (
@@ -72,16 +69,12 @@ def handle_response(func, response):
     # Determine, from the map, the correct response for this status code
     expected_responses = func_response_code_maps[func.__name__]  # noqa
     if str(status_code) not in expected_responses.keys():
-        raise APIException(
-            response=response, reason="An unexpected status code was received"
-        )
+        raise APIException(response=response, reason="An unexpected status code was received")
     else:
         expected_response_class_name = expected_responses[str(status_code)]
 
     # Get the correct response type and build it
-    response_type = [
-        t for t in response_types if t.__name__ == expected_response_class_name
-    ][0]
+    response_type = [t for t in response_types if t.__name__ == expected_response_class_name][0]
     data = response.json()
     return response_type.model_validate(data)
 
@@ -93,9 +86,7 @@ func_response_code_maps = {
         "200": "HeadersResponse",
         "422": "HTTPValidationError",
     },
-    "optional_parameters_request_optional_parameters_get": {
-        "200": "OptionalParametersResponse"
-    },
+    "optional_parameters_request_optional_parameters_get": {"200": "OptionalParametersResponse"},
     "request_data_request_data_post": {
         "200": "RequestDataResponse",
         "422": "HTTPValidationError",
@@ -109,9 +100,7 @@ func_response_code_maps = {
         "422": "HTTPValidationError",
     },
     "request_delete_request_delete_delete": {"200": "DeleteResponse"},
-    "security_required_request_security_required_get": {
-        "200": "SecurityRequiredResponse"
-    },
+    "security_required_request_security_required_get": {"200": "SecurityRequiredResponse"},
     "query_request_simple_query_get": {
         "200": "SimpleQueryParametersResponse",
         "422": "HTTPValidationError",
@@ -156,9 +145,7 @@ def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Re
     return client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
-def patch(
-    url: str, data: dict, headers: typing.Optional[dict] = None
-) -> httpx.Response:
+def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PATCH request"""
     if headers:
         client_headers.update(headers)
