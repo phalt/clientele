@@ -9,8 +9,8 @@ def _load_openapi_spec(url: str = None, file: str = None):
     import json
 
     import httpx
-    import openapi_core
     import yaml
+    from openapi_core import Spec
 
     assert url or file, "Must pass either a URL or a file"
 
@@ -22,10 +22,10 @@ def _load_openapi_spec(url: str = None, file: str = None):
             except json.JSONDecodeError:
                 # It's probably yaml
                 data = yaml.safe_load(response.content)
-        return openapi_core.Spec.from_dict(data)
+        return Spec.from_dict(data)
     else:
         with open(file, "r") as f:
-            return openapi_core.Spec.from_file(f)
+            return Spec.from_file(f)
 
 
 @click.group()
@@ -41,9 +41,9 @@ def version():
     """
     Print the current version of clientele
     """
-    import clientele.settings
+    from clientele import settings
 
-    print(f"clientele {clientele.settings.VERSION}")
+    print(f"clientele {settings.VERSION}")
 
 
 @click.command()
@@ -53,9 +53,9 @@ def validate(url, file):
     """
     Validate an OpenAPI schema. Will error if anything is wrong with the schema
     """
-    import rich.console
+    from rich import console
 
-    console = rich.console.Console()
+    console = console.Console()
 
     spec = _load_openapi_spec(url=url, file=file)
     console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
@@ -76,11 +76,11 @@ def generate(url, file, output, asyncio, regen):
     """
     Generate a new client from an OpenAPI schema
     """
-    import rich.console
+    from rich import console
 
-    console = rich.console.Console()
+    console = console.Console()
 
-    import clientele.generators.standard.generator
+    from clientele.generators.standard.generator import StandardGenerator
 
     spec = _load_openapi_spec(url=url, file=file)
     console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
@@ -88,9 +88,7 @@ def generate(url, file, output, asyncio, regen):
     if int(major) < 3:
         console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
         return
-    generator = clientele.generators.standard.generator.StandardGenerator(
-        spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file
-    )
+    generator = StandardGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ Client generated! ⚜️ \n")
@@ -103,15 +101,15 @@ def generate_basic(output):
     """
     Generate a "basic" file structure, no code.
     """
-    import rich.console
+    from rich import console
 
-    import clientele.generators.basic.generator
+    from clientele.generators.basic.generator import BasicGenerator
 
-    console = rich.console.Console()
+    console = console.Console()
 
     console.log(f"Generating basic client at {output}...")
 
-    generator = clientele.generators.basic.generator.BasicGenerator(output_dir=output)
+    generator = BasicGenerator(output_dir=output)
 
     generator.generate()
 
@@ -126,11 +124,11 @@ def generate_class(url, file, output, asyncio, regen):
     """
     Generate a class-based client from an OpenAPI schema
     """
-    import rich.console
+    from rich import console
 
-    console = rich.console.Console()
+    console = console.Console()
 
-    import clientele.generators.classbase.generator
+    from clientele.generators.classbase.generator import ClassbaseGenerator
 
     spec = _load_openapi_spec(url=url, file=file)
     console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
@@ -138,9 +136,7 @@ def generate_class(url, file, output, asyncio, regen):
     if int(major) < 3:
         console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
         return
-    generator = clientele.generators.classbase.generator.ClassbaseGenerator(
-        spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file
-    )
+    generator = ClassbaseGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ Class-based client generated! ⚜️ \n")

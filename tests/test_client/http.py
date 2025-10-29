@@ -4,7 +4,7 @@ import decimal
 import json
 import types
 import typing
-import urllib.parse
+from urllib import parse
 
 import httpx
 
@@ -35,13 +35,11 @@ def parse_url(url: str) -> str:
     Will filter out any optional query parameters if they are None.
     """
     api_url = f"{c.api_base_url()}{url}"
-    url_parts = urllib.parse.urlparse(url=api_url)
+    url_parts = parse.urlparse(url=api_url)
     # Filter out "None" optional query parameters
-    filtered_query_params = {
-        k: v for k, v in urllib.parse.parse_qs(url_parts.query).items() if v[0] not in ["None", ""]
-    }
-    filtered_query_string = urllib.parse.urlencode(filtered_query_params, doseq=True)
-    return urllib.parse.urlunparse(
+    filtered_query_params = {k: v for k, v in parse.parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
+    filtered_query_string = parse.urlencode(filtered_query_params, doseq=True)
+    return parse.urlunparse(
         (
             url_parts.scheme,
             url_parts.netloc,

@@ -1,12 +1,11 @@
-import typing
+from typing import Optional
 
-import openapi_core
-import rich.console
+from openapi_core import Spec
+from rich import console
 
-import clientele.generators.standard.utils
-import clientele.generators.standard.writer
+from clientele.generators.standard import utils, writer
 
-console = rich.console.Console()
+console = console.Console()
 
 
 class SchemasGenerator:
@@ -14,11 +13,11 @@ class SchemasGenerator:
     Handles all the content generated in the schemas.py file.
     """
 
-    spec: openapi_core.Spec
+    spec: Spec
     schemas: dict[str, str]
     output_dir: str
 
-    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
+    def __init__(self, spec: Spec, output_dir: str) -> None:
         self.spec = spec
         self.schemas = {}
         self.output_dir = output_dir
@@ -29,7 +28,7 @@ class SchemasGenerator:
         """
         Generate a string list of the properties for this enum.
         """
-        utils = clientele.generators.standard.utils
+        # utils already imported
         lines = [
             f"    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"
             for arg, arg_details in properties.items()
@@ -44,31 +43,27 @@ class SchemasGenerator:
         have - separators and python detests that, so we're using
         the alias trick to get around that
         """
-        utils = clientele.generators.standard.utils
-        template = clientele.generators.standard.writer.templates.get_template(
-            "schema_class.jinja2"
-        )
+        # utils already imported
+        template = writer.templates.get_template("schema_class.jinja2")
         class_name = f"{utils.class_name_titled(func_name)}Headers"
         string_props = "\n".join(
             f'    {utils.snake_case_prop(k)}: {v} = pydantic.Field(serialization_alias="{k}")'
             for k, v in properties.items()
         )
-        content = template.render(
-            class_name=class_name, properties=string_props, enum=False
-        )
-        clientele.generators.standard.writer.write_to_schemas(
+        content = template.render(class_name=class_name, properties=string_props, enum=False)
+        writer.write_to_schemas(
             content,
             output_dir=self.output_dir,
         )
         return f"typing.Optional[schemas.{utils.class_name_titled(func_name)}Headers]"
 
-    def generate_class_properties(self, properties: dict, required: typing.Optional[list] = None) -> str:
+    def generate_class_properties(self, properties: dict, required: Optional[list] = None) -> str:
         """
         Generate a string list of the properties for this pydantic class.
         """
         lines = []
         for arg, arg_details in properties.items():
-            arg_type = clientele.generators.standard.utils.get_type(arg_details)
+            arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
             type_string = f"typing.Optional[{arg_type}]" if is_optional else arg_type
             lines.append(f"    {arg}: {type_string}\n")
@@ -79,27 +74,25 @@ class SchemasGenerator:
             for encoding, input_schema in content.items():
                 class_name = ""
                 if ref := input_schema["schema"].get("$ref", False):
-                    class_name = clientele.generators.standard.utils.class_name_titled(
-                        clientele.generators.standard.utils.schema_ref(ref)
-                    )
+                    class_name = utils.class_name_titled(utils.schema_ref(ref))
                 elif title := input_schema["schema"].get("title", False):
-                    class_name = clientele.generators.standard.utils.class_name_titled(title)
+                    class_name = utils.class_name_titled(title)
                 else:
                     # No idea, using the encoding?
-                    class_name = clientele.generators.standard.utils.class_name_titled(encoding)
+                    class_name = utils.class_name_titled(encoding)
                 properties = self.generate_class_properties(
                     properties=input_schema["schema"].get("properties", {}),
                     required=input_schema["schema"].get("required", None),
                 )
-                template = clientele.generators.standard.writer.templates.get_template("schema_class.jinja2")
+                template = writer.templates.get_template("schema_class.jinja2")
                 out_content = template.render(class_name=class_name, properties=properties, enum=False)
-            clientele.generators.standard.writer.write_to_schemas(
+            writer.write_to_schemas(
                 out_content,
                 output_dir=self.output_dir,
             )
 
     def make_schema_class(self, schema_key: str, schema: dict) -> None:
-        schema_key = clientele.generators.standard.utils.class_name_titled(schema_key)
+        schema_key = utils.class_name_titled(schema_key)
         enum = False
         properties: str = ""
         if all_of := schema.get("allOf"):
@@ -108,16 +101,12 @@ class SchemasGenerator:
             for other_ref in all_of:
                 is_ref = other_ref.get("$ref", False)
                 if is_ref:
-                    other_schema_key = clientele.generators.standard.utils.class_name_titled(
-                        clientele.generators.standard.utils.schema_ref(is_ref)
-                    )
+                    other_schema_key = utils.class_name_titled(utils.schema_ref(is_ref))
                     if other_schema_key in self.schemas:
                         property_parts.append(self.schemas[other_schema_key])
                     else:
                         # It's a ref but we've just not made it yet
-                        schema_model = clientele.generators.standard.utils.get_schema_from_ref(
-                            spec=self.spec, ref=is_ref
-                        )
+                        schema_model = utils.get_schema_from_ref(spec=self.spec, ref=is_ref)
                         property_parts.append(
                             self.generate_class_properties(
                                 properties=schema_model.get("properties", {}),
@@ -143,17 +132,17 @@ class SchemasGenerator:
                 required=schema.get("required", None),
             )
         self.schemas[schema_key] = properties
-        template = clientele.generators.standard.writer.templates.get_template("schema_class.jinja2")
+        template = writer.templates.get_template("schema_class.jinja2")
         content = template.render(class_name=schema_key, properties=properties, enum=enum)
-        clientele.generators.standard.writer.write_to_schemas(
+        writer.write_to_schemas(
             content,
             output_dir=self.output_dir,
         )
 
     def write_helpers(self) -> None:
-        template = clientele.generators.standard.writer.templates.get_template("schema_helpers.jinja2")
+        template = writer.templates.get_template("schema_helpers.jinja2")
         content = template.render()
-        clientele.generators.standard.writer.write_to_schemas(
+        writer.write_to_schemas(
             content,
             output_dir=self.output_dir,
         )
