@@ -1,17 +1,17 @@
 import os
+import pathlib
+import typing
 from os import path
-from pathlib import Path
-from typing import Optional
 
 import black
-from openapi_core import Spec
-from rich import console
+import openapi_core
+import rich.console
 
 from clientele import generators, settings, utils
 from clientele.generators.classbase import writer
 from clientele.generators.classbase.generators import clients, http, schemas
 
-console = console.Console()
+console = rich.console.Console()
 
 
 class ClassbaseGenerator(generators.Generator):
@@ -21,24 +21,24 @@ class ClassbaseGenerator(generators.Generator):
     Produces a Python HTTP Client library with a class-based interface.
     """
 
-    spec: Spec
+    spec: openapi_core.Spec
     asyncio: bool
     regen: bool
     schemas_generator: schemas.SchemasGenerator
     clients_generator: clients.ClientsGenerator
     http_generator: http.HTTPGenerator
     output_dir: str
-    file: Optional[str]
-    url: Optional[str]
+    file: typing.Optional[str]
+    url: typing.Optional[str]
 
     def __init__(
         self,
-        spec: Spec,
+        spec: openapi_core.Spec,
         output_dir: str,
         asyncio: bool,
         regen: bool,
-        url: Optional[str],
-        file: Optional[str],
+        url: typing.Optional[str],
+        file: typing.Optional[str],
     ) -> None:
         self.http_generator = http.HTTPGenerator(spec=spec, output_dir=output_dir, asyncio=asyncio)
         self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir)
@@ -129,7 +129,7 @@ class ClassbaseGenerator(generators.Generator):
         return True
 
     def format_client(self) -> None:
-        directory = Path(self.output_dir)
+        directory = pathlib.Path(self.output_dir)
         # Collect all Python files first to format them efficiently
         python_files = list(directory.glob("*.py"))
         # Use fast=True for better performance during code generation

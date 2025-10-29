@@ -2,7 +2,7 @@
 Wrapper for schemas generator that uses classbase writer.
 """
 
-from openapi_core import Spec
+import openapi_core
 
 from clientele.generators.classbase import writer
 from clientele.generators.standard import utils
@@ -15,7 +15,7 @@ class SchemasGenerator(StandardSchemasGenerator):
     Overrides methods that write to schemas to use our writer.
     """
 
-    def __init__(self, spec: Spec, output_dir: str) -> None:
+    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
         # Initialize parent but we'll override writer calls
         self.spec = spec
         self.schemas = {}
@@ -28,7 +28,6 @@ class SchemasGenerator(StandardSchemasGenerator):
         Uses classbase writer.
         """
         template = writer.templates.get_template("schema_class.jinja2")
-        # utils already imported
         class_name = f"{utils.class_name_titled(func_name)}Headers"
         string_props = "\n".join(
             f'    {utils.snake_case_prop(k)}: {v} = pydantic.Field(serialization_alias="{k}")'

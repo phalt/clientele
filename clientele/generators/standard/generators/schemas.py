@@ -1,11 +1,11 @@
-from typing import Optional
+import typing
 
-from openapi_core import Spec
-from rich import console
+import openapi_core
+import rich.console
 
 from clientele.generators.standard import utils, writer
 
-console = console.Console()
+console = rich.console.Console()
 
 
 class SchemasGenerator:
@@ -13,11 +13,11 @@ class SchemasGenerator:
     Handles all the content generated in the schemas.py file.
     """
 
-    spec: Spec
+    spec: openapi_core.Spec
     schemas: dict[str, str]
     output_dir: str
 
-    def __init__(self, spec: Spec, output_dir: str) -> None:
+    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
         self.spec = spec
         self.schemas = {}
         self.output_dir = output_dir
@@ -57,7 +57,7 @@ class SchemasGenerator:
         )
         return f"typing.Optional[schemas.{utils.class_name_titled(func_name)}Headers]"
 
-    def generate_class_properties(self, properties: dict, required: Optional[list] = None) -> str:
+    def generate_class_properties(self, properties: dict, required: typing.Optional[list] = None) -> str:
         """
         Generate a string list of the properties for this pydantic class.
         """
