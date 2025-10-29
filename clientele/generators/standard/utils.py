@@ -83,7 +83,7 @@ def get_type(t):
     if t_type in [DataType.INTEGER, DataType.NUMBER]:
         # Check formatting for a decimal type
         if t_format == "decimal":
-            return "Decimal"
+            return "decimal.Decimal"
         return "int"
     if t_type == DataType.BOOLEAN:
         return "bool"

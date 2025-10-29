@@ -92,7 +92,7 @@ class ClientsGenerator:
                 else:
                     query_args[
                         clean_key
-                    ] = f"typing.typing.Optional[{clientele.generators.standard.utils.get_type(param['schema'])}]"
+                    ] = f"typing.Optional[{clientele.generators.standard.utils.get_type(param['schema'])}]"
             elif in_ == "path":
                 # Function arguments
                 if required:
@@ -100,7 +100,7 @@ class ClientsGenerator:
                 else:
                     path_args[
                         clean_key
-                    ] = f"typing.typing.Optional[{clientele.generators.standard.utils.get_type(param['schema'])}]"
+                    ] = f"typing.Optional[{clientele.generators.standard.utils.get_type(param['schema'])}]"
             elif in_ == "header":
                 # Header object arguments
                 headers_args[param["name"]] = clientele.generators.standard.utils.get_type(param["schema"])
