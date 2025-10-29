@@ -5,12 +5,9 @@ from openapi_core import Spec
 from pydantic import BaseModel
 from rich.console import Console
 
-from clientele.generators.classbase import utils as classbase_utils
 from clientele.generators.classbase import writer
 from clientele.generators.classbase.generators import http, schemas
-
-# Use classbase utils for this generator
-utils = classbase_utils
+from clientele.generators.standard import utils
 
 console = Console()
 
@@ -23,7 +20,7 @@ class ParametersResponse(BaseModel):
     # Parameters that are needed in the headers object
     headers_args: dict[str, str]
 
-    def get_path_args_as_string(self):
+    def get_path_args_as_string(self) -> str:
         # Get all the path arguments, and the query arguments and make a big string out of them.
         args = list(self.path_args.items()) + list(self.query_args.items())
         return ", ".join(f"{k}: {v}" for k, v in args)
@@ -194,7 +191,7 @@ class ClientsGenerator:
         url: str,
         additional_parameters: list[dict],
         summary: Optional[str],
-    ):
+    ) -> None:
         func_name = utils.get_func_name(operation, url)
         response_types = self.generate_response_types(responses=operation["responses"], func_name=func_name)
         function_arguments = self.generate_parameters(
