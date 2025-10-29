@@ -1,6 +1,24 @@
 
 
-auth_key = c.get_bearer_token()
-client_headers = c.additional_headers()
-client_headers.update(Authorization=f'Bearer {auth_key}')
-client = httpx.{{client_type}}(headers=client_headers)
+class HTTPClient:
+    """HTTP client wrapper that manages the httpx client with configuration."""
+    
+    def __init__(self, config: c.Config):
+        self.config = config
+        self._client: typing.Optional[httpx.{{client_type}}] = None
+    
+    def _get_client(self) -> httpx.{{client_type}}:
+        """Get or create the httpx client with current configuration."""
+        if self._client is None:
+            client_headers = self.config.additional_headers.copy()
+            client_headers.update(Authorization=f'Bearer {self.config.bearer_token}')
+            self._client = httpx.{{client_type}}(headers=client_headers)
+        return self._client
+    
+    def _get_headers(self, additional_headers: typing.Optional[dict] = None) -> dict:
+        """Get headers for a request, merging config and request-specific headers."""
+        headers = self.config.additional_headers.copy()
+        headers.update(Authorization=f'Bearer {self.config.bearer_token}')
+        if additional_headers:
+            headers.update(additional_headers)
+        return headers
