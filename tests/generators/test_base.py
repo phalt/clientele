@@ -2,8 +2,8 @@ import pytest
 
 from clientele.generators import Generator
 from clientele.generators.basic.generator import BasicGenerator
-from clientele.generators.standard.generator import StandardGenerator
 from clientele.generators.classbase.generator import ClassbaseGenerator
+from clientele.generators.standard.generator import StandardGenerator
 
 
 def test_generator_is_abstract():
