@@ -13,7 +13,7 @@ async def complex_model_request_complex_model_request_get() -> schemas.ComplexMo
 
 
 async def header_request_header_request_get(
-    headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders]
+    headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders],
 ) -> schemas.HTTPValidationError | schemas.HeadersResponse:
     """Header Request"""
     headers_dict = headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
@@ -29,7 +29,7 @@ async def optional_parameters_request_optional_parameters_get() -> schemas.Optio
 
 
 async def request_data_request_data_post(
-    data: schemas.RequestDataRequest
+    data: schemas.RequestDataRequest,
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data"""
 
@@ -38,7 +38,7 @@ async def request_data_request_data_post(
 
 
 async def request_data_request_data_put(
-    data: schemas.RequestDataRequest
+    data: schemas.RequestDataRequest,
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data"""
 
@@ -70,7 +70,7 @@ async def security_required_request_security_required_get() -> schemas.SecurityR
 
 
 async def query_request_simple_query_get(
-    yourInput: str
+    yourInput: str,
 ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request"""
 
@@ -79,7 +79,7 @@ async def query_request_simple_query_get(
 
 
 async def query_request_optional_query_get(
-    yourInput: typing.Optional[str]
+    yourInput: typing.Optional[str],
 ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
     """Optional Query Request"""
 
