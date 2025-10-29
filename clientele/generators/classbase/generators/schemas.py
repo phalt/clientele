@@ -1,7 +1,8 @@
 """
 Wrapper for schemas generator that uses classbase writer.
 """
-from openapi_core import Spec
+
+import openapi_core
 
 from clientele.generators.classbase import writer
 from clientele.generators.standard import utils
@@ -14,7 +15,7 @@ class SchemasGenerator(StandardSchemasGenerator):
     Overrides methods that write to schemas to use our writer.
     """
 
-    def __init__(self, spec: Spec, output_dir: str) -> None:
+    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
         # Initialize parent but we'll override writer calls
         self.spec = spec
         self.schemas = {}

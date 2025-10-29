@@ -1,11 +1,11 @@
-from collections import defaultdict
+import collections
 
-from openapi_core import Spec
-from rich.console import Console
+import openapi_core
+from rich import console as rich_console
 
 from clientele.generators.standard import writer
 
-console = Console()
+console = rich_console.Console()
 
 
 def env_var(output_dir: str, key: str) -> str:
@@ -18,10 +18,10 @@ class HTTPGenerator:
     Handles all the content generated in the clients.py file.
     """
 
-    def __init__(self, spec: Spec, output_dir: str, asyncio: bool) -> None:
+    def __init__(self, spec: openapi_core.Spec, output_dir: str, asyncio: bool) -> None:
         self.spec = spec
         self.output_dir = output_dir
-        self.results: dict[str, int] = defaultdict(int)
+        self.results: dict[str, int] = collections.defaultdict(int)
         self.asyncio = asyncio
         self.function_and_status_codes_bundle: dict[str, dict[str, str]] = {}
 

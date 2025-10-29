@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
+import abc
 
 
-class Generator(ABC):
+class Generator(abc.ABC):
     """
     Abstract base class for all clientele generators.
 
@@ -9,7 +9,7 @@ class Generator(ABC):
     their respective client code outputs.
     """
 
-    @abstractmethod
+    @abc.abstractmethod
     def generate(self) -> None:
         """
         Generate the client code.

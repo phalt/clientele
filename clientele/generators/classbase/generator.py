@@ -1,45 +1,44 @@
-from os import remove
-from os.path import exists
-from pathlib import Path
-from typing import Optional
+import os
+import pathlib
+import typing
+from os import path
 
 import black
-from openapi_core import Spec
-from rich.console import Console
+import openapi_core
+from rich import console as rich_console
 
-from clientele import settings, utils
-from clientele.generators import Generator
+from clientele import generators, settings, utils
 from clientele.generators.classbase import writer
 from clientele.generators.classbase.generators import clients, http, schemas
 
-console = Console()
+console = rich_console.Console()
 
 
-class ClassbaseGenerator(Generator):
+class ClassbaseGenerator(generators.Generator):
     """
     The class-based Clientele generator.
 
     Produces a Python HTTP Client library with a class-based interface.
     """
 
-    spec: Spec
+    spec: openapi_core.Spec
     asyncio: bool
     regen: bool
     schemas_generator: schemas.SchemasGenerator
     clients_generator: clients.ClientsGenerator
     http_generator: http.HTTPGenerator
     output_dir: str
-    file: Optional[str]
-    url: Optional[str]
+    file: typing.Optional[str]
+    url: typing.Optional[str]
 
     def __init__(
         self,
-        spec: Spec,
+        spec: openapi_core.Spec,
         output_dir: str,
         asyncio: bool,
         regen: bool,
-        url: Optional[str],
-        file: Optional[str],
+        url: typing.Optional[str],
+        file: typing.Optional[str],
     ) -> None:
         self.http_generator = http.HTTPGenerator(spec=spec, output_dir=output_dir, asyncio=asyncio)
         self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir)
@@ -68,8 +67,8 @@ class ClassbaseGenerator(Generator):
         writer.write_to_init(output_dir=self.output_dir)
 
         # Generate the client.py header with class definition
-        if exists(f"{self.output_dir}/client.py"):
-            remove(f"{self.output_dir}/client.py")
+        if path.exists(f"{self.output_dir}/client.py"):
+            os.remove(f"{self.output_dir}/client.py")
         template = writer.templates.get_template("client_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,
@@ -78,8 +77,8 @@ class ClassbaseGenerator(Generator):
         writer.write_to_client(content, output_dir=self.output_dir)
 
         # Generate the schemas.py header
-        if exists(f"{self.output_dir}/schemas.py"):
-            remove(f"{self.output_dir}/schemas.py")
+        if path.exists(f"{self.output_dir}/schemas.py"):
+            os.remove(f"{self.output_dir}/schemas.py")
         template = writer.templates.get_template("schemas_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,
@@ -94,10 +93,10 @@ class ClassbaseGenerator(Generator):
         ) in self.file_name_writer_tuple:
             if client_file == "schemas.py":  # Already handled above
                 continue
-            if exists(f"{self.output_dir}/{client_file}"):
+            if path.exists(f"{self.output_dir}/{client_file}"):
                 if client_file == "config.py":  # do not replace config.py if exists
                     continue
-                remove(f"{self.output_dir}/{client_file}")
+                os.remove(f"{self.output_dir}/{client_file}")
             template = writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
@@ -106,10 +105,10 @@ class ClassbaseGenerator(Generator):
             write_func(content, output_dir=self.output_dir)
 
         # Manifest file
-        if exists(f"{self.output_dir}/MANIFEST.md"):
-            remove(f"{self.output_dir}/MANIFEST.md")
+        if path.exists(f"{self.output_dir}/MANIFEST.md"):
+            os.remove(f"{self.output_dir}/MANIFEST.md")
         template = writer.templates.get_template("manifest.jinja2")
-        generate_command = f'{f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""} --regen t'  # noqa
+        generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio t' if self.asyncio else ''} --regen t"  # noqa
         content = (
             template.render(
                 api_version=self.spec["info"]["version"],
@@ -123,14 +122,14 @@ class ClassbaseGenerator(Generator):
         writer.write_to_manifest(content, output_dir=self.output_dir)
 
     def prevent_accidental_regens(self) -> bool:
-        if exists(self.output_dir):
+        if path.exists(self.output_dir):
             if not self.regen:
                 console.log("[red]WARNING! If you want to regenerate, please pass --regen t")
                 return False
         return True
 
     def format_client(self) -> None:
-        directory = Path(self.output_dir)
+        directory = pathlib.Path(self.output_dir)
         # Collect all Python files first to format them efficiently
         python_files = list(directory.glob("*.py"))
         # Use fast=True for better performance during code generation

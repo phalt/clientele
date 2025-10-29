@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import decimal
+import enum
 import inspect
 import typing
-from decimal import Decimal  # noqa
-from enum import Enum  # noqa
 
 import pydantic
 
@@ -21,7 +21,7 @@ class ComplexModelResponse(pydantic.BaseModel):
     a_list_of_strings: list[str]
     a_number: int
     a_string: str
-    a_decimal: Decimal
+    a_decimal: decimal.Decimal
     another_model: "AnotherModel"
 
 
@@ -29,7 +29,7 @@ class DeleteResponse(pydantic.BaseModel):
     pass
 
 
-class ExampleEnum(str, Enum):
+class ExampleEnum(str, enum.Enum):
     ONE = "ONE"
     TWO = "TWO"
 
@@ -58,7 +58,7 @@ class RequestDataAndParameterResponse(pydantic.BaseModel):
 
 class RequestDataRequest(pydantic.BaseModel):
     my_input: str
-    my_decimal_input: Decimal
+    my_decimal_input: decimal.Decimal
 
 
 class RequestDataResponse(pydantic.BaseModel):
