@@ -1,12 +1,13 @@
-from os import remove
-from os.path import exists
+import os
+import os.path
 
-from clientele import settings, utils
-from clientele.generators import Generator
-from clientele.generators.basic import writer
+import clientele.generators
+import clientele.generators.basic.writer
+import clientele.settings
+import clientele.utils
 
 
-class BasicGenerator(Generator):
+class BasicGenerator(clientele.generators.Generator):
     """
     Generates a "basic" HTTP client, which is just a file structure
     and some useful imports.
@@ -21,28 +22,30 @@ class BasicGenerator(Generator):
         self.output_dir = output_dir
 
         self.file_name_writer_tuple = (
-            ("config.py", "config_py.jinja2", writer.write_to_config),
-            ("client.py", "client_py.jinja2", writer.write_to_client),
-            ("http.py", "http_py.jinja2", writer.write_to_http),
-            ("schemas.py", "schemas_py.jinja2", writer.write_to_schemas),
+            ("config.py", "config_py.jinja2", clientele.generators.basic.writer.write_to_config),
+            ("client.py", "client_py.jinja2", clientele.generators.basic.writer.write_to_client),
+            ("http.py", "http_py.jinja2", clientele.generators.basic.writer.write_to_http),
+            ("schemas.py", "schemas_py.jinja2", clientele.generators.basic.writer.write_to_schemas),
         )
 
     def generate(self) -> None:
-        client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
-        if exists(f"{self.output_dir}/MANIFEST.md"):
-            remove(f"{self.output_dir}/MANIFEST.md")
-        manifest_template = writer.templates.get_template("manifest.jinja2")
-        manifest_content = manifest_template.render(command=f"-o {self.output_dir}", clientele_version=settings.VERSION)
-        writer.write_to_manifest(content=manifest_content + "\n", output_dir=self.output_dir)
-        writer.write_to_init(output_dir=self.output_dir)
+        client_project_directory_path = clientele.utils.get_client_project_directory_path(output_dir=self.output_dir)
+        if os.path.exists(f"{self.output_dir}/MANIFEST.md"):
+            os.remove(f"{self.output_dir}/MANIFEST.md")
+        manifest_template = clientele.generators.basic.writer.templates.get_template("manifest.jinja2")
+        manifest_content = manifest_template.render(
+            command=f"-o {self.output_dir}", clientele_version=clientele.settings.VERSION
+        )
+        clientele.generators.basic.writer.write_to_manifest(content=manifest_content + "\n", output_dir=self.output_dir)
+        clientele.generators.basic.writer.write_to_init(output_dir=self.output_dir)
         for (
             client_file,
             client_template_file,
             write_func,
         ) in self.file_name_writer_tuple:
-            if exists(f"{self.output_dir}/{client_file}"):
-                remove(f"{self.output_dir}/{client_file}")
-            template = writer.templates.get_template(client_template_file)
+            if os.path.exists(f"{self.output_dir}/{client_file}"):
+                os.remove(f"{self.output_dir}/{client_file}")
+            template = clientele.generators.basic.writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
             )

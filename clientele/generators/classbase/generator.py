@@ -1,49 +1,56 @@
-from os import remove
-from os.path import exists
-from pathlib import Path
-from typing import Optional
+import os
+import os.path
+import pathlib
+import typing
 
 import black
-from openapi_core import Spec
-from rich.console import Console
+import openapi_core
+import rich.console
 
-from clientele import settings, utils
-from clientele.generators import Generator
-from clientele.generators.classbase import writer
-from clientele.generators.classbase.generators import clients, http, schemas
+import clientele.generators
+import clientele.generators.classbase.generators.clients
+import clientele.generators.classbase.generators.http
+import clientele.generators.classbase.generators.schemas
+import clientele.generators.classbase.writer
+import clientele.settings
+import clientele.utils
 
-console = Console()
+console = rich.console.Console()
 
 
-class ClassbaseGenerator(Generator):
+class ClassbaseGenerator(clientele.generators.Generator):
     """
     The class-based Clientele generator.
 
     Produces a Python HTTP Client library with a class-based interface.
     """
 
-    spec: Spec
+    spec: openapi_core.Spec
     asyncio: bool
     regen: bool
-    schemas_generator: schemas.SchemasGenerator
-    clients_generator: clients.ClientsGenerator
-    http_generator: http.HTTPGenerator
+    schemas_generator: clientele.generators.classbase.generators.schemas.SchemasGenerator
+    clients_generator: clientele.generators.classbase.generators.clients.ClientsGenerator
+    http_generator: clientele.generators.classbase.generators.http.HTTPGenerator
     output_dir: str
-    file: Optional[str]
-    url: Optional[str]
+    file: typing.Optional[str]
+    url: typing.Optional[str]
 
     def __init__(
         self,
-        spec: Spec,
+        spec: openapi_core.Spec,
         output_dir: str,
         asyncio: bool,
         regen: bool,
-        url: Optional[str],
-        file: Optional[str],
+        url: typing.Optional[str],
+        file: typing.Optional[str],
     ) -> None:
-        self.http_generator = http.HTTPGenerator(spec=spec, output_dir=output_dir, asyncio=asyncio)
-        self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir)
-        self.clients_generator = clients.ClientsGenerator(
+        self.http_generator = clientele.generators.classbase.generators.http.HTTPGenerator(
+            spec=spec, output_dir=output_dir, asyncio=asyncio
+        )
+        self.schemas_generator = clientele.generators.classbase.generators.schemas.SchemasGenerator(
+            spec=spec, output_dir=output_dir
+        )
+        self.clients_generator = clientele.generators.classbase.generators.clients.ClientsGenerator(
             spec=spec,
             output_dir=output_dir,
             schemas_generator=self.schemas_generator,
@@ -57,35 +64,35 @@ class ClassbaseGenerator(Generator):
         self.file = file
         self.url = url
         self.file_name_writer_tuple = (
-            ("config.py", "config_py.jinja2", writer.write_to_config),
-            ("http.py", "http_py.jinja2", writer.write_to_http),
+            ("config.py", "config_py.jinja2", clientele.generators.classbase.writer.write_to_config),
+            ("http.py", "http_py.jinja2", clientele.generators.classbase.writer.write_to_http),
             ("schemas.py", "schemas_py.jinja2", lambda content, output_dir: None),  # Schemas handled separately
         )
 
     def generate_templates_files(self):
-        new_unions = settings.PY_VERSION[1] > 10
-        client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
-        writer.write_to_init(output_dir=self.output_dir)
+        new_unions = clientele.settings.PY_VERSION[1] > 10
+        client_project_directory_path = clientele.utils.get_client_project_directory_path(output_dir=self.output_dir)
+        clientele.generators.classbase.writer.write_to_init(output_dir=self.output_dir)
 
         # Generate the client.py header with class definition
-        if exists(f"{self.output_dir}/client.py"):
-            remove(f"{self.output_dir}/client.py")
-        template = writer.templates.get_template("client_py.jinja2")
+        if os.path.exists(f"{self.output_dir}/client.py"):
+            os.remove(f"{self.output_dir}/client.py")
+        template = clientele.generators.classbase.writer.templates.get_template("client_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,
             new_unions=new_unions,
         )
-        writer.write_to_client(content, output_dir=self.output_dir)
+        clientele.generators.classbase.writer.write_to_client(content, output_dir=self.output_dir)
 
         # Generate the schemas.py header
-        if exists(f"{self.output_dir}/schemas.py"):
-            remove(f"{self.output_dir}/schemas.py")
-        template = writer.templates.get_template("schemas_py.jinja2")
+        if os.path.exists(f"{self.output_dir}/schemas.py"):
+            os.remove(f"{self.output_dir}/schemas.py")
+        template = clientele.generators.classbase.writer.templates.get_template("schemas_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,
             new_unions=new_unions,
         )
-        writer.write_to_schemas(content, output_dir=self.output_dir)
+        clientele.generators.classbase.writer.write_to_schemas(content, output_dir=self.output_dir)
 
         for (
             client_file,
@@ -94,11 +101,11 @@ class ClassbaseGenerator(Generator):
         ) in self.file_name_writer_tuple:
             if client_file == "schemas.py":  # Already handled above
                 continue
-            if exists(f"{self.output_dir}/{client_file}"):
+            if os.path.exists(f"{self.output_dir}/{client_file}"):
                 if client_file == "config.py":  # do not replace config.py if exists
                     continue
-                remove(f"{self.output_dir}/{client_file}")
-            template = writer.templates.get_template(client_template_file)
+                os.remove(f"{self.output_dir}/{client_file}")
+            template = clientele.generators.classbase.writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
                 new_unions=new_unions,
@@ -106,31 +113,31 @@ class ClassbaseGenerator(Generator):
             write_func(content, output_dir=self.output_dir)
 
         # Manifest file
-        if exists(f"{self.output_dir}/MANIFEST.md"):
-            remove(f"{self.output_dir}/MANIFEST.md")
-        template = writer.templates.get_template("manifest.jinja2")
+        if os.path.exists(f"{self.output_dir}/MANIFEST.md"):
+            os.remove(f"{self.output_dir}/MANIFEST.md")
+        template = clientele.generators.classbase.writer.templates.get_template("manifest.jinja2")
         generate_command = f'{f"-u {self.url}" if self.url else ""}{f"-f {self.file}" if self.file else ""} -o {self.output_dir} {"--asyncio t" if self.asyncio else ""} --regen t'  # noqa
         content = (
             template.render(
                 api_version=self.spec["info"]["version"],
                 openapi_version=self.spec["openapi"],
-                clientele_version=settings.VERSION,
+                clientele_version=clientele.settings.VERSION,
                 command=generate_command,
                 generator_type="generate-class",  # Specify this is for class-based generator
             )
             + "\n"
         )
-        writer.write_to_manifest(content, output_dir=self.output_dir)
+        clientele.generators.classbase.writer.write_to_manifest(content, output_dir=self.output_dir)
 
     def prevent_accidental_regens(self) -> bool:
-        if exists(self.output_dir):
+        if os.path.exists(self.output_dir):
             if not self.regen:
                 console.log("[red]WARNING! If you want to regenerate, please pass --regen t")
                 return False
         return True
 
     def format_client(self) -> None:
-        directory = Path(self.output_dir)
+        directory = pathlib.Path(self.output_dir)
         # Collect all Python files first to format them efficiently
         python_files = list(directory.glob("*.py"))
         # Use fast=True for better performance during code generation
@@ -146,6 +153,6 @@ class ClassbaseGenerator(Generator):
         self.schemas_generator.write_helpers()
 
         # Flush the client buffer to write all methods to client.py
-        writer.flush_client_buffer(output_dir=self.output_dir)
+        clientele.generators.classbase.writer.flush_client_buffer(output_dir=self.output_dir)
 
         self.format_client()

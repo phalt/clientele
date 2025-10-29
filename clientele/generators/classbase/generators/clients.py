@@ -1,18 +1,19 @@
-from collections import defaultdict
-from typing import Optional
+import collections
+import typing
 
-from openapi_core import Spec
-from pydantic import BaseModel
-from rich.console import Console
+import openapi_core
+import pydantic
+import rich.console
 
-from clientele.generators.classbase import writer
-from clientele.generators.classbase.generators import http, schemas
-from clientele.generators.standard import utils
+import clientele.generators.classbase.generators.http
+import clientele.generators.classbase.generators.schemas
+import clientele.generators.classbase.writer
+import clientele.generators.standard.utils
 
-console = Console()
+console = rich.console.Console()
 
 
-class ParametersResponse(BaseModel):
+class ParametersResponse(pydantic.BaseModel):
     # Parameters that need to be passed in the URL query
     query_args: dict[str, str]
     # Parameters that need to be passed as variables in the function
@@ -33,22 +34,22 @@ class ClientsGenerator:
 
     method_template_map: dict[str, str]
     results: dict[str, int]
-    spec: Spec
+    spec: openapi_core.Spec
     output_dir: str
-    schemas_generator: schemas.SchemasGenerator
-    http_generator: http.HTTPGenerator
+    schemas_generator: clientele.generators.classbase.generators.schemas.SchemasGenerator
+    http_generator: clientele.generators.classbase.generators.http.HTTPGenerator
 
     def __init__(
         self,
-        spec: Spec,
+        spec: openapi_core.Spec,
         output_dir: str,
-        schemas_generator: schemas.SchemasGenerator,
-        http_generator: http.HTTPGenerator,
+        schemas_generator: clientele.generators.classbase.generators.schemas.SchemasGenerator,
+        http_generator: clientele.generators.classbase.generators.http.HTTPGenerator,
         asyncio: bool,
     ) -> None:
         self.spec = spec
         self.output_dir = output_dir
-        self.results = defaultdict(int)
+        self.results = collections.defaultdict(int)
         self.schemas_generator = schemas_generator
         self.http_generator = http_generator
         self.asyncio = asyncio
@@ -78,7 +79,7 @@ class ClientsGenerator:
         for param in all_parameters:
             if param.get("$ref"):
                 # Get the actual parameter it is referencing
-                param = utils.get_param_from_ref(spec=self.spec, param=param)
+                param = clientele.generators.standard.utils.get_param_from_ref(spec=self.spec, param=param)
             clean_key = param["name"]
             if clean_key in param_keys:
                 continue
@@ -87,18 +88,22 @@ class ClientsGenerator:
             if in_ == "query":
                 # URL query string values
                 if required:
-                    query_args[clean_key] = utils.get_type(param["schema"])
+                    query_args[clean_key] = clientele.generators.standard.utils.get_type(param["schema"])
                 else:
-                    query_args[clean_key] = f"typing.Optional[{utils.get_type(param['schema'])}]"
+                    query_args[
+                        clean_key
+                    ] = f"typing.typing.Optional[{clientele.generators.standard.utils.get_type(param['schema'])}]"
             elif in_ == "path":
                 # Function arguments
                 if required:
-                    path_args[clean_key] = utils.get_type(param["schema"])
+                    path_args[clean_key] = clientele.generators.standard.utils.get_type(param["schema"])
                 else:
-                    path_args[clean_key] = f"typing.Optional[{utils.get_type(param['schema'])}]"
+                    path_args[
+                        clean_key
+                    ] = f"typing.typing.Optional[{clientele.generators.standard.utils.get_type(param['schema'])}]"
             elif in_ == "header":
                 # Header object arguments
-                headers_args[param["name"]] = utils.get_type(param["schema"])
+                headers_args[param["name"]] = clientele.generators.standard.utils.get_type(param["schema"])
             param_keys.append(clean_key)
         return ParametersResponse(
             query_args=query_args,
@@ -121,16 +126,20 @@ class ClientsGenerator:
                 if ref := content["schema"].get("$ref", False):
                     # An object reference, so should be generated
                     # by the schema generator later.
-                    class_name = utils.class_name_titled(utils.schema_ref(ref))
+                    class_name = clientele.generators.standard.utils.class_name_titled(
+                        clientele.generators.standard.utils.schema_ref(ref)
+                    )
                 elif title := content["schema"].get("title", False):
                     # This usually means we have an object that isn't
                     # $ref so we need to create the schema class here
-                    class_name = utils.class_name_titled(title)
+                    class_name = clientele.generators.standard.utils.class_name_titled(title)
                     self.schemas_generator.make_schema_class(class_name, schema=content["schema"])
                 else:
                     # At this point we're just making things up!
                     # It is likely it isn't an object it is just a simple resonse.
-                    class_name = utils.class_name_titled(func_name + status_code + "Response")
+                    class_name = clientele.generators.standard.utils.class_name_titled(
+                        func_name + status_code + "Response"
+                    )
                     # We need to generate the class at this point because it does not exist
                     self.schemas_generator.make_schema_class(
                         func_name + status_code + "Response",
@@ -151,13 +160,15 @@ class ClientsGenerator:
             for encoding, content in details.get("content", {}).items():
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
-                    class_name = utils.class_name_titled(utils.schema_ref(ref))
+                    class_name = clientele.generators.standard.utils.class_name_titled(
+                        clientele.generators.standard.utils.schema_ref(ref)
+                    )
                 elif title := content["schema"].get("title", False):
                     class_name = title
                 else:
                     # No idea, using the encoding?
                     class_name = encoding
-                class_name = utils.class_name_titled(class_name)
+                class_name = clientele.generators.standard.utils.class_name_titled(class_name)
                 input_classes.append(class_name)
         # Return deduplicated list - order doesn't matter for this use case
         return list(set(input_classes))
@@ -165,7 +176,7 @@ class ClientsGenerator:
     def generate_response_types(self, responses: dict, func_name: str) -> str:
         response_class_names = self.get_response_class_names(responses=responses, func_name=func_name)
         if len(response_class_names) > 1:
-            return utils.union_for_py_ver([f"schemas.{r}" for r in response_class_names])
+            return clientele.generators.standard.utils.union_for_py_ver([f"schemas.{r}" for r in response_class_names])
         elif len(response_class_names) == 0:
             return "None"
         else:
@@ -178,7 +189,7 @@ class ClientsGenerator:
                 # It doesn't exist! Generate the schema for it
                 self.schemas_generator.generate_input_class(schema=request_body)
         if len(input_class_names) > 1:
-            return utils.union_for_py_ver([f"schemas.{r}" for r in input_class_names])
+            return clientele.generators.standard.utils.union_for_py_ver([f"schemas.{r}" for r in input_class_names])
         elif len(input_class_names) == 0:
             return "None"
         else:
@@ -190,16 +201,16 @@ class ClientsGenerator:
         method: str,
         url: str,
         additional_parameters: list[dict],
-        summary: Optional[str],
+        summary: typing.Optional[str],
     ) -> None:
-        func_name = utils.get_func_name(operation, url)
+        func_name = clientele.generators.standard.utils.get_func_name(operation, url)
         response_types = self.generate_response_types(responses=operation["responses"], func_name=func_name)
         function_arguments = self.generate_parameters(
             parameters=operation.get("parameters", []),
             additional_parameters=additional_parameters,
         )
         if query_args := function_arguments.query_args:
-            api_url = url + utils.create_query_args(list(query_args.keys()))
+            api_url = url + clientele.generators.standard.utils.create_query_args(list(query_args.keys()))
         else:
             api_url = url
         if method in ["post", "put", "patch"] and not operation.get("requestBody"):
@@ -209,7 +220,7 @@ class ClientsGenerator:
         else:
             data_class_name = None
         self.results[method] += 1
-        template = writer.templates.get_template(self.method_template_map[method])
+        template = clientele.generators.classbase.writer.templates.get_template(self.method_template_map[method])
         if headers := function_arguments.headers_args:
             header_class_name = self.schemas_generator.generate_headers_class(
                 properties=headers,
@@ -228,7 +239,7 @@ class ClientsGenerator:
             method=method,
             summary=operation.get("summary", summary),
         )
-        writer.write_to_client(content=content, output_dir=self.output_dir)
+        clientele.generators.classbase.writer.write_to_client(content=content, output_dir=self.output_dir)
 
     def write_path_to_client(self, path: dict) -> None:
         url, operations = path
