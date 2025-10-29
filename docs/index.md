@@ -94,4 +94,4 @@ response = await client.simple_request_simple_request_get()
 * Support your own configuration - we provide an entry point that will never be overwritten.
 * Designed for easy testing with [respx](https://lundberg.github.io/respx/).
 * API updated? Just run the same command again and check the git diff.
-* Automatically formats the generated client with [Ruff](https://docs.astral.sh/ruff/).
+* Automatically formats the generated client with [black](https://black.readthedocs.io/en/stable/index.html).
