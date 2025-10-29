@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import inspect
 import typing
-from enum import Enum  # noqa
 from decimal import Decimal  # noqa
+from enum import Enum  # noqa
 
 import pydantic
 

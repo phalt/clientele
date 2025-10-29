@@ -1,8 +1,7 @@
 from __future__ import annotations
+
 import json
-
 import types
-
 import typing
 from decimal import Decimal
 from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
