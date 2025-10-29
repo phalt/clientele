@@ -1,5 +1,14 @@
 # Change log
 
+## 0.10.0
+
+- **New**: Class-based client generator! Use `clientele generate-class` to generate a client with a `Client` class and methods instead of standalone functions.
+- Class-based clients support both sync and async modes with `--asyncio t` flag.
+- Class-based clients are perfect for object-oriented codebases and when you need to mock the client for testing.
+- Updated documentation with comprehensive examples of class-based client usage.
+- Added `generate-class` command to CLI with full feature parity to the standard `generate` command.
+- Add ABC (Abstract Base Class) pattern to generators with a `Generator` base class that all generators inherit from.
+
 ## 0.9.0
 
 - Support `patch` methods

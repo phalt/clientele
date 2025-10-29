@@ -114,8 +114,38 @@ def generate_basic(output):
     generator.generate()
 
 
+@click.command()
+@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
+@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
+@click.option("-o", "--output", help="Directory for the generated client", required=True)
+@click.option("-a", "--asyncio", help="Generate async client", required=False)
+@click.option("-r", "--regen", help="Regenerate client", required=False)
+def generate_class(url, file, output, asyncio, regen):
+    """
+    Generate a class-based client from an OpenAPI schema
+    """
+    from rich.console import Console
+
+    console = Console()
+
+    from clientele.generators.classbase.generator import ClassbaseGenerator
+
+    spec = _load_openapi_spec(url=url, file=file)
+    console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
+    major, _, _ = spec["openapi"].split(".")
+    if int(major) < 3:
+        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
+        return
+    generator = ClassbaseGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
+    if generator.prevent_accidental_regens():
+        generator.generate()
+        console.log("\n[green]⚜️ Class-based client generated! ⚜️ \n")
+        console.log("[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client")
+
+
 cli_group.add_command(generate)
 cli_group.add_command(generate_basic)
+cli_group.add_command(generate_class)
 cli_group.add_command(version)
 cli_group.add_command(validate)
 
