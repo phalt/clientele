@@ -1,9 +1,9 @@
 import os
 import pathlib
+import subprocess
 import typing
 from os import path
 
-import black
 import openapi_core
 from rich import console as rich_console
 
@@ -106,12 +106,18 @@ class StandardGenerator(generators.Generator):
 
     def format_client(self) -> None:
         directory = pathlib.Path(self.output_dir)
-        # Collect all Python files first to format them efficiently
-        python_files = list(directory.glob("*.py"))
-        # Use fast=True for better performance during code generation
-        mode = black.Mode()
-        for f in python_files:
-            black.format_file_in_place(f, fast=True, mode=mode, write_back=black.WriteBack.YES)
+        # Use Ruff to format all Python files in the directory
+        try:
+            subprocess.run(
+                ["ruff", "format", str(directory)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        except subprocess.CalledProcessError as e:
+            console.log(f"[yellow]Warning: Ruff formatting failed: {e.stderr}")
+        except FileNotFoundError:
+            console.log("[yellow]Warning: Ruff not found in PATH, skipping formatting")
 
     def generate(self) -> None:
         self.generate_templates_files()

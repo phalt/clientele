@@ -82,38 +82,17 @@ def handle_response(func, response):
 # Func map
 func_response_code_maps = {
     "complex_model_request_complex_model_request_get": {"200": "ComplexModelResponse"},
-    "header_request_header_request_get": {
-        "200": "HeadersResponse",
-        "422": "HTTPValidationError",
-    },
+    "header_request_header_request_get": {"200": "HeadersResponse", "422": "HTTPValidationError"},
     "optional_parameters_request_optional_parameters_get": {"200": "OptionalParametersResponse"},
-    "request_data_request_data_post": {
-        "200": "RequestDataResponse",
-        "422": "HTTPValidationError",
-    },
-    "request_data_request_data_put": {
-        "200": "RequestDataResponse",
-        "422": "HTTPValidationError",
-    },
-    "request_data_path_request_data": {
-        "200": "RequestDataAndParameterResponse",
-        "422": "HTTPValidationError",
-    },
+    "request_data_request_data_post": {"200": "RequestDataResponse", "422": "HTTPValidationError"},
+    "request_data_request_data_put": {"200": "RequestDataResponse", "422": "HTTPValidationError"},
+    "request_data_path_request_data": {"200": "RequestDataAndParameterResponse", "422": "HTTPValidationError"},
     "request_delete_request_delete_delete": {"200": "DeleteResponse"},
     "security_required_request_security_required_get": {"200": "SecurityRequiredResponse"},
-    "query_request_simple_query_get": {
-        "200": "SimpleQueryParametersResponse",
-        "422": "HTTPValidationError",
-    },
-    "query_request_optional_query_get": {
-        "200": "OptionalQueryParametersResponse",
-        "422": "HTTPValidationError",
-    },
+    "query_request_simple_query_get": {"200": "SimpleQueryParametersResponse", "422": "HTTPValidationError"},
+    "query_request_optional_query_get": {"200": "OptionalQueryParametersResponse", "422": "HTTPValidationError"},
     "simple_request_simple_request_get": {"200": "SimpleResponse"},
-    "parameter_request_simple_request": {
-        "200": "ParameterResponse",
-        "422": "HTTPValidationError",
-    },
+    "parameter_request_simple_request": {"200": "ParameterResponse", "422": "HTTPValidationError"},
 }
 
 auth_key = c.get_bearer_token()

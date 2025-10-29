@@ -14,9 +14,7 @@ class Client:
     def __init__(self):
         pass
 
-    def complex_model_request_complex_model_request_get(
-        self,
-    ) -> schemas.ComplexModelResponse:
+    def complex_model_request_complex_model_request_get(self) -> schemas.ComplexModelResponse:
         """Complex Model Request"""
 
         response = http.get(url="/complex-model-request")
@@ -30,9 +28,7 @@ class Client:
         response = http.get(url="/header-request", headers=headers_dict)
         return http.handle_response(self.header_request_header_request_get, response)
 
-    def optional_parameters_request_optional_parameters_get(
-        self,
-    ) -> schemas.OptionalParametersResponse:
+    def optional_parameters_request_optional_parameters_get(self) -> schemas.OptionalParametersResponse:
         """Optional Parameters Request"""
 
         response = http.get(url="/optional-parameters")
@@ -68,9 +64,7 @@ class Client:
         response = http.delete(url="/request-delete")
         return http.handle_response(self.request_delete_request_delete_delete, response)
 
-    def security_required_request_security_required_get(
-        self,
-    ) -> schemas.SecurityRequiredResponse:
+    def security_required_request_security_required_get(self) -> schemas.SecurityRequiredResponse:
         """Security Required Request"""
 
         response = http.get(url="/security-required")
