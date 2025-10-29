@@ -1,5 +1,13 @@
 # Change log
 
+## 0.11.0
+
+- **New**: Dynamic configuration for class-based clients! Class-based clients now accept a `Config` object in their constructor, allowing you to create multiple clients with different configurations on the fly.
+- The `config.py` file in class-based clients now generates a `Config` class instead of standalone functions, enabling runtime configuration changes.
+- You can now instantiate clients with custom configuration: `client = Client(config=Config(api_base_url="https://api.example.com", bearer_token="my-token"))`.
+- This addresses issues #42 and #49, enabling dynamic auth tokens and multiple clients with different configurations.
+- **Breaking change for class-based clients**: The `config.py` file structure has changed from functions to a class. Existing generated clients will need to be regenerated with `--regen t`.
+
 ## 0.10.0
 
 - **New**: Class-based client generator! Use `clientele generate-class` to generate a client with a `Client` class and methods instead of standalone functions.
