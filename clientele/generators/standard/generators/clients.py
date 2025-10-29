@@ -1,17 +1,17 @@
-from collections import defaultdict
-from typing import Optional
+import collections
+import typing
 
-from openapi_core import Spec
-from pydantic import BaseModel
-from rich.console import Console
+import openapi_core
+import pydantic
+from rich import console as rich_console
 
 from clientele.generators.standard import utils, writer
 from clientele.generators.standard.generators import http, schemas
 
-console = Console()
+console = rich_console.Console()
 
 
-class ParametersResponse(BaseModel):
+class ParametersResponse(pydantic.BaseModel):
     # Parameters that need to be passed in the URL query
     query_args: dict[str, str]
     # Parameters that need to be passed as variables in the function
@@ -32,14 +32,14 @@ class ClientsGenerator:
 
     method_template_map: dict[str, str]
     results: dict[str, int]
-    spec: Spec
+    spec: openapi_core.Spec
     output_dir: str
     schemas_generator: schemas.SchemasGenerator
     http_generator: http.HTTPGenerator
 
     def __init__(
         self,
-        spec: Spec,
+        spec: openapi_core.Spec,
         output_dir: str,
         schemas_generator: schemas.SchemasGenerator,
         http_generator: http.HTTPGenerator,
@@ -47,7 +47,7 @@ class ClientsGenerator:
     ) -> None:
         self.spec = spec
         self.output_dir = output_dir
-        self.results = defaultdict(int)
+        self.results = collections.defaultdict(int)
         self.schemas_generator = schemas_generator
         self.http_generator = http_generator
         self.asyncio = asyncio
@@ -189,7 +189,7 @@ class ClientsGenerator:
         method: str,
         url: str,
         additional_parameters: list[dict],
-        summary: Optional[str],
+        summary: typing.Optional[str],
     ):
         func_name = utils.get_func_name(operation, url)
         response_types = self.generate_response_types(responses=operation["responses"], func_name=func_name)

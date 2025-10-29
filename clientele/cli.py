@@ -6,20 +6,20 @@ def _load_openapi_spec(url: str = None, file: str = None):
     Load OpenAPI spec from URL or file.
     Returns the spec object and handles JSON/YAML parsing.
     """
-    from json import JSONDecodeError
+    import json
 
+    import httpx
     import yaml
-    from httpx import Client
     from openapi_core import Spec
 
     assert url or file, "Must pass either a URL or a file"
 
     if url:
-        with Client() as client:  # Use context manager for proper cleanup
+        with httpx.Client() as client:  # Use context manager for proper cleanup
             response = client.get(url)
             try:
                 data = response.json()
-            except JSONDecodeError:
+            except json.JSONDecodeError:
                 # It's probably yaml
                 data = yaml.safe_load(response.content)
         return Spec.from_dict(data)
@@ -41,9 +41,9 @@ def version():
     """
     Print the current version of clientele
     """
-    from clientele.settings import VERSION
+    from clientele import settings
 
-    print(f"clientele {VERSION}")
+    print(f"clientele {settings.VERSION}")
 
 
 @click.command()
@@ -53,9 +53,9 @@ def validate(url, file):
     """
     Validate an OpenAPI schema. Will error if anything is wrong with the schema
     """
-    from rich.console import Console
+    from rich import console
 
-    console = Console()
+    console = console.Console()
 
     spec = _load_openapi_spec(url=url, file=file)
     console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
@@ -76,9 +76,9 @@ def generate(url, file, output, asyncio, regen):
     """
     Generate a new client from an OpenAPI schema
     """
-    from rich.console import Console
+    from rich import console
 
-    console = Console()
+    console = console.Console()
 
     from clientele.generators.standard.generator import StandardGenerator
 
@@ -101,11 +101,11 @@ def generate_basic(output):
     """
     Generate a "basic" file structure, no code.
     """
-    from rich.console import Console
+    from rich import console
 
     from clientele.generators.basic.generator import BasicGenerator
 
-    console = Console()
+    console = console.Console()
 
     console.log(f"Generating basic client at {output}...")
 
@@ -124,9 +124,9 @@ def generate_class(url, file, output, asyncio, regen):
     """
     Generate a class-based client from an OpenAPI schema
     """
-    from rich.console import Console
+    from rich import console
 
-    console = Console()
+    console = console.Console()
 
     from clientele.generators.classbase.generator import ClassbaseGenerator
 

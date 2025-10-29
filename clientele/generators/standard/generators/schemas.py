@@ -1,11 +1,11 @@
-from typing import Optional
+import typing
 
-from openapi_core import Spec
-from rich.console import Console
+import openapi_core
+from rich import console as rich_console
 
 from clientele.generators.standard import utils, writer
 
-console = Console()
+console = rich_console.Console()
 
 
 class SchemasGenerator:
@@ -13,11 +13,11 @@ class SchemasGenerator:
     Handles all the content generated in the schemas.py file.
     """
 
-    spec: Spec
+    spec: openapi_core.Spec
     schemas: dict[str, str]
     output_dir: str
 
-    def __init__(self, spec: Spec, output_dir: str) -> None:
+    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
         self.spec = spec
         self.schemas = {}
         self.output_dir = output_dir
@@ -28,6 +28,7 @@ class SchemasGenerator:
         """
         Generate a string list of the properties for this enum.
         """
+        # utils already imported
         lines = [
             f"    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"
             for arg, arg_details in properties.items()
@@ -42,6 +43,7 @@ class SchemasGenerator:
         have - separators and python detests that, so we're using
         the alias trick to get around that
         """
+        # utils already imported
         template = writer.templates.get_template("schema_class.jinja2")
         class_name = f"{utils.class_name_titled(func_name)}Headers"
         string_props = "\n".join(
@@ -55,7 +57,7 @@ class SchemasGenerator:
         )
         return f"typing.Optional[schemas.{utils.class_name_titled(func_name)}Headers]"
 
-    def generate_class_properties(self, properties: dict, required: Optional[list] = None) -> str:
+    def generate_class_properties(self, properties: dict, required: typing.Optional[list] = None) -> str:
         """
         Generate a string list of the properties for this pydantic class.
         """

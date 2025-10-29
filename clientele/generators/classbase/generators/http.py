@@ -1,14 +1,15 @@
 """
 Wrapper for HTTP generator that uses classbase writer.
 """
-from collections import defaultdict
 
-from openapi_core import Spec
-from rich.console import Console
+import collections
+
+import openapi_core
+from rich import console as rich_console
 
 from clientele.generators.classbase import writer
 
-console = Console()
+console = rich_console.Console()
 
 
 class HTTPGenerator:
@@ -17,10 +18,10 @@ class HTTPGenerator:
     Uses classbase writer.
     """
 
-    def __init__(self, spec: Spec, output_dir: str, asyncio: bool) -> None:
+    def __init__(self, spec: openapi_core.Spec, output_dir: str, asyncio: bool) -> None:
         self.spec = spec
         self.output_dir = output_dir
-        self.results: dict[str, int] = defaultdict(int)
+        self.results: dict[str, int] = collections.defaultdict(int)
         self.asyncio = asyncio
         self.function_and_status_codes_bundle: dict[str, dict[str, str]] = {}
 

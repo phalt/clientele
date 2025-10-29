@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import decimal
 import json
 import types
 import typing
-from decimal import Decimal
-from urllib.parse import parse_qs, urlencode, urlparse, urlunparse
+from urllib import parse
 
 import httpx
 
@@ -12,7 +12,7 @@ from tests.test_class_client import config as c  # noqa
 
 
 def json_serializer(obj):
-    if isinstance(obj, Decimal):
+    if isinstance(obj, decimal.Decimal):
         return str(obj)
 
 
@@ -35,11 +35,11 @@ def parse_url(url: str) -> str:
     Will filter out any optional query parameters if they are None.
     """
     api_url = f"{c.api_base_url()}{url}"
-    url_parts = urlparse(url=api_url)
+    url_parts = parse.urlparse(url=api_url)
     # Filter out "None" optional query parameters
-    filtered_query_params = {k: v for k, v in parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
-    filtered_query_string = urlencode(filtered_query_params, doseq=True)
-    return urlunparse(
+    filtered_query_params = {k: v for k, v in parse.parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
+    filtered_query_string = parse.urlencode(filtered_query_params, doseq=True)
+    return parse.urlunparse(
         (
             url_parts.scheme,
             url_parts.netloc,

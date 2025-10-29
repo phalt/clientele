@@ -8,6 +8,7 @@
 - Updated documentation with comprehensive examples of class-based client usage.
 - Added `generate-class` command to CLI with full feature parity to the standard `generate` command.
 - Add ABC (Abstract Base Class) pattern to generators with a `Generator` base class that all generators inherit from.
+- Refactored all imports to import modules.
 
 ## 0.9.0
 
