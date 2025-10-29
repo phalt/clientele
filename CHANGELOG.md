@@ -9,6 +9,7 @@
 - Added `generate-class` command to CLI with full feature parity to the standard `generate` command.
 - Add ABC (Abstract Base Class) pattern to generators with a `Generator` base class that all generators inherit from.
 - Refactored all imports to import modules.
+- **Changed**: Generated code is now auto-formatted with Ruff instead of Black.
 
 ## 0.9.0
 
