@@ -1,8 +1,8 @@
-import pathlib
+from pathlib import Path
 
-import jinja2
+from jinja2 import Environment, PackageLoader
 
-templates = jinja2.Environment(loader=jinja2.PackageLoader("clientele", "generators/classbase/templates/"))
+templates = Environment(loader=PackageLoader("clientele", "generators/classbase/templates/"))
 
 # Buffer to accumulate content before writing
 _client_buffer = []
@@ -11,12 +11,12 @@ _schemas_buffer = []
 
 def write_to_schemas(content: str, output_dir: str) -> None:
     """Write schema content immediately to file"""
-    path = pathlib.Path(output_dir) / "schemas.py"
+    path = Path(output_dir) / "schemas.py"
     _write_to(path, content)
 
 
 def write_to_http(content: str, output_dir: str) -> None:
-    path = pathlib.Path(output_dir) / "http.py"
+    path = Path(output_dir) / "http.py"
     _write_to(path, content)
 
 
@@ -26,17 +26,17 @@ def write_to_client(content: str, output_dir: str) -> None:
 
 
 def write_to_manifest(content: str, output_dir: str) -> None:
-    path = pathlib.Path(output_dir) / "MANIFEST.md"
+    path = Path(output_dir) / "MANIFEST.md"
     _write_to(path, content)
 
 
 def write_to_config(content: str, output_dir: str) -> None:
-    path = pathlib.Path(output_dir) / "config.py"
+    path = Path(output_dir) / "config.py"
     _write_to(path, content)
 
 
 def write_to_init(output_dir: str) -> None:
-    path = pathlib.Path(output_dir) / "__init__.py"
+    path = Path(output_dir) / "__init__.py"
     _write_to(path, "")
 
 
@@ -48,7 +48,7 @@ def flush_buffers() -> None:
 
 
 def _write_to(
-    path: pathlib.Path,
+    path: Path,
     content: str,
 ) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -59,7 +59,7 @@ def _write_to(
 def flush_client_buffer(output_dir: str) -> None:
     """Write all buffered client content to client.py"""
     if _client_buffer:
-        path = pathlib.Path(output_dir) / "client.py"
+        path = Path(output_dir) / "client.py"
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("w") as f:
             f.write("".join(_client_buffer))
@@ -69,7 +69,7 @@ def flush_client_buffer(output_dir: str) -> None:
 def flush_schemas_buffer(output_dir: str) -> None:
     """Write all buffered schema content to schemas.py"""
     if _schemas_buffer:
-        path = pathlib.Path(output_dir) / "schemas.py"
+        path = Path(output_dir) / "schemas.py"
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a") as f:
             f.write("".join(_schemas_buffer))
