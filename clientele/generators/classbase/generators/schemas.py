@@ -3,7 +3,8 @@ Wrapper for schemas generator that uses classbase writer.
 """
 from openapi_core import Spec
 
-from clientele.generators.classbase import utils, writer
+from clientele.generators.classbase import writer
+from clientele.generators.standard import utils
 from clientele.generators.standard.generators.schemas import SchemasGenerator as StandardSchemasGenerator
 
 
@@ -113,7 +114,7 @@ class SchemasGenerator(StandardSchemasGenerator):
                 output_dir=self.output_dir,
             )
 
-    def write_helpers(self):
+    def write_helpers(self) -> None:
         """
         Write helper functions to schemas. Uses classbase writer.
         """

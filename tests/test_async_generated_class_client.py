@@ -1,8 +1,3 @@
-"""
-Identical to the normal class client tests but just using
-the async client instead
-"""
-
 from decimal import Decimal
 
 import pytest

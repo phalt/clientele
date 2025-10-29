@@ -7,6 +7,7 @@
 - Class-based clients are perfect for object-oriented codebases and when you need to mock the client for testing.
 - Updated documentation with comprehensive examples of class-based client usage.
 - Added `generate-class` command to CLI with full feature parity to the standard `generate` command.
+- Add ABC (Abstract Base Class) pattern to generators with a `Generator` base class that all generators inherit from.
 
 ## 0.9.0
 
