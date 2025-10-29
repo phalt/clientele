@@ -26,7 +26,7 @@ openapi-core = "0.18.0"
 pyyaml = "^6.0.1"
 types-pyyaml = "^6.0.12.11"
 jinja2 = "^3.1.2"
-black = "^23.9.1"
+ruff = "^0.1.2"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.4.0"
@@ -36,7 +36,6 @@ mkdocs-material = "^9.1.19"
 respx = "^0.20.2"
 pytest = "^7.4.0"
 pytest-asyncio = "^0.21.1"
-ruff = "^0.1.2"
 
 [build-system]
 requires = ["poetry-core"]
