@@ -81,7 +81,7 @@ Format and lint the code:
 make format
 ```
 
-Note that, the auto-generated black formatted code will be changed again because this project uses `ruff` for additional formatting. That's okay.
+The generated code is automatically formatted with Ruff, which provides both code formatting and linting fixes.
 
 Make sure you add to `CHANGELOG.md` and `docs/CHANGELOG.md` what changes you have made.
 
