@@ -5,6 +5,14 @@
 
     You can type `clientele COMMAND --help` at anytime to see explicit information about the available arguments.
 
+## Client Types
+
+Clientele offers three types of client generators:
+
+1. **`generate`** - Standard function-based client (recommended for most use cases)
+2. **`generate-class`** - Class-based client with methods
+3. **`generate-basic`** - Basic file structure with no generated code
+
 ## `generate`
 
 Generate a Python HTTP Client from an OpenAPI Schema.
@@ -52,6 +60,73 @@ clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
 !!! note
 
     You can copy and paste the command from the `MANIFEST.md` file in your previously-generated client for a quick and easy regeneration.
+
+## `generate-class`
+
+Generate a class-based Python HTTP Client from an OpenAPI Schema. This generator creates a `Client` class with methods for each API endpoint.
+
+### Usage
+
+The `generate-class` command accepts the same arguments as `generate`:
+
+```sh
+clientele generate-class -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/
+```
+
+### Example Usage
+
+With a class-based client, you instantiate the `Client` class and call methods:
+
+```python
+from my_client.client import Client
+from my_client import schemas
+
+# Create a client instance
+client = Client()
+
+# Call API methods
+data = schemas.RequestDataRequest(my_input="test")
+response = client.request_data_request_data_post(data=data)
+
+# Handle responses
+match response:
+    case schemas.RequestDataResponse():
+        print(f"Success: {response}")
+    case schemas.ValidationError():
+        print(f"Validation error: {response}")
+```
+
+### Async Class-Based Client
+
+You can generate an async class-based client as well:
+
+```sh
+clientele generate-class -f path/to/file.json -o my_client/ --asyncio t
+```
+
+Then use it with async/await:
+
+```python
+from my_async_client.client import Client
+
+client = Client()
+response = await client.simple_request_simple_request_get()
+```
+
+### When to Use Class-Based Clients
+
+Use class-based clients when:
+
+- You prefer object-oriented programming style
+- You want to easily mock the client for testing
+- You need to maintain state or configuration in the client instance
+- You want to subclass and extend the client behavior
+
+Use function-based clients (`generate`) when:
+
+- You prefer functional programming style
+- You want the simplest possible client with no boilerplate
+- You don't need to maintain state between requests
 
 ## `validate`
 

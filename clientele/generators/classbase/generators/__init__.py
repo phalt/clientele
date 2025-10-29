@@ -1,0 +1,1 @@
+# Client generators for classbase

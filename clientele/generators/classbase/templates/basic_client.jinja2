@@ -1,0 +1,2 @@
+client_headers = c.additional_headers()
+client = httpx.{{client_type}}(auth=(c.get_user_key(), c.get_pass_key()), headers=client_headers)
