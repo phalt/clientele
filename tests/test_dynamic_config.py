@@ -1,7 +1,6 @@
 """
 Tests for dynamic configuration feature in class-based clients.
 """
-import pytest
 from httpx import Response
 from respx import MockRouter
 
@@ -16,14 +15,12 @@ def test_client_with_custom_base_url(respx_mock: MockRouter):
     custom_config = config.Config(api_base_url=custom_url)
     mocked_response = {"status": "hello world"}
     mock_path = "/simple-request"
-    respx_mock.get(f"{custom_url}{mock_path}").mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
-    
+    respx_mock.get(f"{custom_url}{mock_path}").mock(return_value=Response(json=mocked_response, status_code=200))
+
     # When
     client = Client(config=custom_config)
     response = client.simple_request_simple_request_get()
-    
+
     # Then
     assert isinstance(response, schemas.SimpleResponse)
     assert len(respx_mock.calls) == 1
@@ -39,15 +36,13 @@ def test_client_with_custom_bearer_token(respx_mock: MockRouter):
     mocked_response = {"status": "hello world"}
     mock_path = "/simple-request"
     base_url = "http://localhost"
-    
-    respx_mock.get(f"{base_url}{mock_path}").mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
-    
+
+    respx_mock.get(f"{base_url}{mock_path}").mock(return_value=Response(json=mocked_response, status_code=200))
+
     # When
     client = Client(config=custom_config)
     response = client.simple_request_simple_request_get()
-    
+
     # Then
     assert isinstance(response, schemas.SimpleResponse)
     assert len(respx_mock.calls) == 1
@@ -63,15 +58,13 @@ def test_client_with_additional_headers(respx_mock: MockRouter):
     mocked_response = {"status": "hello world"}
     mock_path = "/simple-request"
     base_url = "http://localhost"
-    
-    respx_mock.get(f"{base_url}{mock_path}").mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
-    
+
+    respx_mock.get(f"{base_url}{mock_path}").mock(return_value=Response(json=mocked_response, status_code=200))
+
     # When
     client = Client(config=custom_config)
     response = client.simple_request_simple_request_get()
-    
+
     # Then
     assert isinstance(response, schemas.SimpleResponse)
     assert len(respx_mock.calls) == 1
@@ -85,34 +78,34 @@ def test_multiple_clients_with_different_configs(respx_mock: MockRouter):
     # Given
     config1 = config.Config(api_base_url="https://api1.example.com", bearer_token="token1")
     config2 = config.Config(api_base_url="https://api2.example.com", bearer_token="token2")
-    
+
     mocked_response = {"status": "hello world"}
     mock_path = "/simple-request"
-    
+
     respx_mock.get(f"https://api1.example.com{mock_path}").mock(
         return_value=Response(json=mocked_response, status_code=200)
     )
     respx_mock.get(f"https://api2.example.com{mock_path}").mock(
         return_value=Response(json=mocked_response, status_code=200)
     )
-    
+
     # When
     client1 = Client(config=config1)
     client2 = Client(config=config2)
-    
+
     response1 = client1.simple_request_simple_request_get()
     response2 = client2.simple_request_simple_request_get()
-    
+
     # Then
     assert isinstance(response1, schemas.SimpleResponse)
     assert isinstance(response2, schemas.SimpleResponse)
     assert len(respx_mock.calls) == 2
-    
+
     # Verify each client used its own configuration
     call1 = respx_mock.calls[0]
     assert call1.request.url == f"https://api1.example.com{mock_path}"
     assert call1.request.headers.get("Authorization") == "Bearer token1"
-    
+
     call2 = respx_mock.calls[1]
     assert call2.request.url == f"https://api2.example.com{mock_path}"
     assert call2.request.headers.get("Authorization") == "Bearer token2"
@@ -124,15 +117,13 @@ def test_client_with_default_config(respx_mock: MockRouter):
     mocked_response = {"status": "hello world"}
     mock_path = "/simple-request"
     default_base_url = "http://localhost"
-    
-    respx_mock.get(f"{default_base_url}{mock_path}").mock(
-        return_value=Response(json=mocked_response, status_code=200)
-    )
-    
+
+    respx_mock.get(f"{default_base_url}{mock_path}").mock(return_value=Response(json=mocked_response, status_code=200))
+
     # When
     client = Client()  # No config provided, should use defaults
     response = client.simple_request_simple_request_get()
-    
+
     # Then
     assert isinstance(response, schemas.SimpleResponse)
     assert len(respx_mock.calls) == 1
