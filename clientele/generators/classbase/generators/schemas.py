@@ -1,20 +1,20 @@
 """
 Wrapper for schemas generator that uses classbase writer.
 """
-from openapi_core import Spec
+import openapi_core
 
-from clientele.generators.classbase import writer
-from clientele.generators.standard import utils
-from clientele.generators.standard.generators.schemas import SchemasGenerator as StandardSchemasGenerator
+import clientele.generators.classbase.writer
+import clientele.generators.standard.generators.schemas
+import clientele.generators.standard.utils
 
 
-class SchemasGenerator(StandardSchemasGenerator):
+class SchemasGenerator(clientele.generators.standard.generators.schemas.SchemasGenerator):
     """
     Schemas generator that uses the classbase writer instead of standard writer.
     Overrides methods that write to schemas to use our writer.
     """
 
-    def __init__(self, spec: Spec, output_dir: str) -> None:
+    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
         # Initialize parent but we'll override writer calls
         self.spec = spec
         self.schemas = {}
@@ -26,14 +26,19 @@ class SchemasGenerator(StandardSchemasGenerator):
         Generate a headers class that can be used by a function.
         Uses classbase writer.
         """
-        template = writer.templates.get_template("schema_class.jinja2")
+        template = clientele.generators.classbase.writer.templates.get_template(
+            "schema_class.jinja2"
+        )
+        utils = clientele.generators.standard.utils
         class_name = f"{utils.class_name_titled(func_name)}Headers"
         string_props = "\n".join(
             f'    {utils.snake_case_prop(k)}: {v} = pydantic.Field(serialization_alias="{k}")'
             for k, v in properties.items()
         )
-        content = template.render(class_name=class_name, properties=string_props, enum=False)
-        writer.write_to_schemas(
+        content = template.render(
+            class_name=class_name, properties=string_props, enum=False
+        )
+        clientele.generators.classbase.writer.write_to_schemas(
             content,
             output_dir=self.output_dir,
         )
@@ -43,7 +48,7 @@ class SchemasGenerator(StandardSchemasGenerator):
         """
         Make a schema class. Uses classbase writer.
         """
-        schema_key = utils.class_name_titled(schema_key)
+        schema_key = clientele.generators.standard.utils.class_name_titled(schema_key)
         if schema_key in self.schemas.keys():
             return
 
@@ -55,12 +60,16 @@ class SchemasGenerator(StandardSchemasGenerator):
             for other_ref in all_of:
                 is_ref = other_ref.get("$ref", False)
                 if is_ref:
-                    other_schema_key = utils.class_name_titled(utils.schema_ref(is_ref))
+                    other_schema_key = clientele.generators.standard.utils.class_name_titled(
+                        clientele.generators.standard.utils.schema_ref(is_ref)
+                    )
                     if other_schema_key in self.schemas:
                         property_parts.append(self.schemas[other_schema_key])
                     else:
                         # It's a ref but we've just not made it yet
-                        schema_model = utils.get_schema_from_ref(spec=self.spec, ref=is_ref)
+                        schema_model = clientele.generators.standard.utils.get_schema_from_ref(
+                            spec=self.spec, ref=is_ref
+                        )
                         property_parts.append(
                             self.generate_class_properties(
                                 properties=schema_model.get("properties", {}),
@@ -87,9 +96,9 @@ class SchemasGenerator(StandardSchemasGenerator):
             )
         self.schemas[schema_key] = properties
 
-        template = writer.templates.get_template("schema_class.jinja2")
+        template = clientele.generators.classbase.writer.templates.get_template("schema_class.jinja2")
         content = template.render(class_name=schema_key, properties=properties, enum=enum)
-        writer.write_to_schemas(content, output_dir=self.output_dir)
+        clientele.generators.classbase.writer.write_to_schemas(content, output_dir=self.output_dir)
 
     def generate_input_class(self, schema: dict) -> None:
         """Generate input class. Uses classbase writer."""
@@ -97,19 +106,21 @@ class SchemasGenerator(StandardSchemasGenerator):
             for encoding, input_schema in content.items():
                 class_name = ""
                 if ref := input_schema["schema"].get("$ref", False):
-                    class_name = utils.class_name_titled(utils.schema_ref(ref))
+                    class_name = clientele.generators.standard.utils.class_name_titled(
+                        clientele.generators.standard.utils.schema_ref(ref)
+                    )
                 elif title := input_schema["schema"].get("title", False):
-                    class_name = utils.class_name_titled(title)
+                    class_name = clientele.generators.standard.utils.class_name_titled(title)
                 else:
                     # No idea, using the encoding?
-                    class_name = utils.class_name_titled(encoding)
+                    class_name = clientele.generators.standard.utils.class_name_titled(encoding)
                 properties = self.generate_class_properties(
                     properties=input_schema["schema"].get("properties", {}),
                     required=input_schema["schema"].get("required", None),
                 )
-                template = writer.templates.get_template("schema_class.jinja2")
+                template = clientele.generators.classbase.writer.templates.get_template("schema_class.jinja2")
                 out_content = template.render(class_name=class_name, properties=properties, enum=False)
-            writer.write_to_schemas(
+            clientele.generators.classbase.writer.write_to_schemas(
                 out_content,
                 output_dir=self.output_dir,
             )
@@ -118,6 +129,6 @@ class SchemasGenerator(StandardSchemasGenerator):
         """
         Write helper functions to schemas. Uses classbase writer.
         """
-        template = writer.templates.get_template("schema_helpers.jinja2")
+        template = clientele.generators.classbase.writer.templates.get_template("schema_helpers.jinja2")
         content = template.render()
-        writer.write_to_schemas(content, output_dir=self.output_dir)
+        clientele.generators.classbase.writer.write_to_schemas(content, output_dir=self.output_dir)
