@@ -132,14 +132,26 @@ class ClassbaseGenerator(generators.Generator):
         directory = pathlib.Path(self.output_dir)
         # Use Ruff to format all Python files in the directory
         try:
+            # Resolve the path to ensure it's absolute and normalized
+            resolved_dir = directory.resolve()
+            # First, format the code
             subprocess.run(
-                ["ruff", "format", str(directory)],
+                ["ruff", "format", str(resolved_dir)],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            # Then, fix auto-fixable linting issues
+            subprocess.run(
+                ["ruff", "check", "--fix", str(resolved_dir)],
                 check=True,
                 capture_output=True,
                 text=True,
             )
         except subprocess.CalledProcessError as e:
-            console.log(f"[yellow]Warning: Ruff formatting failed: {e.stderr}")
+            # Sanitize stderr to prevent log injection
+            error_msg = str(e.stderr).replace("\n", " ").replace("\r", " ")[:200]
+            console.log(f"[yellow]Warning: Ruff formatting failed: {error_msg}")
         except FileNotFoundError:
             console.log("[yellow]Warning: Ruff not found in PATH, skipping formatting")
 
