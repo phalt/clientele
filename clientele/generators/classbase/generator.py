@@ -5,13 +5,13 @@ from os import path
 
 import black
 import openapi_core
-import rich.console
+from rich import console as rich_console
 
 from clientele import generators, settings, utils
 from clientele.generators.classbase import writer
 from clientele.generators.classbase.generators import clients, http, schemas
 
-console = rich.console.Console()
+console = rich_console.Console()
 
 
 class ClassbaseGenerator(generators.Generator):

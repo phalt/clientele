@@ -1,11 +1,11 @@
 import typing
 
 import openapi_core
-import rich.console
+from rich import console as rich_console
 
 from clientele.generators.standard import utils, writer
 
-console = rich.console.Console()
+console = rich_console.Console()
 
 
 class SchemasGenerator:
