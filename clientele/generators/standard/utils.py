@@ -1,7 +1,7 @@
+import functools
 import re
-from functools import lru_cache
 
-from openapi_core import Spec
+import openapi_core
 
 from clientele import settings
 
@@ -17,7 +17,7 @@ class DataType:
     ANY_OF = "anyOf"
 
 
-@lru_cache(maxsize=256)
+@functools.lru_cache(maxsize=256)
 def class_name_titled(input_str: str) -> str:
     """
     Make the input string suitable for a class name
@@ -34,7 +34,7 @@ def class_name_titled(input_str: str) -> str:
     return input_str.replace(" ", "")
 
 
-@lru_cache(maxsize=256)
+@functools.lru_cache(maxsize=256)
 def snake_case_prop(input_str: str) -> str:
     """
     Clean a property to not have invalid characters.
@@ -105,23 +105,23 @@ def create_query_args(query_args: list[str]) -> str:
     return "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
 
 
-@lru_cache(maxsize=128)
+@functools.lru_cache(maxsize=128)
 def schema_ref(ref: str) -> str:
     return ref.replace("#/components/schemas/", "")
 
 
-@lru_cache(maxsize=128)
+@functools.lru_cache(maxsize=128)
 def param_ref(ref: str) -> str:
     return ref.replace("#/components/parameters/", "")
 
 
-def get_param_from_ref(spec: Spec, param: dict) -> dict:
+def get_param_from_ref(spec: openapi_core.Spec, param: dict) -> dict:
     ref = param.get("$ref", "")
     stripped_name = param_ref(ref)
     return spec["components"]["parameters"][stripped_name]
 
 
-def get_schema_from_ref(spec: Spec, ref: str) -> dict:
+def get_schema_from_ref(spec: openapi_core.Spec, ref: str) -> dict:
     stripped_name = schema_ref(ref)
     return spec["components"]["schemas"][stripped_name]
 
