@@ -5,11 +5,11 @@ Wrapper for HTTP generator that uses classbase writer.
 import collections
 
 import openapi_core
-import rich.console
+from rich import console as rich_console
 
 from clientele.generators.classbase import writer
 
-console = rich.console.Console()
+console = rich_console.Console()
 
 
 class HTTPGenerator:

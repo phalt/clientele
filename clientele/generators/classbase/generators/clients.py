@@ -3,13 +3,13 @@ import typing
 
 import openapi_core
 import pydantic
-import rich.console
+from rich import console as rich_console
 
 from clientele.generators.classbase import writer
 from clientele.generators.classbase.generators import http, schemas
 from clientele.generators.standard import utils
 
-console = rich.console.Console()
+console = rich_console.Console()
 
 
 class ParametersResponse(pydantic.BaseModel):

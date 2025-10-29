@@ -1,11 +1,11 @@
 import collections
 
 import openapi_core
-import rich.console
+from rich import console as rich_console
 
 from clientele.generators.standard import writer
 
-console = rich.console.Console()
+console = rich_console.Console()
 
 
 def env_var(output_dir: str, key: str) -> str:

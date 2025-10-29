@@ -8,7 +8,7 @@
 - Updated documentation with comprehensive examples of class-based client usage.
 - Added `generate-class` command to CLI with full feature parity to the standard `generate` command.
 - Add ABC (Abstract Base Class) pattern to generators with a `Generator` base class that all generators inherit from.
-- **Refactored all imports to use cleaner `from X import Y` style** across the entire codebase for better code readability. Multi-level imports like `import clientele.generators.basic.writer` are now `from clientele.generators.basic import writer`, and standard library imports like `import urllib.parse` are now `from urllib import parse`. This applies to both the clientele codebase and generated client code.
+- Refactored all imports to import modules.
 
 ## 0.9.0
 
