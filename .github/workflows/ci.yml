@@ -1,4 +1,4 @@
-name: Linting
+name: CI - Lint and Test
 
 on: [push]
 
@@ -9,7 +9,6 @@ jobs:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
     steps:
-      - uses: actions/checkout@v3
       #----------------------------------------------
       #       check-out repo and set-up python
       #----------------------------------------------
@@ -44,16 +43,22 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction
       #----------------------------------------------
-      # Do the actuall checks
+      # install the project itself if using cache
       #----------------------------------------------
-      - name: Ruff format
+      - name: Install project
+        if: steps.cached-poetry-dependencies.outputs.cache-hit == 'true'
+        run: poetry install --no-interaction --only-root
+      #----------------------------------------------
+      # Run linting and tests
+      #----------------------------------------------
+      - name: Ruff format check
         run: |
           poetry run ruff format --check .
       - name: Ruff linting
         run: |
-          poetry run ruff .
+          poetry run ruff check .
       - name: Test with pytest
         run: |
           poetry run pytest -vv
