@@ -9,12 +9,33 @@
 
 Clientele lets you generate fully-typed, pythonic HTTP API Clients using an OpenAPI schema.
 
-It's easy to use:
+## Installation
+
+Install clientele as a global CLI tool:
+
+### With Homebrew (macOS/Linux)
 
 ```sh
-# Install as a global tool - it's not a dependency!
+brew tap phalt/clientele
+brew install clientele
+```
+
+### With pipx (Python)
+
+```sh
 pipx install clientele
-# Generate a client
+```
+
+### With uv (Python)
+
+```sh
+uv tool install clientele
+```
+
+## Quick Start
+
+```sh
+# Generate a client from an OpenAPI schema
 clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o api_client/
 ```
 
