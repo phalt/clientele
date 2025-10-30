@@ -29,7 +29,7 @@ fi
 
 # Check if formula exists
 if [ -f "$SCRIPT_DIR/clientele.rb" ]; then
-    FORMULA_VERSION=$(grep 'url "https://files.pythonhosted.org/packages/source/c/clientele/clientele-' "$SCRIPT_DIR/clientele.rb" | sed -n 's/.*clientele-\([0-9][0-9.]*[0-9]\)\.tar\.gz.*/\1/p')
+    FORMULA_VERSION=$(grep 'url "https://files.pythonhosted.org/packages/source/c/clientele/clientele-' "$SCRIPT_DIR/clientele.rb" | sed -n 's/.*clientele-\([0-9][0-9.]*\)\.tar\.gz.*/\1/p')
     echo "🍺 Homebrew formula exists: v$FORMULA_VERSION"
     
     if [ "$PYPROJECT_VERSION" = "$FORMULA_VERSION" ]; then
