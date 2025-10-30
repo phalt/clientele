@@ -127,6 +127,7 @@ def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter)
         "a_list_of_strings": ["hello", "world"],
         "a_number": 13,
         "a_decimal": 0.4,
+        "a_float": 3.14,
         "a_string": "hello world",
         "another_model": {"key": "value"},
     }
@@ -146,6 +147,7 @@ def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter)
         "a_list_of_strings": ["hello", "world"],
         "a_number": 13,
         "a_decimal": Decimal("0.4"),
+        "a_float": 3.14,
         "a_string": "hello world",
         "another_model": {"key": "value"},
     }
