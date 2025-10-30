@@ -1,7 +1,7 @@
 import click
 
 
-def _load_openapi_spec(url: str = None, file: str = None):
+def _load_openapi_spec(url: str | None = None, file: str | None = None):
     """
     Load OpenAPI spec from URL or file.
     Returns the spec object and handles JSON/YAML parsing.
@@ -23,9 +23,11 @@ def _load_openapi_spec(url: str = None, file: str = None):
                 # It's probably yaml
                 data = yaml.safe_load(response.content)
         return Spec.from_dict(data)
-    else:
+    elif file:
         with open(file, "r") as f:
             return Spec.from_file(f)
+    else:
+        raise ValueError("Must provide either url or file")
 
 
 @click.group()
@@ -53,9 +55,9 @@ def validate(url, file):
     """
     Validate an OpenAPI schema. Will error if anything is wrong with the schema
     """
-    from rich import console
+    from rich.console import Console
 
-    console = console.Console()
+    console = Console()
 
     spec = _load_openapi_spec(url=url, file=file)
     console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
@@ -76,9 +78,9 @@ def generate(url, file, output, asyncio, regen):
     """
     Generate a new client from an OpenAPI schema
     """
-    from rich import console
+    from rich.console import Console
 
-    console = console.Console()
+    console = Console()
 
     from clientele.generators.standard.generator import StandardGenerator
 
@@ -101,11 +103,11 @@ def generate_basic(output):
     """
     Generate a "basic" file structure, no code.
     """
-    from rich import console
+    from rich.console import Console
 
     from clientele.generators.basic.generator import BasicGenerator
 
-    console = console.Console()
+    console = Console()
 
     console.log(f"Generating basic client at {output}...")
 
@@ -124,9 +126,9 @@ def generate_class(url, file, output, asyncio, regen):
     """
     Generate a class-based client from an OpenAPI schema
     """
-    from rich import console
+    from rich.console import Console
 
-    console = console.Console()
+    console = Console()
 
     from clientele.generators.classbase.generator import ClassbaseGenerator
 

@@ -5,8 +5,8 @@ import jinja2
 templates = jinja2.Environment(loader=jinja2.PackageLoader("clientele", "generators/classbase/templates/"))
 
 # Buffer to accumulate content before writing
-_client_buffer = []
-_schemas_buffer = []
+_client_buffer: list[str] = []
+_schemas_buffer: list[str] = []
 
 
 def write_to_schemas(content: str, output_dir: str) -> None:

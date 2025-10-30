@@ -42,6 +42,9 @@ jobs:
       - name: Ruff linting
         run: |
           uv run ruff check .
+      - name: Type check with mypy
+        run: |
+          uv run mypy .
       - name: Test with pytest
         run: |
           uv run pytest -vv

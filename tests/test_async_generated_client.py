@@ -219,7 +219,7 @@ async def test_request_data_path_request_data(respx_mock: MockRouter):
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_request_delete_request_delete_delete(respx_mock: MockRouter):
     # Given
-    mocked_response = {}
+    mocked_response: dict[str, str] = {}
     mock_path = "/request-delete"
     respx_mock.delete(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
