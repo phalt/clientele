@@ -1,6 +1,7 @@
 """
 Tests for dynamic configuration feature in class-based clients.
 """
+
 import pytest
 from httpx import Response
 from respx import MockRouter

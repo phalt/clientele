@@ -48,13 +48,23 @@ Move to a feature branch:
 git branch -B my-branch-name
 ```
 
+Install UV (if not already installed):
+
+```sh
+# On macOS and Linux:
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Or using pip:
+pip install uv
+```
+
 Install all the dependencies:
 
 ```sh
-python3.11 -m venv .venv
-source .venv/bin/activate
 make install
 ```
+
+This will use UV to create a virtual environment and install all dependencies. UV handles the virtual environment automatically, so you don't need to manually activate it.
 
 To make sure you have things set up correctly, please run the tests:
 
