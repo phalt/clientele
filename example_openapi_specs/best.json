@@ -68,6 +68,10 @@
                         "type": "number",
                         "format": "decimal"
                     },
+                    "a_float": {
+                        "title": "A Float",
+                        "type": "number"
+                    },
                     "another_model": {
                         "$ref": "#/components/schemas/AnotherModel"
                     }
@@ -76,6 +80,7 @@
                     "a_string",
                     "a_number",
                     "a_decimal",
+                    "a_float",
                     "a_list_of_strings",
                     "a_list_of_numbers",
                     "another_model",
