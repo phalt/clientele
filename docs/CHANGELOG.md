@@ -15,6 +15,7 @@
 - Refactored all imports to import modules.
 - **Changed**: Generated code is now auto-formatted with Ruff instead of Black.
 - **Breaking change for class-based clients**: The `config.py` file structure has changed from functions to a class. Existing generated clients will need to be regenerated with `--regen t`.
+- **Fixed**: OpenAPI `number` type now correctly maps to Python `float` instead of `int`. The `integer` type continues to map to `int`, and `number` with `format: "decimal"` continues to map to `decimal.Decimal`. This addresses issue #40.
 - **New**: Python 3.13 and Python 3.14 support! Clientele and all generated clients now officially support Python 3.10, 3.11, 3.12, 3.13, and 3.14.
 - Python 3.9 support has been dropped. If you need Python 3.9 support, please use version 0.9.0 or earlier.
 

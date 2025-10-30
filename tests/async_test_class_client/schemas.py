@@ -22,6 +22,7 @@ class ComplexModelResponse(pydantic.BaseModel):
     a_number: int
     a_string: str
     a_decimal: decimal.Decimal
+    a_float: float
     another_model: "AnotherModel"
 
 
