@@ -45,6 +45,9 @@ generate-test-clients:  ## regenerate the test clients in the tests/ directory
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/test_class_client/ --regen t
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
 
+brew-status:  ## Check the status of Homebrew publishing setup
+	@homebrew/check_status.sh
+
 brew-formula:  ## Generate Homebrew formula for current version
 	uv run python homebrew/generate_formula.py
 
