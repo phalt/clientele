@@ -7,7 +7,7 @@ from respx import MockRouter
 from .async_test_class_client import config, http, schemas
 from .async_test_class_client.client import Client
 
-BASE_URL = config.api_base_url()
+BASE_URL = config.Config().api_base_url
 
 
 @pytest.mark.asyncio

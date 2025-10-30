@@ -81,7 +81,7 @@ With a class-based client, you instantiate the `Client` class and call methods:
 from my_client.client import Client
 from my_client import schemas
 
-# Create a client instance
+# Create a client instance with default configuration
 client = Client()
 
 # Call API methods
@@ -96,6 +96,54 @@ match response:
         print(f"Validation error: {response}")
 ```
 
+### Dynamic Configuration
+
+Class-based clients support dynamic configuration, allowing you to create multiple clients with different settings:
+
+```python
+from my_client.client import Client
+from my_client import config
+
+# Create a client with custom configuration
+custom_config = config.Config(
+    api_base_url="https://api.example.com",
+    bearer_token="my-auth-token",
+    additional_headers={"X-Custom-Header": "value"}
+)
+client = Client(config=custom_config)
+
+# Create multiple clients with different configurations
+prod_config = config.Config(
+    api_base_url="https://api.production.com",
+    bearer_token="prod-token"
+)
+dev_config = config.Config(
+    api_base_url="https://api.development.com",
+    bearer_token="dev-token"
+)
+
+prod_client = Client(config=prod_config)
+dev_client = Client(config=dev_config)
+
+# Each client uses its own configuration
+prod_response = prod_client.get_data()
+dev_response = dev_client.get_data()
+```
+
+The `Config` class supports the following parameters:
+
+- `api_base_url`: Base URL for the API (default: `"http://localhost"`)
+- `additional_headers`: Additional headers to include in all requests (default: `{}`)
+- `user_key`: Username for HTTP Basic authentication (default: `"user"`)
+- `pass_key`: Password for HTTP Basic authentication (default: `"password"`)
+- `bearer_token`: Token for HTTP Bearer authentication (default: `"token"`)
+
+This makes it easy to:
+- Switch between different API environments (dev, staging, production)
+- Use different authentication tokens for different users or sessions
+- Add custom headers per client instance
+- Test your code with mock configurations
+
 ### Async Class-Based Client
 
 You can generate an async class-based client as well:
@@ -108,8 +156,15 @@ Then use it with async/await:
 
 ```python
 from my_async_client.client import Client
+from my_async_client import config
 
+# With default configuration
 client = Client()
+response = await client.simple_request_simple_request_get()
+
+# With custom configuration
+custom_config = config.Config(api_base_url="https://api.example.com")
+client = Client(config=custom_config)
 response = await client.simple_request_simple_request_get()
 ```
 
@@ -121,12 +176,14 @@ Use class-based clients when:
 - You want to easily mock the client for testing
 - You need to maintain state or configuration in the client instance
 - You want to subclass and extend the client behavior
+- **You need dynamic configuration or multiple clients with different settings**
 
 Use function-based clients (`generate`) when:
 
 - You prefer functional programming style
 - You want the simplest possible client with no boilerplate
 - You don't need to maintain state between requests
+- You only need a single static configuration
 
 ## `validate`
 

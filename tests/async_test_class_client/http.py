@@ -28,13 +28,13 @@ class APIException(Exception):
         super().__init__(*args)
 
 
-def parse_url(url: str) -> str:
+def parse_url(url: str, config: c.Config) -> str:
     """
     Returns the full URL from a string.
 
     Will filter out any optional query parameters if they are None.
     """
-    api_url = f"{c.api_base_url()}{url}"
+    api_url = f"{config.api_base_url}{url}"
     url_parts = parse.urlparse(url=api_url)
     # Filter out "None" optional query parameters
     filtered_query_params = {k: v for k, v in parse.parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
@@ -95,41 +95,59 @@ func_response_code_maps = {
     "parameter_request_simple_request": {"200": "ParameterResponse", "422": "HTTPValidationError"},
 }
 
-auth_key = c.get_bearer_token()
-client_headers = c.additional_headers()
-client_headers.update(Authorization=f"Bearer {auth_key}")
-client = httpx.AsyncClient(headers=client_headers)
 
+class HTTPClient:
+    """HTTP client wrapper that manages the httpx client with configuration."""
 
-async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """Issue an HTTP GET request"""
-    if headers:
-        client_headers.update(headers)
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.get(parse_url(url))
+    def __init__(self, config: c.Config):
+        self.config = config
+        self._client: typing.Optional[httpx.AsyncClient] = None
 
+    def _get_client(self) -> httpx.AsyncClient:
+        """Get or create the httpx client with current configuration."""
+        if self._client is None:
+            client_headers = self.config.additional_headers.copy()
+            client_headers.update(Authorization=f"Bearer {self.config.bearer_token}")
+            self._client = httpx.AsyncClient(headers=client_headers)
+        return self._client
 
-async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """Issue an HTTP POST request"""
-    if headers:
-        client_headers.update(headers)
-    json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.post(parse_url(url), json=json_data)
+    def _get_headers(self, additional_headers: typing.Optional[dict] = None) -> dict:
+        """Get headers for a request, merging config and request-specific headers."""
+        headers = self.config.additional_headers.copy()
+        headers.update(Authorization=f"Bearer {self.config.bearer_token}")
+        if additional_headers:
+            headers.update(additional_headers)
+        return headers
 
+    async def get(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+        """Issue an HTTP GET request"""
+        request_headers = self._get_headers(headers)
+        async with httpx.AsyncClient(headers=request_headers) as async_client:
+            return await async_client.get(parse_url(url, self.config))
 
-async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """Issue an HTTP PUT request"""
-    if headers:
-        client_headers.update(headers)
-    json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.put(parse_url(url), json=json_data)
+    async def post(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+        """Issue an HTTP POST request"""
+        request_headers = self._get_headers(headers)
+        json_data = json.loads(json.dumps(data, default=json_serializer))
+        async with httpx.AsyncClient(headers=request_headers) as async_client:
+            return await async_client.post(parse_url(url, self.config), json=json_data)
 
+    async def put(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+        """Issue an HTTP PUT request"""
+        request_headers = self._get_headers(headers)
+        json_data = json.loads(json.dumps(data, default=json_serializer))
+        async with httpx.AsyncClient(headers=request_headers) as async_client:
+            return await async_client.put(parse_url(url, self.config), json=json_data)
 
-async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-    """Issue an HTTP DELETE request"""
-    if headers:
-        client_headers.update(headers)
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.delete(parse_url(url))
+    async def patch(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+        """Issue an HTTP PATCH request"""
+        request_headers = self._get_headers(headers)
+        json_data = json.loads(json.dumps(data, default=json_serializer))
+        async with httpx.AsyncClient(headers=request_headers) as async_client:
+            return await async_client.patch(parse_url(url, self.config), json=json_data)
+
+    async def delete(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+        """Issue an HTTP DELETE request"""
+        request_headers = self._get_headers(headers)
+        async with httpx.AsyncClient(headers=request_headers) as async_client:
+            return await async_client.delete(parse_url(url, self.config))
