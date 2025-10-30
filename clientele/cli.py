@@ -94,7 +94,15 @@ def generate(url, file, output, asyncio, regen):
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ Client generated! ⚜️ \n")
-        console.log("[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client")
+        console.log("[yellow]Install the following dependencies to use your new client:\n")
+        console.log("[cyan]# For requirements.txt:")
+        console.log("httpx")
+        console.log("pydantic")
+        console.log("respx  # For testing\n")
+        console.log("[cyan]# For pyproject.toml:")
+        console.log('dependencies = ["httpx", "pydantic"]')
+        console.log("\\[dependency-groups]")
+        console.log('dev = ["respx"]')
 
 
 @click.command()
@@ -142,7 +150,15 @@ def generate_class(url, file, output, asyncio, regen):
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ Class-based client generated! ⚜️ \n")
-        console.log("[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client")
+        console.log("[yellow]Install the following dependencies to use your new client:\n")
+        console.log("[cyan]# For requirements.txt:")
+        console.log("httpx")
+        console.log("pydantic")
+        console.log("respx  # For testing\n")
+        console.log("[cyan]# For pyproject.toml:")
+        console.log('dependencies = ["httpx", "pydantic"]')
+        console.log("\\[dependency-groups]")
+        console.log('dev = ["respx"]')
 
 
 cli_group.add_command(generate)
