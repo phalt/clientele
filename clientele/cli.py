@@ -1,6 +1,21 @@
 import click
 
 
+def _print_dependency_instructions(console):
+    """
+    Print installation instructions for client dependencies.
+    """
+    console.log("[yellow]Install the following dependencies to use your new client:\n")
+    console.log("[cyan]# For requirements.txt:")
+    console.log("httpx")
+    console.log("pydantic")
+    console.log("respx  # For testing\n")
+    console.log("[cyan]# For pyproject.toml:")
+    console.log('dependencies = ["httpx", "pydantic"]')
+    console.log("\\[dependency-groups]")
+    console.log('dev = ["respx"]')
+
+
 def _load_openapi_spec(url: str | None = None, file: str | None = None):
     """
     Load OpenAPI spec from URL or file.
@@ -94,7 +109,7 @@ def generate(url, file, output, asyncio, regen):
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ Client generated! ⚜️ \n")
-        console.log("[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client")
+        _print_dependency_instructions(console)
 
 
 @click.command()
@@ -142,7 +157,7 @@ def generate_class(url, file, output, asyncio, regen):
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ Class-based client generated! ⚜️ \n")
-        console.log("[yellow]REMEMBER: install `httpx` `pydantic`, and `respx` to use your new client")
+        _print_dependency_instructions(console)
 
 
 cli_group.add_command(generate)
