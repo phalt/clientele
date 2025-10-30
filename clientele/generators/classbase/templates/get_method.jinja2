@@ -3,5 +3,5 @@
     {{asyncio and "async " or ""}}def {{func_name}}(self{% if function_arguments %}, {{function_arguments}}{% endif %}{% if header_class_name %}, headers: {{header_class_name}}{% endif %}) -> {{response_types}}:
         {% if summary %}"""{{summary}}"""{% endif %}
         {% if header_class_name %}headers_dict = headers and headers.model_dump(by_alias=True, exclude_unset=True) or None {% else%}{% endif %}
-        response = {{asyncio and "await " or ""}}http.{{method}}(url=f"{{api_url}}"{% if header_class_name %}, headers=headers_dict{% endif %})
+        response = {{asyncio and "await " or ""}}self._http_client.{{method}}(url=f"{{api_url}}"{% if header_class_name %}, headers=headers_dict{% endif %})
         return http.handle_response(self.{{func_name}}, response)

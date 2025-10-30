@@ -7,7 +7,7 @@ from respx import MockRouter
 from .test_class_client import config, http, schemas
 from .test_class_client.client import Client
 
-BASE_URL = config.api_base_url()
+BASE_URL = config.Config().api_base_url
 
 
 @pytest.mark.respx(base_url=BASE_URL)
