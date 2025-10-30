@@ -20,45 +20,28 @@ jobs:
         with:
           python-version: ${{matrix.python-version}}
       #----------------------------------------------
-      #  -----  install & configure poetry  -----
+      #  -----  install & configure uv  -----
       #----------------------------------------------
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
         with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
       #----------------------------------------------
-      #       load cached venv if cache exists
-      #----------------------------------------------
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v3
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      #----------------------------------------------
-      # install dependencies if cache does not exist
+      # install dependencies
       #----------------------------------------------
       - name: Install dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction
-      #----------------------------------------------
-      # install the project itself if using cache
-      #----------------------------------------------
-      - name: Install project
-        if: steps.cached-poetry-dependencies.outputs.cache-hit == 'true'
-        run: poetry install --no-interaction --only-root
+        run: uv sync --frozen
       #----------------------------------------------
       # Run linting and tests
       #----------------------------------------------
       - name: Ruff format check
         run: |
-          poetry run ruff format --check .
+          uv run ruff format --check .
       - name: Ruff linting
         run: |
-          poetry run ruff check .
+          uv run ruff check .
       - name: Test with pytest
         run: |
-          poetry run pytest -vv
+          uv run pytest -vv

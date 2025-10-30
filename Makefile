@@ -5,22 +5,22 @@ help:
 	@echo
 
 install:  ## Install requirements ready for development
-	poetry install
+	uv sync
 
 deploy-docs:  ## Build and deploy the documentation
-	mkdocs build
-	mkdocs gh-deploy
+	uv run mkdocs build
+	uv run mkdocs gh-deploy
 
 release:  ## Build a new version and release it
-	poetry build
-	poetry publish
+	uv build
+	uv publish
 
 mypy: ## Run a static syntax check
-	poetry run mypy .
+	uv run mypy .
 
 format: ## Format the code correctly
-	poetry run ruff format .
-	poetry run ruff --fix .
+	uv run ruff format .
+	uv run ruff check --fix .
 
 clean:  ## Clear any cache files and test files
 	rm -rf .mypy_cache
@@ -33,14 +33,14 @@ clean:  ## Clear any cache files and test files
 	rm -rf **/*.pyc
 
 test:  ## Run tests
-	pytest -vvv
+	uv run pytest -vvv
 
 shell:  ## Run an ipython shell
-	poetry run ipython
+	uv run ipython
 
 generate-test-clients:  ## regenerate the test clients in the tests/ directory
-	poetry install
-	clientele generate -f example_openapi_specs/best.json -o tests/test_client/ --regen t
-	clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
-	clientele generate-class -f example_openapi_specs/best.json -o tests/test_class_client/ --regen t
-	clientele generate-class -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
+	uv sync
+	uv run clientele generate -f example_openapi_specs/best.json -o tests/test_client/ --regen t
+	uv run clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
+	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/test_class_client/ --regen t
+	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
