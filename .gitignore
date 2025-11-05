@@ -10,3 +10,4 @@ test_output/
 dist/
 site/
 homebrew/clientele.rb
+.python-version
