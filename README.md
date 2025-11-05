@@ -13,13 +13,6 @@ Clientele lets you generate fully-typed, pythonic HTTP API Clients using an Open
 
 Install clientele as a global CLI tool:
 
-### With Homebrew (macOS/Linux)
-
-```sh
-brew tap phalt/clientele
-brew install clientele
-```
-
 ### With pipx (Python)
 
 ```sh
