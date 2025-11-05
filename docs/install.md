@@ -1,14 +1,22 @@
 # 🏗️ Install
 
-We recommend installing with [pipx](https://github.com/pypa/pipx) as a global CLI command:
+We recommend installing with [pipx](https://github.com/pypa/pipx) or [uv](https://docs.astral.sh/uv/) as a global CLI command:
+
+## With pipx (Python)
 
 ```sh
 pipx install clientele
+```
+
+## With uv (Python)
+
+```sh
+uv tool install clientele
 ```
 
 Once installed you can run `clientele version` to make sure you have the latest version:
 
 ```sh
 > clientele version
-clientele 0.9.0
+clientele 0.10.0
 ```
