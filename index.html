@@ -327,6 +327,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-not-use-an-llm-to-do-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why not use an LLM to do this?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#other-features" class="md-nav__link">
     <span class="md-ellipsis">
       Other features
@@ -575,6 +584,15 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#why-not-use-an-llm-to-do-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why not use an LLM to do this?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#other-features" class="md-nav__link">
     <span class="md-ellipsis">
       Other features
@@ -608,10 +626,10 @@
 <img alt="PyPI - Python Version" src="https://img.shields.io/pypi/pyversions/clientele?label=python%20support" />
 <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/clientele" />
 <img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele" /></p>
-<p>Clientele lets you generate fully-typed, pythonic HTTP API Clients using an OpenAPI schema.</p>
+<p>Clientele lets you generate fully-typed, pythonic HTTP API Clients using an OpenAPI/Swagger schema.</p>
 <p>It's easy to use:</p>
 <div class="language-sh highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install as a global tool - it&#39;s not a dependency!</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pipx<span class="w"> </span>install<span class="w"> </span>clientele
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>clientele
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># Generate a client</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>api_client/
 </span></code></pre></div>
@@ -667,6 +685,14 @@
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Async client functions</span>
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
 </span></code></pre></div>
+<h2 id="why-not-use-an-llm-to-do-this">Why not use an LLM to do this?</h2>
+<ul>
+<li>Clientele is deterministic. The output will always be identical. No hallucinations here!</li>
+<li>Clientele is designed by Python developers, for Python developers.</li>
+<li>Clientele is a tiny application,</li>
+<li>It is not carbon intensive for the problem it is solving.</li>
+<li>An LLM's potential compute is far too wasteful to use for this problem.</li>
+</ul>
 <h2 id="other-features">Other features</h2>
 <ul>
 <li>Written entirely in Python.</li>
