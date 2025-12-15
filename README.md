@@ -7,7 +7,7 @@
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/clientele)
 ![PyPI - License](https://img.shields.io/pypi/l/clientele)
 
-Clientele lets you generate fully-typed, pythonic HTTP API Clients using an OpenAPI schema.
+Clientele lets you generate fully-typed, pythonic HTTP API Clients using an OpenAPI/Swagger schema.
 
 ## Installation
 
@@ -98,6 +98,14 @@ from my_async_api import client
 # Async client functions
 response = await client.simple_request_simple_request_get()
 ```
+
+## Why not use an LLM to do this?
+
+* Clientele is deterministic. The output will always be identical. No hallucinations here!
+* Clientele is designed by Python developers, for Python developers.
+* Clientele is a tiny application,
+* It is not carbon intensive for the problem it is solving.
+* An LLM's potential compute is far too wasteful to use for this problem.
 
 ## Other features
 
