@@ -1,5 +1,13 @@
 # Change log
 
+## 0.11.0
+
+- **New**: Support for OpenAPI `deprecated` field! Operations marked as deprecated in the OpenAPI spec will now include deprecation warnings in their generated docstrings.
+- Deprecated operations display a clear warning message: `.. deprecated:: This operation is deprecated and may be removed in a future version.`
+- This feature works for both function-based and class-based clients, as well as sync and async variants.
+- Helps developers identify and migrate away from deprecated API endpoints before they are removed.
+- No breaking changes - deprecated operations continue to work normally, they just include helpful warnings in their documentation.
+
 ## 0.10.0
 
 - **New**: Class-based client generator! Use `clientele generate-class` to generate a client with a `Client` class and methods instead of standalone functions.
