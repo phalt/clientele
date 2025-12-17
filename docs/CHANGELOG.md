@@ -1,5 +1,9 @@
 # Change log
 
+## 0.11.0
+
+- **New**: Support for OpenAPI `deprecated` field - operations marked as deprecated will include deprecation warnings in generated docstrings.
+
 ## 0.10.0
 
 - **New**: Class-based client generator! Use `clientele generate-class` to generate a client with a `Client` class and methods instead of standalone functions.
