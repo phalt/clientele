@@ -540,8 +540,7 @@
                         "description": "Successful Response"
                     }
                 },
-                "summary": "Request Delete",
-                "deprecated": true
+                "summary": "Request Delete"
             }
         },
         "/security-required": {
@@ -663,8 +662,7 @@
                         "description": "Successful Response"
                     }
                 },
-                "summary": "Simple Request",
-                "deprecated": true
+                "summary": "Simple Request"
             }
         },
         "/simple-request/{your_input}": {
@@ -705,6 +703,26 @@
                     }
                 },
                 "summary": "Parameter Request"
+            }
+        },
+        "/deprecated-endpoint": {
+            "get": {
+                "summary": "Deprecated Endpoint",
+                "description": "An endpoint specifically for testing deprecated functionality",
+                "operationId": "deprecated_endpoint_deprecated_endpoint_get",
+                "deprecated": true,
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleResponse"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

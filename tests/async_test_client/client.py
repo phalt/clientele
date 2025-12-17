@@ -56,11 +56,7 @@ async def request_data_path_request_data(
 
 
 async def request_delete_request_delete_delete() -> schemas.DeleteResponse:
-    """Request Delete
-
-    .. deprecated::
-        This operation is deprecated and may be removed in a future version.
-    """
+    """Request Delete"""
 
     response = await http.delete(url="/request-delete")
     return http.handle_response(request_delete_request_delete_delete, response)
@@ -92,11 +88,7 @@ async def query_request_optional_query_get(
 
 
 async def simple_request_simple_request_get() -> schemas.SimpleResponse:
-    """Simple Request
-
-    .. deprecated::
-        This operation is deprecated and may be removed in a future version.
-    """
+    """Simple Request"""
 
     response = await http.get(url="/simple-request")
     return http.handle_response(simple_request_simple_request_get, response)
@@ -107,3 +99,14 @@ async def parameter_request_simple_request(your_input: str) -> schemas.HTTPValid
 
     response = await http.get(url=f"/simple-request/{your_input}")
     return http.handle_response(parameter_request_simple_request, response)
+
+
+async def deprecated_endpoint_deprecated_endpoint_get() -> schemas.SimpleResponse:
+    """Deprecated Endpoint
+
+    .. deprecated::
+        This operation is deprecated and may be removed in a future version.
+    """
+
+    response = await http.get(url="/deprecated-endpoint")
+    return http.handle_response(deprecated_endpoint_deprecated_endpoint_get, response)
