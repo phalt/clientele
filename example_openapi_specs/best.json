@@ -195,7 +195,7 @@
                         "title": "A Decimal input",
                         "type": "number",
                         "format": "decimal"
-                    },
+                    }
                 },
                 "required": [
                     "my_input", "my_decimal_input"
