@@ -446,31 +446,31 @@
 
 <h1 id="testing">Testing</h1>
 <p>Clientele is designed for easy testing, and our <a href="https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py">own test suite</a> is a great example of how easily you can write mock tests for your API Client.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">httpx</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">respx</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockRouter</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kn">from</span><span class="w"> </span><span class="nn">.test_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">schemas</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">BASE_URL</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">api_base_url</span><span class="p">()</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">respx</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">BASE_URL</span><span class="p">)</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_simple_request_simple_request_get</span><span class="p">(</span><span class="n">respx_mock</span><span class="p">:</span> <span class="n">MockRouter</span><span class="p">):</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="c1"># Given</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    <span class="n">mocked_response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;hello world&quot;</span><span class="p">}</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    <span class="n">mock_path</span> <span class="o">=</span> <span class="s2">&quot;/simple-request&quot;</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    <span class="n">respx_mock</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mock_path</span><span class="p">)</span><span class="o">.</span><span class="n">mock</span><span class="p">(</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        <span class="n">return_value</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">=</span><span class="n">mocked_response</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="p">)</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="c1"># When</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    <span class="c1"># Then</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">SimpleResponse</span><span class="p">)</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    <span class="n">call</span> <span class="o">=</span> <span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>    <span class="k">assert</span> <span class="n">call</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="n">mock_path</span>
-</span></code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">httpx</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">respx</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockRouter</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.test_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">schemas</span>
+
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">api_base_url</span><span class="p">()</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">respx</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">BASE_URL</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_simple_request_simple_request_get</span><span class="p">(</span><span class="n">respx_mock</span><span class="p">:</span> <span class="n">MockRouter</span><span class="p">):</span>
+    <span class="c1"># Given</span>
+    <span class="n">mocked_response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;hello world&quot;</span><span class="p">}</span>
+    <span class="n">mock_path</span> <span class="o">=</span> <span class="s2">&quot;/simple-request&quot;</span>
+    <span class="n">respx_mock</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mock_path</span><span class="p">)</span><span class="o">.</span><span class="n">mock</span><span class="p">(</span>
+        <span class="n">return_value</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">=</span><span class="n">mocked_response</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># When</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
+    <span class="c1"># Then</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">SimpleResponse</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">call</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="n">mock_path</span>
+</code></pre></div>
 <p>We recommend you install <a href="https://lundberg.github.io/respx/">respx</a> for writing your tests.</p>
 
 
