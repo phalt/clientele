@@ -198,7 +198,8 @@
                     }
                 },
                 "required": [
-                    "my_input", "my_decimal_input"
+                    "my_input",
+                    "my_decimal_input"
                 ],
                 "title": "RequestDataRequest",
                 "type": "object"
@@ -253,7 +254,9 @@
                         "type": "string"
                     }
                 },
-                "required": ["your_query"],
+                "required": [
+                    "your_query"
+                ],
                 "title": "OptionalQueryParametersResponse",
                 "type": "object"
             },
@@ -537,7 +540,8 @@
                         "description": "Successful Response"
                     }
                 },
-                "summary": "Request Delete"
+                "summary": "Request Delete",
+                "deprecated": true
             }
         },
         "/security-required": {
@@ -659,7 +663,8 @@
                         "description": "Successful Response"
                     }
                 },
-                "summary": "Simple Request"
+                "summary": "Simple Request",
+                "deprecated": true
             }
         },
         "/simple-request/{your_input}": {
