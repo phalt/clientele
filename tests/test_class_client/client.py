@@ -116,3 +116,13 @@ class Client:
 
         response = self._http_client.get(url=f"/simple-request/{your_input}")
         return http.handle_response(self.parameter_request_simple_request, response)
+
+    def deprecated_endpoint_deprecated_endpoint_get(self) -> schemas.SimpleResponse:
+        """Deprecated Endpoint
+
+        .. deprecated::
+            This operation is deprecated and may be removed in a future version.
+        """
+
+        response = self._http_client.get(url="/deprecated-endpoint")
+        return http.handle_response(self.deprecated_endpoint_deprecated_endpoint_get, response)

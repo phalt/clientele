@@ -93,6 +93,7 @@ func_response_code_maps = {
     "query_request_optional_query_get": {"200": "OptionalQueryParametersResponse", "422": "HTTPValidationError"},
     "simple_request_simple_request_get": {"200": "SimpleResponse"},
     "parameter_request_simple_request": {"200": "ParameterResponse", "422": "HTTPValidationError"},
+    "deprecated_endpoint_deprecated_endpoint_get": {"200": "SimpleResponse"},
 }
 
 auth_key = c.get_bearer_token()
