@@ -6,7 +6,10 @@ from tests.test_client import http, schemas  # noqa
 
 
 def complex_model_request_complex_model_request_get() -> schemas.ComplexModelResponse:
-    """Complex Model Request"""
+    """Complex Model Request
+
+    A request that returns a complex model demonstrating various response types
+    """
 
     response = http.get(url="/complex-model-request")
     return http.handle_response(complex_model_request_complex_model_request_get, response)
@@ -22,7 +25,10 @@ def header_request_header_request_get(
 
 
 def optional_parameters_request_optional_parameters_get() -> schemas.OptionalParametersResponse:
-    """Optional Parameters Request"""
+    """Optional Parameters Request
+
+    A response with a a model that has optional input values
+    """
 
     response = http.get(url="/optional-parameters")
     return http.handle_response(optional_parameters_request_optional_parameters_get, response)
@@ -31,7 +37,10 @@ def optional_parameters_request_optional_parameters_get() -> schemas.OptionalPar
 def request_data_request_data_post(
     data: schemas.RequestDataRequest,
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
-    """Request Data"""
+    """Request Data
+
+    An endpoint that takes input data from an HTTP POST request and returns it
+    """
 
     response = http.post(url="/request-data", data=data.model_dump())
     return http.handle_response(request_data_request_data_post, response)
@@ -40,7 +49,10 @@ def request_data_request_data_post(
 def request_data_request_data_put(
     data: schemas.RequestDataRequest,
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
-    """Request Data"""
+    """Request Data
+
+    An endpoint that takes input data from an HTTP PUT request and returns it
+    """
 
     response = http.put(url="/request-data", data=data.model_dump())
     return http.handle_response(request_data_request_data_put, response)
@@ -49,7 +61,10 @@ def request_data_request_data_put(
 def request_data_path_request_data(
     path_parameter: str, data: schemas.RequestDataRequest
 ) -> schemas.HTTPValidationError | schemas.RequestDataAndParameterResponse:
-    """Request Data Path"""
+    """Request Data Path
+
+    An endpoint that takes input data from an HTTP POST request and also a path parameter
+    """
 
     response = http.post(url=f"/request-data/{path_parameter}", data=data.model_dump())
     return http.handle_response(request_data_path_request_data, response)
@@ -72,7 +87,10 @@ def security_required_request_security_required_get() -> schemas.SecurityRequire
 def query_request_simple_query_get(
     yourInput: str,
 ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
-    """Query Request"""
+    """Query Request
+
+    A request with a query parameters
+    """
 
     response = http.get(url=f"/simple-query?yourInput={yourInput}")
     return http.handle_response(query_request_simple_query_get, response)
@@ -81,21 +99,30 @@ def query_request_simple_query_get(
 def query_request_optional_query_get(
     yourInput: typing.Optional[str],
 ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
-    """Optional Query Request"""
+    """Optional Query Request
+
+    A request with a query parameters that are optional
+    """
 
     response = http.get(url=f"/optional-query?yourInput={yourInput}")
     return http.handle_response(query_request_optional_query_get, response)
 
 
 def simple_request_simple_request_get() -> schemas.SimpleResponse:
-    """Simple Request"""
+    """Simple Request
+
+    A simple API request with no parameters.
+    """
 
     response = http.get(url="/simple-request")
     return http.handle_response(simple_request_simple_request_get, response)
 
 
 def parameter_request_simple_request(your_input: str) -> schemas.HTTPValidationError | schemas.ParameterResponse:
-    """Parameter Request"""
+    """Parameter Request
+
+    A request with a URL parameter
+    """
 
     response = http.get(url=f"/simple-request/{your_input}")
     return http.handle_response(parameter_request_simple_request, response)
@@ -103,6 +130,8 @@ def parameter_request_simple_request(your_input: str) -> schemas.HTTPValidationE
 
 def deprecated_endpoint_deprecated_endpoint_get() -> schemas.SimpleResponse:
     """Deprecated Endpoint
+
+    An endpoint specifically for testing deprecated functionality
 
     .. deprecated::
         This operation is deprecated and may be removed in a future version.
