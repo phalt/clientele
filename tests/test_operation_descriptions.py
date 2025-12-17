@@ -26,7 +26,7 @@ def test_function_with_only_summary_has_no_extra_content():
     assert "Header Request" in docstring
     # Should not contain any extended description
     # The docstring should be relatively short (just the summary)
-    lines = [line.strip() for line in docstring.strip().split('\n') if line.strip()]
+    lines = [line.strip() for line in docstring.strip().split("\n") if line.strip()]
     assert len(lines) == 1  # Only the summary line
 
 
