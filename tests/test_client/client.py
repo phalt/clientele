@@ -56,7 +56,11 @@ def request_data_path_request_data(
 
 
 def request_delete_request_delete_delete() -> schemas.DeleteResponse:
-    """Request Delete"""
+    """Request Delete
+
+    .. deprecated::
+        This operation is deprecated and may be removed in a future version.
+    """
 
     response = http.delete(url="/request-delete")
     return http.handle_response(request_delete_request_delete_delete, response)
@@ -88,7 +92,11 @@ def query_request_optional_query_get(
 
 
 def simple_request_simple_request_get() -> schemas.SimpleResponse:
-    """Simple Request"""
+    """Simple Request
+
+    .. deprecated::
+        This operation is deprecated and may be removed in a future version.
+    """
 
     response = http.get(url="/simple-request")
     return http.handle_response(simple_request_simple_request_get, response)

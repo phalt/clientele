@@ -76,7 +76,11 @@ class Client:
         return http.handle_response(self.request_data_path_request_data, response)
 
     async def request_delete_request_delete_delete(self) -> schemas.DeleteResponse:
-        """Request Delete"""
+        """Request Delete
+
+        .. deprecated::
+            This operation is deprecated and may be removed in a future version.
+        """
 
         response = await self._http_client.delete(url="/request-delete")
         return http.handle_response(self.request_delete_request_delete_delete, response)
@@ -104,7 +108,11 @@ class Client:
         return http.handle_response(self.query_request_optional_query_get, response)
 
     async def simple_request_simple_request_get(self) -> schemas.SimpleResponse:
-        """Simple Request"""
+        """Simple Request
+
+        .. deprecated::
+            This operation is deprecated and may be removed in a future version.
+        """
 
         response = await self._http_client.get(url="/simple-request")
         return http.handle_response(self.simple_request_simple_request_get, response)

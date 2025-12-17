@@ -226,6 +226,7 @@ class ClientsGenerator:
             api_url=api_url,
             method=method,
             summary=operation.get("summary", summary),
+            deprecated=operation.get("deprecated", False),
         )
         writer.write_to_client(content=content, output_dir=self.output_dir)
 
