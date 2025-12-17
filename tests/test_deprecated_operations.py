@@ -1,5 +1,7 @@
 """Tests for deprecated operations support in generated clients."""
 
+from __future__ import annotations
+
 from .test_client import client
 from .test_class_client.client import Client
 
