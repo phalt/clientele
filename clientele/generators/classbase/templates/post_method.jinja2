@@ -1,12 +1,12 @@
 
 
     {{asyncio and "async " or ""}}def {{func_name}}(self, {% if function_arguments %}{{function_arguments}}, {% endif %}data: {{data_class_name}}{% if header_class_name%}, headers: {{header_class_name}}{% endif %}) -> {{response_types}}:
-        {% if summary and deprecated %}"""{{summary}}
+        {% if summary or description or deprecated %}"""{% if summary %}{{summary}}{% endif %}{% if description %}
+        
+        {{description}}{% endif %}{% if deprecated %}
         
         .. deprecated::
-            This operation is deprecated and may be removed in a future version.
-        """{% elif summary %}"""{{summary}}"""{% elif deprecated %}""".. deprecated::
-            This operation is deprecated and may be removed in a future version.
+            This operation is deprecated and may be removed in a future version.{% endif %}
         """{% endif %}
         {% if header_class_name %}headers_dict = headers and headers.model_dump(by_alias=True, exclude_unset=True) or None {% endif %}
         response = {{asyncio and "await " or ""}}self._http_client.{{method}}(url=f"{{api_url}}", data=data.model_dump(){% if header_class_name %}, headers=headers_dict{% endif %})
