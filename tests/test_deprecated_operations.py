@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from .test_client import client
 from .test_class_client.client import Client
+from .test_client import client
 
 
 def test_deprecated_function_has_deprecation_warning_in_docstring():
