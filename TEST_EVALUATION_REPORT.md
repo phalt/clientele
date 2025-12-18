@@ -6,16 +6,46 @@ This report documents the comprehensive evaluation and improvement of the client
 
 ### Key Metrics (Updated 2025-12-18)
 - **Initial Tests**: 90
-- **Final Tests**: 146 (+56 tests, +62%)
+- **Final Tests**: 159 (+69 tests, +77%)
 - **Initial Coverage**: 28%
-- **Final Coverage**: 43% (+15 percentage points)
-- **All Tests Passing**: ✅ 146/146
+- **Final Coverage**: 83% (+55 percentage points) 🎉
+- **All Tests Passing**: ✅ 159/159
 
 ### Recent Improvements
+
+**Third Round (Integration Tests for Generator Coverage)**
+- Added 13 comprehensive integration tests
+- Coverage improved from 43% to 83% (+40 percentage points!)
+- Focus: End-to-end generator testing with real OpenAPI specs
+
 **Second Round (Response to PR Feedback)**
-- Added 25 more tests for "low-hanging fruit"
+- Added 25 tests for "low-hanging fruit"
 - Coverage improved from 38% to 43% (+5 percentage points)
 - Focus areas: CLI URL loading, writer modules
+
+**First Round (Initial Improvements)**
+- Added 31 tests for critical gaps
+- Coverage improved from 28% to 38% (+10 percentage points)
+- Focus: CLI, utils, settings, generator utils
+
+## Coverage by Module (Final)
+
+### Excellent Coverage (90-100%)
+- **CLI**: 72% → Remaining gaps are error paths
+- **Utils**: 100% ✅
+- **Settings**: 100% ✅
+- **Standard Writer**: 100% ✅
+- **Basic Writer**: 100% ✅
+- **Standard Generator**: 91% (was 35%)
+- **Classbase Generator**: 86% (was 30%)
+- **Standard Generators (clients/http/schemas)**: 92% (was 21-23%)
+- **Classbase Generators (clients/http/schemas)**: 77-96% (was 16-23%)
+- **Standard Utils**: 97% (was 72%)
+
+### Remaining Low Coverage
+- **Templates (Jinja2)**: 14-36% - These are template files, not logic
+  - Templates are tested indirectly through generator integration tests
+  - Direct template testing would require mocking extensive contexts
 
 ## Test Suite Evaluation
 
@@ -80,6 +110,25 @@ Each combination validates genuinely different functionality.
    - Before: 35% coverage
    - After: 86% coverage
    - Tests: File writing, buffering, appending, client buffer management
+
+#### Gaps Addressed (Round 3 - Integration Tests):
+8. **Standard Generator** - Added 6 integration tests
+   - Before: 35% coverage
+   - After: 91% coverage ✨✨
+   - Tests: Simple spec, complex spec, async mode, YAML, manifest, regen protection
+
+9. **Classbase Generator** - Added 7 integration tests
+   - Before: 30% coverage
+   - After: 86% coverage ✨✨
+   - Tests: Simple spec, complex spec, async mode, YAML, Config class, manifest, regen protection
+
+10. **Generator Internals (clients/http/schemas)** - Indirect coverage via integration tests
+    - Standard clients: 21% → 92% ✨✨
+    - Standard http: 23% → 92% ✨✨
+    - Standard schemas: 23% → 82% ✨
+    - Classbase clients: 22% → 92% ✨✨
+    - Classbase http: 22% → 96% ✨✨
+    - Classbase schemas: 16% → 77% ✨✨
    - Tests: Path conversion utilities
 
 3. **Settings Module** - Added 4 tests
