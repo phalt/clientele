@@ -55,4 +55,4 @@ def test_generator_abstract_method_raises_not_implemented():
 
     # Should not be able to instantiate
     with pytest.raises(TypeError):
-        IncompleteGenerator()
+        IncompleteGenerator()  # type: ignore[abstract]
