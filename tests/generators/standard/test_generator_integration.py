@@ -3,21 +3,14 @@
 import tempfile
 from pathlib import Path
 
-from openapi_core import Spec
-
 from clientele.generators.standard.generator import StandardGenerator
-
-
-def _load_spec(spec_path: Path) -> Spec:
-    """Load an OpenAPI spec from a file."""
-    with open(spec_path, "r") as f:
-        return Spec.from_file(f)
+from tests.generators.integration_utils import get_spec_path, load_spec
 
 
 def test_standard_generator_with_simple_spec():
     """Test StandardGenerator can generate a complete client from simple spec."""
-    spec_path = Path(__file__).parent.parent.parent.parent / "example_openapi_specs" / "simple.json"
-    spec = _load_spec(spec_path)
+    spec = load_spec("simple.json")
+    spec_path = get_spec_path("simple.json")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "generated_client"
@@ -58,8 +51,8 @@ def test_standard_generator_with_simple_spec():
 
 def test_standard_generator_with_best_spec():
     """Test StandardGenerator with the comprehensive 'best' spec."""
-    spec_path = Path(__file__).parent.parent.parent.parent / "example_openapi_specs" / "best.json"
-    spec = _load_spec(spec_path)
+    spec = load_spec("best.json")
+    spec_path = get_spec_path("best.json")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "best_client"
@@ -87,8 +80,8 @@ def test_standard_generator_with_best_spec():
 
 def test_standard_generator_async_mode():
     """Test StandardGenerator generates async client."""
-    spec_path = Path(__file__).parent.parent.parent.parent / "example_openapi_specs" / "simple.json"
-    spec = _load_spec(spec_path)
+    spec = load_spec("simple.json")
+    spec_path = get_spec_path("simple.json")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "async_client"
@@ -115,8 +108,8 @@ def test_standard_generator_async_mode():
 
 def test_standard_generator_prevents_accidental_regen():
     """Test that generator prevents accidental regeneration."""
-    spec_path = Path(__file__).parent.parent.parent.parent / "example_openapi_specs" / "simple.json"
-    spec = _load_spec(spec_path)
+    spec = load_spec("simple.json")
+    spec_path = get_spec_path("simple.json")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "protected_client"
@@ -148,8 +141,8 @@ def test_standard_generator_prevents_accidental_regen():
 
 def test_standard_generator_with_yaml_spec():
     """Test StandardGenerator works with YAML spec."""
-    spec_path = Path(__file__).parent.parent.parent.parent / "example_openapi_specs" / "test_303.yaml"
-    spec = _load_spec(spec_path)
+    spec = load_spec("test_303.yaml")
+    spec_path = get_spec_path("test_303.yaml")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "yaml_client"
@@ -172,8 +165,8 @@ def test_standard_generator_with_yaml_spec():
 
 def test_standard_generator_creates_manifest():
     """Test that generator creates proper MANIFEST.md."""
-    spec_path = Path(__file__).parent.parent.parent.parent / "example_openapi_specs" / "simple.json"
-    spec = _load_spec(spec_path)
+    spec = load_spec("simple.json")
+    spec_path = get_spec_path("simple.json")
     
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "manifest_test"
