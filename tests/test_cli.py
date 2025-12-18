@@ -36,10 +36,12 @@ def simple_openapi_spec():
 
 def test_version_command(runner):
     """Test the version command displays version."""
+    from clientele import settings
+
     result = runner.invoke(cli.cli_group, ["version"])
     assert result.exit_code == 0
     assert "clientele" in result.output
-    assert "0.10.0" in result.output
+    assert settings.VERSION in result.output
 
 
 def test_validate_command_with_valid_json_file(runner, simple_openapi_spec):
@@ -73,8 +75,9 @@ def test_validate_command_with_valid_yaml_file(runner, simple_openapi_spec):
 
 def test_validate_command_with_old_openapi_version(runner):
     """Test validate command warns about old OpenAPI versions."""
+    OLD_OPENAPI_VERSION = "2.0.0"
     old_spec = {
-        "openapi": "2.0.0",
+        "openapi": OLD_OPENAPI_VERSION,
         "info": {"title": "Old API", "version": "1.0.0"},
         "paths": {},
     }
@@ -86,7 +89,7 @@ def test_validate_command_with_old_openapi_version(runner):
         result = runner.invoke(cli.cli_group, ["validate", "--file", spec_file])
         # Should warn about old version
         assert "supports openapi version 3" in result.output.lower()
-        assert "2.0.0" in result.output
+        assert OLD_OPENAPI_VERSION in result.output
     finally:
         Path(spec_file).unlink()
 
