@@ -47,4 +47,12 @@ jobs:
           uv run mypy .
       - name: Test with pytest
         run: |
-          uv run pytest -vv
+          uv run pytest -vv --cov=clientele --cov-report=term-missing --cov-report=xml
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v5
+        if: matrix.python-version == '3.12'
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
