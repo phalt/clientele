@@ -92,3 +92,21 @@ module = [
 disallow_untyped_defs = false
 check_untyped_defs = false
 warn_no_return = false
+
+[tool.coverage.run]
+omit = [
+    "*/templates/*.jinja2",
+    "clientele/generators/*/templates/*.jinja2",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+

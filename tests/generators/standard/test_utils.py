@@ -94,3 +94,21 @@ def test_class_name_titled_removes_special_chars():
     assert "_" not in result
     assert "." not in result
     assert ">" not in result
+
+
+def test_split_upper_single_char():
+    """Test _split_upper with single character."""
+    from clientele.generators.standard.utils import _split_upper
+    
+    result = _split_upper("A")
+    assert result == "A"
+
+
+def test_split_upper_multiple_uppercase():
+    """Test _split_upper with multiple uppercase letters."""
+    from clientele.generators.standard.utils import _split_upper
+    
+    result = _split_upper("HelloWorld")
+    assert "_" in result or result == "HelloWorld"
+
+

@@ -165,3 +165,49 @@ def test_flush_client_buffer_with_empty_buffer():
         # File should not be created
         client_file = Path(tmpdir) / "client.py"
         assert not client_file.exists()
+
+
+def test_flush_schemas_buffer_with_content():
+    """Test flush_schemas_buffer writes buffered schema content."""
+    import tempfile
+    from pathlib import Path
+    from clientele.generators.classbase import writer
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # First, we need to buffer some schema content
+        # The _schemas_buffer is a module-level variable, so we need to add to it directly
+        writer._schemas_buffer.append("# Schema content\n")
+        writer._schemas_buffer.append("class TestSchema:\n")
+        writer._schemas_buffer.append("    pass\n")
+        
+        # Now flush it
+        writer.flush_schemas_buffer(tmpdir)
+        
+        # Check that the file was created
+        schema_file = Path(tmpdir) / "schemas.py"
+        assert schema_file.exists()
+        
+        content = schema_file.read_text()
+        assert "# Schema content" in content
+        assert "class TestSchema" in content
+        
+        # Buffer should be cleared
+        assert len(writer._schemas_buffer) == 0
+
+
+def test_flush_schemas_buffer_with_empty_buffer():
+    """Test flush_schemas_buffer does nothing when buffer is empty."""
+    import tempfile
+    from pathlib import Path
+    from clientele.generators.classbase import writer
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        # Make sure buffer is empty
+        writer._schemas_buffer.clear()
+        
+        # Flush empty buffer
+        writer.flush_schemas_buffer(tmpdir)
+        
+        # File should not be created
+        schema_file = Path(tmpdir) / "schemas.py"
+        assert not schema_file.exists()

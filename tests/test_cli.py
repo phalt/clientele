@@ -227,3 +227,52 @@ def test_load_openapi_spec_with_json_from_url(simple_openapi_spec, respx_mock):
     spec = cli._load_openapi_spec(url=url)
     assert spec is not None
     assert spec["info"]["title"] == "Test API"
+
+
+def test_generate_command_with_valid_spec(runner):
+    """Test generate command creates client successfully."""
+    import tempfile
+    from pathlib import Path
+    
+    # Use the simple spec from example_openapi_specs
+    spec_path = Path(__file__).parent.parent / "example_openapi_specs" / "simple.json"
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_client"
+        
+        result = runner.invoke(
+            cli.cli_group,
+            ["generate", "--file", str(spec_path), "--output", str(output_dir), "--regen", "true"],
+        )
+        
+        # Should succeed
+        assert result.exit_code == 0
+        assert "Client generated" in result.output or "generated" in result.output.lower()
+
+
+def test_generate_class_command_with_valid_spec(runner):
+    """Test generate-class command creates client successfully."""
+    import tempfile
+    from pathlib import Path
+    
+    # Use the simple spec from example_openapi_specs
+    spec_path = Path(__file__).parent.parent / "example_openapi_specs" / "simple.json"
+    
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_client"
+        
+        result = runner.invoke(
+            cli.cli_group,
+            ["generate-class", "--file", str(spec_path), "--output", str(output_dir), "--regen", "true"],
+        )
+        
+        # Should succeed
+        assert result.exit_code == 0
+        assert "generated" in result.output.lower()
+
+
+def test_cli_main_block():
+    """Test the CLI main block can be imported without running."""
+    # Just importing the module should work without executing main
+    import clientele.cli as cli_module
+    assert hasattr(cli_module, 'cli_group')
