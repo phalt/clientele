@@ -3,7 +3,7 @@
 ## Generate loveable Python HTTP API Clients
 
 [![Package version](https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version)](https://pypi.org/project/clientele)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/clientele?label=python%20support)
+[![codecov](https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM)](https://codecov.io/github/phalt/clientele)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/clientele)
 ![PyPI - License](https://img.shields.io/pypi/l/clientele)
 
