@@ -43,3 +43,16 @@ def test_classbase_generator_implements_generate():
     """Test that ClassbaseGenerator implements the generate method."""
     assert hasattr(ClassbaseGenerator, "generate")
     assert callable(getattr(ClassbaseGenerator, "generate"))
+
+
+def test_generator_abstract_method_raises_not_implemented():
+    """Test that calling the abstract generate method raises NotImplementedError."""
+    from clientele.generators.base import Generator
+
+    # Create a minimal concrete implementation that doesn't override generate
+    class IncompleteGenerator(Generator):
+        pass
+
+    # Should not be able to instantiate
+    with pytest.raises(TypeError):
+        IncompleteGenerator()  # type: ignore[abstract]
