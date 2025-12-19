@@ -36,6 +36,7 @@ dev = [
     "respx>=0.20.2",
     "pytest>=7.4.0",
     "pytest-asyncio>=0.21.1",
+    "pytest-cov>=4.1.0",
 ]
 
 [build-system]
@@ -91,3 +92,21 @@ module = [
 disallow_untyped_defs = false
 check_untyped_defs = false
 warn_no_return = false
+
+[tool.coverage.run]
+omit = [
+    "*/templates/*.jinja2",
+    "clientele/generators/*/templates/*.jinja2",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@abstractmethod",
+]
+

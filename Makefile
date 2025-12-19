@@ -33,7 +33,7 @@ clean:  ## Clear any cache files and test files
 	rm -rf **/*.pyc
 
 test:  ## Run tests
-	uv run pytest -vvv
+	uv run pytest -vvv --cov=clientele --cov-report=term-missing --cov-report=html
 
 shell:  ## Run an ipython shell
 	uv run ipython
