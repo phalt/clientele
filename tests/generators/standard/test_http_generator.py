@@ -41,7 +41,7 @@ def test_http_generator_with_basic_auth():
 
         try:
             with open(spec_file, "r") as f:
-                spec = Spec.from_file(f)
+                spec = Spec.from_file(f)  # type: ignore[arg-type]
 
             generator = HTTPGenerator(spec=spec, output_dir=tmpdir, asyncio=False)
 
