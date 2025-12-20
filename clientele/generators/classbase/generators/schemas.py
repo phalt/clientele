@@ -40,6 +40,28 @@ class SchemasGenerator(StandardSchemasGenerator):
         )
         return f"typing.Optional[schemas.{utils.class_name_titled(func_name)}Headers]"
 
+    def _create_union_type_alias(self, schema_key: str, schema_options: list[dict]) -> None:
+        """
+        Create a type alias for oneOf or anyOf schemas.
+
+        Args:
+            schema_key: Name of the schema
+            schema_options: List of schema options from oneOf or anyOf
+        """
+        union_types = []
+        for schema_option in schema_options:
+            if ref := schema_option.get("$ref"):
+                ref_name = utils.class_name_titled(utils.schema_ref(ref))
+                union_types.append(f'"{ref_name}"')
+            else:
+                # Inline schema - convert to type
+                union_types.append(utils.get_type(schema_option))
+        template = writer.templates.get_template("schema_type_alias.jinja2")
+        union_type = utils.union_for_py_ver(union_types)
+        content = template.render(class_name=schema_key, union_type=union_type)
+        writer.write_to_schemas(content, output_dir=self.output_dir)
+        self.schemas[schema_key] = ""  # Mark as processed
+
     def make_schema_class(self, schema_key: str, schema: dict) -> None:
         """
         Make a schema class. Uses classbase writer.
@@ -53,36 +75,12 @@ class SchemasGenerator(StandardSchemasGenerator):
 
         # Handle oneOf - create a type alias
         if one_of := schema.get("oneOf"):
-            union_types = []
-            for schema_option in one_of:
-                if ref := schema_option.get("$ref"):
-                    ref_name = utils.class_name_titled(utils.schema_ref(ref))
-                    union_types.append(f'"{ref_name}"')
-                else:
-                    # Inline schema - convert to type
-                    union_types.append(utils.get_type(schema_option))
-            template = writer.templates.get_template("schema_type_alias.jinja2")
-            union_type = utils.union_for_py_ver(union_types)
-            content = template.render(class_name=schema_key, union_type=union_type)
-            writer.write_to_schemas(content, output_dir=self.output_dir)
-            self.schemas[schema_key] = ""  # Mark as processed
+            self._create_union_type_alias(schema_key, one_of)
             return
 
         # Handle anyOf - create a type alias
         if any_of := schema.get("anyOf"):
-            union_types = []
-            for schema_option in any_of:
-                if ref := schema_option.get("$ref"):
-                    ref_name = utils.class_name_titled(utils.schema_ref(ref))
-                    union_types.append(f'"{ref_name}"')
-                else:
-                    # Inline schema - convert to type
-                    union_types.append(utils.get_type(schema_option))
-            template = writer.templates.get_template("schema_type_alias.jinja2")
-            union_type = utils.union_for_py_ver(union_types)
-            content = template.render(class_name=schema_key, union_type=union_type)
-            writer.write_to_schemas(content, output_dir=self.output_dir)
-            self.schemas[schema_key] = ""  # Mark as processed
+            self._create_union_type_alias(schema_key, any_of)
             return
 
         if all_of := schema.get("allOf"):
