@@ -7,7 +7,7 @@ import openapi_core
 from clientele import settings
 
 # Pre-computed set of Python reserved words for efficient lookup
-RESERVED_WORDS = frozenset(keyword.kwlist + keyword.softkwlist)
+RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(keyword.softkwlist))
 
 
 class DataType:

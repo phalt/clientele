@@ -11,7 +11,7 @@ from clientele.generators.standard.generator import StandardGenerator
 
 def load_fixture_spec(spec_path: Path) -> Spec:
     """Load an OpenAPI spec from a fixture file."""
-    with open(spec_path, "r", encoding="utf-8") as f:
+    with open(spec_path, "rb") as f:
         return Spec.from_file(f)
 
 
