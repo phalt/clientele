@@ -50,6 +50,41 @@ class SchemasGenerator(StandardSchemasGenerator):
 
         enum = False
         properties: str = ""
+        
+        # Handle oneOf - create a type alias
+        if one_of := schema.get("oneOf"):
+            union_types = []
+            for schema_option in one_of:
+                if ref := schema_option.get("$ref"):
+                    ref_name = utils.class_name_titled(utils.schema_ref(ref))
+                    union_types.append(f'"{ref_name}"')
+                else:
+                    # Inline schema - convert to type
+                    union_types.append(utils.get_type(schema_option))
+            template = writer.templates.get_template("schema_type_alias.jinja2")
+            union_type = utils.union_for_py_ver(union_types)
+            content = template.render(class_name=schema_key, union_type=union_type)
+            writer.write_to_schemas(content, output_dir=self.output_dir)
+            self.schemas[schema_key] = ""  # Mark as processed
+            return
+        
+        # Handle anyOf - create a type alias
+        if any_of := schema.get("anyOf"):
+            union_types = []
+            for schema_option in any_of:
+                if ref := schema_option.get("$ref"):
+                    ref_name = utils.class_name_titled(utils.schema_ref(ref))
+                    union_types.append(f'"{ref_name}"')
+                else:
+                    # Inline schema - convert to type
+                    union_types.append(utils.get_type(schema_option))
+            template = writer.templates.get_template("schema_type_alias.jinja2")
+            union_type = utils.union_for_py_ver(union_types)
+            content = template.render(class_name=schema_key, union_type=union_type)
+            writer.write_to_schemas(content, output_dir=self.output_dir)
+            self.schemas[schema_key] = ""  # Mark as processed
+            return
+        
         if all_of := schema.get("allOf"):
             # This schema uses "all of" the properties inside it
             property_parts = []

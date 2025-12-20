@@ -1,0 +1,301 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Complex Schema Examples",
+    "description": "Demonstrates oneOf, anyOf, and nullable schema support in Clientele",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/oneof-example": {
+      "post": {
+        "summary": "OneOf Example",
+        "description": "Demonstrates oneOf schema - accepts either a Cat or a Dog",
+        "operationId": "oneof_example_oneof_example_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/anyof-example": {
+      "get": {
+        "summary": "AnyOf Example",
+        "description": "Demonstrates anyOf schema - accepts string or integer identifier",
+        "operationId": "anyof_example_anyof_example_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlexibleIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/nullable-example": {
+      "get": {
+        "summary": "Nullable Example",
+        "description": "Demonstrates nullable fields - some fields can be null",
+        "operationId": "nullable_example_nullable_example_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NullableFieldsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/complex-union": {
+      "post": {
+        "summary": "Complex Union Example",
+        "description": "Demonstrates complex oneOf with multiple schema types",
+        "operationId": "complex_union_complex_union_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentMethodRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentConfirmation"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Cat": {
+        "type": "object",
+        "title": "Cat",
+        "description": "A cat object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["cat"]
+          },
+          "meow_volume": {
+            "type": "integer",
+            "description": "How loud the cat meows"
+          }
+        },
+        "required": ["type", "meow_volume"]
+      },
+      "Dog": {
+        "type": "object",
+        "title": "Dog",
+        "description": "A dog object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["dog"]
+          },
+          "bark_volume": {
+            "type": "integer",
+            "description": "How loud the dog barks"
+          }
+        },
+        "required": ["type", "bark_volume"]
+      },
+      "PetRequest": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/Cat"
+          },
+          {
+            "$ref": "#/components/schemas/Dog"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "type"
+        },
+        "title": "PetRequest",
+        "description": "A pet can be either a cat or a dog"
+      },
+      "PetResponse": {
+        "type": "object",
+        "title": "PetResponse",
+        "description": "Response confirming the pet received",
+        "properties": {
+          "pet_type": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": ["pet_type", "message"]
+      },
+      "FlexibleIdResponse": {
+        "type": "object",
+        "title": "FlexibleIdResponse",
+        "description": "Response with a flexible ID that can be string or integer",
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "description": "ID can be either a string or an integer"
+          },
+          "data": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "data"]
+      },
+      "NullableFieldsResponse": {
+        "type": "object",
+        "title": "NullableFieldsResponse",
+        "description": "Response with nullable fields",
+        "properties": {
+          "required_field": {
+            "type": "string",
+            "description": "This field is always present"
+          },
+          "optional_nullable_field": {
+            "type": "string",
+            "nullable": true,
+            "description": "This field can be null or a string"
+          },
+          "nullable_number": {
+            "type": "integer",
+            "nullable": true,
+            "description": "This number can be null"
+          }
+        },
+        "required": ["required_field"]
+      },
+      "CreditCard": {
+        "type": "object",
+        "title": "CreditCard",
+        "description": "Credit card payment method",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["credit_card"]
+          },
+          "card_number": {
+            "type": "string"
+          },
+          "expiry": {
+            "type": "string"
+          }
+        },
+        "required": ["method", "card_number", "expiry"]
+      },
+      "BankTransfer": {
+        "type": "object",
+        "title": "BankTransfer",
+        "description": "Bank transfer payment method",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["bank_transfer"]
+          },
+          "account_number": {
+            "type": "string"
+          },
+          "routing_number": {
+            "type": "string"
+          }
+        },
+        "required": ["method", "account_number", "routing_number"]
+      },
+      "PayPal": {
+        "type": "object",
+        "title": "PayPal",
+        "description": "PayPal payment method",
+        "properties": {
+          "method": {
+            "type": "string",
+            "enum": ["paypal"]
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": ["method", "email"]
+      },
+      "PaymentMethodRequest": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CreditCard"
+          },
+          {
+            "$ref": "#/components/schemas/BankTransfer"
+          },
+          {
+            "$ref": "#/components/schemas/PayPal"
+          }
+        ],
+        "discriminator": {
+          "propertyName": "method"
+        },
+        "title": "PaymentMethodRequest",
+        "description": "A payment can use one of several methods"
+      },
+      "PaymentConfirmation": {
+        "type": "object",
+        "title": "PaymentConfirmation",
+        "description": "Confirmation of payment processing",
+        "properties": {
+          "transaction_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "payment_method": {
+            "type": "string"
+          }
+        },
+        "required": ["transaction_id", "status", "payment_method"]
+      }
+    }
+  }
+}
