@@ -17,13 +17,14 @@ def load_fixture_spec(spec_path: Path) -> Spec:
 
 # Define all fixture schemas to test
 # Some schemas are marked as xfail due to advanced features or edge cases not yet supported
+# Callback schemas are excluded as they define server-side webhook handlers, not client operations
 FIXTURE_SCHEMAS = [
     # OpenAPI examples directory
     pytest.param(
         "tests/fixtures/openapi_examples/api-with-examples.json",
         marks=pytest.mark.xfail(reason="Missing 'schema' key in response definitions"),
     ),
-    "tests/fixtures/openapi_examples/callback-example.json",
+    # Excluded: callback-example.json - callbacks are server-side, not client operations
     pytest.param(
         "tests/fixtures/openapi_examples/non-oauth-scopes.json",
         marks=pytest.mark.xfail(reason="Missing 'responses' key in path definitions"),
@@ -34,7 +35,7 @@ FIXTURE_SCHEMAS = [
     "tests/fixtures/openapi_examples/uspto.json",
     "tests/fixtures/openapi_examples/webhook-example.json",
     # Root fixtures directory
-    "tests/fixtures/callback_example.yaml",
+    # Excluded: callback_example.yaml - callbacks are server-side, not client operations
     "tests/fixtures/complex_api.yaml",
     "tests/fixtures/petstore_openapi3.yaml",
     # Real-world schemas

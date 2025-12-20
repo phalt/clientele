@@ -9,7 +9,7 @@ from rich import console as rich_console
 
 from clientele import generators, settings, utils
 from clientele.generators.standard import writer
-from clientele.generators.standard.generators import callbacks, clients, http, schemas
+from clientele.generators.standard.generators import clients, http, schemas
 
 console = rich_console.Console()
 
@@ -27,7 +27,6 @@ class StandardGenerator(generators.Generator):
     schemas_generator: schemas.SchemasGenerator
     clients_generator: clients.ClientsGenerator
     http_generator: http.HTTPGenerator
-    callbacks_generator: callbacks.CallbacksGenerator
     output_dir: str
     file: typing.Optional[str]
     url: typing.Optional[str]
@@ -50,7 +49,6 @@ class StandardGenerator(generators.Generator):
             http_generator=self.http_generator,
             asyncio=asyncio,
         )
-        self.callbacks_generator = callbacks.CallbacksGenerator(spec=spec, output_dir=output_dir)
         self.spec = spec
         self.asyncio = asyncio
         self.regen = regen
@@ -139,14 +137,5 @@ class StandardGenerator(generators.Generator):
         self.clients_generator.generate_paths()
         self.http_generator.generate_http_content()
         self.schemas_generator.write_helpers()
-        
-        # Generate callbacks if any exist
-        console.log("Checking for callbacks...")
-        self.callbacks_generator.extract_callbacks_from_spec()
-        if self.callbacks_generator.callbacks:
-            console.log("Generating callback schemas and handlers...")
-            self.callbacks_generator.generate_callback_schemas(self.schemas_generator)
-            self.callbacks_generator.write_callbacks_file()
-        
         writer.flush_buffers()  # Write all buffered content at once
         self.format_client()
