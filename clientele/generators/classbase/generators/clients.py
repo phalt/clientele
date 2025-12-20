@@ -123,6 +123,19 @@ class ClientsGenerator:
         response_classes = []
         for status_code, details in responses.items():
             for _, content in details.get("content", {}).items():
+                # Skip if no schema is defined (e.g., only examples)
+                if "schema" not in content:
+                    console.log(f"[yellow]Warning: Response {status_code} has no schema, using typing.Any")
+                    class_name = utils.class_name_titled(func_name + status_code + "Response")
+                    # Generate a minimal schema with Any type
+                    self.schemas_generator.make_schema_class(
+                        func_name + status_code + "Response",
+                        schema={"type": "object", "properties": {"data": {"type": "object"}}},
+                    )
+                    status_code_map[status_code] = class_name
+                    response_classes.append(class_name)
+                    continue
+                
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
                     # An object reference, so should be generated
