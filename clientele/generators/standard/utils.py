@@ -205,14 +205,18 @@ def get_param_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, param: dict) -> 
 def _schema_to_dict(schema: cicerone_schema.Schema) -> dict:
     """Convert a cicerone Schema object to a dict-like structure for compatibility."""
     result = {}
+    
+    # Handle $ref - it's in the extra fields
+    if hasattr(schema, '__pydantic_extra__') and schema.__pydantic_extra__ and '$ref' in schema.__pydantic_extra__:
+        result["$ref"] = schema.__pydantic_extra__['$ref']
+        return result
+    
     if schema.type:
         result["type"] = schema.type
-    if schema.format:
+    if hasattr(schema, 'format') and schema.format:
         result["format"] = schema.format
     if schema.items:
         result["items"] = _schema_to_dict(schema.items)
-    if schema.ref:
-        result["$ref"] = schema.ref
     return result
 
 

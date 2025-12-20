@@ -73,9 +73,11 @@ class ClientsGenerator:
             for method, operation in path_item.operations.items():
                 # Convert operation to dict-like structure
                 operations_dict[method] = self._operation_to_dict(operation)
-            # Add path-level parameters if they exist
-            if path_item.parameters:
+            # Add path-level parameters if they exist (might be in extra fields)
+            if hasattr(path_item, 'parameters') and path_item.parameters:
                 operations_dict["parameters"] = [self._parameter_to_dict(p) for p in path_item.parameters]
+            elif hasattr(path_item, '__pydantic_extra__') and path_item.__pydantic_extra__ and 'parameters' in path_item.__pydantic_extra__:
+                operations_dict["parameters"] = path_item.__pydantic_extra__['parameters']
             self.write_path_to_client(path=(path, operations_dict))
         console.log(f"Generated {self.results['get']} GET methods...")
         console.log(f"Generated {self.results['post']} POST methods...")
@@ -92,18 +94,24 @@ class ClientsGenerator:
             result["summary"] = operation.summary
         if operation.description:
             result["description"] = operation.description
-        if operation.deprecated:
-            result["deprecated"] = operation.deprecated
+        # deprecated is in the extra fields
+        if hasattr(operation, '__pydantic_extra__') and operation.__pydantic_extra__ and 'deprecated' in operation.__pydantic_extra__:
+            result["deprecated"] = operation.__pydantic_extra__['deprecated']
         if operation.parameters:
             result["parameters"] = [self._parameter_to_dict(p) for p in operation.parameters]
-        if operation.request_body:
-            result["requestBody"] = self._request_body_to_dict(operation.request_body)
+        # request_body might be in extra fields
+        request_body = getattr(operation, 'request_body', None) or (operation.__pydantic_extra__.get('requestBody') if hasattr(operation, '__pydantic_extra__') and operation.__pydantic_extra__ else None)
+        if request_body:
+            result["requestBody"] = self._request_body_to_dict(request_body)
         if operation.responses:
             result["responses"] = {status: self._response_to_dict(resp) for status, resp in operation.responses.items()}
         return result
 
     def _parameter_to_dict(self, param) -> dict:
         """Convert a cicerone Parameter to dict-like structure."""
+        # If it's already a dict (likely a reference), return it as-is
+        if isinstance(param, dict):
+            return param
         if hasattr(param, 'ref') and param.ref:
             return {"$ref": param.ref}
         result = {
@@ -117,17 +125,23 @@ class ClientsGenerator:
 
     def _request_body_to_dict(self, request_body) -> dict:
         """Convert a cicerone RequestBody to dict-like structure."""
+        # If it's already a dict, return it as-is
+        if isinstance(request_body, dict):
+            return request_body
         result = {}
-        if request_body.content:
+        if hasattr(request_body, 'content') and request_body.content:
             result["content"] = {}
             for media_type, media_type_obj in request_body.content.items():
                 result["content"][media_type] = {}
-                if media_type_obj.schema_:
+                if hasattr(media_type_obj, 'schema_') and media_type_obj.schema_:
                     result["content"][media_type]["schema"] = self._schema_to_dict(media_type_obj.schema_)
         return result
 
     def _response_to_dict(self, response) -> dict:
         """Convert a cicerone Response to dict-like structure."""
+        # If it's already a dict, return it as-is
+        if isinstance(response, dict):
+            return response
         result = {}
         if hasattr(response, 'description') and response.description:
             result["description"] = response.description
@@ -135,21 +149,25 @@ class ClientsGenerator:
             result["content"] = {}
             for media_type, media_type_obj in response.content.items():
                 result["content"][media_type] = {}
-                if media_type_obj.schema_:
+                if hasattr(media_type_obj, 'schema_') and media_type_obj.schema_:
                     result["content"][media_type]["schema"] = self._schema_to_dict(media_type_obj.schema_)
         return result
 
     def _schema_to_dict(self, schema) -> dict:
         """Convert a cicerone Schema to dict-like structure."""
         result = {}
+        
+        # Handle $ref - it's in the extra fields
+        if hasattr(schema, '__pydantic_extra__') and schema.__pydantic_extra__ and '$ref' in schema.__pydantic_extra__:
+            result["$ref"] = schema.__pydantic_extra__['$ref']
+            return result
+        
         if hasattr(schema, 'type') and schema.type:
             result["type"] = schema.type
         if hasattr(schema, 'format') and schema.format:
             result["format"] = schema.format
         if hasattr(schema, 'items') and schema.items:
             result["items"] = self._schema_to_dict(schema.items)
-        if hasattr(schema, 'ref') and schema.ref:
-            result["$ref"] = schema.ref
         if hasattr(schema, 'properties') and schema.properties:
             result["properties"] = {k: self._schema_to_dict(v) for k, v in schema.properties.items()}
         if hasattr(schema, 'required') and schema.required:
