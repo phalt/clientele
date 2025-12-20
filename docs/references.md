@@ -1,10 +1,12 @@
 # 🔗 References in OpenAPI
 
-Clientele fully supports OpenAPI's `$ref` mechanism for reusing schema definitions across your API specification. This page explains how references work and shows you the generated code.
+Clientele fully supports OpenAPI's `$ref` mechanism for reusing schema definitions across your API specification.
+
+This page explains how references work and how what clientele does when generating clients with them.
 
 ## What are `$ref`s?
 
-In OpenAPI, `$ref` (short for "reference") lets you define a schema, parameter, or response once and reuse it throughout your specification. This keeps your OpenAPI document [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) and maintainable.
+In OpenAPI, `$ref` (short for "reference") lets you define a schema, parameter, or response once and reuse it throughout your specification.
 
 Here's a simple example:
 
@@ -39,8 +41,6 @@ Instead of duplicating the `User` schema definition everywhere you need it, you 
 
 Clientele resolves all `$ref` declarations in your OpenAPI schema and generates properly-typed Python code using [Pydantic](https://docs.pydantic.dev/latest/) models.
 
-The generated code maintains type safety and IDE auto-completion while keeping the code clean and readable.
-
 ## Types of references supported
 
 Clientele handles `$ref` in all the places the OpenAPI specification allows:
@@ -67,12 +67,8 @@ class User(pydantic.BaseModel):
     name: str
 
 class Response(pydantic.BaseModel):
-    user: "User"  # ← Forward reference, resolved at runtime
+    user: "User" 
 ```
-
-!!! note
-    
-    Clientele uses Python's forward references (strings) for schema references. These are automatically resolved by Pydantic, giving you full IDE support and type checking.
 
 ### 2. Array items
 
@@ -95,7 +91,7 @@ Generates:
 
 ```python
 class UserList(pydantic.BaseModel):
-    users: list["User"]  # ← Fully typed list
+    users: list["User"]
 ```
 
 ### 3. Enum references
@@ -155,7 +151,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
 ```
 
-Clientele resolves the response reference and generates the corresponding schema:
+Clientele resolves the response reference and generates the corresponding schema just once:
 
 ```python
 class Error(pydantic.BaseModel):
@@ -273,7 +269,7 @@ response.user.name  # ← Your IDE suggests 'id' and 'name'
 
 ## Why forward references?
 
-You might notice that Clientele uses forward references (strings) for schema types:
+You might notice that Clientele sometimes uses forward references (strings) for schema types:
 
 ```python
 user: "User"  # ← String, not direct reference
@@ -393,7 +389,7 @@ assert team.owner.role == schemas.UserRole.ADMIN
 Clientele handles all forms of `$ref` in OpenAPI schemas:
 
 | Reference Type | Location | Supported | Example |
-|---------------|----------|-----------|---------|
+|----------------|----------|-----------|---------|
 | Schema in property | `properties.user.$ref` | ✅ | `user: "User"` |
 | Schema in array | `items.$ref` | ✅ | `list["User"]` |
 | Enum reference | `properties.status.$ref` | ✅ | `status: "Status"` |
@@ -401,11 +397,4 @@ Clientele handles all forms of `$ref` in OpenAPI schemas:
 | Parameter reference | `parameters.$ref` | ✅ | Included in functions |
 | allOf composition | `allOf[n].$ref` | ✅ | Merged into one schema |
 
-The generated code is:
-
-- ✅ **Fully typed** - Your IDE and type checkers understand the relationships
-- ✅ **Validated** - Pydantic validates the data at runtime
-- ✅ **Readable** - Clean, pythonic code that's easy to understand
-- ✅ **Maintainable** - Forward references are resolved automatically
-
-You don't need to do anything special to use references in your OpenAPI schema - Clientele handles them automatically and generates code that just works.
+You don't need to do anything special to handle references in your OpenAPI schema - Clientele handles them automatically and generates code that just works, and without loads of duplication!
