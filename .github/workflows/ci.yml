@@ -44,7 +44,7 @@ jobs:
           uv run ruff check .
       - name: Type check with ty
         run: |
-          uv run ty check --exclude 'tests/test_client/**' --exclude 'tests/async_test_client/**' --exclude 'tests/test_class_client/**' --exclude 'tests/async_test_class_client/**'
+          uv run ty check
       - name: Test with pytest
         run: |
           uv run pytest -vv --cov=clientele --cov-branch --cov-report=term-missing --cov-report=xml
