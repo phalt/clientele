@@ -149,27 +149,27 @@ def create_query_args_with_mapping(sanitized_names: list[str], param_name_map: d
 def replace_path_parameters(url: str, param_name_map: dict[str, str]) -> str:
     """
     Replace path parameters in a URL with their sanitized Python variable names.
-    
+
     For example: "/factions/{factionSymbol}" becomes "/factions/{faction_symbol}"
     when param_name_map = {"faction_symbol": "factionSymbol"}
-    
+
     Args:
         url: The URL path with parameters in {braces}
         param_name_map: Mapping from sanitized names to original API names
-    
+
     Returns:
         URL with path parameters replaced with sanitized names
     """
     # Create reverse mapping: original -> sanitized
     reverse_map = {original: sanitized for sanitized, original in param_name_map.items()}
-    
+
     def replace_param(match):
         param_name = match.group(1)
         # If we have a sanitized version, use it; otherwise keep original
         return "{" + reverse_map.get(param_name, param_name) + "}"
-    
+
     # Find all {paramName} in URL and replace with {sanitized_name}
-    return re.sub(r'\{([^}]+)\}', replace_param, url)
+    return re.sub(r"\{([^}]+)\}", replace_param, url)
 
 
 @functools.lru_cache(maxsize=128)
