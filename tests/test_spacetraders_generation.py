@@ -90,8 +90,6 @@ def test_generate_spacetraders_client_python_validity():
             sys.modules["spacetraders_schemas"] = module
             try:
                 spec.loader.exec_module(module)
-                # If we get here, the module loaded successfully
-                assert True
             except Exception as e:
                 # Clean up
                 if "spacetraders_schemas" in sys.modules:
