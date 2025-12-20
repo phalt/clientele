@@ -52,11 +52,11 @@ def test_complex_schemas_generation(tmp_path):
 
     content = schemas_file.read_text()
 
-    # Check that oneOf creates type aliases
-    assert 'PetRequest = "Cat" | "Dog"' in content
-    assert 'PaymentMethodRequest = "CreditCard" | "BankTransfer" | "PayPal"' in content
+    # Check that oneOf creates type aliases with Union (because they're forward refs)
+    assert 'PetRequest = typing.Union["Cat", "Dog"]' in content
+    assert 'PaymentMethodRequest = typing.Union["CreditCard", "BankTransfer", "PayPal"]' in content
 
-    # Check that anyOf creates union types in properties
+    # Check that anyOf creates union types in properties (using | for regular types)
     assert "id: str | int" in content
 
     # Check that nullable creates Optional types
@@ -105,9 +105,10 @@ def test_complex_schemas_class_generation(tmp_path):
 
     content = schemas_file.read_text()
 
-    # Same checks as function-based
-    assert 'PetRequest = "Cat" | "Dog"' in content
-    assert 'PaymentMethodRequest = "CreditCard" | "BankTransfer" | "PayPal"' in content
+    # Same checks as function-based - Union for forward refs
+    assert 'PetRequest = typing.Union["Cat", "Dog"]' in content
+    assert 'PaymentMethodRequest = typing.Union["CreditCard", "BankTransfer", "PayPal"]' in content
+    # | for regular types in properties
     assert "id: str | int" in content
     assert "optional_nullable_field: typing.Optional[str]" in content
 

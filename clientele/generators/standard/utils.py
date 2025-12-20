@@ -223,8 +223,17 @@ def get_schema_from_ref(spec: openapi_core.Spec, ref: str) -> dict:
 
 
 def union_for_py_ver(union_items: list) -> str:
+    """
+    Create a union type string based on Python version and content.
+    Uses typing.Union if any items are forward references (quoted strings),
+    otherwise uses modern | syntax for Python 3.10+
+    """
+    # Check if any items are forward references (quoted strings)
+    has_forward_ref = any(isinstance(item, str) and item.startswith('"') for item in union_items)
+    
+    # Always use typing.Union for forward references or Python < 3.10
     minor = settings.PY_VERSION[1]
-    if int(minor) >= 10:
-        return " | ".join(union_items)
-    else:
+    if has_forward_ref or int(minor) < 10:
         return f"typing.Union[{', '.join(union_items)}]"
+    else:
+        return " | ".join(union_items)
