@@ -60,9 +60,6 @@ select = [
     "I001",
 ]
 
-[tool.ty]
-# Configuration for ty type checker
-
 [tool.coverage.run]
 omit = [
     "*/templates/*.jinja2",
