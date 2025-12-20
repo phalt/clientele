@@ -11,7 +11,7 @@ from clientele.generators.standard.generator import StandardGenerator
 
 def load_fixture_spec(spec_path: Path) -> Spec:
     """Load an OpenAPI spec from a fixture file."""
-    with open(spec_path, "r") as f:
+    with open(spec_path, "r", encoding="utf-8") as f:
         return Spec.from_file(f)
 
 
@@ -23,10 +23,7 @@ FIXTURE_SCHEMAS = [
         "tests/fixtures/openapi_examples/api-with-examples.json",
         marks=pytest.mark.xfail(reason="Missing 'schema' key in response definitions"),
     ),
-    pytest.param(
-        "tests/fixtures/openapi_examples/callback-example.json",
-        marks=pytest.mark.xfail(reason="Callbacks feature not yet supported"),
-    ),
+    "tests/fixtures/openapi_examples/callback-example.json",
     pytest.param(
         "tests/fixtures/openapi_examples/non-oauth-scopes.json",
         marks=pytest.mark.xfail(reason="Missing 'responses' key in path definitions"),
@@ -37,10 +34,7 @@ FIXTURE_SCHEMAS = [
     "tests/fixtures/openapi_examples/uspto.json",
     "tests/fixtures/openapi_examples/webhook-example.json",
     # Root fixtures directory
-    pytest.param(
-        "tests/fixtures/callback_example.yaml",
-        marks=pytest.mark.xfail(reason="Callbacks feature not yet supported"),
-    ),
+    "tests/fixtures/callback_example.yaml",
     "tests/fixtures/complex_api.yaml",
     "tests/fixtures/petstore_openapi3.yaml",
     # Real-world schemas
