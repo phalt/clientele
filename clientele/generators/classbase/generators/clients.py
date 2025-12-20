@@ -61,6 +61,11 @@ class ClientsGenerator:
         )
 
     def generate_paths(self) -> None:
+        # Check if the spec has paths
+        if "paths" not in self.spec:
+            console.log("No paths found in spec, skipping client generation...")
+            return
+        
         for path in self.spec["paths"].items():
             self.write_path_to_client(path=path)
         console.log(f"Generated {self.results['get']} GET methods...")

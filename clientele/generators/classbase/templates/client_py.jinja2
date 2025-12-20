@@ -2,8 +2,11 @@ from __future__ import annotations
 
 import typing  # noqa
 
-from {{client_project_directory_path}} import config as _config
+{% if client_project_directory_path %}from {{client_project_directory_path}} import config as _config
 from {{client_project_directory_path}} import http, schemas  # noqa
+{% else %}from . import config as _config
+from . import http, schemas  # noqa
+{% endif %}
 
 
 class Client:
@@ -19,8 +22,9 @@ class Client:
         client = Client()
         
         # Use custom configuration
-        from {{client_project_directory_path}} import config
-        custom_config = config.Config(
+        {% if client_project_directory_path %}from {{client_project_directory_path}} import config
+        {% else %}from . import config
+        {% endif %}custom_config = config.Config(
             api_base_url="https://api.example.com",
             bearer_token="my-token"
         )

@@ -2,4 +2,6 @@ from __future__ import annotations
 
 import typing  # noqa
 
-from {{client_project_directory_path}} import http, schemas  # noqa
+{% if client_project_directory_path %}from {{client_project_directory_path}} import http, schemas  # noqa
+{% else %}from . import http, schemas  # noqa
+{% endif %}
