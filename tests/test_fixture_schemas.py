@@ -20,11 +20,7 @@ def load_fixture_spec(spec_path: Path) -> Spec:
 # Callback schemas are excluded as they define server-side webhook handlers, not client operations
 FIXTURE_SCHEMAS = [
     # OpenAPI examples directory
-    pytest.param(
-        "tests/fixtures/openapi_examples/api-with-examples.json",
-        marks=pytest.mark.xfail(reason="Missing 'schema' key in response definitions"),
-    ),
-    # Excluded: callback-example.json - callbacks are server-side, not client operations
+    "tests/fixtures/openapi_examples/api-with-examples.json",
     "tests/fixtures/openapi_examples/non-oauth-scopes.json",
     "tests/fixtures/openapi_examples/petstore-expanded.json",
     "tests/fixtures/openapi_examples/petstore.json",
@@ -32,7 +28,6 @@ FIXTURE_SCHEMAS = [
     "tests/fixtures/openapi_examples/uspto.json",
     "tests/fixtures/openapi_examples/webhook-example.json",
     # Root fixtures directory
-    # Excluded: callback_example.yaml - callbacks are server-side, not client operations
     "tests/fixtures/complex_api.yaml",
     "tests/fixtures/petstore_openapi3.yaml",
     # Real-world schemas

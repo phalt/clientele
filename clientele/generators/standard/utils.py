@@ -44,37 +44,27 @@ def snake_case_prop(input_str: str) -> str:
     Clean a property to not have invalid characters.
     Returns a "snake_case" version of the input string
     """
-    # Replace characters in a single pass using translate
+    # Sanitize: replace special chars and keep only valid Python identifier characters
     trans_table = str.maketrans({">": "", "<": "", "-": "_", ".": "_", "/": "_", " ": "_"})
-    input_str = input_str.translate(trans_table)
+    result = input_str.translate(trans_table)
+    result = "".join(c for c in result if c.isalnum() or c == "_")
 
-    # Remove any characters that aren't valid in Python identifiers
-    # Keep only alphanumeric and underscore
-    input_str = "".join(c for c in input_str if c.isalnum() or c == "_")
+    # Handle empty or digit-starting identifiers
+    if not result:
+        return "EMPTY"
+    if result[0].isdigit():
+        result = f"_{result}"
 
-    # If the result is empty or starts with a digit, prefix with underscore
-    if not input_str:
-        input_str = "EMPTY"
-    elif input_str[0].isdigit():
-        input_str = f"_{input_str}"
+    # Avoid Python reserved words
+    if result.lower() in RESERVED_WORDS:
+        result = result + "_"
 
-    # Python keywords need to be converted
-    # Use the pre-computed set of reserved words
-    if input_str.lower() in RESERVED_WORDS:
-        input_str = input_str + "_"
+    # Convert to snake_case unless already uppercase or no letters
+    has_letters = any(c.isalpha() for c in result)
+    if has_letters and not result.isupper():
+        result = "".join(["_" + i.lower() if i.isupper() else i for i in result]).lstrip("_")
 
-    # Retain all-uppercase strings or strings with only underscores/digits
-    # Otherwise convert to snake_case
-    # Check if the string has any letters and if they're all uppercase
-    has_letters = any(c.isalpha() for c in input_str)
-    if not has_letters or input_str.isupper():
-        # Keep as-is (already uppercase or no letters)
-        pass
-    else:
-        # Convert to snake_case
-        input_str = "".join(["_" + i.lower() if i.isupper() else i for i in input_str]).lstrip("_")
-
-    return input_str
+    return result
 
 
 def _split_upper(s):
