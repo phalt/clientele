@@ -1,9 +1,11 @@
 """Integration tests for fixture schemas to ensure clientele can handle real-world OpenAPI specs."""
 
 import tempfile
+import typing
 from pathlib import Path
 
 import pytest
+from jsonschema_path.handlers.protocols import SupportsRead
 from openapi_core import Spec
 
 from clientele.generators.standard.generator import StandardGenerator
@@ -11,8 +13,8 @@ from clientele.generators.standard.generator import StandardGenerator
 
 def load_fixture_spec(spec_path: Path) -> Spec:
     """Load an OpenAPI spec from a fixture file."""
-    with open(spec_path, "rb") as f:
-        return Spec.from_file(f)
+    with open(spec_path, "r") as f:
+        return Spec.from_file(typing.cast(SupportsRead, f))
 
 
 # Define all fixture schemas to test
