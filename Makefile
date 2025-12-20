@@ -16,7 +16,7 @@ release:  ## Build a new version and release it
 	uv publish
 
 ty: ## Run a static syntax check
-	uv run ty check
+	uv run ty check .
 
 format: ## Format the code correctly
 	uv run ruff format .
