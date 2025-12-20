@@ -12,5 +12,5 @@ site/
 homebrew/clientele.rb
 .python-version
 htmlcov/
-.coverage
+*.coverage*
 coverage.xml
