@@ -1,9 +1,13 @@
 import functools
+import keyword
 import re
 
 import openapi_core
 
 from clientele import settings
+
+# Pre-computed set of Python reserved words for efficient lookup
+RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(keyword.softkwlist))
 
 
 class DataType:
@@ -25,7 +29,7 @@ def class_name_titled(input_str: str) -> str:
     # Capitalize the first letter always
     input_str = input_str[:1].title() + input_str[1:]
     # Remove any bad characters with an empty space in a single pass
-    trans_table = str.maketrans(".-_></", "      ")
+    trans_table = str.maketrans(".-_></{}", "        ")
     input_str = input_str.translate(trans_table)
     if " " in input_str:
         # Capitalize all the spaces
@@ -40,17 +44,27 @@ def snake_case_prop(input_str: str) -> str:
     Clean a property to not have invalid characters.
     Returns a "snake_case" version of the input string
     """
-    # Replace characters in a single pass using translate
-    trans_table = str.maketrans({">": "", "<": "", "-": "_", ".": "_"})
-    input_str = input_str.translate(trans_table)
-    # python keywords need to be converted
-    reserved_words = ["from"]
-    if input_str in reserved_words:
-        input_str = input_str + "_"
-    # Retain all-uppercase strings, otherwise convert to camel case
-    if not input_str.isupper():
-        input_str = "".join(["_" + i.lower() if i.isupper() else i for i in input_str]).lstrip("_")
-    return input_str
+    # Sanitize: replace special chars and keep only valid Python identifier characters
+    trans_table = str.maketrans({">": "", "<": "", "-": "_", ".": "_", "/": "_", " ": "_"})
+    result = input_str.translate(trans_table)
+    result = "".join(c for c in result if c.isalnum() or c == "_")
+
+    # Handle empty or digit-starting identifiers
+    if not result:
+        return "EMPTY"
+    if result[0].isdigit():
+        result = f"_{result}"
+
+    # Avoid Python reserved words
+    if result.lower() in RESERVED_WORDS:
+        result = result + "_"
+
+    # Convert to snake_case unless already uppercase or no letters
+    has_letters = any(c.isalpha() for c in result)
+    if has_letters and not result.isupper():
+        result = "".join(["_" + i.lower() if i.isupper() else i for i in result]).lstrip("_")
+
+    return result
 
 
 def _split_upper(s):
@@ -62,7 +76,7 @@ def _split_upper(s):
 
 def _snake_case(s):
     # Replace characters in a single pass
-    trans_table = str.maketrans("/-.", "___")
+    trans_table = str.maketrans("/-.<>{} ", "________")
     s = s.translate(trans_table)
     s = _split_upper(s)
     return s[1:].lower() if s and s[0] == "_" else s.lower()
@@ -105,6 +119,25 @@ def get_type(t):
 
 def create_query_args(query_args: list[str]) -> str:
     return "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
+
+
+def create_query_args_with_mapping(sanitized_names: list[str], param_name_map: dict[str, str]) -> str:
+    """
+    Create query string using original API parameter names in the URL,
+    but sanitized Python variable names in the f-string interpolation.
+
+    Args:
+        sanitized_names: List of sanitized Python parameter names
+        param_name_map: Mapping from sanitized names to original API names
+
+    Returns:
+        Query string like "?originalName={sanitized_name}&other={other_var}"
+    """
+    parts = []
+    for sanitized in sanitized_names:
+        original = param_name_map.get(sanitized, sanitized)
+        parts.append(f"{original}=" + "{" + sanitized + "}")
+    return "?" + "&".join(parts)
 
 
 @functools.lru_cache(maxsize=128)

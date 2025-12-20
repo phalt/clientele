@@ -103,25 +103,25 @@ class Client:
         return http.handle_response(self.security_required_request_security_required_get, response)
 
     async def query_request_simple_query_get(
-        self, yourInput: str
+        self, your_input: str
     ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
         """Query Request
 
         A request with a query parameters
         """
 
-        response = await self._http_client.get(url=f"/simple-query?yourInput={yourInput}")
+        response = await self._http_client.get(url=f"/simple-query?yourInput={your_input}")
         return http.handle_response(self.query_request_simple_query_get, response)
 
     async def query_request_optional_query_get(
-        self, yourInput: typing.Optional[str]
+        self, your_input: typing.Optional[str]
     ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
         """Optional Query Request
 
         A request with a query parameters that are optional
         """
 
-        response = await self._http_client.get(url=f"/optional-query?yourInput={yourInput}")
+        response = await self._http_client.get(url=f"/optional-query?yourInput={your_input}")
         return http.handle_response(self.query_request_optional_query_get, response)
 
     async def simple_request_simple_request_get(self) -> schemas.SimpleResponse:
