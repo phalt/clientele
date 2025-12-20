@@ -40,28 +40,59 @@ def snake_case_prop(input_str: str) -> str:
     Clean a property to not have invalid characters.
     Returns a "snake_case" version of the input string
     """
-    # Store original for fallback
-    original = input_str
-    
     # Replace characters in a single pass using translate
     trans_table = str.maketrans({">": "", "<": "", "-": "_", ".": "_", "/": "_", " ": "_"})
     input_str = input_str.translate(trans_table)
-    
+
     # Remove any characters that aren't valid in Python identifiers
     # Keep only alphanumeric and underscore
     input_str = "".join(c for c in input_str if c.isalnum() or c == "_")
-    
+
     # If the result is empty or starts with a digit, prefix with underscore
     if not input_str:
         input_str = "EMPTY"
     elif input_str[0].isdigit():
         input_str = f"_{input_str}"
-    
+
     # python keywords need to be converted
-    reserved_words = ["from", "import", "class", "def", "return", "if", "else", "elif", "for", "while", "try", "except", "finally", "with", "as", "pass", "break", "continue", "raise", "assert", "yield", "lambda", "global", "nonlocal", "del", "and", "or", "not", "in", "is", "None", "True", "False"]
+    reserved_words = [
+        "from",
+        "import",
+        "class",
+        "def",
+        "return",
+        "if",
+        "else",
+        "elif",
+        "for",
+        "while",
+        "try",
+        "except",
+        "finally",
+        "with",
+        "as",
+        "pass",
+        "break",
+        "continue",
+        "raise",
+        "assert",
+        "yield",
+        "lambda",
+        "global",
+        "nonlocal",
+        "del",
+        "and",
+        "or",
+        "not",
+        "in",
+        "is",
+        "None",
+        "True",
+        "False",
+    ]
     if input_str.lower() in reserved_words:
         input_str = input_str + "_"
-    
+
     # Retain all-uppercase strings or strings with only underscores/digits, otherwise convert to camel case
     # Check if the string has any letters and if they're all uppercase
     has_letters = any(c.isalpha() for c in input_str)
@@ -71,7 +102,7 @@ def snake_case_prop(input_str: str) -> str:
     else:
         # Convert to snake_case
         input_str = "".join(["_" + i.lower() if i.isupper() else i for i in input_str]).lstrip("_")
-    
+
     return input_str
 
 

@@ -155,11 +155,11 @@ class SchemasGenerator:
         if "components" not in self.spec:
             console.log("No components found in spec, skipping schema generation...")
             return
-        
+
         if "schemas" not in self.spec["components"]:
             console.log("No schemas found in components, skipping schema generation...")
             return
-        
+
         for schema_key, schema in self.spec["components"]["schemas"].items():
             self.make_schema_class(schema_key=schema_key, schema=schema)
         console.log(f"Generated {len(self.schemas.items())} schemas...")
