@@ -1,0 +1,99 @@
+# Minimal OpenAPI 3.0 example spec
+# This is a simple reference spec for testing basic functionality
+openapi: "3.0.0"
+info:
+  title: Test API
+  version: "1.0.0"
+  description: A minimal test API for validating OpenAPI parsing
+
+paths:
+  /users:
+    get:
+      operationId: listUsers
+      summary: List all users
+      description: Returns a list of all users in the system
+      tags:
+        - users
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      operationId: createUser
+      summary: Create a new user
+      tags:
+        - users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created
+
+  /users/{userId}:
+    get:
+      operationId: getUser
+      summary: Get a specific user
+      tags:
+        - users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - username
+        - email
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the user
+        username:
+          type: string
+          description: Username for login
+        email:
+          type: string
+          format: email
+          description: User's email address
+        age:
+          type: integer
+          description: User's age (optional)
+        roles:
+          type: array
+          items:
+            type: string
+          description: User's roles
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
