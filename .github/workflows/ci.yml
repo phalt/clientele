@@ -42,9 +42,9 @@ jobs:
       - name: Ruff linting
         run: |
           uv run ruff check .
-      - name: Type check with mypy
+      - name: Type check with ty
         run: |
-          uv run mypy .
+          uv run ty check
       - name: Test with pytest
         run: |
           uv run pytest -vv --cov=clientele --cov-branch --cov-report=term-missing --cov-report=xml

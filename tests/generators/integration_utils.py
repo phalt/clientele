@@ -1,7 +1,11 @@
 """Shared utilities for generator integration tests."""
 
+from __future__ import annotations
+
+import typing
 from pathlib import Path
 
+from jsonschema_path.handlers.protocols import SupportsRead
 from openapi_core import Spec
 
 # Path to example OpenAPI specs directory
@@ -20,7 +24,7 @@ def load_spec(spec_filename: str) -> Spec:
     """
     spec_path = EXAMPLE_SPECS_DIR / spec_filename
     with open(spec_path, "r") as f:
-        return Spec.from_file(f)
+        return Spec.from_file(typing.cast(SupportsRead, f))
 
 
 def get_spec_path(spec_filename: str) -> Path:

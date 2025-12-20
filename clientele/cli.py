@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 import click
 
 
@@ -24,8 +28,9 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
     import json
 
     import httpx
+    import openapi_core
     import yaml
-    from openapi_core import Spec
+    from jsonschema_path.handlers import protocols as jsonschema_protocols
 
     assert url or file, "Must pass either a URL or a file"
 
@@ -37,10 +42,11 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
             except json.JSONDecodeError:
                 # It's probably yaml
                 data = yaml.safe_load(response.content)
-        return Spec.from_dict(data)
+        return openapi_core.Spec.from_dict(data)
     elif file:
         with open(file, "r") as f:
-            return Spec.from_file(f)
+            # With future annotations, we can use the protocol directly
+            return openapi_core.Spec.from_file(typing.cast(jsonschema_protocols.SupportsRead, f))
     else:
         raise ValueError("Must provide either url or file")
 

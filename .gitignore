@@ -1,5 +1,5 @@
 .venv/
-.mypy_cache/
+.ty_cache/
 env.ini
 .ruff_cache/
 .pytest_cache/
