@@ -198,7 +198,15 @@ class ClientsGenerator:
         summary: typing.Optional[str],
     ):
         func_name = utils.get_func_name(operation, url)
-        response_types = self.generate_response_types(responses=operation["responses"], func_name=func_name)
+
+        # Handle missing responses (OpenAPI spec violation, but handle gracefully)
+        if "responses" not in operation:
+            console.log(f"[yellow]Warning: Operation {func_name} has no responses defined, using default 200 response")
+            responses = {"200": {"description": "Success"}}
+        else:
+            responses = operation["responses"]
+
+        response_types = self.generate_response_types(responses=responses, func_name=func_name)
         function_arguments = self.generate_parameters(
             parameters=operation.get("parameters", []),
             additional_parameters=additional_parameters,

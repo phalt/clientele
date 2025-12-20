@@ -25,10 +25,7 @@ FIXTURE_SCHEMAS = [
         marks=pytest.mark.xfail(reason="Missing 'schema' key in response definitions"),
     ),
     # Excluded: callback-example.json - callbacks are server-side, not client operations
-    pytest.param(
-        "tests/fixtures/openapi_examples/non-oauth-scopes.json",
-        marks=pytest.mark.xfail(reason="Missing 'responses' key in path definitions"),
-    ),
+    "tests/fixtures/openapi_examples/non-oauth-scopes.json",
     "tests/fixtures/openapi_examples/petstore-expanded.json",
     "tests/fixtures/openapi_examples/petstore.json",
     "tests/fixtures/openapi_examples/tictactoe.json",
@@ -44,11 +41,26 @@ FIXTURE_SCHEMAS = [
     "tests/fixtures/realworld/google.yaml",
     "tests/fixtures/realworld/medium.yaml",
     "tests/fixtures/realworld/spacetraders.yaml",
-    pytest.param(
-        "tests/fixtures/realworld/twilio.yaml",
-        marks=pytest.mark.xfail(reason="Very large complex schema with edge case syntax error"),
-    ),
+    "tests/fixtures/realworld/twilio.yaml",
 ]
+
+
+def validate_generated_python_file(file_path: Path, file_content: str, fixture_path: str) -> None:
+    """
+    Validate that a generated Python file is syntactically correct.
+
+    Args:
+        file_path: Path to the file being validated
+        file_content: Content of the Python file
+        fixture_path: Path to the original fixture schema (for error messages)
+
+    Raises:
+        AssertionError: If the file has syntax errors
+    """
+    try:
+        compile(file_content, str(file_path), "exec")
+    except SyntaxError as e:
+        pytest.fail(f"Generated {file_path.name} has syntax errors for {fixture_path}: {e}")
 
 
 @pytest.mark.parametrize("fixture_path", FIXTURE_SCHEMAS)
@@ -101,12 +113,5 @@ def test_fixture_schema_generates_client(fixture_path):
         assert len(schemas_content) > 0, f"schemas.py is empty for {fixture_path}"
 
         # Verify the generated files are valid Python
-        try:
-            compile(client_content, str(output_dir / "client.py"), "exec")
-        except SyntaxError as e:
-            pytest.fail(f"Generated client.py has syntax errors for {fixture_path}: {e}")
-
-        try:
-            compile(schemas_content, str(output_dir / "schemas.py"), "exec")
-        except SyntaxError as e:
-            pytest.fail(f"Generated schemas.py has syntax errors for {fixture_path}: {e}")
+        validate_generated_python_file(output_dir / "client.py", client_content, fixture_path)
+        validate_generated_python_file(output_dir / "schemas.py", schemas_content, fixture_path)

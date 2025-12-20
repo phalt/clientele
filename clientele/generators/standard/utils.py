@@ -6,6 +6,9 @@ import openapi_core
 
 from clientele import settings
 
+# Pre-computed set of Python reserved words for efficient lookup
+RESERVED_WORDS = frozenset(keyword.kwlist + keyword.softkwlist)
+
 
 class DataType:
     INTEGER = "integer"
@@ -56,9 +59,8 @@ def snake_case_prop(input_str: str) -> str:
         input_str = f"_{input_str}"
 
     # Python keywords need to be converted
-    # Use the keyword module to get all reserved words including soft keywords
-    reserved_words = frozenset(keyword.kwlist + keyword.softkwlist)
-    if input_str.lower() in reserved_words:
+    # Use the pre-computed set of reserved words
+    if input_str.lower() in RESERVED_WORDS:
         input_str = input_str + "_"
 
     # Retain all-uppercase strings or strings with only underscores/digits
