@@ -32,6 +32,7 @@ clean:  ## Clear any cache files and test files
 	rm -rf **/__pycache__
 	rm -rf **/*.pyc
 	rm -rf htmlcov/
+	rm -rf .coverage
 
 test:  ## Run tests
 	uv run pytest -vvv --cov=clientele --cov-report=term-missing --cov-report=html
