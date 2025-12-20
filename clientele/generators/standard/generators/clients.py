@@ -1,8 +1,8 @@
 import collections
 import typing
 
-import openapi_core
 import pydantic
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele.generators.standard import utils, writer
@@ -34,14 +34,14 @@ class ClientsGenerator:
 
     method_template_map: dict[str, str]
     results: dict[str, int]
-    spec: openapi_core.Spec
+    spec: cicerone_openapi_spec.OpenAPISpec
     output_dir: str
     schemas_generator: schemas.SchemasGenerator
     http_generator: http.HTTPGenerator
 
     def __init__(
         self,
-        spec: openapi_core.Spec,
+        spec: cicerone_openapi_spec.OpenAPISpec,
         output_dir: str,
         schemas_generator: schemas.SchemasGenerator,
         http_generator: http.HTTPGenerator,
@@ -63,17 +63,100 @@ class ClientsGenerator:
 
     def generate_paths(self) -> None:
         # Check if the spec has paths
-        if "paths" not in self.spec:
+        if not self.spec.paths or not self.spec.paths.items:
             console.log("No paths found in spec, skipping client generation...")
             return
 
-        for path in self.spec["paths"].items():
-            self.write_path_to_client(path=path)
+        for path, path_item in self.spec.paths.items.items():
+            # Convert path_item to the expected structure
+            operations_dict = {}
+            for method, operation in path_item.operations.items():
+                # Convert operation to dict-like structure
+                operations_dict[method] = self._operation_to_dict(operation)
+            # Add path-level parameters if they exist
+            if path_item.parameters:
+                operations_dict["parameters"] = [self._parameter_to_dict(p) for p in path_item.parameters]
+            self.write_path_to_client(path=(path, operations_dict))
         console.log(f"Generated {self.results['get']} GET methods...")
         console.log(f"Generated {self.results['post']} POST methods...")
         console.log(f"Generated {self.results['put']} PUT methods...")
         console.log(f"Generated {self.results['patch']} PATCH methods...")
         console.log(f"Generated {self.results['delete']} DELETE methods...")
+
+    def _operation_to_dict(self, operation) -> dict:
+        """Convert a cicerone Operation to dict-like structure."""
+        result = {}
+        if operation.operation_id:
+            result["operationId"] = operation.operation_id
+        if operation.summary:
+            result["summary"] = operation.summary
+        if operation.description:
+            result["description"] = operation.description
+        if operation.deprecated:
+            result["deprecated"] = operation.deprecated
+        if operation.parameters:
+            result["parameters"] = [self._parameter_to_dict(p) for p in operation.parameters]
+        if operation.request_body:
+            result["requestBody"] = self._request_body_to_dict(operation.request_body)
+        if operation.responses:
+            result["responses"] = {status: self._response_to_dict(resp) for status, resp in operation.responses.items()}
+        return result
+
+    def _parameter_to_dict(self, param) -> dict:
+        """Convert a cicerone Parameter to dict-like structure."""
+        if hasattr(param, 'ref') and param.ref:
+            return {"$ref": param.ref}
+        result = {
+            "name": param.name,
+            "in": param.in_,
+            "required": param.required if hasattr(param, 'required') else False,
+        }
+        if hasattr(param, 'schema_') and param.schema_:
+            result["schema"] = self._schema_to_dict(param.schema_)
+        return result
+
+    def _request_body_to_dict(self, request_body) -> dict:
+        """Convert a cicerone RequestBody to dict-like structure."""
+        result = {}
+        if request_body.content:
+            result["content"] = {}
+            for media_type, media_type_obj in request_body.content.items():
+                result["content"][media_type] = {}
+                if media_type_obj.schema_:
+                    result["content"][media_type]["schema"] = self._schema_to_dict(media_type_obj.schema_)
+        return result
+
+    def _response_to_dict(self, response) -> dict:
+        """Convert a cicerone Response to dict-like structure."""
+        result = {}
+        if hasattr(response, 'description') and response.description:
+            result["description"] = response.description
+        if hasattr(response, 'content') and response.content:
+            result["content"] = {}
+            for media_type, media_type_obj in response.content.items():
+                result["content"][media_type] = {}
+                if media_type_obj.schema_:
+                    result["content"][media_type]["schema"] = self._schema_to_dict(media_type_obj.schema_)
+        return result
+
+    def _schema_to_dict(self, schema) -> dict:
+        """Convert a cicerone Schema to dict-like structure."""
+        result = {}
+        if hasattr(schema, 'type') and schema.type:
+            result["type"] = schema.type
+        if hasattr(schema, 'format') and schema.format:
+            result["format"] = schema.format
+        if hasattr(schema, 'items') and schema.items:
+            result["items"] = self._schema_to_dict(schema.items)
+        if hasattr(schema, 'ref') and schema.ref:
+            result["$ref"] = schema.ref
+        if hasattr(schema, 'properties') and schema.properties:
+            result["properties"] = {k: self._schema_to_dict(v) for k, v in schema.properties.items()}
+        if hasattr(schema, 'required') and schema.required:
+            result["required"] = schema.required
+        if hasattr(schema, 'title') and schema.title:
+            result["title"] = schema.title
+        return result
 
     def generate_parameters(self, parameters: list[dict], additional_parameters: list[dict]) -> ParametersResponse:
         param_keys = []

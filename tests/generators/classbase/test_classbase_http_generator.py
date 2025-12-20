@@ -6,8 +6,7 @@ import tempfile
 import typing
 from pathlib import Path
 
-from jsonschema_path.handlers.protocols import SupportsRead
-from openapi_core import Spec
+from cicerone import parse as cicerone_parse
 
 from clientele.generators.classbase.generators.http import HTTPGenerator
 
@@ -30,8 +29,7 @@ def test_http_generator_with_basic_auth():
             spec_file = f.name
 
         try:
-            with open(spec_file, "r") as f:
-                spec = Spec.from_file(typing.cast(SupportsRead, f))
+            spec = cicerone_parse.parse_spec_from_file(spec_file)
 
             generator = HTTPGenerator(spec=spec, output_dir=tmpdir, asyncio=False)
 
