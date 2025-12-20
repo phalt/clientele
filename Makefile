@@ -15,15 +15,15 @@ release:  ## Build a new version and release it
 	uv build
 	uv publish
 
-mypy: ## Run a static syntax check
-	uv run mypy .
+ty: ## Run a static syntax check
+	uv run ty check .
 
 format: ## Format the code correctly
 	uv run ruff format .
 	uv run ruff check --fix .
 
 clean:  ## Clear any cache files and test files
-	rm -rf .mypy_cache
+	rm -rf .ty_cache
 	rm -rf .pytest_cache
 	rm -rf .ruff_cache
 	rm -rf test_output

@@ -19,7 +19,7 @@ def header_request_header_request_get(
     headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders],
 ) -> schemas.HTTPValidationError | schemas.HeadersResponse:
     """Header Request"""
-    headers_dict = headers and headers.model_dump(by_alias=True, exclude_unset=True) or None
+    headers_dict: dict | None = headers.model_dump(by_alias=True, exclude_unset=True) if headers else None
     response = http.get(url="/header-request", headers=headers_dict)
     return http.handle_response(header_request_header_request_get, response)
 

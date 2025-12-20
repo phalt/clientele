@@ -4,6 +4,7 @@
 
 - **New**: Support for OpenAPI `deprecated` field - operations marked as deprecated will include deprecation warnings in generated docstrings.
 - **New**: Support for OpenAPI `description` field - operation descriptions are now included in generated function docstrings for better documentation.
+- Clientele is 100% typed, including the generated code, and verified using [ty](https://github.com/astral-sh/ty) instead of mypy.
 
 ## 0.10.0
 

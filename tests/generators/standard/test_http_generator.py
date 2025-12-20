@@ -1,8 +1,12 @@
 """Tests for standard HTTP generator."""
 
+from __future__ import annotations
+
 import tempfile
+import typing
 from pathlib import Path
 
+from jsonschema_path.handlers.protocols import SupportsRead
 from openapi_core import Spec
 
 from clientele.generators.standard import writer
@@ -41,7 +45,7 @@ def test_http_generator_with_basic_auth():
 
         try:
             with open(spec_file, "r") as f:
-                spec = Spec.from_file(f)
+                spec = Spec.from_file(typing.cast(SupportsRead, f))
 
             generator = HTTPGenerator(spec=spec, output_dir=tmpdir, asyncio=False)
 
