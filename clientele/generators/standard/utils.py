@@ -109,7 +109,13 @@ def get_type(t):
         inner_class = get_type(t.get("items"))
         return f"list[{inner_class}]"
     if ref := t.get("$ref"):
-        return f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
+        # Handle component-based references
+        if "#/components/schemas/" in ref:
+            return f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
+        else:
+            # Path-based references are not supported - use typing.Any
+            # These are inline schemas in the OpenAPI spec
+            return "typing.Any"
     if t_type is None:
         # In this case, make it an "Any"
         return "typing.Any"
@@ -138,6 +144,32 @@ def create_query_args_with_mapping(sanitized_names: list[str], param_name_map: d
         original = param_name_map.get(sanitized, sanitized)
         parts.append(f"{original}=" + "{" + sanitized + "}")
     return "?" + "&".join(parts)
+
+
+def replace_path_parameters(url: str, param_name_map: dict[str, str]) -> str:
+    """
+    Replace path parameters in a URL with their sanitized Python variable names.
+
+    For example: "/factions/{factionSymbol}" becomes "/factions/{faction_symbol}"
+    when param_name_map = {"faction_symbol": "factionSymbol"}
+
+    Args:
+        url: The URL path with parameters in {braces}
+        param_name_map: Mapping from sanitized names to original API names
+
+    Returns:
+        URL with path parameters replaced with sanitized names
+    """
+    # Create reverse mapping: original -> sanitized
+    reverse_map = {original: sanitized for sanitized, original in param_name_map.items()}
+
+    def replace_param(match):
+        param_name = match.group(1)
+        # If we have a sanitized version, use it; otherwise keep original
+        return "{" + reverse_map.get(param_name, param_name) + "}"
+
+    # Find all {paramName} in URL and replace with {sanitized_name}
+    return re.sub(r"\{([^}]+)\}", replace_param, url)
 
 
 @functools.lru_cache(maxsize=128)
