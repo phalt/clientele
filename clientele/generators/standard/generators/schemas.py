@@ -171,33 +171,33 @@ class SchemasGenerator:
     def _cicerone_schema_to_dict(self, schema) -> dict:
         """Convert a cicerone Schema object to a dict representation."""
         result = {}
-        
+
         # Handle $ref - it's in the extra fields
         if hasattr(schema, '__pydantic_extra__') and schema.__pydantic_extra__ and '$ref' in schema.__pydantic_extra__:
             result["$ref"] = schema.__pydantic_extra__['$ref']
             return result  # When $ref is present, return early as other fields are not relevant
-        
+
         if schema.all_of:
             result["allOf"] = [self._cicerone_schema_to_dict(s) for s in schema.all_of]
-        
+
         # Handle enum - it's in the extra fields
         if hasattr(schema, '__pydantic_extra__') and schema.__pydantic_extra__ and 'enum' in schema.__pydantic_extra__:
             result["enum"] = schema.__pydantic_extra__['enum']
-        
+
         if schema.properties:
             result["properties"] = {k: self._cicerone_schema_to_dict(v) for k, v in schema.properties.items()}
-        
+
         if schema.required:
             result["required"] = schema.required
-        
+
         if schema.type:
             result["type"] = schema.type
-        
+
         # Format can be accessed directly if model has it in extra
         if hasattr(schema, 'format') and schema.format:
             result["format"] = schema.format
-        
+
         if schema.items:
             result["items"] = self._cicerone_schema_to_dict(schema.items)
-        
+
         return result
