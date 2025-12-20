@@ -148,7 +148,7 @@ def get_type(t):
     # Apply nullable wrapper if the type is nullable
     if base_type and t_nullable:
         return f"typing.Optional[{base_type}]"
-    
+
     return base_type if base_type else "typing.Any"
 
 
@@ -230,7 +230,7 @@ def union_for_py_ver(union_items: list) -> str:
     """
     # Check if any items are forward references (quoted strings)
     has_forward_ref = any(isinstance(item, str) and item.startswith('"') for item in union_items)
-    
+
     # Always use typing.Union for forward references or Python < 3.10
     minor = settings.PY_VERSION[1]
     if has_forward_ref or int(minor) < 10:

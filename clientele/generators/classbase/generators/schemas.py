@@ -50,7 +50,7 @@ class SchemasGenerator(StandardSchemasGenerator):
 
         enum = False
         properties: str = ""
-        
+
         # Handle oneOf - create a type alias
         if one_of := schema.get("oneOf"):
             union_types = []
@@ -67,7 +67,7 @@ class SchemasGenerator(StandardSchemasGenerator):
             writer.write_to_schemas(content, output_dir=self.output_dir)
             self.schemas[schema_key] = ""  # Mark as processed
             return
-        
+
         # Handle anyOf - create a type alias
         if any_of := schema.get("anyOf"):
             union_types = []
@@ -84,7 +84,7 @@ class SchemasGenerator(StandardSchemasGenerator):
             writer.write_to_schemas(content, output_dir=self.output_dir)
             self.schemas[schema_key] = ""  # Mark as processed
             return
-        
+
         if all_of := schema.get("allOf"):
             # This schema uses "all of" the properties inside it
             property_parts = []

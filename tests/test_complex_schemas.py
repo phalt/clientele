@@ -6,8 +6,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-import pytest
-
 
 def test_complex_schemas_generation(tmp_path):
     """Test that complex schemas with oneOf, anyOf, and nullable are properly generated"""
@@ -35,7 +33,7 @@ def test_complex_schemas_generation(tmp_path):
         capture_output=True,
         text=True,
     )
-    
+
     # Print output for debugging
     print(f"returncode: {result.returncode}")
     print(f"stdout: {result.stdout}")
@@ -43,7 +41,7 @@ def test_complex_schemas_generation(tmp_path):
     print(f"Output dir exists: {output_dir.exists()}")
     if output_dir.exists():
         print(f"Output directory contents: {list(output_dir.iterdir())}")
-    
+
     assert result.returncode == 0, f"Generation failed: stdout={result.stdout}\nstderr={result.stderr}"
 
     # Read the generated schemas file
@@ -127,13 +125,12 @@ def test_validation_error_anyof():
     # The annotation is a string due to from __future__ import annotations
     # Let's check the string representation
     loc_annotation_str = str(validation_error.__annotations__["loc"])
-    
+
     # Should contain list and union of str | int
     assert "list" in loc_annotation_str
     assert "str" in loc_annotation_str
     assert "int" in loc_annotation_str
-    
+
     # Or check the model fields which are evaluated
     loc_field = validation_error.model_fields["loc"]
     assert loc_field.annotation is not None
-
