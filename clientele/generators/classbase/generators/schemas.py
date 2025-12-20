@@ -92,7 +92,7 @@ class SchemasGenerator(StandardSchemasGenerator):
         content = template.render(class_name=schema_key, properties=properties, enum=enum)
         writer.write_to_schemas(content, output_dir=self.output_dir)
 
-    def generate_input_class(self, schema: dict) -> None:
+    def generate_input_class(self, schema: dict, func_name: str) -> None:
         """Generate input class. Uses classbase writer."""
         if content := schema.get("content"):
             for encoding, input_schema in content.items():
@@ -102,8 +102,8 @@ class SchemasGenerator(StandardSchemasGenerator):
                 elif title := input_schema["schema"].get("title", False):
                     class_name = utils.class_name_titled(title)
                 else:
-                    # No idea, using the encoding?
-                    class_name = utils.class_name_titled(encoding)
+                    # Use function name + encoding to create unique class name
+                    class_name = utils.class_name_titled(f"{func_name}_{encoding}")
                 properties = self.generate_class_properties(
                     properties=input_schema["schema"].get("properties", {}),
                     required=input_schema["schema"].get("required", None),
