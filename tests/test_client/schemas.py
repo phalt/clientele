@@ -85,7 +85,7 @@ class SimpleResponse(pydantic.BaseModel):
 class ValidationError(pydantic.BaseModel):
     loc: list[typing.Any]
     msg: str
-    type: str
+    type_: str
 
 
 class HeaderRequestHeaderRequestGetHeaders(pydantic.BaseModel):

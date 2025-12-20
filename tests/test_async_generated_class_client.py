@@ -96,7 +96,7 @@ async def test_query_request_simple_query_get(respx_mock: MockRouter):
     respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    response = await client.query_request_simple_query_get(yourInput=your_input)
+    response = await client.query_request_simple_query_get(your_input=your_input)
     # Then
     assert isinstance(response, schemas.SimpleQueryParametersResponse)
     assert len(respx_mock.calls) == 1
@@ -115,7 +115,7 @@ async def test_query_request_optional_query_get(respx_mock: MockRouter):
     respx_mock.get(mock_path).mock(return_value=Response(json=mocked_response, status_code=200))
     # When
     client = Client()
-    response = await client.query_request_optional_query_get(yourInput=your_input)
+    response = await client.query_request_optional_query_get(your_input=your_input)
     # Then
     assert isinstance(response, schemas.OptionalQueryParametersResponse)
     assert len(respx_mock.calls) == 1
