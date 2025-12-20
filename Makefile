@@ -11,6 +11,9 @@ deploy-docs:  ## Build and deploy the documentation
 	uv run mkdocs build
 	uv run mkdocs gh-deploy
 
+docs-serve:  ## Run a local documentation server
+	uv run mkdocs serve
+
 release:  ## Build a new version and release it
 	uv build
 	uv publish
