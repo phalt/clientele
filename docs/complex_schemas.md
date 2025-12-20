@@ -42,7 +42,7 @@ The `oneOf` keyword indicates that a value must match exactly one of several sch
 
 ### Generated Code
 
-Clientele generates a type alias for `oneOf` schemas:
+Clientele generates a type alias for `oneOf` schemas using `typing.Union`:
 
 ```python
 class Cat(pydantic.BaseModel):
@@ -53,8 +53,8 @@ class Dog(pydantic.BaseModel):
     type_: str
     bark_volume: int
 
-# Type alias for the union
-PetRequest = Cat | Dog
+# Type alias for the union (using typing.Union for forward references)
+PetRequest = typing.Union[Cat, Dog]
 ```
 
 ### Usage
@@ -233,16 +233,17 @@ You can combine `oneOf`, `anyOf`, and `nullable` for even more expressive schema
 ### Generated Code
 
 ```python
-# Type alias with optional wrapper
-PaymentMethod = typing.Optional[CreditCard | BankTransfer | PayPal]
+# Type alias with optional wrapper (using typing.Union for forward refs)
+PaymentMethod = typing.Optional[typing.Union[CreditCard, BankTransfer, PayPal]]
 ```
 
 ## Python Version Compatibility
 
 Clientele generates code compatible with your Python version:
 
-- **Python 3.10+**: Uses modern union syntax (`str | int`)
-- **Python 3.9 and below**: Uses `typing.Union[str, int]`
+- **Python 3.10+**: Uses modern union syntax (`str | int`) for inline types
+- **Python 3.9 and below**: Uses `typing.Union[str, int]` for inline types
+- **Forward references**: Always uses `typing.Union` (e.g., `typing.Union["Cat", "Dog"]`) because the `|` operator doesn't work with string literals
 
 The generated code automatically adapts to your target Python version for maximum compatibility.
 
