@@ -39,7 +39,13 @@ class HTTPGenerator:
         writer.write_to_http(self.writeable_function_and_status_codes_bundle(), self.output_dir)
         client_generated = False
         client_type = "AsyncClient" if self.asyncio else "Client"
-        if security_schemes := self.spec["components"].get("securitySchemes"):
+        
+        # Check if the spec has security schemes
+        security_schemes = None
+        if "components" in self.spec and "securitySchemes" in self.spec["components"]:
+            security_schemes = self.spec["components"]["securitySchemes"]
+        
+        if security_schemes:
             console.log("client has authentication...")
             for _, info in security_schemes.items():
                 if (

@@ -1,4 +1,5 @@
 import functools
+import keyword
 import re
 
 import openapi_core
@@ -55,43 +56,8 @@ def snake_case_prop(input_str: str) -> str:
         input_str = f"_{input_str}"
 
     # Python keywords need to be converted
-    reserved_words = frozenset(
-        [
-            "from",
-            "import",
-            "class",
-            "def",
-            "return",
-            "if",
-            "else",
-            "elif",
-            "for",
-            "while",
-            "try",
-            "except",
-            "finally",
-            "with",
-            "as",
-            "pass",
-            "break",
-            "continue",
-            "raise",
-            "assert",
-            "yield",
-            "lambda",
-            "global",
-            "nonlocal",
-            "del",
-            "and",
-            "or",
-            "not",
-            "in",
-            "is",
-            "None",
-            "True",
-            "False",
-        ]
-    )
+    # Use the keyword module to get all reserved words including soft keywords
+    reserved_words = frozenset(keyword.kwlist + keyword.softkwlist)
     if input_str.lower() in reserved_words:
         input_str = input_str + "_"
 
