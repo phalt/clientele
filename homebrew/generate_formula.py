@@ -9,21 +9,34 @@ This script:
 4. Generates the Homebrew formula from the template
 """
 
+from __future__ import annotations
+
 import hashlib
 import sys
 from pathlib import Path
+from typing import IO, Any, Protocol
+
+import httpx
+
+
+class TomlLoader(Protocol):
+    """Protocol for TOML loaders (tomllib or tomli)."""
+
+    def load(self, fp: IO[bytes]) -> dict[str, Any]: ...
+
 
 # Handle tomllib/tomli imports for different Python versions
 if sys.version_info >= (3, 11):
     import tomllib
+
+    toml_loader: TomlLoader = tomllib
 else:
     try:
-        import tomli as tomllib  # type: ignore[import-not-found]
-    except ImportError:
-        # Will be caught in __main__ block if needed
-        tomllib = None  # type: ignore[assignment]
+        import tomli  # type: ignore[import-not-found]
 
-import httpx
+        toml_loader: TomlLoader = tomli
+    except ImportError:
+        toml_loader = None  # type: ignore[assignment]
 
 
 def get_sha256_from_url(url: str) -> str:
@@ -70,10 +83,10 @@ def normalize_package_name(name: str) -> str:
 
 def get_dependencies_from_pyproject() -> dict[str, str | None]:
     """Extract dependencies and their versions from pyproject.toml."""
-    assert tomllib is not None, "tomllib/tomli is required but not available"
+    assert toml_loader is not None, "tomllib/tomli is required but not available"
     pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
     with open(pyproject_path, "rb") as f:
-        data = tomllib.load(f)
+        data = toml_loader.load(f)
 
     dependencies: dict[str, str | None] = {}
     for dep in data["project"]["dependencies"]:
@@ -93,11 +106,11 @@ def get_dependencies_from_pyproject() -> dict[str, str | None]:
 
 def main():
     """Generate the Homebrew formula."""
-    assert tomllib is not None, "tomllib/tomli is required but not available"
+    assert toml_loader is not None, "tomllib/tomli is required but not available"
     # Read current version
     pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
     with open(pyproject_path, "rb") as f:
-        pyproject = tomllib.load(f)
+        pyproject = toml_loader.load(f)
 
     version = pyproject["project"]["version"]
     print(f"Generating Homebrew formula for clientele version {version}")
@@ -204,7 +217,7 @@ if __name__ == "__main__":
         import httpx  # noqa: F401
 
         # Verify tomllib/tomli is available
-        if tomllib is None:
+        if toml_loader is None:
             raise ImportError("tomli")
     except ImportError as e:
         print(f"Error: Missing required package: {e}")

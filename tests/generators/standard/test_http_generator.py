@@ -1,16 +1,16 @@
 """Tests for standard HTTP generator."""
 
-import tempfile
-from pathlib import Path
-from typing import TYPE_CHECKING, cast
+from __future__ import annotations
 
+import tempfile
+import typing
+from pathlib import Path
+
+from jsonschema_path.handlers.protocols import SupportsRead
 from openapi_core import Spec
 
 from clientele.generators.standard import writer
 from clientele.generators.standard.generators.http import HTTPGenerator
-
-if TYPE_CHECKING:
-    from jsonschema_path.handlers.protocols import SupportsRead
 
 
 def test_http_generator_env_var():
@@ -45,9 +45,7 @@ def test_http_generator_with_basic_auth():
 
         try:
             with open(spec_file, "r") as f:
-                if TYPE_CHECKING:
-                    f = cast("SupportsRead", f)
-                spec = Spec.from_file(f)
+                spec = Spec.from_file(typing.cast(SupportsRead, f))
 
             generator = HTTPGenerator(spec=spec, output_dir=tmpdir, asyncio=False)
 
