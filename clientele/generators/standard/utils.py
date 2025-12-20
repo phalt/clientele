@@ -84,7 +84,7 @@ def _split_upper(s):
 
 def _snake_case(s):
     # Replace characters in a single pass
-    trans_table = str.maketrans("/-.<>{}", "_______")
+    trans_table = str.maketrans("/-.<>{} ", "________")
     s = s.translate(trans_table)
     s = _split_upper(s)
     return s[1:].lower() if s and s[0] == "_" else s.lower()
