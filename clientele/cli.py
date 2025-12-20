@@ -22,10 +22,14 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
     Returns the spec object and handles JSON/YAML parsing.
     """
     import json
+    from typing import TYPE_CHECKING, cast
 
     import httpx
     import yaml
     from openapi_core import Spec
+
+    if TYPE_CHECKING:
+        from jsonschema_path.handlers.protocols import SupportsRead
 
     assert url or file, "Must pass either a URL or a file"
 
@@ -40,7 +44,9 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
         return Spec.from_dict(data)
     elif file:
         with open(file, "r") as f:
-            return Spec.from_file(f)  # type: ignore[arg-type]
+            if TYPE_CHECKING:
+                f = cast("SupportsRead", f)
+            return Spec.from_file(f)
     else:
         raise ValueError("Must provide either url or file")
 
