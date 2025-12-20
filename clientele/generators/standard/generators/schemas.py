@@ -67,7 +67,11 @@ class SchemasGenerator:
             sanitized_arg = utils.snake_case_prop(arg)
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
-            type_string = f"typing.Optional[{arg_type}]" if is_optional else arg_type
+            # Only wrap in Optional if not already optional (e.g., from nullable)
+            if is_optional and not arg_type.startswith("typing.Optional["):
+                type_string = f"typing.Optional[{arg_type}]"
+            else:
+                type_string = arg_type
             lines.append(f"    {sanitized_arg}: {type_string}\n")
         return "".join(lines)
 
@@ -97,6 +101,47 @@ class SchemasGenerator:
         schema_key = utils.class_name_titled(schema_key)
         enum = False
         properties: str = ""
+        
+        # Handle oneOf - create a type alias
+        if one_of := schema.get("oneOf"):
+            union_types = []
+            for schema_option in one_of:
+                if ref := schema_option.get("$ref"):
+                    ref_name = utils.class_name_titled(utils.schema_ref(ref))
+                    union_types.append(f'"{ref_name}"')
+                else:
+                    # Inline schema - convert to type
+                    union_types.append(utils.get_type(schema_option))
+            template = writer.templates.get_template("schema_type_alias.jinja2")
+            union_type = utils.union_for_py_ver(union_types)
+            content = template.render(class_name=schema_key, union_type=union_type)
+            writer.write_to_schemas(
+                content,
+                output_dir=self.output_dir,
+            )
+            self.schemas[schema_key] = ""  # Mark as processed
+            return
+        
+        # Handle anyOf - create a type alias
+        if any_of := schema.get("anyOf"):
+            union_types = []
+            for schema_option in any_of:
+                if ref := schema_option.get("$ref"):
+                    ref_name = utils.class_name_titled(utils.schema_ref(ref))
+                    union_types.append(f'"{ref_name}"')
+                else:
+                    # Inline schema - convert to type
+                    union_types.append(utils.get_type(schema_option))
+            template = writer.templates.get_template("schema_type_alias.jinja2")
+            union_type = utils.union_for_py_ver(union_types)
+            content = template.render(class_name=schema_key, union_type=union_type)
+            writer.write_to_schemas(
+                content,
+                output_dir=self.output_dir,
+            )
+            self.schemas[schema_key] = ""  # Mark as processed
+            return
+        
         if all_of := schema.get("allOf"):
             # This schema uses "all of" the properties inside it
             property_parts = []
