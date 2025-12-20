@@ -16,7 +16,7 @@ def get_client_project_directory_path(output_dir: str) -> str:
 
     # Use the original logic but handle path separators properly
     # os.path.join with a single argument just returns the path
-    parts = os.path.join(output_dir).split("/")
+    parts = os.path.join(output_dir).split(os.sep)
 
     # Remove the last component (empty string for trailing slash, or directory name)
     if len(parts) > 1:
