@@ -40,7 +40,7 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
         return Spec.from_dict(data)
     elif file:
         with open(file, "r") as f:
-            return Spec.from_file(f)
+            return Spec.from_file(f)  # type: ignore[arg-type]
     else:
         raise ValueError("Must provide either url or file")
 

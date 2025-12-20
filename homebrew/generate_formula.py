@@ -194,12 +194,12 @@ def main():
 if __name__ == "__main__":
     # Check if required packages are installed
     try:
-        import httpx
+        import httpx  # noqa: F401
 
         try:
-            import tomllib
+            import tomllib  # type: ignore[import-not-found]  # noqa: F401
         except ImportError:
-            import tomli as tomllib
+            import tomli as tomllib  # type: ignore[import-not-found]  # noqa: F401
     except ImportError as e:
         print(f"Error: Missing required package: {e}")
         print("Please run: pip install httpx")
