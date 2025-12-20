@@ -2,10 +2,14 @@
 
 import tempfile
 from pathlib import Path
+from typing import TYPE_CHECKING, cast
 
 from openapi_core import Spec
 
 from clientele.generators.classbase.generators.http import HTTPGenerator
+
+if TYPE_CHECKING:
+    from jsonschema_path.handlers.protocols import SupportsRead
 
 
 def test_http_generator_with_basic_auth():
@@ -27,7 +31,9 @@ def test_http_generator_with_basic_auth():
 
         try:
             with open(spec_file, "r") as f:
-                spec = Spec.from_file(f)  # type: ignore[arg-type]
+                if TYPE_CHECKING:
+                    f = cast("SupportsRead", f)
+                spec = Spec.from_file(f)
 
             generator = HTTPGenerator(spec=spec, output_dir=tmpdir, asyncio=False)
 

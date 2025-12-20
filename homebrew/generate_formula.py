@@ -13,10 +13,15 @@ import hashlib
 import sys
 from pathlib import Path
 
-try:
-    import tomllib  # type: ignore[import-not-found]  # Python 3.11+
-except ImportError:
-    import tomli as tomllib  # type: ignore[import-not-found]  # Fallback for older Python
+# Handle tomllib/tomli imports for different Python versions
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    try:
+        import tomli as tomllib  # type: ignore[import-not-found]
+    except ImportError:
+        # Will be caught in __main__ block if needed
+        tomllib = None  # type: ignore[assignment]
 
 import httpx
 
@@ -65,6 +70,7 @@ def normalize_package_name(name: str) -> str:
 
 def get_dependencies_from_pyproject() -> dict[str, str | None]:
     """Extract dependencies and their versions from pyproject.toml."""
+    assert tomllib is not None, "tomllib/tomli is required but not available"
     pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
     with open(pyproject_path, "rb") as f:
         data = tomllib.load(f)
@@ -87,6 +93,7 @@ def get_dependencies_from_pyproject() -> dict[str, str | None]:
 
 def main():
     """Generate the Homebrew formula."""
+    assert tomllib is not None, "tomllib/tomli is required but not available"
     # Read current version
     pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
     with open(pyproject_path, "rb") as f:
@@ -196,10 +203,9 @@ if __name__ == "__main__":
     try:
         import httpx  # noqa: F401
 
-        try:
-            import tomllib  # type: ignore[import-not-found]  # noqa: F401
-        except ImportError:
-            import tomli as tomllib  # type: ignore[import-not-found]  # noqa: F401
+        # Verify tomllib/tomli is available
+        if tomllib is None:
+            raise ImportError("tomli")
     except ImportError as e:
         print(f"Error: Missing required package: {e}")
         print("Please run: pip install httpx")
