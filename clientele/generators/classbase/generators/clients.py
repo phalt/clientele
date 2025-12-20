@@ -19,6 +19,8 @@ class ParametersResponse(pydantic.BaseModel):
     path_args: dict[str, str]
     # Parameters that are needed in the headers object
     headers_args: dict[str, str]
+    # Mapping from sanitized Python name to original API parameter name
+    param_name_map: dict[str, str] = {}
 
     def get_path_args_as_string(self) -> str:
         # Get all the path arguments, and the query arguments and make a big string out of them.
@@ -79,15 +81,19 @@ class ClientsGenerator:
         query_args = {}
         path_args = {}
         headers_args = {}
+        param_name_map = {}  # Maps sanitized name to original name
         all_parameters = parameters + additional_parameters
         for param in all_parameters:
             if param.get("$ref"):
                 # Get the actual parameter it is referencing
                 param = utils.get_param_from_ref(spec=self.spec, param=param)
             # Sanitize the parameter name to be a valid Python identifier
-            clean_key = utils.snake_case_prop(param["name"])
+            original_name = param["name"]
+            clean_key = utils.snake_case_prop(original_name)
             if clean_key in param_keys:
                 continue
+            # Store mapping from sanitized to original name
+            param_name_map[clean_key] = original_name
             in_ = param.get("in")
             required = param.get("required", False) or in_ != "query"
             if in_ == "query":
@@ -110,6 +116,7 @@ class ClientsGenerator:
             query_args=query_args,
             path_args=path_args,
             headers_args=headers_args,
+            param_name_map=param_name_map,
         )
 
     def get_response_class_names(self, responses: dict, func_name: str) -> list[str]:
@@ -226,7 +233,11 @@ class ClientsGenerator:
             additional_parameters=additional_parameters,
         )
         if query_args := function_arguments.query_args:
-            api_url = url + utils.create_query_args(list(query_args.keys()))
+            # Use original parameter names in URL, but sanitized names for Python variables
+            api_url = url + utils.create_query_args_with_mapping(
+                list(query_args.keys()), 
+                function_arguments.param_name_map
+            )
         else:
             api_url = url
         if method in ["post", "put", "patch"] and not operation.get("requestBody"):
