@@ -160,8 +160,6 @@ def replace_path_parameters(url: str, param_name_map: dict[str, str]) -> str:
     Returns:
         URL with path parameters replaced with sanitized names
     """
-    import re
-    
     # Create reverse mapping: original -> sanitized
     reverse_map = {original: sanitized for sanitized, original in param_name_map.items()}
     
