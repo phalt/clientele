@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import typing
 from pathlib import Path
 
 from cicerone import parse as cicerone_parse

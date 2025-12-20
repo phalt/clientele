@@ -50,7 +50,8 @@ class HTTPGenerator:
             for _, info in security_schemes.items():
                 if (
                     info.type == "http"
-                    and hasattr(info, 'scheme') and info.scheme.lower() in ["basic", "bearer"]
+                    and hasattr(info, "scheme")
+                    and info.scheme.lower() in ["basic", "bearer"]
                     and client_generated is False
                 ):
                     client_generated = True

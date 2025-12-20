@@ -1,7 +1,6 @@
 """Integration tests for fixture schemas to ensure clientele can handle real-world OpenAPI specs."""
 
 import tempfile
-import typing
 from pathlib import Path
 
 import pytest

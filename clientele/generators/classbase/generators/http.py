@@ -1,10 +1,10 @@
 """
-Wrapper for HTTP generator that uses classbase writer.
+HTTP generator for class-based clients.
 """
 
 import collections
 
-import openapi_core
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele.generators.classbase import writer
@@ -51,7 +51,8 @@ class HTTPGenerator:
             for _, info in security_schemes.items():
                 if (
                     info.type == "http"
-                    and hasattr(info, 'scheme') and info.scheme.lower() in ["basic", "bearer"]
+                    and hasattr(info, "scheme")
+                    and info.scheme.lower() in ["basic", "bearer"]
                     and client_generated is False
                 ):
                     client_generated = True
