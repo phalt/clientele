@@ -6,7 +6,9 @@ import typing
 from urllib import parse
 import httpx  # noqa
 
-from {{client_project_directory_path}} import config as c  # noqa
+{% if client_project_directory_path %}from {{client_project_directory_path}} import config as c  # noqa
+{% else %}from . import config as c  # noqa
+{% endif %}
 
 
 class APIException(Exception):

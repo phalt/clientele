@@ -85,26 +85,26 @@ async def security_required_request_security_required_get() -> schemas.SecurityR
 
 
 async def query_request_simple_query_get(
-    yourInput: str,
+    your_input: str,
 ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request
 
     A request with a query parameters
     """
 
-    response = await http.get(url=f"/simple-query?yourInput={yourInput}")
+    response = await http.get(url=f"/simple-query?yourInput={your_input}")
     return http.handle_response(query_request_simple_query_get, response)
 
 
 async def query_request_optional_query_get(
-    yourInput: typing.Optional[str],
+    your_input: typing.Optional[str],
 ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
     """Optional Query Request
 
     A request with a query parameters that are optional
     """
 
-    response = await http.get(url=f"/optional-query?yourInput={yourInput}")
+    response = await http.get(url=f"/optional-query?yourInput={your_input}")
     return http.handle_response(query_request_optional_query_get, response)
 
 

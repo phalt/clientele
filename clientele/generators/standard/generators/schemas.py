@@ -63,10 +63,12 @@ class SchemasGenerator:
         """
         lines = []
         for arg, arg_details in properties.items():
+            # Sanitize property names to ensure valid Python identifiers
+            sanitized_arg = utils.snake_case_prop(arg)
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
             type_string = f"typing.Optional[{arg_type}]" if is_optional else arg_type
-            lines.append(f"    {arg}: {type_string}\n")
+            lines.append(f"    {sanitized_arg}: {type_string}\n")
         return "".join(lines)
 
     def generate_input_class(self, schema: dict) -> None:
@@ -151,6 +153,15 @@ class SchemasGenerator:
         """
         Generates all Pydantic schema classes.
         """
+        # Check if the spec has components and schemas
+        if "components" not in self.spec:
+            console.log("No components found in spec, skipping schema generation...")
+            return
+
+        if "schemas" not in self.spec["components"]:
+            console.log("No schemas found in components, skipping schema generation...")
+            return
+
         for schema_key, schema in self.spec["components"]["schemas"].items():
             self.make_schema_class(schema_key=schema_key, schema=schema)
         console.log(f"Generated {len(self.schemas.items())} schemas...")

@@ -19,6 +19,8 @@ class ParametersResponse(pydantic.BaseModel):
     path_args: dict[str, str]
     # Parameters that are needed in the headers object
     headers_args: dict[str, str]
+    # Mapping from sanitized Python name to original API parameter name
+    param_name_map: dict[str, str] = {}
 
     def get_path_args_as_string(self) -> str:
         # Get all the path arguments, and the query arguments and make a big string out of them.
@@ -61,6 +63,11 @@ class ClientsGenerator:
         )
 
     def generate_paths(self) -> None:
+        # Check if the spec has paths
+        if "paths" not in self.spec:
+            console.log("No paths found in spec, skipping client generation...")
+            return
+
         for path in self.spec["paths"].items():
             self.write_path_to_client(path=path)
         console.log(f"Generated {self.results['get']} GET methods...")
@@ -74,14 +81,19 @@ class ClientsGenerator:
         query_args = {}
         path_args = {}
         headers_args = {}
+        param_name_map = {}  # Maps sanitized name to original name
         all_parameters = parameters + additional_parameters
         for param in all_parameters:
             if param.get("$ref"):
                 # Get the actual parameter it is referencing
                 param = utils.get_param_from_ref(spec=self.spec, param=param)
-            clean_key = param["name"]
+            # Sanitize the parameter name to be a valid Python identifier
+            original_name = param["name"]
+            clean_key = utils.snake_case_prop(original_name)
             if clean_key in param_keys:
                 continue
+            # Store mapping from sanitized to original name
+            param_name_map[clean_key] = original_name
             in_ = param.get("in")
             required = param.get("required", False) or in_ != "query"
             if in_ == "query":
@@ -104,6 +116,7 @@ class ClientsGenerator:
             query_args=query_args,
             path_args=path_args,
             headers_args=headers_args,
+            param_name_map=param_name_map,
         )
 
     def get_response_class_names(self, responses: dict, func_name: str) -> list[str]:
@@ -117,6 +130,19 @@ class ClientsGenerator:
         response_classes = []
         for status_code, details in responses.items():
             for _, content in details.get("content", {}).items():
+                # Skip if no schema is defined (e.g., only examples)
+                if "schema" not in content:
+                    console.log(f"[yellow]Warning: Response {status_code} has no schema, using typing.Any")
+                    class_name = utils.class_name_titled(func_name + status_code + "Response")
+                    # Generate a minimal schema with Any type
+                    self.schemas_generator.make_schema_class(
+                        func_name + status_code + "Response",
+                        schema={"type": "object", "properties": {"data": {"type": "object"}}},
+                    )
+                    status_code_map[status_code] = class_name
+                    response_classes.append(class_name)
+                    continue
+
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
                     # An object reference, so should be generated
@@ -193,13 +219,24 @@ class ClientsGenerator:
         summary: typing.Optional[str],
     ) -> None:
         func_name = utils.get_func_name(operation, url)
-        response_types = self.generate_response_types(responses=operation["responses"], func_name=func_name)
+
+        # Handle missing responses (OpenAPI spec violation, but handle gracefully)
+        if "responses" not in operation:
+            console.log(f"[yellow]Warning: Operation {func_name} has no responses defined, using default 200 response")
+            responses = {"200": {"description": "Success"}}
+        else:
+            responses = operation["responses"]
+
+        response_types = self.generate_response_types(responses=responses, func_name=func_name)
         function_arguments = self.generate_parameters(
             parameters=operation.get("parameters", []),
             additional_parameters=additional_parameters,
         )
         if query_args := function_arguments.query_args:
-            api_url = url + utils.create_query_args(list(query_args.keys()))
+            # Use original parameter names in URL, but sanitized names for Python variables
+            api_url = url + utils.create_query_args_with_mapping(
+                list(query_args.keys()), function_arguments.param_name_map
+            )
         else:
             api_url = url
         if method in ["post", "put", "patch"] and not operation.get("requestBody"):
