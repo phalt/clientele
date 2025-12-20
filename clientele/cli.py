@@ -25,28 +25,14 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
     Load OpenAPI spec from URL or file.
     Returns the spec object and handles JSON/YAML parsing.
     """
-    import json
-
-    import httpx
-    import openapi_core
-    import yaml
-    from jsonschema_path.handlers import protocols as jsonschema_protocols
+    from cicerone import parse as cicerone_parse
 
     assert url or file, "Must pass either a URL or a file"
 
     if url:
-        with httpx.Client() as client:  # Use context manager for proper cleanup
-            response = client.get(url)
-            try:
-                data = response.json()
-            except json.JSONDecodeError:
-                # It's probably yaml
-                data = yaml.safe_load(response.content)
-        return openapi_core.Spec.from_dict(data)
+        return cicerone_parse.parse_spec_from_url(url)
     elif file:
-        with open(file, "r") as f:
-            # With future annotations, we can use the protocol directly
-            return openapi_core.Spec.from_file(typing.cast(jsonschema_protocols.SupportsRead, f))
+        return cicerone_parse.parse_spec_from_file(file)
     else:
         raise ValueError("Must provide either url or file")
 
@@ -81,10 +67,10 @@ def validate(url, file):
     console = Console()
 
     spec = _load_openapi_spec(url=url, file=file)
-    console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
-    major, _, _ = spec["openapi"].split(".")
+    console.log(f"Found API specification: {spec.info.title} | version {spec.info.version}")
+    major, _, _ = str(spec.version).split(".")
     if int(major) < 3:
-        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
+        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec.version}")
         return
     console.log("schema validated successfully! You can generate a client with it")
 
@@ -106,10 +92,10 @@ def generate(url, file, output, asyncio, regen):
     from clientele.generators.standard.generator import StandardGenerator
 
     spec = _load_openapi_spec(url=url, file=file)
-    console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
-    major, _, _ = spec["openapi"].split(".")
+    console.log(f"Found API specification: {spec.info.title} | version {spec.info.version}")
+    major, _, _ = str(spec.version).split(".")
     if int(major) < 3:
-        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
+        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec.version}")
         return
     generator = StandardGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
@@ -154,10 +140,10 @@ def generate_class(url, file, output, asyncio, regen):
     from clientele.generators.classbase.generator import ClassbaseGenerator
 
     spec = _load_openapi_spec(url=url, file=file)
-    console.log(f"Found API specification: {spec['info']['title']} | version {spec['info']['version']}")
-    major, _, _ = spec["openapi"].split(".")
+    console.log(f"Found API specification: {spec.info.title} | version {spec.info.version}")
+    major, _, _ = str(spec.version).split(".")
     if int(major) < 3:
-        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec['openapi']}")
+        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec.version}")
         return
     generator = ClassbaseGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():

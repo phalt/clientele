@@ -1,6 +1,6 @@
 import typing
 
-import openapi_core
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele.generators.standard import utils, writer
@@ -13,11 +13,11 @@ class SchemasGenerator:
     Handles all the content generated in the schemas.py file.
     """
 
-    spec: openapi_core.Spec
+    spec: cicerone_openapi_spec.OpenAPISpec
     schemas: dict[str, str]
     output_dir: str
 
-    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
+    def __init__(self, spec: cicerone_openapi_spec.OpenAPISpec, output_dir: str) -> None:
         self.spec = spec
         self.schemas = {}
         self.output_dir = output_dir
@@ -154,14 +154,46 @@ class SchemasGenerator:
         Generates all Pydantic schema classes.
         """
         # Check if the spec has components and schemas
-        if "components" not in self.spec:
+        if not self.spec.components:
             console.log("No components found in spec, skipping schema generation...")
             return
 
-        if "schemas" not in self.spec["components"]:
+        if not self.spec.components.schemas:
             console.log("No schemas found in components, skipping schema generation...")
             return
 
-        for schema_key, schema in self.spec["components"]["schemas"].items():
-            self.make_schema_class(schema_key=schema_key, schema=schema)
+        for schema_key, schema in self.spec.components.schemas.items():
+            # Convert cicerone Schema to dict-like structure
+            schema_dict = self._cicerone_schema_to_dict(schema)
+            self.make_schema_class(schema_key=schema_key, schema=schema_dict)
         console.log(f"Generated {len(self.schemas.items())} schemas...")
+
+    def _cicerone_schema_to_dict(self, schema) -> dict:
+        """Convert a cicerone Schema object to a dict representation."""
+        result = {}
+        
+        if schema.all_of:
+            result["allOf"] = [self._cicerone_schema_to_dict(s) if hasattr(s, 'type') else {"$ref": s.ref} if hasattr(s, 'ref') and s.ref else {} for s in schema.all_of]
+        
+        if schema.enum:
+            result["enum"] = schema.enum
+        
+        if schema.properties:
+            result["properties"] = {k: self._cicerone_schema_to_dict(v) for k, v in schema.properties.items()}
+        
+        if schema.required:
+            result["required"] = schema.required
+        
+        if schema.type:
+            result["type"] = schema.type
+        
+        if schema.format:
+            result["format"] = schema.format
+        
+        if schema.items:
+            result["items"] = self._cicerone_schema_to_dict(schema.items)
+        
+        if schema.ref:
+            result["$ref"] = schema.ref
+        
+        return result

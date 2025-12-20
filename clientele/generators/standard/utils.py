@@ -2,7 +2,9 @@ import functools
 import keyword
 import re
 
-import openapi_core
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
+from cicerone.spec import parameter as cicerone_parameter
+from cicerone.spec import schema as cicerone_schema
 
 from clientele import settings
 
@@ -182,15 +184,52 @@ def param_ref(ref: str) -> str:
     return ref.replace("#/components/parameters/", "")
 
 
-def get_param_from_ref(spec: openapi_core.Spec, param: dict) -> dict:
+def get_param_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, param: dict) -> dict:
     ref = param.get("$ref", "")
     stripped_name = param_ref(ref)
-    return spec["components"]["parameters"][stripped_name]
+    # Get parameter from components and convert to dict-like structure
+    param_obj = spec.components.parameters.get(stripped_name)
+    if param_obj is None:
+        return {}
+    # Convert the Parameter object to a dict-like structure
+    result = {
+        "name": param_obj.name,
+        "in": param_obj.in_,
+        "required": param_obj.required,
+    }
+    if param_obj.schema_:
+        result["schema"] = _schema_to_dict(param_obj.schema_)
+    return result
 
 
-def get_schema_from_ref(spec: openapi_core.Spec, ref: str) -> dict:
+def _schema_to_dict(schema: cicerone_schema.Schema) -> dict:
+    """Convert a cicerone Schema object to a dict-like structure for compatibility."""
+    result = {}
+    if schema.type:
+        result["type"] = schema.type
+    if schema.format:
+        result["format"] = schema.format
+    if schema.items:
+        result["items"] = _schema_to_dict(schema.items)
+    if schema.ref:
+        result["$ref"] = schema.ref
+    return result
+
+
+def get_schema_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, ref: str) -> dict:
     stripped_name = schema_ref(ref)
-    return spec["components"]["schemas"][stripped_name]
+    schema_obj = spec.components.schemas.get(stripped_name)
+    if schema_obj is None:
+        return {}
+    # Convert Schema to dict-like structure
+    result = {}
+    if schema_obj.properties:
+        result["properties"] = {k: _schema_to_dict(v) for k, v in schema_obj.properties.items()}
+    if schema_obj.required:
+        result["required"] = schema_obj.required
+    if schema_obj.type:
+        result["type"] = schema_obj.type
+    return result
 
 
 def union_for_py_ver(union_items: list) -> str:

@@ -5,16 +5,14 @@ import typing
 from pathlib import Path
 
 import pytest
-from jsonschema_path.handlers.protocols import SupportsRead
-from openapi_core import Spec
+from cicerone import parse as cicerone_parse
 
 from clientele.generators.standard.generator import StandardGenerator
 
 
-def load_fixture_spec(spec_path: Path) -> Spec:
+def load_fixture_spec(spec_path: Path):
     """Load an OpenAPI spec from a fixture file."""
-    with open(spec_path, "r") as f:
-        return Spec.from_file(typing.cast(SupportsRead, f))
+    return cicerone_parse.parse_spec_from_file(str(spec_path))
 
 
 # Define all fixture schemas to test
