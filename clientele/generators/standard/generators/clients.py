@@ -141,7 +141,7 @@ class ClientsGenerator:
                     status_code_map[status_code] = class_name
                     response_classes.append(class_name)
                     continue
-                
+
                 class_name = ""
                 if ref := content["schema"].get("$ref", False):
                     # An object reference, so should be generated
@@ -234,8 +234,7 @@ class ClientsGenerator:
         if query_args := function_arguments.query_args:
             # Use original parameter names in URL, but sanitized names for Python variables
             api_url = url + utils.create_query_args_with_mapping(
-                list(query_args.keys()), 
-                function_arguments.param_name_map
+                list(query_args.keys()), function_arguments.param_name_map
             )
         else:
             api_url = url

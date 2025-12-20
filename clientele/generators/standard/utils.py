@@ -125,11 +125,11 @@ def create_query_args_with_mapping(sanitized_names: list[str], param_name_map: d
     """
     Create query string using original API parameter names in the URL,
     but sanitized Python variable names in the f-string interpolation.
-    
+
     Args:
         sanitized_names: List of sanitized Python parameter names
         param_name_map: Mapping from sanitized names to original API names
-    
+
     Returns:
         Query string like "?originalName={sanitized_name}&other={other_var}"
     """
