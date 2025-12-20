@@ -59,7 +59,7 @@ FIXTURE_SCHEMAS = [
 @pytest.mark.parametrize("fixture_path", FIXTURE_SCHEMAS)
 def test_fixture_schema_generates_client(fixture_path):
     """Test that each fixture schema can generate a working client."""
-    base_path = Path("/home/runner/work/clientele/clientele")
+    base_path = Path(__file__).parent.parent
     spec_path = base_path / fixture_path
 
     # Skip if file doesn't exist or is empty

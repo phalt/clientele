@@ -54,46 +54,49 @@ def snake_case_prop(input_str: str) -> str:
     elif input_str[0].isdigit():
         input_str = f"_{input_str}"
 
-    # python keywords need to be converted
-    reserved_words = [
-        "from",
-        "import",
-        "class",
-        "def",
-        "return",
-        "if",
-        "else",
-        "elif",
-        "for",
-        "while",
-        "try",
-        "except",
-        "finally",
-        "with",
-        "as",
-        "pass",
-        "break",
-        "continue",
-        "raise",
-        "assert",
-        "yield",
-        "lambda",
-        "global",
-        "nonlocal",
-        "del",
-        "and",
-        "or",
-        "not",
-        "in",
-        "is",
-        "None",
-        "True",
-        "False",
-    ]
+    # Python keywords need to be converted
+    reserved_words = frozenset(
+        [
+            "from",
+            "import",
+            "class",
+            "def",
+            "return",
+            "if",
+            "else",
+            "elif",
+            "for",
+            "while",
+            "try",
+            "except",
+            "finally",
+            "with",
+            "as",
+            "pass",
+            "break",
+            "continue",
+            "raise",
+            "assert",
+            "yield",
+            "lambda",
+            "global",
+            "nonlocal",
+            "del",
+            "and",
+            "or",
+            "not",
+            "in",
+            "is",
+            "None",
+            "True",
+            "False",
+        ]
+    )
     if input_str.lower() in reserved_words:
         input_str = input_str + "_"
 
-    # Retain all-uppercase strings or strings with only underscores/digits, otherwise convert to camel case
+    # Retain all-uppercase strings or strings with only underscores/digits
+    # Otherwise convert to snake_case
     # Check if the string has any letters and if they're all uppercase
     has_letters = any(c.isalpha() for c in input_str)
     if not has_letters or input_str.isupper():
