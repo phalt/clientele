@@ -168,7 +168,7 @@ class ClientsGenerator:
         # Use set to deduplicate, then sorted for consistent ordering
         return sorted(set(response_classes))
 
-    def get_input_class_names(self, inputs: dict) -> list[str]:
+    def get_input_class_names(self, inputs: dict, func_name: str) -> list[str]:
         """
         Generates a list of input class for this operation.
         """
@@ -181,8 +181,8 @@ class ClientsGenerator:
                 elif title := content["schema"].get("title", False):
                     class_name = title
                 else:
-                    # No idea, using the encoding?
-                    class_name = encoding
+                    # Use function name + encoding to create unique class name
+                    class_name = f"{func_name}_{encoding}"
                 class_name = utils.class_name_titled(class_name)
                 input_classes.append(class_name)
         # Return deduplicated list - order doesn't matter for this use case
@@ -197,12 +197,12 @@ class ClientsGenerator:
         else:
             return f"schemas.{response_class_names[0]}"
 
-    def generate_input_types(self, request_body: dict) -> str:
-        input_class_names = self.get_input_class_names(inputs={"": request_body})
+    def generate_input_types(self, request_body: dict, func_name: str) -> str:
+        input_class_names = self.get_input_class_names(inputs={"": request_body}, func_name=func_name)
         for input_class in input_class_names:
             if input_class not in self.schemas_generator.schemas.keys():
                 # It doesn't exist! Generate the schema for it
-                self.schemas_generator.generate_input_class(schema=request_body)
+                self.schemas_generator.generate_input_class(schema=request_body, func_name=func_name)
         if len(input_class_names) > 1:
             return utils.union_for_py_ver([f"schemas.{r}" for r in input_class_names])
         elif len(input_class_names) == 0:
@@ -232,17 +232,17 @@ class ClientsGenerator:
             parameters=operation.get("parameters", []),
             additional_parameters=additional_parameters,
         )
+        # Replace path parameters in URL with sanitized names
+        api_url = utils.replace_path_parameters(url, function_arguments.param_name_map)
         if query_args := function_arguments.query_args:
             # Use original parameter names in URL, but sanitized names for Python variables
-            api_url = url + utils.create_query_args_with_mapping(
+            api_url = api_url + utils.create_query_args_with_mapping(
                 list(query_args.keys()), function_arguments.param_name_map
             )
-        else:
-            api_url = url
         if method in ["post", "put", "patch"] and not operation.get("requestBody"):
             data_class_name = "None"
         elif method in ["post", "put", "patch"]:
-            data_class_name = self.generate_input_types(operation.get("requestBody", {}))
+            data_class_name = self.generate_input_types(operation.get("requestBody", {}), func_name=func_name)
         else:
             data_class_name = None
         self.results[method] += 1
