@@ -153,7 +153,7 @@ def test_load_openapi_spec_from_file(simple_openapi_spec):
     try:
         spec = cli._load_openapi_spec(file=spec_file)
         assert spec is not None
-        assert spec["info"]["title"] == "Test API"
+        assert spec.info.title == "Test API"
     finally:
         Path(spec_file).unlink()
 
@@ -173,7 +173,7 @@ def test_load_openapi_spec_with_yaml_file(simple_openapi_spec):
     try:
         spec = cli._load_openapi_spec(file=spec_file)
         assert spec is not None
-        assert spec["info"]["title"] == "Test API"
+        assert spec.info.title == "Test API"
     finally:
         Path(spec_file).unlink()
 
@@ -205,7 +205,7 @@ def test_load_openapi_spec_with_yaml_response_from_url(simple_openapi_spec, resp
 
     spec = cli._load_openapi_spec(url=url)
     assert spec is not None
-    assert spec["info"]["title"] == "Test API"
+    assert spec.info.title == "Test API"
 
 
 def test_load_openapi_spec_with_json_from_url(simple_openapi_spec, respx_mock):
@@ -218,7 +218,7 @@ def test_load_openapi_spec_with_json_from_url(simple_openapi_spec, respx_mock):
 
     spec = cli._load_openapi_spec(url=url)
     assert spec is not None
-    assert spec["info"]["title"] == "Test API"
+    assert spec.info.title == "Test API"
 
 
 def test_generate_command_with_valid_spec(runner):
