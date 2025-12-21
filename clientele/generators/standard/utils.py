@@ -91,36 +91,65 @@ def get_func_name(operation: dict, path: str) -> str:
 def get_type(t):
     t_type = t.get("type")
     t_format = t.get("format")
+    t_nullable = t.get("nullable", False)
 
+    # Handle oneOf - creates a union type
+    if one_of := t.get("oneOf"):
+        union_types = [get_type(schema) for schema in one_of]
+        result = union_for_py_ver(union_types)
+        # Apply nullable wrapper if needed
+        if t_nullable:
+            return f"typing.Optional[{result}]"
+        return result
+
+    # Handle anyOf - creates a union type
+    if any_of := t.get("anyOf"):
+        union_types = [get_type(schema) for schema in any_of]
+        result = union_for_py_ver(union_types)
+        # Apply nullable wrapper if needed
+        if t_nullable:
+            return f"typing.Optional[{result}]"
+        return result
+
+    # Handle regular types
+    base_type = None
     if t_type == DataType.STRING:
-        return "str"
-    if t_type == DataType.INTEGER:
-        return "int"
-    if t_type == DataType.NUMBER:
+        base_type = "str"
+    elif t_type == DataType.INTEGER:
+        base_type = "int"
+    elif t_type == DataType.NUMBER:
         # Check formatting for a decimal type
         if t_format == "decimal":
-            return "decimal.Decimal"
-        return "float"
-    if t_type == DataType.BOOLEAN:
-        return "bool"
-    if t_type == DataType.OBJECT:
-        return "dict[str, typing.Any]"
-    if t_type == DataType.ARRAY:
+            base_type = "decimal.Decimal"
+        else:
+            base_type = "float"
+    elif t_type == DataType.BOOLEAN:
+        base_type = "bool"
+    elif t_type == DataType.OBJECT:
+        base_type = "dict[str, typing.Any]"
+    elif t_type == DataType.ARRAY:
         inner_class = get_type(t.get("items"))
-        return f"list[{inner_class}]"
-    if ref := t.get("$ref"):
+        base_type = f"list[{inner_class}]"
+    elif ref := t.get("$ref"):
         # Handle component-based references
         if "#/components/schemas/" in ref:
-            return f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
+            base_type = f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
         else:
             # Path-based references are not supported - use typing.Any
             # These are inline schemas in the OpenAPI spec
-            return "typing.Any"
-    if t_type is None:
+            base_type = "typing.Any"
+    elif t_type is None:
         # In this case, make it an "Any"
-        return "typing.Any"
-    # Note: enums have type {'type': '"EXAMPLE"'} so fall through here
-    return t_type
+        base_type = "typing.Any"
+    else:
+        # Note: enums have type {'type': '"EXAMPLE"'} so fall through here
+        base_type = t_type
+
+    # Apply nullable wrapper if the type is nullable
+    if base_type and t_nullable:
+        return f"typing.Optional[{base_type}]"
+
+    return base_type if base_type else "typing.Any"
 
 
 def create_query_args(query_args: list[str]) -> str:
@@ -194,8 +223,17 @@ def get_schema_from_ref(spec: openapi_core.Spec, ref: str) -> dict:
 
 
 def union_for_py_ver(union_items: list) -> str:
+    """
+    Create a union type string based on Python version and content.
+    Uses typing.Union if any items are forward references (quoted strings),
+    otherwise uses modern | syntax for Python 3.10+
+    """
+    # Check if any items are forward references (quoted strings)
+    has_forward_ref = any(isinstance(item, str) and item.startswith('"') for item in union_items)
+
+    # Always use typing.Union for forward references or Python < 3.10
     minor = settings.PY_VERSION[1]
-    if int(minor) >= 10:
-        return " | ".join(union_items)
-    else:
+    if has_forward_ref or int(minor) < 10:
         return f"typing.Union[{', '.join(union_items)}]"
+    else:
+        return " | ".join(union_items)

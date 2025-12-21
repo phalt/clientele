@@ -14,6 +14,7 @@ nav:
   - Design: design.md
   - References: references.md
   - Client Example: examples.md
+  - Complex Schemas: complex_schemas.md
   - Testing: testing.md
   - Compatibility: compatibility.md
   - Change log: CHANGELOG.md
