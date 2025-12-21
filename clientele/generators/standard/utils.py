@@ -3,7 +3,6 @@ import keyword
 import re
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
-from cicerone.spec import schema as cicerone_schema
 
 from clientele import settings
 from clientele.generators import cicerone_compat
