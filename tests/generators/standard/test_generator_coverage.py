@@ -77,11 +77,9 @@ def test_standard_generator_handles_ruff_formatting_error():
         )
 
         # Mock subprocess.run to raise CalledProcessError on first call (format)
-        with patch('subprocess.run') as mock_run:
+        with patch("subprocess.run") as mock_run:
             mock_run.side_effect = subprocess.CalledProcessError(
-                returncode=1,
-                cmd=['ruff', 'format'],
-                stderr='Formatting error occurred'
+                returncode=1, cmd=["ruff", "format"], stderr="Formatting error occurred"
             )
 
             # Should not raise exception, just log warning
@@ -104,7 +102,7 @@ def test_standard_generator_handles_ruff_not_found():
         )
 
         # Mock subprocess.run to raise FileNotFoundError
-        with patch('subprocess.run') as mock_run:
+        with patch("subprocess.run") as mock_run:
             mock_run.side_effect = FileNotFoundError("ruff: command not found")
 
             # Should not raise exception, just log warning
