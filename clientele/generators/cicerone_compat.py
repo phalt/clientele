@@ -47,6 +47,14 @@ def schema_to_dict(schema) -> dict:
     if hasattr(schema, "all_of") and schema.all_of:
         result["allOf"] = [schema_to_dict(s) for s in schema.all_of]
 
+    # Handle oneOf
+    if hasattr(schema, "one_of") and schema.one_of:
+        result["oneOf"] = [schema_to_dict(s) for s in schema.one_of]
+
+    # Handle anyOf
+    if hasattr(schema, "any_of") and schema.any_of:
+        result["anyOf"] = [schema_to_dict(s) for s in schema.any_of]
+
     # Handle enum - it's in the extra fields
     if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "enum" in schema.__pydantic_extra__:
         result["enum"] = schema.__pydantic_extra__["enum"]
