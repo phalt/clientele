@@ -88,7 +88,7 @@ class StandardGenerator(generators.Generator):
         generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio t' if self.asyncio else ''} --regen t"  # noqa
         content = (
             template.render(
-                api_version=self.spec.info.version,
+                api_version=self.spec.info.version if self.spec.info else "N/A",
                 openapi_version=str(self.spec.version),
                 clientele_version=settings.VERSION,
                 command=generate_command,
