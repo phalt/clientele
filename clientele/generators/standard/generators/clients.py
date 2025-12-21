@@ -5,6 +5,7 @@ import pydantic
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
+from clientele.generators import cicerone_compat
 from clientele.generators.standard import utils, writer
 from clientele.generators.standard.generators import http, schemas
 
@@ -71,11 +72,11 @@ class ClientsGenerator:
             # Convert path_item to the expected structure
             operations_dict = {}
             for method, operation in path_item.operations.items():
-                # Convert operation to dict-like structure
-                operations_dict[method] = self._operation_to_dict(operation)
+                # Convert operation to dict-like structure using centralized compat layer
+                operations_dict[method] = cicerone_compat.operation_to_dict(operation)
             # Add path-level parameters if they exist (might be in extra fields)
             if hasattr(path_item, "parameters") and path_item.parameters:
-                operations_dict["parameters"] = [self._parameter_to_dict(p) for p in path_item.parameters]
+                operations_dict["parameters"] = [cicerone_compat.parameter_to_dict(p) for p in path_item.parameters]
             elif (
                 hasattr(path_item, "__pydantic_extra__")
                 and path_item.__pydantic_extra__
@@ -88,105 +89,6 @@ class ClientsGenerator:
         console.log(f"Generated {self.results['put']} PUT methods...")
         console.log(f"Generated {self.results['patch']} PATCH methods...")
         console.log(f"Generated {self.results['delete']} DELETE methods...")
-
-    def _operation_to_dict(self, operation) -> dict:
-        """Convert a cicerone Operation to dict-like structure."""
-        result = {}
-        if operation.operation_id:
-            result["operationId"] = operation.operation_id
-        if operation.summary:
-            result["summary"] = operation.summary
-        if operation.description:
-            result["description"] = operation.description
-        # deprecated is in the extra fields
-        if (
-            hasattr(operation, "__pydantic_extra__")
-            and operation.__pydantic_extra__
-            and "deprecated" in operation.__pydantic_extra__
-        ):
-            result["deprecated"] = operation.__pydantic_extra__["deprecated"]
-        if operation.parameters:
-            result["parameters"] = [self._parameter_to_dict(p) for p in operation.parameters]
-        # request_body might be in extra fields
-        request_body = getattr(operation, "request_body", None) or (
-            operation.__pydantic_extra__.get("requestBody")
-            if hasattr(operation, "__pydantic_extra__") and operation.__pydantic_extra__
-            else None
-        )
-        if request_body:
-            result["requestBody"] = self._request_body_to_dict(request_body)
-        if operation.responses:
-            result["responses"] = {status: self._response_to_dict(resp) for status, resp in operation.responses.items()}
-        return result
-
-    def _parameter_to_dict(self, param) -> dict:
-        """Convert a cicerone Parameter to dict-like structure."""
-        # If it's already a dict (likely a reference), return it as-is
-        if isinstance(param, dict):
-            return param
-        if hasattr(param, "ref") and param.ref:
-            return {"$ref": param.ref}
-        result = {
-            "name": param.name,
-            "in": param.in_,
-            "required": param.required if hasattr(param, "required") else False,
-        }
-        if hasattr(param, "schema_") and param.schema_:
-            result["schema"] = self._schema_to_dict(param.schema_)
-        return result
-
-    def _request_body_to_dict(self, request_body) -> dict:
-        """Convert a cicerone RequestBody to dict-like structure."""
-        # If it's already a dict, return it as-is
-        if isinstance(request_body, dict):
-            return request_body
-        result = {}
-        if hasattr(request_body, "content") and request_body.content:
-            result["content"] = {}
-            for media_type, media_type_obj in request_body.content.items():
-                result["content"][media_type] = {}
-                if hasattr(media_type_obj, "schema_") and media_type_obj.schema_:
-                    result["content"][media_type]["schema"] = self._schema_to_dict(media_type_obj.schema_)
-        return result
-
-    def _response_to_dict(self, response) -> dict:
-        """Convert a cicerone Response to dict-like structure."""
-        # If it's already a dict, return it as-is
-        if isinstance(response, dict):
-            return response
-        result = {}
-        if hasattr(response, "description") and response.description:
-            result["description"] = response.description
-        if hasattr(response, "content") and response.content:
-            result["content"] = {}
-            for media_type, media_type_obj in response.content.items():
-                result["content"][media_type] = {}
-                if hasattr(media_type_obj, "schema_") and media_type_obj.schema_:
-                    result["content"][media_type]["schema"] = self._schema_to_dict(media_type_obj.schema_)
-        return result
-
-    def _schema_to_dict(self, schema) -> dict:
-        """Convert a cicerone Schema to dict-like structure."""
-        result = {}
-
-        # Handle $ref - it's in the extra fields
-        if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "$ref" in schema.__pydantic_extra__:
-            result["$ref"] = schema.__pydantic_extra__["$ref"]
-            return result
-
-        if hasattr(schema, "type") and schema.type:
-            result["type"] = schema.type
-        if hasattr(schema, "format") and schema.format:
-            result["format"] = schema.format
-        if hasattr(schema, "items") and schema.items:
-            result["items"] = self._schema_to_dict(schema.items)
-        if hasattr(schema, "properties") and schema.properties:
-            result["properties"] = {k: self._schema_to_dict(v) for k, v in schema.properties.items()}
-        if hasattr(schema, "required") and schema.required:
-            result["required"] = schema.required
-        if hasattr(schema, "title") and schema.title:
-            result["title"] = schema.title
-        return result
 
     def generate_parameters(self, parameters: list[dict], additional_parameters: list[dict]) -> ParametersResponse:
         param_keys = []
