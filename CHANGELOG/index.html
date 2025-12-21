@@ -1287,6 +1287,7 @@
 <h1 id="change-log">Change log</h1>
 <h2 id="0110">0.11.0</h2>
 <ul>
+<li>Replaced <code>openapi-core</code> dependency with <code>cicerone==0.3.0</code> for OpenAPI schema parsing and introspection. This change provides faster, more minimal, and fully typed OpenAPI schema handling.</li>
 <li><strong>New</strong>: Support for OpenAPI <code>deprecated</code> field - operations marked as deprecated will include deprecation warnings in generated docstrings.</li>
 <li><strong>New</strong>: Support for OpenAPI <code>description</code> field - operation descriptions are now included in generated function docstrings for better documentation.</li>
 <li>Clientele is 100% typed, including the generated code, and verified using <a href="https://github.com/astral-sh/ty">ty</a> instead of mypy.</li>
