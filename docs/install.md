@@ -14,7 +14,7 @@ pipx install clientele
 uv tool install clientele
 ```
 
-Once installed you can run `clientele version` to make sure you have the latest version:
+Once installed, you can run `clientele version` to make sure you have the latest version:
 
 ```sh
 > clientele version

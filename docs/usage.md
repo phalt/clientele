@@ -21,7 +21,7 @@ Generate a Python HTTP Client from an OpenAPI Schema.
 
 Use the `-u` or `--url` argument.
 
-`-o` or `--output` is the target directory for the generate client.
+`-o` or `--output` is the target directory for the generated client.
 
 ```sh
 clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/
@@ -185,7 +185,7 @@ Validate lets you check if an OpenAPI schema will work with clientele.
 
 Use the `-u` or `--url` argument.
 
-`-o` or `--output` is the target directory for the generate client.
+`-o` or `--output` is the target directory for the generated client.
 
 ```sh
 clientele validate -u http://path.com/to/openapi.json
@@ -203,9 +203,9 @@ clientele validate -f /path/to/openapi.json
 
 The `generate-basic` command can be used to generate a basic file structure for an HTTP client.
 
-It does not required an OpenAPI schema, just a path.
+It does not require an OpenAPI schema, just a path.
 
-This command serves two reasons:
+This command serves two purposes:
 
 1. You may have an HTTP API without an OpenAPI schema and you want to keep a consistent file structure with other Clientele clients.
 2. The generator for this basic client can be extended for your own client in the future, if you choose.
@@ -363,4 +363,4 @@ You can automate regeneration in CI/CD:
     fi
 ```
 
-This ensures your client never drifts from the API schema.
+This keeps your client in sync with the API schema.

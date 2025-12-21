@@ -2,7 +2,7 @@
 
 Clientele fully supports OpenAPI's `$ref` mechanism for reusing schema definitions across your API specification.
 
-This page explains how references work and how what clientele does when generating clients with them.
+This page explains how references work and what Clientele does when generating clients with them.
 
 ## What are `$ref`s?
 
@@ -397,4 +397,4 @@ Clientele handles all forms of `$ref` in OpenAPI schemas:
 | Parameter reference | `parameters.$ref` | ✅ | Included in functions |
 | allOf composition | `allOf[n].$ref` | ✅ | Merged into one schema |
 
-You don't need to do anything special to handle references in your OpenAPI schema - Clientele handles them automatically and generates code that just works, and without loads of duplication!
+You don't need to do anything special to handle references in your OpenAPI schema - Clientele handles them automatically and generates clean, DRY code.

@@ -2,9 +2,9 @@
 
 ## Testing Against Real-World Schemas
 
-Clientele is rigorously tested to ensure it works with real-world OpenAPI schemas.
+We rigorously test Clientele to ensure it works with real-world OpenAPI schemas.
 
-We test against the entire [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) - a massive collection of 4000+ real-world OpenAPI schemas from hundreds of different APIs.
+We test against the entire [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) - a collection of 4000+ real-world OpenAPI schemas from hundreds of different APIs.
 
 This testing happens automatically:
 
@@ -14,7 +14,7 @@ This testing happens automatically:
 
 ### Current results
 
-As of the latest run, Clientele successfully generates clients for 93.86% of schemas in the OpenAPI directory:
+As of our latest run, we successfully generate clients for 93.86% of schemas in the OpenAPI directory:
 
 ```sh
 

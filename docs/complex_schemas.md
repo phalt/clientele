@@ -4,7 +4,7 @@ Clientele fully supports OpenAPI's complex schema combinations including `oneOf`
 
 ## oneOf - Discriminated Unions
 
-The `oneOf` keyword indicates that a value must match exactly one of several schemas. This is perfect for modeling polymorphic types where you know the exact type at runtime.
+The `oneOf` keyword indicates that a value must match exactly one of several schemas. This is useful for modeling polymorphic types where you know the exact type at runtime.
 
 ### Schema Example
 
