@@ -363,4 +363,4 @@ You can automate regeneration in CI/CD:
     fi
 ```
 
-This ensures your client never drifts from the API schema.
+This keeps your client in sync with the API schema.
