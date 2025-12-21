@@ -11,13 +11,13 @@ This guide shows you how to generate a Python client for a FastAPI application u
 
 FastAPI automatically generates an OpenAPI schema for your API. You can access it at:
 
-```
+```sh
 http://your-api-domain/openapi.json
 ```
 
 For example, if your FastAPI app is running locally on port 8000:
 
-```
+```sh
 http://localhost:8000/openapi.json
 ```
 
@@ -112,6 +112,7 @@ FastAPI generates `operationId` values for each endpoint, which Clientele uses t
 By default, FastAPI creates operation IDs like: `{function_name}_{path}_{method}`
 
 For example:
+
 - Function `get_users()` at path `/users` with GET → `get_users_users_get`
 - Function `create_user()` at path `/users` with POST → `create_user_users_post`
 
@@ -134,6 +135,7 @@ def create_user(user: UserCreate):
 ```
 
 This generates:
+
 - `client.list_users()` instead of `client.get_users_users_get()`
 - `client.create_user()` instead of `client.create_user_users_post()`
 
@@ -257,7 +259,7 @@ def get_user(user_id: int):
 ```python
 response = client.get_user_users_user_id_get(user_id=123)
 # response is typed as schemas.User
-print(response.name)  # IDE autocomplete works!
+print(response.name)
 ```
 
 ## Known Limitations
@@ -277,6 +279,11 @@ print(response.name)  # IDE autocomplete works!
 ### File Uploads
 
 File upload endpoints may require manual customization of the generated client code.
+
+### Callbacks and webhooks
+
+Clientele specifically focuses on calling an API and does not handle callbacks or webhooks as
+these are features usually seen in a web server.
 
 ## Best Practices
 

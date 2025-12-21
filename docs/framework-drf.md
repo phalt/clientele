@@ -64,13 +64,13 @@ urlpatterns = [
 
 After configuring drf-spectacular, your OpenAPI schema is available at:
 
-```
+```sh
 http://your-api-domain/api/schema/
 ```
 
 For local development:
 
-```
+```sh
 http://localhost:8000/api/schema/
 ```
 
@@ -175,6 +175,7 @@ class UserViewSet(viewsets.ModelViewSet):
 ```
 
 This generates:
+
 - `client.list_users()` instead of a generic operation ID
 - `client.create_user()` instead of verbose auto-generated names
 - `client.get_user()` for clean, readable function names
@@ -316,6 +317,7 @@ router.register(r'users', UserViewSet)
 ```
 
 This generates endpoints like:
+
 - `GET /users/` → `client.list_users()`
 - `POST /users/` → `client.create_user(data=...)`
 - `GET /users/{id}/` → `client.get_user(id=...)`
