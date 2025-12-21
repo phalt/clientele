@@ -6,6 +6,7 @@ from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from cicerone.spec import schema as cicerone_schema
 
 from clientele import settings
+from clientele.generators import cicerone_compat
 
 # Pre-computed set of Python reserved words for efficient lookup
 RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(keyword.softkwlist))
@@ -184,55 +185,22 @@ def param_ref(ref: str) -> str:
 
 
 def get_param_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, param: dict) -> dict:
+    """Get parameter from reference and convert to dict using centralized compat layer."""
     ref = param.get("$ref", "")
     stripped_name = param_ref(ref)
-    # Get parameter from components and convert to dict-like structure
     param_obj = spec.components.parameters.get(stripped_name)
     if param_obj is None:
         return {}
-    # Convert the Parameter object to a dict-like structure
-    result = {
-        "name": param_obj.name,
-        "in": param_obj.in_,
-        "required": param_obj.required,
-    }
-    if param_obj.schema_:
-        result["schema"] = _schema_to_dict(param_obj.schema_)
-    return result
-
-
-def _schema_to_dict(schema: cicerone_schema.Schema) -> dict:
-    """Convert a cicerone Schema object to a dict-like structure for compatibility."""
-    result = {}
-
-    # Handle $ref - it's in the extra fields
-    if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "$ref" in schema.__pydantic_extra__:
-        result["$ref"] = schema.__pydantic_extra__["$ref"]
-        return result
-
-    if schema.type:
-        result["type"] = schema.type
-    if hasattr(schema, "format") and schema.format:
-        result["format"] = schema.format
-    if schema.items:
-        result["items"] = _schema_to_dict(schema.items)
-    return result
+    return cicerone_compat.parameter_to_dict(param_obj)
 
 
 def get_schema_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, ref: str) -> dict:
+    """Get schema from reference and convert to dict using centralized compat layer."""
     stripped_name = schema_ref(ref)
     schema_obj = spec.components.schemas.get(stripped_name)
     if schema_obj is None:
         return {}
-    # Convert Schema to dict-like structure
-    result = {}
-    if schema_obj.properties:
-        result["properties"] = {k: _schema_to_dict(v) for k, v in schema_obj.properties.items()}
-    if schema_obj.required:
-        result["required"] = schema_obj.required
-    if schema_obj.type:
-        result["type"] = schema_obj.type
-    return result
+    return cicerone_compat.schema_to_dict(schema_obj)
 
 
 def union_for_py_ver(union_items: list) -> str:
