@@ -1,8 +1,9 @@
 import typing
 
-import openapi_core
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
+from clientele.generators import cicerone_compat
 from clientele.generators.standard import utils, writer
 
 console = rich_console.Console()
@@ -13,11 +14,11 @@ class SchemasGenerator:
     Handles all the content generated in the schemas.py file.
     """
 
-    spec: openapi_core.Spec
+    spec: cicerone_openapi_spec.OpenAPISpec
     schemas: dict[str, str]
     output_dir: str
 
-    def __init__(self, spec: openapi_core.Spec, output_dir: str) -> None:
+    def __init__(self, spec: cicerone_openapi_spec.OpenAPISpec, output_dir: str) -> None:
         self.spec = spec
         self.schemas = {}
         self.output_dir = output_dir
@@ -197,14 +198,16 @@ class SchemasGenerator:
         Generates all Pydantic schema classes.
         """
         # Check if the spec has components and schemas
-        if "components" not in self.spec:
+        if not self.spec.components:
             console.log("No components found in spec, skipping schema generation...")
             return
 
-        if "schemas" not in self.spec["components"]:
+        if not self.spec.components.schemas:
             console.log("No schemas found in components, skipping schema generation...")
             return
 
-        for schema_key, schema in self.spec["components"]["schemas"].items():
-            self.make_schema_class(schema_key=schema_key, schema=schema)
+        for schema_key, schema in self.spec.components.schemas.items():
+            # Convert cicerone Schema to dict-like structure
+            schema_dict = cicerone_compat.schema_to_dict(schema)
+            self.make_schema_class(schema_key=schema_key, schema=schema_dict)
         console.log(f"Generated {len(self.schemas.items())} schemas...")

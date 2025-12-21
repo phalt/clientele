@@ -2,9 +2,10 @@ import functools
 import keyword
 import re
 
-import openapi_core
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 
 from clientele import settings
+from clientele.generators import cicerone_compat
 
 # Pre-computed set of Python reserved words for efficient lookup
 RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(keyword.softkwlist))
@@ -211,15 +212,23 @@ def param_ref(ref: str) -> str:
     return ref.replace("#/components/parameters/", "")
 
 
-def get_param_from_ref(spec: openapi_core.Spec, param: dict) -> dict:
+def get_param_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, param: dict) -> dict:
+    """Get parameter from reference and convert to dict using centralized compat layer."""
     ref = param.get("$ref", "")
     stripped_name = param_ref(ref)
-    return spec["components"]["parameters"][stripped_name]
+    param_obj = spec.components.parameters.get(stripped_name)
+    if param_obj is None:
+        return {}
+    return cicerone_compat.parameter_to_dict(param_obj)
 
 
-def get_schema_from_ref(spec: openapi_core.Spec, ref: str) -> dict:
+def get_schema_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, ref: str) -> dict:
+    """Get schema from reference and convert to dict using centralized compat layer."""
     stripped_name = schema_ref(ref)
-    return spec["components"]["schemas"][stripped_name]
+    schema_obj = spec.components.schemas.get(stripped_name)
+    if schema_obj is None:
+        return {}
+    return cicerone_compat.schema_to_dict(schema_obj)
 
 
 def union_for_py_ver(union_items: list) -> str:

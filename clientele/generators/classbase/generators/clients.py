@@ -1,10 +1,11 @@
 import collections
 import typing
 
-import openapi_core
 import pydantic
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
+from clientele.generators import cicerone_compat
 from clientele.generators.classbase import writer
 from clientele.generators.classbase.generators import http, schemas
 from clientele.generators.standard import utils
@@ -35,14 +36,14 @@ class ClientsGenerator:
 
     method_template_map: dict[str, str]
     results: dict[str, int]
-    spec: openapi_core.Spec
+    spec: cicerone_openapi_spec.OpenAPISpec
     output_dir: str
     schemas_generator: schemas.SchemasGenerator
     http_generator: http.HTTPGenerator
 
     def __init__(
         self,
-        spec: openapi_core.Spec,
+        spec: cicerone_openapi_spec.OpenAPISpec,
         output_dir: str,
         schemas_generator: schemas.SchemasGenerator,
         http_generator: http.HTTPGenerator,
@@ -64,12 +65,14 @@ class ClientsGenerator:
 
     def generate_paths(self) -> None:
         # Check if the spec has paths
-        if "paths" not in self.spec:
+        if not self.spec.paths or not self.spec.paths.items:
             console.log("No paths found in spec, skipping client generation...")
             return
 
-        for path in self.spec["paths"].items():
-            self.write_path_to_client(path=path)
+        for path, path_item in self.spec.paths.items.items():
+            # Convert path_item to operations dict using centralized compat layer
+            operations_dict = cicerone_compat.path_item_to_operations_dict(path_item)
+            self.write_path_to_client((path, operations_dict))
         console.log(f"Generated {self.results['get']} GET methods...")
         console.log(f"Generated {self.results['post']} POST methods...")
         console.log(f"Generated {self.results['put']} PUT methods...")
@@ -269,7 +272,7 @@ class ClientsGenerator:
         )
         writer.write_to_client(content=content, output_dir=self.output_dir)
 
-    def write_path_to_client(self, path: dict) -> None:
+    def write_path_to_client(self, path: tuple[str, dict]) -> None:
         url, operations = path
         for method, operation in operations.items():
             if method.lower() in self.method_template_map.keys():
