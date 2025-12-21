@@ -61,6 +61,121 @@ clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
 
     You can copy and paste the command from the `MANIFEST.md` file in your previously-generated client for a quick and easy regeneration.
 
+#### Understanding Regeneration
+
+When you regenerate a client with `--regen t`, Clientele follows these rules:
+
+**Files that WILL be overwritten:**
+- `client.py` - Your API client functions/class
+- `schemas.py` - Pydantic models for request/response data
+- `http.py` - HTTP handling logic
+- `__init__.py` - Package initialization
+- `MANIFEST.md` - Metadata about the generated client
+
+**Files that will NOT be overwritten:**
+- `config.py` - Your custom configuration (API URL, auth tokens, headers)
+
+This design ensures your customizations in `config.py` are preserved while keeping the client code in sync with the latest API schema.
+
+#### The MANIFEST.md File
+
+Every generated client includes a `MANIFEST.md` file that records:
+
+- The exact command used to generate the client
+- The OpenAPI version of the source schema
+- The Clientele version used
+- Generation timestamp
+
+Example `MANIFEST.md`:
+
+```markdown
+# Client Manifest
+
+This client was generated with the following command:
+
+clientele generate -u https://example.com/openapi.json -o my_client/
+
+OPENAPI VERSION: 3.0.2
+CLIENTELE VERSION: 0.10.0
+Generated at: 2024-01-15 10:30:00
+```
+
+You can copy the command directly from this file to regenerate your client.
+
+#### Regeneration Workflow
+
+Here's the recommended workflow for keeping your client in sync:
+
+1. **API Updated**: Your API has new endpoints or changed schemas
+2. **Regenerate**: Run `clientele generate` with `--regen t`
+   ```sh
+   clientele generate -u http://localhost:8000/openapi.json -o my_client/ --regen t
+   ```
+3. **Review Changes**: Use git to see what changed
+   ```sh
+   git diff my_client/
+   ```
+4. **Inspect**: Look at:
+   - New functions in `client.py`
+   - Modified schemas in `schemas.py`
+   - Changes to function signatures
+5. **Test**: Run your test suite to catch breaking changes
+   ```sh
+   pytest tests/
+   ```
+6. **Commit**: Add the changes to git
+   ```sh
+   git add my_client/
+   git commit -m "Regenerate client for API v2.1"
+   ```
+
+#### Handling Breaking Changes
+
+When the API introduces breaking changes, regeneration will reflect them:
+
+- **Removed endpoints** → Functions deleted from `client.py`
+- **Renamed fields** → Schema properties change
+- **New required fields** → Function signatures updated
+- **Changed response types** → Schema unions modified
+
+Your tests should catch these issues. If you need to support multiple API versions, consider:
+- Generating separate clients for each version
+- Using version-specific directories (e.g., `my_client_v1/`, `my_client_v2/`)
+
+#### Regenerating vs. Fresh Generation
+
+**Regenerating** (`--regen t`):
+- Overwrites most files except `config.py`
+- Preserves your configuration
+- Intended for updating an existing client
+
+**Fresh Generation** (without `--regen`):
+- Will fail if the output directory already exists
+- Use for creating a new client from scratch
+
+#### Integration with CI/CD
+
+You can automate regeneration in CI/CD:
+
+```yaml
+# Example GitHub Actions workflow
+- name: Regenerate API client
+  run: |
+    clientele generate \
+      -u http://api:8000/openapi.json \
+      -o clients/my_api/ \
+      --regen t
+    
+    # Check if client changed
+    if ! git diff --quiet clients/my_api/; then
+      echo "API client changed - review required"
+      git diff clients/my_api/
+      exit 1
+    fi
+```
+
+This ensures your client never drifts from the API schema.
+
 ## `generate-class`
 
 Generate a class-based Python HTTP Client from an OpenAPI Schema. This generator creates a `Client` class with methods for each API endpoint.
