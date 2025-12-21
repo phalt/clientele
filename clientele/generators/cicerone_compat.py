@@ -38,42 +38,37 @@ def schema_to_dict(schema) -> dict:
 
     result = {}
 
-    # Handle $ref - it's in the extra fields
-    if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "$ref" in schema.__pydantic_extra__:
-        result["$ref"] = schema.__pydantic_extra__["$ref"]
-        return result  # When $ref is present, return early as other fields are not relevant
+    # Helper to get pydantic extra field
+    def get_extra(key: str):
+        return getattr(schema, "__pydantic_extra__", {}).get(key)
+
+    # Helper to get attribute if it exists and has a value
+    def add_if_present(attr: str, key: str = None, transform=None):
+        key = key or attr
+        value = getattr(schema, attr, None)
+        if value:
+            result[key] = transform(value) if transform else value
+
+    # Handle $ref - it's in the extra fields, return early if present
+    if ref := get_extra("$ref"):
+        return {"$ref": ref}
 
     # Handle allOf
-    if hasattr(schema, "all_of") and schema.all_of:
-        result["allOf"] = [schema_to_dict(s) for s in schema.all_of]
+    add_if_present("all_of", "allOf", lambda v: [schema_to_dict(s) for s in v])
 
     # Handle enum - it's in the extra fields
-    if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "enum" in schema.__pydantic_extra__:
-        result["enum"] = schema.__pydantic_extra__["enum"]
+    if enum := get_extra("enum"):
+        result["enum"] = enum
 
     # Handle properties
-    if hasattr(schema, "properties") and schema.properties:
-        result["properties"] = {k: schema_to_dict(v) for k, v in schema.properties.items()}
+    add_if_present("properties", transform=lambda v: {k: schema_to_dict(s) for k, s in v.items()})
 
-    # Handle required
-    if hasattr(schema, "required") and schema.required:
-        result["required"] = schema.required
-
-    # Handle type
-    if hasattr(schema, "type") and schema.type:
-        result["type"] = schema.type
-
-    # Handle format
-    if hasattr(schema, "format") and schema.format:
-        result["format"] = schema.format
+    # Handle simple attributes
+    for attr in ("required", "type", "format", "title"):
+        add_if_present(attr)
 
     # Handle items (for arrays)
-    if hasattr(schema, "items") and schema.items:
-        result["items"] = schema_to_dict(schema.items)
-
-    # Handle title
-    if hasattr(schema, "title") and schema.title:
-        result["title"] = schema.title
+    add_if_present("items", transform=schema_to_dict)
 
     return result
 

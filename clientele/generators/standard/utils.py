@@ -94,40 +94,30 @@ def get_type(t):
     t_format = t.get("format")
     t_nullable = t.get("nullable", False)
 
-    # Handle oneOf - creates a union type
-    if one_of := t.get("oneOf"):
-        union_types = [get_type(schema) for schema in one_of]
-        result = union_for_py_ver(union_types)
-        # Apply nullable wrapper if needed
-        if t_nullable:
-            return f"typing.Optional[{result}]"
-        return result
+    # Helper to wrap type in Optional if nullable
+    def wrap_nullable(type_str: str) -> str:
+        return f"typing.Optional[{type_str}]" if t_nullable else type_str
 
-    # Handle anyOf - creates a union type
-    if any_of := t.get("anyOf"):
-        union_types = [get_type(schema) for schema in any_of]
-        result = union_for_py_ver(union_types)
-        # Apply nullable wrapper if needed
-        if t_nullable:
-            return f"typing.Optional[{result}]"
-        return result
+    # Handle oneOf/anyOf - creates a union type
+    for union_key in ("oneOf", "anyOf"):
+        if union_schemas := t.get(union_key):
+            union_types = [get_type(schema) for schema in union_schemas]
+            return wrap_nullable(union_for_py_ver(union_types))
+
+    # Type mapping for basic types
+    TYPE_MAP = {
+        DataType.STRING: "str",
+        DataType.INTEGER: "int",
+        DataType.BOOLEAN: "bool",
+        DataType.OBJECT: "dict[str, typing.Any]",
+    }
 
     # Handle regular types
     base_type = None
-    if t_type == DataType.STRING:
-        base_type = "str"
-    elif t_type == DataType.INTEGER:
-        base_type = "int"
+    if t_type in TYPE_MAP:
+        base_type = TYPE_MAP[t_type]
     elif t_type == DataType.NUMBER:
-        # Check formatting for a decimal type
-        if t_format == "decimal":
-            base_type = "decimal.Decimal"
-        else:
-            base_type = "float"
-    elif t_type == DataType.BOOLEAN:
-        base_type = "bool"
-    elif t_type == DataType.OBJECT:
-        base_type = "dict[str, typing.Any]"
+        base_type = "decimal.Decimal" if t_format == "decimal" else "float"
     elif t_type == DataType.ARRAY:
         inner_class = get_type(t.get("items"))
         base_type = f"list[{inner_class}]"
@@ -146,11 +136,7 @@ def get_type(t):
         # Note: enums have type {'type': '"EXAMPLE"'} so fall through here
         base_type = t_type
 
-    # Apply nullable wrapper if the type is nullable
-    if base_type and t_nullable:
-        return f"typing.Optional[{base_type}]"
-
-    return base_type if base_type else "typing.Any"
+    return wrap_nullable(base_type if base_type else "typing.Any")
 
 
 def create_query_args(query_args: list[str]) -> str:
