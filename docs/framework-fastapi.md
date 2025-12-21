@@ -280,10 +280,9 @@ print(response.name)
 
 File upload endpoints may require manual customization of the generated client code.
 
-### Callbacks and webhooks
+### Callbacks and Webhooks
 
-Clientele specifically focuses on calling an API and does not handle callbacks or webhooks as
-these are features usually seen in a web server.
+Clientele specifically focuses on calling an API and doesn't handle callbacks or webhooks - these are features usually seen in a web server.
 
 ## Best Practices
 

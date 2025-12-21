@@ -66,9 +66,7 @@ clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/exa
 
 ## Generated code
 
-The generated code is designed by python developers, for python developers.
-
-It uses modern tooling and has a great developer experience.
+The generated code uses modern tooling and has a great developer experience.
 
 ### Function-based client
 
@@ -139,7 +137,7 @@ Any framework or tool that generates standard-compliant OpenAPI schemas will wor
 
 ### Verified Compatibility
 
-Clientele is tested against 4000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) to ensure broad compatibility. As of the latest run, Clientele successfully generates clients for **93.86%** of schemas in the OpenAPI directory.
+We test Clientele against 4000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory). As of our latest run, we successfully generate clients for **93.86%** of schemas in the directory.
 
 We specifically test and support:
 
@@ -166,11 +164,11 @@ We specifically test and support:
 
 ## Why not use an LLM to do this?
 
-- Clientele is deterministic. The output will always be identical. No hallucinations here!
+- Clientele is deterministic - the same input always produces the same output. No hallucinations.
 - Clientele is designed by Python developers, for Python developers.
-- Clientele is a tiny application,
-- It is not carbon intensive for the problem it is solving.
-- An LLM's potential compute is far too wasteful to use for this problem.
+- It's a tiny, focused tool that does one thing well.
+- It's not carbon intensive for the problem it's solving.
+- LLM compute would be wasteful overkill for this task.
 
 ## Getting Started
 

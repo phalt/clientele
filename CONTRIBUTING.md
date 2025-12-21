@@ -82,7 +82,7 @@ This command clones the openapi-directory, generates test clients for all schema
 
 ### Preparing changes for review
 
-Once you have made changes, here is a good check list to run through to get it published for review:
+Once you've made changes, here's a good checklist to run through before publishing for review:
 
 Regenerate the test clients to see what has changed, and if tests pass:
 
@@ -91,7 +91,7 @@ make generate-test-clients
 make test
 ```
 
-Check your `git diff` to see if anything drastic has changed. If changes happen that you did not expect, something has gone wrong. We want to make sure the clients do not change drastically when adding new features unless it is intended.
+Check your `git diff` to see if anything drastic has changed. If unexpected changes appear, something has gone wrong. We want to make sure the clients don't change drastically when adding new features unless it's intended.
 
 Format and lint the code:
 
@@ -111,6 +111,6 @@ Please push your changes up to a feature branch and make a new [pull request](ht
 
 Please add a description to the PR and some information about why the change is being made.
 
-After a review you might need to make more changes.
+After a review, you might need to make more changes.
 
 Once accepted, a core contributor will merge your changes!
