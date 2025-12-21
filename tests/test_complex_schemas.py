@@ -5,6 +5,8 @@ This test module validates that clientele correctly handles oneOf, anyOf,
 and nullable schema constructs with proper Python typing.
 """
 
+import sys
+
 from clientele.generators.classbase.generator import ClassbaseGenerator
 from clientele.generators.standard.generator import StandardGenerator
 from tests.generators.integration_utils import get_spec_path, load_spec
@@ -187,23 +189,21 @@ class TestRuntimeBehavior:
         )
         generator.generate()
 
-        # Import should not raise
-        import importlib.util
-        import sys
-        import typing
-
-        spec_module = importlib.util.spec_from_file_location("schemas", tmp_path / "schemas.py")
-        if spec_module and spec_module.loader:
-            schemas = importlib.util.module_from_spec(spec_module)
-            schemas.typing = typing
-            sys.modules["test_complex_schemas"] = schemas
-            spec_module.loader.exec_module(schemas)
+        # Add tmp_path to sys.path and import normally
+        sys.path.insert(0, str(tmp_path))
+        try:
+            import schemas
 
             # Should be able to access classes
             assert hasattr(schemas, "Cat")
             assert hasattr(schemas, "Dog")
             assert hasattr(schemas, "FlexibleIdResponse")
             assert hasattr(schemas, "NullableFieldsResponse")
+        finally:
+            # Clean up sys.path
+            sys.path.remove(str(tmp_path))
+            if "schemas" in sys.modules:
+                del sys.modules["schemas"]
 
     def test_create_instances_with_union_types(self, tmp_path):
         """Test creating instances with union types."""
@@ -219,17 +219,10 @@ class TestRuntimeBehavior:
         )
         generator.generate()
 
-        # Import the generated module
-        import importlib.util
-        import sys
-        import typing
-
-        spec_module = importlib.util.spec_from_file_location("schemas", tmp_path / "schemas.py")
-        if spec_module and spec_module.loader:
-            schemas = importlib.util.module_from_spec(spec_module)
-            schemas.typing = typing
-            sys.modules["test_complex_schemas_instances"] = schemas
-            spec_module.loader.exec_module(schemas)
+        # Add tmp_path to sys.path and import normally
+        sys.path.insert(0, str(tmp_path))
+        try:
+            import schemas
 
             # Create instances with different union types
             cat = schemas.Cat(type_="cat", meow_volume=10)
@@ -243,6 +236,11 @@ class TestRuntimeBehavior:
             # FlexibleIdResponse with int ID
             resp2 = schemas.FlexibleIdResponse(id=12345, data="test")
             assert resp2.id == 12345
+        finally:
+            # Clean up sys.path
+            sys.path.remove(str(tmp_path))
+            if "schemas" in sys.modules:
+                del sys.modules["schemas"]
 
     def test_nullable_field_instances(self, tmp_path):
         """Test creating instances with nullable fields."""
@@ -258,19 +256,10 @@ class TestRuntimeBehavior:
         )
         generator.generate()
 
-        # Import the generated module
-        import importlib.util
-        import sys
-        import typing
-
-        # Make sure typing is available for the module
-        spec_module = importlib.util.spec_from_file_location("schemas", tmp_path / "schemas.py")
-        if spec_module and spec_module.loader:
-            schemas = importlib.util.module_from_spec(spec_module)
-            # Inject typing into the module's namespace before executing
-            schemas.typing = typing
-            sys.modules["test_complex_schemas_nullable"] = schemas
-            spec_module.loader.exec_module(schemas)
+        # Add tmp_path to sys.path and import normally
+        sys.path.insert(0, str(tmp_path))
+        try:
+            import schemas
 
             # Create instance with nullable fields
             resp = schemas.NullableFieldsResponse(
@@ -283,6 +272,11 @@ class TestRuntimeBehavior:
             # Create instance omitting optional nullable fields
             resp2 = schemas.NullableFieldsResponse(required_field="test")
             assert resp2.required_field == "test"
+        finally:
+            # Clean up sys.path
+            sys.path.remove(str(tmp_path))
+            if "schemas" in sys.modules:
+                del sys.modules["schemas"]
 
 
 class TestEdgeCases:
