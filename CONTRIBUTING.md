@@ -72,6 +72,14 @@ To make sure you have things set up correctly, please run the tests:
 make test
 ```
 
+You can also test clientele against all schemas from the APIs-guru/openapi-directory repository (4000+ schemas):
+
+```sh
+make test-openapi-directory
+```
+
+This command clones the openapi-directory, generates test clients for all schemas, and reports results. This is useful for ensuring clientele works with real-world OpenAPI schemas.
+
 ### Preparing changes for review
 
 Once you have made changes, here is a good check list to run through to get it published for review:
