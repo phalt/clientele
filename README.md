@@ -139,6 +139,8 @@ Any framework or tool that generates standard-compliant OpenAPI schemas will wor
 
 ### Verified Compatibility
 
+Clientele is tested against 4000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) to ensure broad compatibility.
+
 We actively test and support:
 
 - **FastAPI** - 100% compatibility with FastAPI's built-in OpenAPI schema generation

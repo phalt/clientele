@@ -1,12 +1,12 @@
 # Contributing
 
-First things first: thank you for contributing! This project will be succesful thanks to everyone who contributes, and we're happy to have you.
+First things first: thank you for contributing! This project will be successful thanks to everyone who contributes, and we're happy to have you.
 
 ## Bug or issue?
 
 To raise a bug or issue please use [our GitHub](https://github.com/phalt/clientele/issues).
 
-Please check the issue has not be raised before by using the search feature.
+Please check the issue has not been raised before by using the search feature.
 
 When submitting an issue or bug, please make sure you provide thorough detail on:
 
@@ -71,6 +71,14 @@ To make sure you have things set up correctly, please run the tests:
 ```sh
 make test
 ```
+
+You can also test clientele against all schemas from the APIs-guru/openapi-directory repository (4000+ schemas):
+
+```sh
+make test-openapi-directory
+```
+
+This command clones the openapi-directory, generates test clients for all schemas, and reports results. This is useful for ensuring clientele works with real-world OpenAPI schemas.
 
 ### Preparing changes for review
 
