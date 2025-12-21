@@ -749,7 +749,7 @@
 
 
 <h1 id="testing">Testing</h1>
-<p>Clientele is designed for easy testing, and our <a href="https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py">own test suite</a> is a great example of how easily you can write mock tests for your API Client.</p>
+<p>Clientele is designed for easy testing. Our <a href="https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py">own test suite</a> shows how you can write mock tests for your API client.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">httpx</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">respx</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockRouter</span>
@@ -775,7 +775,7 @@
     <span class="n">call</span> <span class="o">=</span> <span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">call</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="n">mock_path</span>
 </code></pre></div>
-<p>We recommend you install <a href="https://lundberg.github.io/respx/">respx</a> for writing your tests.</p>
+<p>We recommend installing <a href="https://lundberg.github.io/respx/">respx</a> for writing your tests.</p>
 
 
 

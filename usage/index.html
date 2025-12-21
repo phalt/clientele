@@ -1266,7 +1266,7 @@
 <p>Generate a Python HTTP Client from an OpenAPI Schema.</p>
 <h3 id="from-a-url">From a URL</h3>
 <p>Use the <code>-u</code> or <code>--url</code> argument.</p>
-<p><code>-o</code> or <code>--output</code> is the target directory for the generate client.</p>
+<p><code>-o</code> or <code>--output</code> is the target directory for the generated client.</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
 <div class="admonition note">
@@ -1391,7 +1391,7 @@
 </div>
 <h3 id="from-a-url_1">From a URL</h3>
 <p>Use the <code>-u</code> or <code>--url</code> argument.</p>
-<p><code>-o</code> or <code>--output</code> is the target directory for the generate client.</p>
+<p><code>-o</code> or <code>--output</code> is the target directory for the generated client.</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>validate<span class="w"> </span>-u<span class="w"> </span>http://path.com/to/openapi.json
 </code></pre></div>
 <h3 id="from-a-file-path">From a file path</h3>
@@ -1400,8 +1400,8 @@
 </code></pre></div>
 <h2 id="generate-basic">generate-basic</h2>
 <p>The <code>generate-basic</code> command can be used to generate a basic file structure for an HTTP client.</p>
-<p>It does not required an OpenAPI schema, just a path.</p>
-<p>This command serves two reasons:</p>
+<p>It does not require an OpenAPI schema, just a path.</p>
+<p>This command serves two purposes:</p>
 <ol>
 <li>You may have an HTTP API without an OpenAPI schema and you want to keep a consistent file structure with other Clientele clients.</li>
 <li>The generator for this basic client can be extended for your own client in the future, if you choose.</li>
@@ -1525,7 +1525,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="w">      </span><span class="no">exit 1</span>
 <span class="w">    </span><span class="no">fi</span>
 </code></pre></div>
-<p>This ensures your client never drifts from the API schema.</p>
+<p>This keeps your client in sync with the API schema.</p>
 
 
 

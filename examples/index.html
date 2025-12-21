@@ -1064,8 +1064,7 @@
 <span class="o">&gt;&gt;&gt;</span> <span class="n">SimpleResponse</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Hello, clientele&#39;</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="post-and-put-functions">POST and PUT functions</h3>
-<p>A more complex example is shown just below. </p>
-<p>This is for an HTTP POST method, and it requires an input property called <code>data</code> that is an instance of a schema, and returns one of many potential responses. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function alongside the <code>data</code> argument.</p>
+<p>Here's a more complex example for an HTTP POST method. It requires an input property called <code>data</code> that is an instance of a schema, and returns one of many potential responses. If the endpoint has URL or query parameters, they'll appear as input arguments to the function alongside the <code>data</code> argument.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">request_data_request_data_post</span><span class="p">(</span>
     <span class="n">data</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataRequest</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataResponse</span> <span class="o">|</span> <span class="n">schemas</span><span class="o">.</span><span class="n">HTTPValidationError</span><span class="p">:</span>
@@ -1106,8 +1105,8 @@ This works beautifully with the new <a href="https://peps.python.org/pep-0636/">
         <span class="o">...</span>
 </code></pre></div>
 <h3 id="api-exceptions">API Exceptions</h3>
-<p>Clientele keeps a mapping of the paths and their potential response codes. When it gets a response code that fits into the map, it generates the pydantic object associated to it.</p>
-<p>If the HTTP response code is an unintended one, it will not match a return type. In this case, the function will raise an <code>http.APIException</code>.</p>
+<p>Clientele keeps a mapping of the paths and their potential response codes. When it gets a response code that fits into the map, it generates the Pydantic object associated with it.</p>
+<p>If the HTTP response code is unexpected, it won't match a return type. In this case, the function will raise an <code>http.APIException</code>.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">http</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">good_response</span> <span class="o">=</span> <span class="n">my_client</span><span class="o">.</span><span class="n">get_my_thing</span><span class="p">()</span>
@@ -1115,9 +1114,9 @@ This works beautifully with the new <a href="https://peps.python.org/pep-0636/">
     <span class="c1"># The API got a response code we didn&#39;t expect</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
 </code></pre></div>
-<p>The <code>response</code> object will be attached to this exception class for your own debugging.</p>
+<p>The <code>response</code> object is attached to this exception class for debugging.</p>
 <h2 id="schemas">Schemas</h2>
-<p>The <code>schemas.py</code> file has all the possible schemas, request and response, and even Enums, for the API. These are taken from OpenAPI's  schemas objects and turned into Python classes. They are all subclassed from pydantic's <code>BaseModel</code>.</p>
+<p>The <code>schemas.py</code> file has all the possible schemas - request, response, and even Enums - for the API. These are taken from OpenAPI's schema objects and turned into Python classes. They all subclass from Pydantic's <code>BaseModel</code>.</p>
 <p>Here are a few examples:</p>
 <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">my_client/schemas.py</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
 <span class="normal"> 2</span>
@@ -1154,10 +1153,9 @@ This works beautifully with the new <a href="https://peps.python.org/pep-0636/">
     <span class="n">TWO</span> <span class="o">=</span> <span class="s2">&quot;TWO&quot;</span>
 </code></pre></div></td></tr></table></div>
 <h2 id="configuration">Configuration</h2>
-<p>One of the problems with auto-generated clients is that you often need to configure them, and
-if you try and regenerate the client at some point in the future then your configuration gets wiped clean and you have to do it all over again.</p>
-<p>Clientele solves this problem by providing an <em>entry point</em> for configuration that will never be overwritten - <code>config.py</code>.</p>
-<p>When you first generate the project, you will see a file called <code>config.py</code> and it will offer configuration functions a bit like this:</p>
+<p>One of the problems with auto-generated clients is that you often need to configure them, and if you try to regenerate the client later, your configuration gets wiped clean and you have to do it all over again.</p>
+<p>Clientele solves this by providing an <em>entry point</em> for configuration that will never be overwritten: <code>config.py</code>.</p>
+<p>When you first generate the project, you'll see a file called <code>config.py</code> with configuration functions like this:</p>
 <div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">This file will never be updated on subsequent clientele runs.</span>
 <span class="sd">Use it as a space to store configuration and constants.</span>
@@ -1210,12 +1208,12 @@ make this work during the generation. For example:</p>
 <p>If you want to pass specific headers with all requests made by the client, you can configure the <code>additional_headers</code> function in <code>config.py</code> to do this.</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">additional_headers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify this function ot provide additional headers to all</span>
+<span class="sd">    Modify this function to provide additional headers to all</span>
 <span class="sd">    HTTP requests made by this client.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{}</span>
 </code></pre></div>
-<p>Please note that if you are using this with authentication headers, then authentication headers <strong>will overwrite these defaults</strong> if they keys match.</p>
+<p>Note that if you're using authentication headers, the authentication headers <strong>will overwrite these defaults</strong> if the keys match.</p>
 
 
 

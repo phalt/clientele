@@ -1206,8 +1206,7 @@
 clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>api_client/
 </code></pre></div>
 <h2 id="generated-code">Generated code</h2>
-<p>The generated code is designed by python developers, for python developers.</p>
-<p>It uses modern tooling and has a great developer experience.</p>
+<p>The generated code uses modern tooling and has a great developer experience.</p>
 <h3 id="function-based-client">Function-based client</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
 
@@ -1261,7 +1260,7 @@ clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="
 <p>Clientele works by consuming OpenAPI 3.0+ schemas. </p>
 <p>Any framework or tool that generates standard-compliant OpenAPI schemas will work with Clientele.</p>
 <h3 id="verified-compatibility">Verified Compatibility</h3>
-<p>Clientele is tested against 4000+ real-world OpenAPI schemas from the <a href="https://github.com/APIs-guru/openapi-directory">APIs.guru OpenAPI Directory</a> to ensure broad compatibility. As of the latest run, Clientele successfully generates clients for <strong>93.86%</strong> of schemas in the OpenAPI directory.</p>
+<p>We test Clientele against 4000+ real-world OpenAPI schemas from the <a href="https://github.com/APIs-guru/openapi-directory">APIs.guru OpenAPI Directory</a>. As of our latest run, we successfully generate clients for <strong>93.86%</strong> of schemas in the directory.</p>
 <p>We specifically test and support:</p>
 <ul>
 <li><strong>FastAPI</strong> - 100% compatibility with FastAPI's built-in OpenAPI schema generation</li>
@@ -1286,11 +1285,11 @@ clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="
 </ul>
 <h2 id="why-not-use-an-llm-to-do-this">Why not use an LLM to do this?</h2>
 <ul>
-<li>Clientele is deterministic. The output will always be identical. No hallucinations here!</li>
+<li>Clientele is deterministic - the same input always produces the same output. No hallucinations.</li>
 <li>Clientele is designed by Python developers, for Python developers.</li>
-<li>Clientele is a tiny application,</li>
-<li>It is not carbon intensive for the problem it is solving.</li>
-<li>An LLM's potential compute is far too wasteful to use for this problem.</li>
+<li>It's a tiny, focused tool that does one thing well.</li>
+<li>It's not carbon intensive for the problem it's solving.</li>
+<li>LLM compute would be wasteful overkill for this task.</li>
 </ul>
 <h2 id="getting-started">Getting Started</h2>
 <p>👉 See our <a href="https://phalt.github.io/clientele/">framework-specific guides</a> for FastAPI, Django REST Framework, and Django Ninja</p>
