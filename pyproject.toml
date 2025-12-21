@@ -1,7 +1,7 @@
 [project]
 name = "clientele"
 version = "0.10.0"
-description = "Generate loveable Python HTTP API Clients"
+description = "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"
 authors = [{ name = "Paul Hallett", email = "paulandrewhallett@gmail.com" }]
 license = { text = "MIT" }
 readme = "README.md"
@@ -61,10 +61,7 @@ select = [
 ]
 
 [tool.coverage.run]
-omit = [
-    "*/templates/*.jinja2",
-    "clientele/generators/*/templates/*.jinja2",
-]
+omit = ["*/templates/*.jinja2", "clientele/generators/*/templates/*.jinja2"]
 
 [tool.coverage.report]
 exclude_lines = [
@@ -76,4 +73,3 @@ exclude_lines = [
     "if TYPE_CHECKING:",
     "@abstractmethod",
 ]
-

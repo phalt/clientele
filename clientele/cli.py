@@ -54,7 +54,7 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
 @click.group()
 def cli_group():
     """
-    Clientele:  Generate loveable Python HTTP API Clients
+    Clientele:  The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja
     https://github.com/phalt/clientele
     """
 
