@@ -44,7 +44,7 @@ class HTTPValidationError(pydantic.BaseModel):
 
 
 class OptionalParametersResponse(pydantic.BaseModel):
-    optional_parameter: typing.Optional[str]
+    optional_parameter: typing.Optional[str] = None
     required_parameter: str
 
 
@@ -83,7 +83,7 @@ class SimpleResponse(pydantic.BaseModel):
 
 
 class ValidationError(pydantic.BaseModel):
-    loc: list[str | int]
+    loc: list[typing.Any]
     msg: str
     type_: str
 
