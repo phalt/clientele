@@ -46,23 +46,23 @@ But what is it exactly that we aimed to do with Clientele, why is this the OpenA
 
 ### Strongly-typed inputs and outputs
 
-OpenAPI prides itself on being able to describe the input and output objects in it's schema.
+OpenAPI prides itself on being able to describe the input and output objects in its schema.
 
 This means you can build strongly-typed interfaces to the API. This helps to solve some common niggles when using an API - such as casting a value to a string when it should be an integer.
 
 With Clientele, we opted to use [Pydantic](https://docs.pydantic.dev/latest/) to build the models from the OpenAPI schema.
 
-Pydantic doesn't only describe the shape of an object, it also validates the attributes as well. If an API sends back the wrong attributes at run time, Pydantic will error and provide a detail description about what went wrong.
+Pydantic doesn't only describe the shape of an object, it also validates the attributes. If an API sends back the wrong attributes at runtime, Pydantic will error and provide a detailed description of what went wrong.
 
 ### Idiomatic Python
 
 A lot of the client generators we tested produced a lot of poor code.
 
-It was clear in a few cases that the client generator was built without understanding or knowledge of good [python conventions](https://realpython.com/lessons/zen-of-python/).
+It was clear in a few cases that the client generator was built without understanding or knowledge of good [Python conventions](https://realpython.com/lessons/zen-of-python/).
 
-In more than one case we also discovered the client generator would work by reading a file at run time. This is a very cool piece of engineering, but it is impractical to use. When you develop with these clients, the available functions and objects don't exist and you can't use an IDE's auto-complete feature.
+We also discovered more than one client generator that would work by reading a file at runtime. This is cool engineering, but it's impractical to use. When you develop with these clients, the available functions and objects don't exist and you can't use an IDE's autocomplete feature.
 
-Clientele set out to be as pythonic as possible. We use modern tools,  idiomatic conventions, and provide some helpful bonuses like [Black](https://github.com/psf/black/) auto-formatting.
+Clientele set out to be as pythonic as possible. We use modern tools, idiomatic conventions, and provide some helpful bonuses like [Black](https://github.com/psf/black/) auto-formatting.
 
 ### Easy to understand
 
@@ -70,7 +70,7 @@ Eventually a developer will need to do some debugging, and sometimes they'll nee
 
 A lot of the other client generators make obscure or obtuse code that is hard to pick apart and debug.
 
-Now, there is a suggestion that developers shouldn't _have to_ look at this, and that is fair. But the reality doesn't match that expectation. Personally; we like to know what generated code is doing. We want to trust that it will work, and that we can adapt around it if needs be. An interesting quirk of any code generator is you can't always inspect the source when evaluating to use it. Any other tool - you'd just go to GitHub and have a read around, but you can't with code generators.
+Now, there's a suggestion that developers shouldn't _have to_ look at this, and that's fair. But the reality doesn't match that expectation. Personally, we like to know what generated code is doing. We want to trust that it will work, and that we can adapt around it if needed. An interesting quirk of any code generator is you can't always inspect the source when evaluating whether to use it. Any other tool - you'd just go to GitHub and have a read around, but you can't with code generators.
 
 So the code that is generated needs to be easy to understand.
 

@@ -1,6 +1,6 @@
 # Testing
 
-Clientele is designed for easy testing, and our [own test suite](https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py) is a great example of how easily you can write mock tests for your API Client.
+Clientele is designed for easy testing. Our [own test suite](https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py) shows how you can write mock tests for your API client.
 
 ```python
 import pytest
@@ -29,4 +29,4 @@ def test_simple_request_simple_request_get(respx_mock: MockRouter):
     assert call.request.url == BASE_URL + mock_path
 ```
 
-We recommend you install [respx](https://lundberg.github.io/respx/) for writing your tests.
+We recommend installing [respx](https://lundberg.github.io/respx/) for writing your tests.
