@@ -144,7 +144,7 @@ def main() -> int:
     parser.add_argument(
         "--repo-dir",
         type=pathlib.Path,
-        default=pathlib.Path("/tmp/openapi-directory-test"),
+        default=pathlib.Path(tempfile.gettempdir()) / "openapi-directory-test",
         help="Directory to clone the repository into",
     )
     parser.add_argument("--limit", type=int, help="Limit number of schemas to test (for quick testing)")
