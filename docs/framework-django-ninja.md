@@ -125,7 +125,7 @@ async def create_user():
 
 ## Working with operation_id
 
-Django Ninja allows you to customize operation IDs for cleaner function names.
+You can customize operation IDs in Django Ninja for cleaner function names.
 
 ### Default Operation ID
 

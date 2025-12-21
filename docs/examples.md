@@ -126,9 +126,9 @@ match response:
 
 ### API Exceptions
 
-Clientele keeps a mapping of the paths and their potential response codes. When it gets a response code that fits into the map, it generates the pydantic object associated to it.
+Clientele keeps a mapping of the paths and their potential response codes. When it gets a response code that fits into the map, it generates the Pydantic object associated with it.
 
-If the HTTP response code is an unintended one, it will not match a return type. In this case, the function will raise an `http.APIException`.
+If the HTTP response code is unexpected, it won't match a return type. In this case, the function will raise an `http.APIException`.
 
 ```py
 from my_client import client, http
@@ -139,11 +139,11 @@ except http.APIException as e:
     print(e.response.status_code)
 ```
 
-The `response` object will be attached to this exception class for your own debugging.
+The `response` object is attached to this exception class for debugging.
 
 ## Schemas
 
-The `schemas.py` file has all the possible schemas, request and response, and even Enums, for the API. These are taken from OpenAPI's  schemas objects and turned into Python classes. They are all subclassed from pydantic's `BaseModel`.
+The `schemas.py` file has all the possible schemas - request, response, and even Enums - for the API. These are taken from OpenAPI's schema objects and turned into Python classes. They all subclass from Pydantic's `BaseModel`.
 
 Here are a few examples:
 
