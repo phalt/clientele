@@ -2,7 +2,7 @@
 
 Clientele fully supports OpenAPI's `$ref` mechanism for reusing schema definitions across your API specification.
 
-This page explains how references work and how what clientele does when generating clients with them.
+This page explains how references work and what Clientele does when generating clients with them.
 
 ## What are `$ref`s?
 
