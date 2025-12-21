@@ -17,6 +17,7 @@ import tempfile
 from typing import List, Tuple
 
 from cicerone import parse as cicerone_parse
+
 from clientele.generators.standard.generator import StandardGenerator
 
 
@@ -58,11 +59,11 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
     try:
         # Parse the spec first
         spec = cicerone_parse.parse_spec_from_file(schema_path)
-        
+
         # Basic validation - ensure we got a spec with some content
         if spec is None:
             return "failed", "Parsed spec is None", None
-        
+
         # Check if this is a Swagger 2.x file (even if cicerone auto-converts it)
         # Cicerone preserves the original format in spec.raw
         if "swagger" in spec.raw:
@@ -73,34 +74,29 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
                     return "skipped", f"Swagger {swagger_version} (not supported, clientele requires OpenAPI 3.x)", None
             except (IndexError, ValueError):
                 pass  # If we can't parse version, continue with OpenAPI check
-        
+
         # Check OpenAPI version from parsed spec
         version_parts = str(spec.version).split(".")
         if not version_parts or not version_parts[0]:
             return "failed", f"Invalid OpenAPI version format: {spec.version}", None
-        
+
         try:
             major = int(version_parts[0])
         except (ValueError, TypeError):
             return "failed", f"Invalid OpenAPI version format: {spec.version}", None
-            
+
         # Clientele requires OpenAPI 3.x
         if major < 3:
             return "skipped", f"OpenAPI {spec.version} (clientele requires 3.x)", None
-        
+
         # Try to generate a client in a temporary directory
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = pathlib.Path(tmpdir) / "client"
             generator = StandardGenerator(
-                spec=spec, 
-                asyncio=False, 
-                regen=False, 
-                output_dir=str(output_dir),
-                url=None,
-                file=str(schema_path)
+                spec=spec, asyncio=False, regen=False, output_dir=str(output_dir), url=None, file=str(schema_path)
             )
             generator.generate()
-            
+
         return "success", "", None
     except Exception as e:
         return "failed", f"{type(e).__name__}: {str(e)}", e
@@ -121,7 +117,10 @@ def test_all_schemas(
 
     for i, schema_path in enumerate(schema_files, 1):
         if verbose or i % 100 == 0:
-            print(f"Progress: {i}/{len(schema_files)} ({successes} successful, {len(skipped)} skipped, {len(failures)} failed)")
+            print(
+                f"Progress: {i}/{len(schema_files)} ({successes} successful, "
+                f"{len(skipped)} skipped, {len(failures)} failed)"
+            )
 
         status, error, exception = test_schema_file(schema_path)
         if status == "success":
@@ -201,11 +200,13 @@ def main() -> int:
         print(f"Successful: {successes}")
         print(f"Skipped (version incompatible): {skipped_count}")
         print(f"Failed: {failures_count}")
-        
+
         # Calculate success rate excluding skipped schemas
         testable_count = len(schema_files) - skipped_count
         if testable_count > 0:
-            print(f"Success rate: {successes / testable_count * 100:.2f}% ({successes}/{testable_count} testable schemas)")
+            print(
+                f"Success rate: {successes / testable_count * 100:.2f}% ({successes}/{testable_count} testable schemas)"
+            )
         else:
             print("Success rate: N/A (no testable schemas)")
 
@@ -216,7 +217,7 @@ def main() -> int:
                 print(f"  - {rel_path}")
                 if args.verbose:
                     print(f"    Reason: {reason}")
-            
+
             if len(skipped) > 5:
                 print(f"  ... and {len(skipped) - 5} more")
 
