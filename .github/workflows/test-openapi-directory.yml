@@ -1,0 +1,47 @@
+name: Test OpenAPI Directory
+
+# Run weekly on Mondays at 00:00 UTC, and allow manual triggering
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Weekly on Mondays at midnight UTC
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  test-openapi-directory:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      #----------------------------------------------
+      #       check-out repo and set-up python
+      #----------------------------------------------
+      - name: Check out repository
+        uses: actions/checkout@v3
+      
+      - name: Set up python
+        id: setup-python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      
+      #----------------------------------------------
+      #  -----  install & configure uv  -----
+      #----------------------------------------------
+      - name: Install UV
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      
+      #----------------------------------------------
+      # install dependencies
+      #----------------------------------------------
+      - name: Install dependencies
+        run: uv sync --frozen
+      
+      #----------------------------------------------
+      # Test against openapi-directory
+      #----------------------------------------------
+      - name: Test against APIs-guru/openapi-directory
+        run: |
+          uv run python3 test_openapi_directory.py --verbose

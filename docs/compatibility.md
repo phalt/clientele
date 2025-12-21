@@ -1,5 +1,35 @@
 # 💱 Compatibility
 
+## Testing Against Real-World Schemas
+
+Clientele is rigorously tested to ensure it works with real-world OpenAPI schemas.
+
+We test against the entire [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) - a massive collection of 4000+ real-world OpenAPI schemas from hundreds of different APIs.
+
+This testing happens automatically:
+
+- **Weekly CI runs**: Every Monday, GitHub Actions runs the test suite against all schemas
+- **Manual testing**: Developers can run compatibility tests locally
+- **Continuous monitoring**: Test results are tracked to catch regressions
+
+### Running Compatibility Tests
+
+You can run the compatibility tests yourself:
+
+```bash
+# Test against all schemas (takes several minutes)
+make test-openapi-directory
+
+# Test a limited subset for quick feedback
+python3 test_openapi_directory.py --limit 100
+
+# Stop on first failure for debugging
+python3 test_openapi_directory.py -x
+
+# Keep the cloned repository for inspection
+python3 test_openapi_directory.py --keep-repo
+```
+
 ## OpenAPI Version Support
 
 Clientele is designed for **OpenAPI 3.0.x** schemas and supports most standard-compliant implementations.

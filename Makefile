@@ -73,3 +73,6 @@ brew-test-local:  ## Test installing the formula locally (requires Homebrew inst
 		echo "Error: Homebrew is not installed."; \
 		exit 1; \
 	fi
+
+test-openapi-directory:  ## Test clientele against all schemas from APIs-guru/openapi-directory
+	uv run python3 test_openapi_directory.py
