@@ -227,7 +227,7 @@ def get_pydantic_extra(obj: typing.Any, key: str) -> typing.Any:
     return extra[key]
 
 
-def path_item_to_operations_dict(path_item, *, spec=None, path=None) -> dict:
+def path_item_to_operations_dict(path_item) -> dict:
     """
     Convert a cicerone PathItem object to a dict of operations.
 
@@ -236,8 +236,6 @@ def path_item_to_operations_dict(path_item, *, spec=None, path=None) -> dict:
 
     Args:
         path_item: A cicerone PathItem object
-        spec: Optional OpenAPISpec object to access raw data for path-level parameters
-        path: Optional path string to look up in spec.raw
 
     Returns:
         Dict mapping HTTP methods to operation dicts, with optional "parameters" key
@@ -256,17 +254,5 @@ def path_item_to_operations_dict(path_item, *, spec=None, path=None) -> dict:
         parameters = get_pydantic_extra(path_item, "parameters")
         if parameters:
             operations_dict["parameters"] = parameters
-        # WORKAROUND for cicerone v0.2.0 bug: Path-level parameters with $ref are not merged
-        # into operations. This should be fixed in a future version of cicerone.
-        # TODO: Remove this workaround when cicerone fixes path-level $ref parameter merging
-        elif spec and path and hasattr(spec, "raw"):
-            try:
-                raw_path_item = spec.raw.get("paths", {}).get(path, {})
-                raw_parameters = raw_path_item.get("parameters", [])
-                if raw_parameters:
-                    operations_dict["parameters"] = raw_parameters
-            except (AttributeError, TypeError):
-                # If raw data structure is unexpected, skip this workaround
-                pass
 
     return operations_dict
