@@ -160,7 +160,7 @@ class BaseClientsGenerator:
                     self.schemas_generator.make_schema_class(class_name, schema=content["schema"])
                 else:
                     # At this point we're just making things up!
-                    # It is likely it isn't an object it is just a simple resonse.
+                    # It is likely it isn't an object it is just a simple response.
                     class_name = utils.class_name_titled(func_name + status_code + "Response")
                     # We need to generate the class at this point because it does not exist
                     self.schemas_generator.make_schema_class(
