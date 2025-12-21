@@ -1,6 +1,11 @@
 """
 Compatibility layer for converting cicerone Pydantic models to dict structures.
 
+LEGACY MODULE: This module exists as a temporary compatibility layer during the
+migration from openapi-core to cicerone. The goal is to eventually remove this
+module entirely and work directly with cicerone's Pydantic models throughout
+the codebase, eliminating the need for these conversions.
+
 This module provides conversion utilities to transform cicerone's typed OpenAPI models
 (Operation, Parameter, RequestBody, Response, Schema) into dict structures that are
 compatible with existing code generation templates.
@@ -184,22 +189,15 @@ def operation_to_dict(operation) -> dict:
         result["description"] = operation.description
 
     # deprecated is in the extra fields
-    if (
-        hasattr(operation, "__pydantic_extra__")
-        and operation.__pydantic_extra__
-        and "deprecated" in operation.__pydantic_extra__
-    ):
-        result["deprecated"] = operation.__pydantic_extra__["deprecated"]
+    deprecated = get_pydantic_extra(operation, "deprecated")
+    if deprecated is not None:
+        result["deprecated"] = deprecated
 
     if hasattr(operation, "parameters") and operation.parameters:
         result["parameters"] = [parameter_to_dict(p) for p in operation.parameters]
 
     # request_body might be in extra fields
-    request_body = getattr(operation, "request_body", None) or (
-        operation.__pydantic_extra__.get("requestBody")
-        if hasattr(operation, "__pydantic_extra__") and operation.__pydantic_extra__
-        else None
-    )
+    request_body = getattr(operation, "request_body", None) or get_pydantic_extra(operation, "requestBody")
     if request_body:
         result["requestBody"] = request_body_to_dict(request_body)
 
@@ -227,3 +225,34 @@ def get_pydantic_extra(obj: typing.Any, key: str) -> typing.Any:
     if not extra or key not in extra:
         return None
     return extra[key]
+
+
+def path_item_to_operations_dict(path_item) -> dict:
+    """
+    Convert a cicerone PathItem object to a dict of operations.
+
+    This extracts all operations (get, post, put, etc.) from the path item
+    and converts them to dicts, including any path-level parameters.
+
+    Args:
+        path_item: A cicerone PathItem object
+
+    Returns:
+        Dict mapping HTTP methods to operation dicts, with optional "parameters" key
+    """
+    operations_dict = {}
+
+    # Convert each operation in the path item
+    for method, operation in path_item.operations.items():
+        operations_dict[method] = operation_to_dict(operation)
+
+    # Add path-level parameters if they exist
+    if hasattr(path_item, "parameters") and path_item.parameters:
+        operations_dict["parameters"] = [parameter_to_dict(p) for p in path_item.parameters]
+    else:
+        # Check in pydantic extra fields
+        parameters = get_pydantic_extra(path_item, "parameters")
+        if parameters:
+            operations_dict["parameters"] = parameters
+
+    return operations_dict
