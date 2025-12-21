@@ -6,10 +6,34 @@ and nullable schema constructs with proper Python typing.
 """
 
 import sys
+from contextlib import contextmanager
 
 from clientele.generators.classbase.generator import ClassbaseGenerator
 from clientele.generators.standard.generator import StandardGenerator
 from tests.generators.integration_utils import get_spec_path, load_spec
+
+
+@contextmanager
+def import_generated_schemas(tmp_path):
+    """
+    Context manager to temporarily add tmp_path to sys.path for importing generated schemas.
+
+    Automatically cleans up sys.path and sys.modules after use.
+
+    Args:
+        tmp_path: Path to directory containing generated schemas.py
+
+    Yields:
+        None - use 'import schemas' within the context
+    """
+    sys.path.insert(0, str(tmp_path))
+    try:
+        yield
+    finally:
+        # Clean up sys.path
+        sys.path.remove(str(tmp_path))
+        if "schemas" in sys.modules:
+            del sys.modules["schemas"]
 
 
 class TestOneOfSchemas:
@@ -189,9 +213,7 @@ class TestRuntimeBehavior:
         )
         generator.generate()
 
-        # Add tmp_path to sys.path and import normally
-        sys.path.insert(0, str(tmp_path))
-        try:
+        with import_generated_schemas(tmp_path):
             import schemas
 
             # Should be able to access classes
@@ -199,11 +221,6 @@ class TestRuntimeBehavior:
             assert hasattr(schemas, "Dog")
             assert hasattr(schemas, "FlexibleIdResponse")
             assert hasattr(schemas, "NullableFieldsResponse")
-        finally:
-            # Clean up sys.path
-            sys.path.remove(str(tmp_path))
-            if "schemas" in sys.modules:
-                del sys.modules["schemas"]
 
     def test_create_instances_with_union_types(self, tmp_path):
         """Test creating instances with union types."""
@@ -219,9 +236,7 @@ class TestRuntimeBehavior:
         )
         generator.generate()
 
-        # Add tmp_path to sys.path and import normally
-        sys.path.insert(0, str(tmp_path))
-        try:
+        with import_generated_schemas(tmp_path):
             import schemas
 
             # Create instances with different union types
@@ -236,11 +251,6 @@ class TestRuntimeBehavior:
             # FlexibleIdResponse with int ID
             resp2 = schemas.FlexibleIdResponse(id=12345, data="test")
             assert resp2.id == 12345
-        finally:
-            # Clean up sys.path
-            sys.path.remove(str(tmp_path))
-            if "schemas" in sys.modules:
-                del sys.modules["schemas"]
 
     def test_nullable_field_instances(self, tmp_path):
         """Test creating instances with nullable fields."""
@@ -256,9 +266,7 @@ class TestRuntimeBehavior:
         )
         generator.generate()
 
-        # Add tmp_path to sys.path and import normally
-        sys.path.insert(0, str(tmp_path))
-        try:
+        with import_generated_schemas(tmp_path):
             import schemas
 
             # Create instance with nullable fields
@@ -272,11 +280,6 @@ class TestRuntimeBehavior:
             # Create instance omitting optional nullable fields
             resp2 = schemas.NullableFieldsResponse(required_field="test")
             assert resp2.required_field == "test"
-        finally:
-            # Clean up sys.path
-            sys.path.remove(str(tmp_path))
-            if "schemas" in sys.modules:
-                del sys.modules["schemas"]
 
 
 class TestEdgeCases:
