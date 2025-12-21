@@ -47,11 +47,8 @@ def test_classbase_schemas_generator_handles_allof_with_non_ref_object():
             "allOf": [
                 {
                     "type": "object",
-                    "properties": {
-                        "name": {"type": "string"},
-                        "age": {"type": "integer"}
-                    },
-                    "required": ["name"]
+                    "properties": {"name": {"type": "string"}, "age": {"type": "integer"}},
+                    "required": ["name"],
                 }
             ]
         }
@@ -74,16 +71,7 @@ def test_classbase_schemas_generator_handles_inline_schema_in_input():
 
         # Create input schema without $ref or title (uses func_name + encoding)
         input_schema = {
-            "content": {
-                "application/json": {
-                    "schema": {
-                        "type": "object",
-                        "properties": {
-                            "data": {"type": "string"}
-                        }
-                    }
-                }
-            }
+            "content": {"application/json": {"schema": {"type": "object", "properties": {"data": {"type": "string"}}}}}
         }
 
         generator.generate_input_class(input_schema, "create_user")
@@ -128,15 +116,7 @@ def test_standard_schemas_generator_handles_ref_in_input_class():
         generator = StandardSchemasGenerator(spec=spec, output_dir=str(output_dir))
 
         # Create input schema with $ref
-        input_schema = {
-            "content": {
-                "application/json": {
-                    "schema": {
-                        "$ref": "#/components/schemas/UserInput"
-                    }
-                }
-            }
-        }
+        input_schema = {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/UserInput"}}}}
 
         # Just test that it doesn't raise an exception
         generator.generate_input_class(input_schema, "create_user")
@@ -181,11 +161,8 @@ def test_standard_schemas_generator_handles_allof_with_object_properties():
             "allOf": [
                 {
                     "type": "object",
-                    "properties": {
-                        "id": {"type": "integer"},
-                        "name": {"type": "string"}
-                    },
-                    "required": ["id"]
+                    "properties": {"id": {"type": "integer"}, "name": {"type": "string"}},
+                    "required": ["id"],
                 }
             ]
         }

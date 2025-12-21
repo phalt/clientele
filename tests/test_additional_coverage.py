@@ -45,13 +45,7 @@ def test_classbase_schemas_input_class_with_ref():
 
         # Create input schema with $ref
         input_schema_with_ref = {
-            "content": {
-                "application/json": {
-                    "schema": {
-                        "$ref": "#/components/schemas/SomeSchema"
-                    }
-                }
-            }
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SomeSchema"}}}
         }
 
         generator.generate_input_class(input_schema_with_ref, "test_operation")
@@ -76,9 +70,7 @@ def test_classbase_schemas_input_class_with_title():
                     "schema": {
                         "type": "object",
                         "title": "CustomInputTitle",
-                        "properties": {
-                            "name": {"type": "string"}
-                        }
+                        "properties": {"name": {"type": "string"}},
                     }
                 }
             }
@@ -104,11 +96,7 @@ def test_utils_create_query_args():
 
 def test_utils_get_type_with_allof_single_schema():
     """Test get_type with allOf containing a single schema (line 157)."""
-    type_spec = {
-        "allOf": [
-            {"type": "string"}
-        ]
-    }
+    type_spec = {"allOf": [{"type": "string"}]}
     result = utils.get_type(type_spec)
     # Should handle allOf with single schema
     assert result is not None
@@ -152,11 +140,8 @@ def test_standard_schemas_generator_with_allof_object():
             "allOf": [
                 {
                     "type": "object",
-                    "properties": {
-                        "id": {"type": "integer"},
-                        "name": {"type": "string"}
-                    },
-                    "required": ["id"]
+                    "properties": {"id": {"type": "integer"}, "name": {"type": "string"}},
+                    "required": ["id"],
                 }
             ]
         }

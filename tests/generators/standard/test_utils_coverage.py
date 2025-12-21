@@ -1,6 +1,5 @@
 """Additional tests for standard utils to increase coverage."""
 
-
 from clientele.generators.standard import utils
 
 
@@ -55,7 +54,7 @@ def test_get_type_with_oneof_and_nullable():
             {"type": "string"},
             {"type": "integer"},
         ],
-        "nullable": True
+        "nullable": True,
     }
     result = utils.get_type(type_spec)
     # Should wrap union in Optional
@@ -84,7 +83,7 @@ def test_get_type_with_anyof_and_nullable():
             {"type": "string"},
             {"type": "integer"},
         ],
-        "nullable": True
+        "nullable": True,
     }
     result = utils.get_type(type_spec)
     # Should wrap union in Optional
@@ -107,6 +106,7 @@ def test_get_schema_from_ref_basic():
     """Test get_schema_from_ref retrieves schema from components/schemas."""
     # Use existing test spec that has components
     from tests.generators.integration_utils import load_spec
+
     spec = load_spec("best.json")
 
     # This spec should have some schemas we can reference

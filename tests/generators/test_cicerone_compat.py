@@ -50,9 +50,7 @@ def test_request_body_to_dict_with_content():
     mock_media_type.schema_ = mock_schema
 
     mock_request_body = Mock()
-    mock_request_body.content = {
-        "application/json": mock_media_type
-    }
+    mock_request_body.content = {"application/json": mock_media_type}
 
     result = cicerone_compat.request_body_to_dict(mock_request_body)
 
@@ -89,9 +87,7 @@ def test_response_to_dict_with_description_and_content():
 
     mock_response = Mock()
     mock_response.description = "Success response"
-    mock_response.content = {
-        "application/json": mock_media_type
-    }
+    mock_response.content = {"application/json": mock_media_type}
 
     result = cicerone_compat.response_to_dict(mock_response)
 
@@ -178,9 +174,7 @@ def test_path_item_to_operations_dict_with_pydantic_extra_parameters():
     mock_path_item = Mock(spec=[])
     mock_path_item.operations = {"get": mock_operation}
     # Add __pydantic_extra__ with parameters
-    mock_path_item.__pydantic_extra__ = {
-        "parameters": [{"name": "id", "in": "path", "required": True}]
-    }
+    mock_path_item.__pydantic_extra__ = {"parameters": [{"name": "id", "in": "path", "required": True}]}
 
     result = cicerone_compat.path_item_to_operations_dict(mock_path_item)
 
@@ -191,6 +185,7 @@ def test_path_item_to_operations_dict_with_pydantic_extra_parameters():
 
 def test_get_pydantic_extra_with_no_extra():
     """Test get_pydantic_extra when object has no extra fields."""
+
     # Create a plain object without __pydantic_extra__
     class PlainObject:
         pass

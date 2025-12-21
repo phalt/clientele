@@ -68,11 +68,7 @@ def test_clients_generator_handles_optional_path_parameters():
         schemas_gen = SchemasGenerator(spec=spec, output_dir=str(output_dir))
 
         generator = ClientsGenerator(
-            spec=spec,
-            output_dir=str(output_dir),
-            schemas_generator=schemas_gen,
-            http_generator=http_gen,
-            asyncio=False
+            spec=spec, output_dir=str(output_dir), schemas_generator=schemas_gen, http_generator=http_gen, asyncio=False
         )
 
         # Test with query parameter set as optional to cover line 109
@@ -82,7 +78,7 @@ def test_clients_generator_handles_optional_path_parameters():
                 "name": "filter",
                 "in": "query",
                 "required": False,  # Optional query parameter
-                "schema": {"type": "string"}
+                "schema": {"type": "string"},
             }
         ]
 
@@ -108,28 +104,21 @@ def test_clients_generator_handles_multiple_input_classes():
         schemas_gen = SchemasGenerator(spec=spec, output_dir=str(output_dir))
 
         generator = ClientsGenerator(
-            spec=spec,
-            output_dir=str(output_dir),
-            schemas_generator=schemas_gen,
-            http_generator=http_gen,
-            asyncio=False
+            spec=spec, output_dir=str(output_dir), schemas_generator=schemas_gen, http_generator=http_gen, asyncio=False
         )
 
         # Mock request body with multiple content types
         request_body = {
             "content": {
-                "application/json": {
-                    "schema": {"type": "object", "properties": {"name": {"type": "string"}}}
-                },
-                "application/xml": {
-                    "schema": {"type": "object", "properties": {"name": {"type": "string"}}}
-                }
+                "application/json": {"schema": {"type": "object", "properties": {"name": {"type": "string"}}}},
+                "application/xml": {"schema": {"type": "object", "properties": {"name": {"type": "string"}}}},
             }
         }
 
         # Mock the get_input_class_names to return multiple classes
         from unittest.mock import patch
-        with patch.object(generator, 'get_input_class_names', return_value=['InputClass1', 'InputClass2']):
+
+        with patch.object(generator, "get_input_class_names", return_value=["InputClass1", "InputClass2"]):
             result = generator.generate_input_types(request_body, "test_func")
 
             # Should create a union type for multiple input classes
