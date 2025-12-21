@@ -71,7 +71,7 @@ class ClientsGenerator:
 
         for path, path_item in self.spec.paths.items.items():
             # Convert path_item to operations dict using centralized compat layer
-            operations_dict = cicerone_compat.path_item_to_operations_dict(path_item)
+            operations_dict = cicerone_compat.path_item_to_operations_dict(path_item, spec=self.spec, path=path)
             self.write_path_to_client((path, operations_dict))
         console.log(f"Generated {self.results['get']} GET methods...")
         console.log(f"Generated {self.results['post']} POST methods...")
