@@ -1,7 +1,7 @@
 class Clientele < Formula
   include Language::Python::Virtualenv
 
-  desc "Generate loveable Python HTTP API Clients from OpenAPI schemas"
+  desc "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"
   homepage "https://phalt.github.io/clientele/"
   url "https://files.pythonhosted.org/packages/source/c/clientele/clientele-{{VERSION}}.tar.gz"
   sha256 "{{SHA256}}"
