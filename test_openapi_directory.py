@@ -63,7 +63,10 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[bool, str, Exception | 
             return False, "Parsed spec is None", None
         
         # Check OpenAPI version
-        major, _, _ = str(spec.version).split(".")
+        version_parts = str(spec.version).split(".")
+        if len(version_parts) < 1:
+            return False, f"Invalid OpenAPI version format: {spec.version}", None
+        major = version_parts[0]
         if int(major) < 3:
             return False, f"OpenAPI version {spec.version} < 3.0", None
         
@@ -174,7 +177,10 @@ def main() -> int:
         print(f"Total schemas tested: {len(schema_files)}")
         print(f"Successful: {successes}")
         print(f"Failed: {failures_count}")
-        print(f"Success rate: {successes / len(schema_files) * 100:.2f}%")
+        if len(schema_files) > 0:
+            print(f"Success rate: {successes / len(schema_files) * 100:.2f}%")
+        else:
+            print("Success rate: N/A (no schemas tested)")
 
         if failures:
             print(f"\n{len(failures)} schemas failed to generate clients:")
