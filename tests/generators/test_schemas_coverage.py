@@ -11,13 +11,13 @@ from tests.generators.integration_utils import load_spec
 def test_classbase_schemas_generator_handles_anyof():
     """Test classbase schemas generator handles anyOf schemas (lines 83-84)."""
     spec = load_spec("simple.json")
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_schemas"
         output_dir.mkdir(parents=True)
-        
+
         generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-        
+
         # Create a schema with anyOf
         schema_with_anyof = {
             "anyOf": [
@@ -25,9 +25,9 @@ def test_classbase_schemas_generator_handles_anyof():
                 {"$ref": "#/components/schemas/Integer"},
             ]
         }
-        
+
         generator.make_schema_class("TestAnyOf", schema_with_anyof)
-        
+
         # Verify schema was processed (marked as processed in schemas dict)
         assert "TestAnyOf" in generator.schemas
 
@@ -35,13 +35,13 @@ def test_classbase_schemas_generator_handles_anyof():
 def test_classbase_schemas_generator_handles_allof_with_non_ref_object():
     """Test classbase schemas generator handles allOf with non-ref object types (lines 106-107)."""
     spec = load_spec("simple.json")
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_schemas"
         output_dir.mkdir(parents=True)
-        
+
         generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-        
+
         # Create a schema with allOf containing non-ref object
         schema_with_allof = {
             "allOf": [
@@ -55,9 +55,9 @@ def test_classbase_schemas_generator_handles_allof_with_non_ref_object():
                 }
             ]
         }
-        
+
         generator.make_schema_class("TestAllOf", schema_with_allof)
-        
+
         # Verify schema was processed
         assert "TestAllOf" in generator.schemas
 
@@ -65,13 +65,13 @@ def test_classbase_schemas_generator_handles_allof_with_non_ref_object():
 def test_classbase_schemas_generator_handles_inline_schema_in_input():
     """Test classbase schemas generator handles inline schemas in input (lines 130-146)."""
     spec = load_spec("simple.json")
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_schemas"
         output_dir.mkdir(parents=True)
-        
+
         generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-        
+
         # Create input schema without $ref or title (uses func_name + encoding)
         input_schema = {
             "content": {
@@ -85,9 +85,9 @@ def test_classbase_schemas_generator_handles_inline_schema_in_input():
                 }
             }
         }
-        
+
         generator.generate_input_class(input_schema, "create_user")
-        
+
         # Verify the generated file exists
         schemas_file = output_dir / "schemas.py"
         assert schemas_file.exists()
@@ -96,13 +96,13 @@ def test_classbase_schemas_generator_handles_inline_schema_in_input():
 def test_standard_schemas_generator_handles_anyof():
     """Test standard schemas generator handles anyOf schemas (lines 141-142)."""
     spec = load_spec("simple.json")
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_schemas"
         output_dir.mkdir(parents=True)
-        
+
         generator = StandardSchemasGenerator(spec=spec, output_dir=str(output_dir))
-        
+
         # Create a schema with anyOf
         schema_with_anyof = {
             "anyOf": [
@@ -110,9 +110,9 @@ def test_standard_schemas_generator_handles_anyof():
                 {"type": "integer"},
             ]
         }
-        
+
         generator.make_schema_class("TestAnyOf", schema_with_anyof)
-        
+
         # Verify schema was processed
         assert "TestAnyOf" in generator.schemas
 
@@ -120,13 +120,13 @@ def test_standard_schemas_generator_handles_anyof():
 def test_standard_schemas_generator_handles_ref_in_input_class():
     """Test standard schemas generator handles $ref in input class (line 87)."""
     spec = load_spec("simple.json")
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_schemas"
         output_dir.mkdir(parents=True)
-        
+
         generator = StandardSchemasGenerator(spec=spec, output_dir=str(output_dir))
-        
+
         # Create input schema with $ref
         input_schema = {
             "content": {
@@ -137,7 +137,7 @@ def test_standard_schemas_generator_handles_ref_in_input_class():
                 }
             }
         }
-        
+
         # Just test that it doesn't raise an exception
         generator.generate_input_class(input_schema, "create_user")
 
@@ -145,13 +145,13 @@ def test_standard_schemas_generator_handles_ref_in_input_class():
 def test_standard_schemas_generator_handles_inline_schema_in_union():
     """Test standard schemas generator handles inline schemas in unions (line 119)."""
     spec = load_spec("simple.json")
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_schemas"
         output_dir.mkdir(parents=True)
-        
+
         generator = StandardSchemasGenerator(spec=spec, output_dir=str(output_dir))
-        
+
         # Create a schema with oneOf containing both refs and inline schemas
         schema_with_mixed_oneof = {
             "oneOf": [
@@ -159,9 +159,9 @@ def test_standard_schemas_generator_handles_inline_schema_in_union():
                 {"type": "integer"},  # Inline schema
             ]
         }
-        
+
         generator.make_schema_class("TestMixedUnion", schema_with_mixed_oneof)
-        
+
         # Verify schema was processed
         assert "TestMixedUnion" in generator.schemas
 
@@ -169,13 +169,13 @@ def test_standard_schemas_generator_handles_inline_schema_in_union():
 def test_standard_schemas_generator_handles_allof_with_object_properties():
     """Test standard schemas generator handles allOf with object properties (lines 202-203)."""
     spec = load_spec("simple.json")
-    
+
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_schemas"
         output_dir.mkdir(parents=True)
-        
+
         generator = StandardSchemasGenerator(spec=spec, output_dir=str(output_dir))
-        
+
         # Create a schema with allOf containing object with properties
         schema_with_allof_object = {
             "allOf": [
@@ -189,8 +189,8 @@ def test_standard_schemas_generator_handles_allof_with_object_properties():
                 }
             ]
         }
-        
+
         generator.make_schema_class("TestAllOfObject", schema_with_allof_object)
-        
+
         # Verify schema was processed
         assert "TestAllOfObject" in generator.schemas
