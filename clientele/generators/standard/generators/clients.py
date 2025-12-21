@@ -69,21 +69,9 @@ class ClientsGenerator:
             return
 
         for path, path_item in self.spec.paths.items.items():
-            # Convert path_item to the expected structure
-            operations_dict = {}
-            for method, operation in path_item.operations.items():
-                # Convert operation to dict-like structure using centralized compat layer
-                operations_dict[method] = cicerone_compat.operation_to_dict(operation)
-            # Add path-level parameters if they exist (might be in extra fields)
-            if hasattr(path_item, "parameters") and path_item.parameters:
-                operations_dict["parameters"] = [cicerone_compat.parameter_to_dict(p) for p in path_item.parameters]
-            elif (
-                hasattr(path_item, "__pydantic_extra__")
-                and path_item.__pydantic_extra__
-                and "parameters" in path_item.__pydantic_extra__
-            ):
-                operations_dict["parameters"] = path_item.__pydantic_extra__["parameters"]
-            self.write_path_to_client(path=(path, operations_dict))
+            # Convert path_item to operations dict using centralized compat layer
+            operations_dict = cicerone_compat.path_item_to_operations_dict(path_item)
+            self.write_path_to_client((path, operations_dict))
         console.log(f"Generated {self.results['get']} GET methods...")
         console.log(f"Generated {self.results['post']} POST methods...")
         console.log(f"Generated {self.results['put']} PUT methods...")
@@ -283,7 +271,7 @@ class ClientsGenerator:
         )
         writer.write_to_client(content=content, output_dir=self.output_dir)
 
-    def write_path_to_client(self, path: dict) -> None:
+    def write_path_to_client(self, path: tuple[str, dict]) -> None:
         url, operations = path
         for method, operation in operations.items():
             if method.lower() in self.method_template_map.keys():

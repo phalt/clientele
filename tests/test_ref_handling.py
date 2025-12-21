@@ -166,8 +166,8 @@ class TestRefInParameters:
 
         # Parameters should be included in header classes
         assert "class CreateThreadHeaders(pydantic.BaseModel):" in schemas_content
-        # x-customer-ip from operation-level parameter
-        assert 'x_customer_ip: str = pydantic.Field(serialization_alias="x-customer-ip")' in schemas_content
+        # request-id from $ref parameter
+        assert 'request_id: str = pydantic.Field(serialization_alias="request-id")' in schemas_content
         # idempotency-key from $ref parameter
         assert 'idempotency_key: str = pydantic.Field(serialization_alias="idempotency-key")' in schemas_content
 
