@@ -139,19 +139,13 @@ Any framework or tool that generates standard-compliant OpenAPI schemas will wor
 
 ### Verified Compatibility
 
-Clientele is tested against 4000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) to ensure broad compatibility.
+Clientele is tested against 4000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) to ensure broad compatibility. As of the latest run, Clientele successfully generates clients for **93.86%** of schemas in the OpenAPI directory.
 
-We actively test and support:
+We specifically test and support:
 
 - **FastAPI** - 100% compatibility with FastAPI's built-in OpenAPI schema generation
 - **Django REST Framework** with **drf-spectacular** - Full support for DRF's OpenAPI schemas
 - **Django Ninja** - Works with Django Ninja's OpenAPI output
-
-We also successfully generate clients from:
-
-- Microsoft's OpenAPI specifications
-- Twilio's public API schemas
-- Any standard OpenAPI 3.0.x compliant schema
 
 ### How It Works
 
