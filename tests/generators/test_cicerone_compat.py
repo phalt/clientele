@@ -191,8 +191,11 @@ def test_path_item_to_operations_dict_with_pydantic_extra_parameters():
 
 def test_get_pydantic_extra_with_no_extra():
     """Test get_pydantic_extra when object has no extra fields."""
-    obj = Mock()
-    del obj.__pydantic_extra__
+    # Create a plain object without __pydantic_extra__
+    class PlainObject:
+        pass
+    
+    obj = PlainObject()
     
     result = cicerone_compat.get_pydantic_extra(obj, "test_key")
     
