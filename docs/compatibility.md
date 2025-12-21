@@ -12,6 +12,35 @@ This testing happens automatically:
 - **Manual testing**: Developers can run compatibility tests locally
 - **Continuous monitoring**: Test results are tracked to catch regressions
 
+### Current results
+
+As of the latest run, Clientele successfully generates clients for 93.86% of schemas in the OpenAPI directory:
+
+```sh
+
+================================================================================
+SUMMARY
+================================================================================
+Total schemas found: 4138
+Successful: 1879
+Skipped (version incompatible): 2136
+Failed: 123
+Success rate: 93.86% (1879/2002 testable schemas)
+
+123 schemas failed to generate clients:
+  - APIs/adyen.com/BalancePlatformConfigurationNotification-v1/1/openapi.yaml
+  - APIs/adyen.com/BalancePlatformService/2/openapi.yaml
+  - APIs/adyen.com/LegalEntityService/3/openapi.yaml
+  - APIs/adyen.com/ManagementService/1/openapi.yaml
+  - APIs/adyen.com/ManagementService-v3/3/openapi.yaml
+  - APIs/akeneo.com/1.0.0/swagger.yaml
+  - APIs/apicurio.local/registry/1.3.2.Final/openapi.yaml
+  - APIs/apidapp.com/2019-02-14T164701Z/openapi.yaml
+  - APIs/apideck.com/file-storage/10.0.0/openapi.yaml
+  - APIs/atlassian.com/jira/1001.0.0-SNAPSHOT/openapi.yaml
+  ... and 113 more
+  ```
+
 ### Running Compatibility Tests
 
 You can run the compatibility tests yourself:
