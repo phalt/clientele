@@ -64,10 +64,15 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[bool, str, Exception | 
         
         # Check OpenAPI version
         version_parts = str(spec.version).split(".")
-        if len(version_parts) < 1:
+        if not version_parts or not version_parts[0]:
             return False, f"Invalid OpenAPI version format: {spec.version}", None
-        major = version_parts[0]
-        if int(major) < 3:
+        
+        try:
+            major = int(version_parts[0])
+        except (ValueError, TypeError):
+            return False, f"Invalid OpenAPI version format: {spec.version}", None
+            
+        if major < 3:
             return False, f"OpenAPI version {spec.version} < 3.0", None
         
         # Try to generate a client in a temporary directory
