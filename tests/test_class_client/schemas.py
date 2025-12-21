@@ -83,7 +83,7 @@ class SimpleResponse(pydantic.BaseModel):
 
 
 class ValidationError(pydantic.BaseModel):
-    loc: list[typing.Any]
+    loc: list[str | int]
     msg: str
     type_: str
 
