@@ -591,6 +591,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#testing-against-real-world-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Against Real-World Schemas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Against Real-World Schemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#openapi-version-support" class="md-nav__link">
     <span class="md-ellipsis">
       OpenAPI Version Support
@@ -1013,6 +1037,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#testing-against-real-world-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Testing Against Real-World Schemas
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Testing Against Real-World Schemas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      Current results
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#openapi-version-support" class="md-nav__link">
     <span class="md-ellipsis">
       OpenAPI Version Support
@@ -1275,6 +1323,57 @@
 
 
 <h1 id="compatibility">💱 Compatibility</h1>
+<h2 id="testing-against-real-world-schemas">Testing Against Real-World Schemas</h2>
+<p>Clientele is rigorously tested to ensure it works with real-world OpenAPI schemas.</p>
+<p>We test against the entire <a href="https://github.com/APIs-guru/openapi-directory">APIs.guru OpenAPI Directory</a> - a massive collection of 4000+ real-world OpenAPI schemas from hundreds of different APIs.</p>
+<p>This testing happens automatically:</p>
+<ul>
+<li><strong>Weekly CI runs</strong>: Every Monday, GitHub Actions runs the test suite against all schemas</li>
+<li><strong>Manual testing</strong>: Developers can run compatibility tests locally</li>
+<li><strong>Continuous monitoring</strong>: Test results are tracked to catch regressions</li>
+</ul>
+<h3 id="current-results">Current results</h3>
+<p>As of the latest run, Clientele successfully generates clients for 93.86% of schemas in the OpenAPI directory:</p>
+<div class="highlight"><pre><span></span><code><span class="o">================================================================================</span>
+<span class="nv">SUMMARY</span>
+<span class="o">================================================================================</span>
+Total<span class="w"> </span>schemas<span class="w"> </span>found:<span class="w"> </span><span class="m">4138</span>
+Successful:<span class="w"> </span><span class="m">1879</span>
+Skipped<span class="w"> </span><span class="o">(</span>version<span class="w"> </span>incompatible<span class="o">)</span>:<span class="w"> </span><span class="m">2136</span>
+Failed:<span class="w"> </span><span class="m">123</span>
+Success<span class="w"> </span>rate:<span class="w"> </span><span class="m">93</span>.86%<span class="w"> </span><span class="o">(</span><span class="m">1879</span>/2002<span class="w"> </span>testable<span class="w"> </span>schemas<span class="o">)</span>
+
+<span class="m">123</span><span class="w"> </span>schemas<span class="w"> </span>failed<span class="w"> </span>to<span class="w"> </span>generate<span class="w"> </span>clients:
+<span class="w">  </span>-<span class="w"> </span>APIs/adyen.com/BalancePlatformConfigurationNotification-v1/1/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/adyen.com/BalancePlatformService/2/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/adyen.com/LegalEntityService/3/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/adyen.com/ManagementService/1/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/adyen.com/ManagementService-v3/3/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/akeneo.com/1.0.0/swagger.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/apicurio.local/registry/1.3.2.Final/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/apidapp.com/2019-02-14T164701Z/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/apideck.com/file-storage/10.0.0/openapi.yaml
+<span class="w">  </span>-<span class="w"> </span>APIs/atlassian.com/jira/1001.0.0-SNAPSHOT/openapi.yaml
+<span class="w">  </span>...<span class="w"> </span>and<span class="w"> </span><span class="m">113</span><span class="w"> </span>more
+<span class="w">  </span><span class="sb">```</span>
+
+<span class="c1">### Running Compatibility Tests</span>
+
+You<span class="w"> </span>can<span class="w"> </span>run<span class="w"> </span>the<span class="w"> </span>compatibility<span class="w"> </span>tests<span class="w"> </span>yourself:
+
+<span class="sb">```</span>bash
+<span class="c1"># Test against all schemas (takes several minutes)</span>
+make<span class="w"> </span>test-openapi-directory
+
+<span class="c1"># Test a limited subset for quick feedback</span>
+python3<span class="w"> </span>test_openapi_directory.py<span class="w"> </span>--limit<span class="w"> </span><span class="m">100</span>
+
+<span class="c1"># Stop on first failure for debugging</span>
+python3<span class="w"> </span>test_openapi_directory.py<span class="w"> </span>-x
+
+<span class="c1"># Keep the cloned repository for inspection</span>
+python3<span class="w"> </span>test_openapi_directory.py<span class="w"> </span>--keep-repo
+</code></pre></div>
 <h2 id="openapi-version-support">OpenAPI Version Support</h2>
 <p>Clientele is designed for <strong>OpenAPI 3.0.x</strong> schemas and supports most standard-compliant implementations.</p>
 <h3 id="fully-supported">Fully Supported</h3>
