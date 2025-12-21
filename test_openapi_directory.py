@@ -63,10 +63,16 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
         if spec is None:
             return "failed", "Parsed spec is None", None
         
-        # Check if this is a Swagger 2.0 file (even if cicerone auto-converts it)
+        # Check if this is a Swagger 2.x file (even if cicerone auto-converts it)
         # Cicerone preserves the original format in spec.raw
-        if "swagger" in spec.raw and str(spec.raw["swagger"]).startswith("2"):
-            return "skipped", f"Swagger 2.0 (not supported, clientele requires OpenAPI 3.x)", None
+        if "swagger" in spec.raw:
+            swagger_version = str(spec.raw["swagger"])
+            # Check if it's Swagger 2.x (2.0, 2.1, etc.)
+            try:
+                if swagger_version.split(".")[0] == "2":
+                    return "skipped", f"Swagger {swagger_version} (not supported, clientele requires OpenAPI 3.x)", None
+            except (IndexError, ValueError):
+                pass  # If we can't parse version, continue with OpenAPI check
         
         # Check OpenAPI version from parsed spec
         version_parts = str(spec.version).split(".")
@@ -78,7 +84,7 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
         except (ValueError, TypeError):
             return "failed", f"Invalid OpenAPI version format: {spec.version}", None
             
-        # Additional check for OpenAPI version (should be 3.x)
+        # Clientele requires OpenAPI 3.x
         if major < 3:
             return "skipped", f"OpenAPI {spec.version} (clientele requires 3.x)", None
         
