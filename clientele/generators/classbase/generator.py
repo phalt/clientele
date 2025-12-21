@@ -4,7 +4,7 @@ import subprocess
 import typing
 from os import path
 
-import openapi_core
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele import generators, settings, utils
@@ -21,7 +21,7 @@ class ClassbaseGenerator(generators.Generator):
     Produces a Python HTTP Client library with a class-based interface.
     """
 
-    spec: openapi_core.Spec
+    spec: cicerone_openapi_spec.OpenAPISpec
     asyncio: bool
     regen: bool
     schemas_generator: schemas.SchemasGenerator
@@ -33,7 +33,7 @@ class ClassbaseGenerator(generators.Generator):
 
     def __init__(
         self,
-        spec: openapi_core.Spec,
+        spec: cicerone_openapi_spec.OpenAPISpec,
         output_dir: str,
         asyncio: bool,
         regen: bool,
@@ -111,8 +111,8 @@ class ClassbaseGenerator(generators.Generator):
         generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio t' if self.asyncio else ''} --regen t"  # noqa
         content = (
             template.render(
-                api_version=self.spec["info"]["version"],
-                openapi_version=self.spec["openapi"],
+                api_version=self.spec.info.version if self.spec.info else "N/A",
+                openapi_version=str(self.spec.version),
                 clientele_version=settings.VERSION,
                 command=generate_command,
                 generator_type="generate-class",  # Specify this is for class-based generator

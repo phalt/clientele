@@ -1,6 +1,6 @@
 import collections
 
-import openapi_core
+from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele.generators.standard import writer
@@ -18,7 +18,7 @@ class HTTPGenerator:
     Handles all the content generated in the clients.py file.
     """
 
-    def __init__(self, spec: openapi_core.Spec, output_dir: str, asyncio: bool) -> None:
+    def __init__(self, spec: cicerone_openapi_spec.OpenAPISpec, output_dir: str, asyncio: bool) -> None:
         self.spec = spec
         self.output_dir = output_dir
         self.results: dict[str, int] = collections.defaultdict(int)
@@ -42,19 +42,20 @@ class HTTPGenerator:
 
         # Check if the spec has security schemes
         security_schemes = None
-        if "components" in self.spec and "securitySchemes" in self.spec["components"]:
-            security_schemes = self.spec["components"]["securitySchemes"]
+        if self.spec.components and self.spec.components.security_schemes:
+            security_schemes = self.spec.components.security_schemes
 
         if security_schemes:
             console.log("client has authentication...")
             for _, info in security_schemes.items():
                 if (
-                    info["type"] == "http"
-                    and info["scheme"].lower() in ["basic", "bearer"]
+                    info.type == "http"
+                    and info.scheme
+                    and info.scheme.lower() in ["basic", "bearer"]
                     and client_generated is False
                 ):
                     client_generated = True
-                    if info["scheme"] == "bearer":
+                    if info.scheme == "bearer":
                         template = writer.templates.get_template("bearer_client.jinja2")
                         content = template.render(
                             client_type=client_type,
@@ -65,7 +66,7 @@ class HTTPGenerator:
                             client_type=client_type,
                         )
                     console.log(f"[yellow]Please see {self.output_dir}config.py to set authentication variables")
-                elif info["type"] == "oauth2":
+                elif info.type == "oauth2":
                     template = writer.templates.get_template("bearer_client.jinja2")
                     content = template.render(
                         client_type=client_type,

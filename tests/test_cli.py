@@ -153,7 +153,7 @@ def test_load_openapi_spec_from_file(simple_openapi_spec):
     try:
         spec = cli._load_openapi_spec(file=spec_file)
         assert spec is not None
-        assert spec["info"]["title"] == "Test API"
+        assert spec.info.title == "Test API"
     finally:
         Path(spec_file).unlink()
 
@@ -173,7 +173,7 @@ def test_load_openapi_spec_with_yaml_file(simple_openapi_spec):
     try:
         spec = cli._load_openapi_spec(file=spec_file)
         assert spec is not None
-        assert spec["info"]["title"] == "Test API"
+        assert spec.info.title == "Test API"
     finally:
         Path(spec_file).unlink()
 
@@ -191,34 +191,36 @@ def test_load_openapi_spec_raises_value_error_when_no_params():
         pass
 
 
-def test_load_openapi_spec_with_yaml_response_from_url(simple_openapi_spec, respx_mock):
+def test_load_openapi_spec_with_yaml_response_from_url(simple_openapi_spec, httpserver):
     """Test loading OpenAPI spec from URL when response is YAML."""
-    import httpx
-
-    url = "https://example.com/openapi.yaml"
     yaml_content = yaml.dump(simple_openapi_spec)
 
-    # Mock the URL to return YAML content that will fail JSON parsing
-    respx_mock.get(url).mock(
-        return_value=httpx.Response(200, content=yaml_content.encode(), headers={"content-type": "application/x-yaml"})
+    # Set up the local HTTP server to return YAML content
+    httpserver.expect_request("/openapi.yaml").respond_with_data(
+        yaml_content,
+        content_type="application/x-yaml",
     )
 
+    url = httpserver.url_for("/openapi.yaml")
     spec = cli._load_openapi_spec(url=url)
     assert spec is not None
-    assert spec["info"]["title"] == "Test API"
+    assert spec.info.title == "Test API"
 
 
-def test_load_openapi_spec_with_json_from_url(simple_openapi_spec, respx_mock):
+def test_load_openapi_spec_with_json_from_url(simple_openapi_spec, httpserver):
     """Test loading OpenAPI spec from URL when response is JSON."""
-    import httpx
+    json_content = json.dumps(simple_openapi_spec)
 
-    url = "https://example.com/openapi.json"
+    # Set up the local HTTP server to return JSON content
+    httpserver.expect_request("/openapi.json").respond_with_data(
+        json_content,
+        content_type="application/json",
+    )
 
-    respx_mock.get(url).mock(return_value=httpx.Response(200, json=simple_openapi_spec))
-
+    url = httpserver.url_for("/openapi.json")
     spec = cli._load_openapi_spec(url=url)
     assert spec is not None
-    assert spec["info"]["title"] == "Test API"
+    assert spec.info.title == "Test API"
 
 
 def test_generate_command_with_valid_spec(runner):
