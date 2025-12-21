@@ -9,15 +9,22 @@ repo_name: phalt/clientele
 repo_url: https://github.com/phalt/clientele
 nav:
   - Home: index.md
-  - Install: install.md
-  - Use: usage.md
-  - Design: design.md
-  - References: references.md
-  - Client Example: examples.md
-  - Complex Schemas: complex_schemas.md
-  - Testing: testing.md
-  - Compatibility: compatibility.md
-  - Change log: CHANGELOG.md
+  - Getting Started:
+    - Install: install.md
+    - Usage & CLI: usage.md
+  - Framework Guides:
+    - FastAPI: framework-fastapi.md
+    - Django REST Framework: framework-drf.md
+    - Django Ninja: framework-django-ninja.md
+  - Documentation:
+    - Client Examples: examples.md
+    - Testing: testing.md
+    - Compatibility & Limitations: compatibility.md
+    - Complex Schemas: complex_schemas.md
+    - References in OpenAPI: references.md
+  - About:
+    - Design Philosophy: design.md
+    - Change Log: CHANGELOG.md
 
 markdown_extensions:
   - pymdownx.inlinehilite
