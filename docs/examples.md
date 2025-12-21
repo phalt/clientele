@@ -66,9 +66,7 @@ client.simple_request_simple_request_get()
 
 ### POST and PUT functions
 
-A more complex example is shown just below. 
-
-This is for an HTTP POST method, and it requires an input property called `data` that is an instance of a schema, and returns one of many potential responses. If the endpoint has url parameters or query parameters, they will appear as input arguments to the function alongside the `data` argument.
+Here's a more complex example for an HTTP POST method. It requires an input property called `data` that is an instance of a schema, and returns one of many potential responses. If the endpoint has URL or query parameters, they'll appear as input arguments to the function alongside the `data` argument.
 
 ```py
 def request_data_request_data_post(
@@ -171,12 +169,11 @@ class ExampleEnum(str, Enum):
 
 ## Configuration
 
-One of the problems with auto-generated clients is that you often need to configure them, and
-if you try and regenerate the client at some point in the future then your configuration gets wiped clean and you have to do it all over again.
+One of the problems with auto-generated clients is that you often need to configure them, and if you try to regenerate the client later, your configuration gets wiped clean and you have to do it all over again.
 
-Clientele solves this problem by providing an _entry point_ for configuration that will never be overwritten - `config.py`.
+Clientele solves this by providing an _entry point_ for configuration that will never be overwritten: `config.py`.
 
-When you first generate the project, you will see a file called `config.py` and it will offer configuration functions a bit like this:
+When you first generate the project, you'll see a file called `config.py` with configuration functions like this:
 
 ```python
 """
@@ -249,10 +246,10 @@ If you want to pass specific headers with all requests made by the client, you c
 ```py
 def additional_headers() -> dict:
     """
-    Modify this function ot provide additional headers to all
+    Modify this function to provide additional headers to all
     HTTP requests made by this client.
     """
     return {}
 ```
 
-Please note that if you are using this with authentication headers, then authentication headers **will overwrite these defaults** if they keys match.
+Note that if you're using authentication headers, the authentication headers **will overwrite these defaults** if the keys match.
