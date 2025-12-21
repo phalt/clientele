@@ -11,13 +11,13 @@ This guide shows you how to generate a Python client for a Django Ninja API usin
 
 Django Ninja automatically generates an OpenAPI schema for your API. By default, it's available at:
 
-```
+```sh
 http://your-api-domain/api/openapi.json
 ```
 
 For local development:
 
-```
+```sh
 http://localhost:8000/api/openapi.json
 ```
 
@@ -162,6 +162,7 @@ def create_user(request, user: UserIn):
 ```
 
 This generates:
+
 - `client.list_users()` - clean and simple!
 - `client.create_user()` - exactly what you'd expect
 
