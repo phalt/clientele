@@ -17,7 +17,7 @@ def test_standard_generator_preserves_existing_config_py():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
         output_dir.mkdir(parents=True)
-        
+
         # Create an existing config.py with custom content
         existing_config = output_dir / "config.py"
         custom_content = "# Custom config\nAPI_BASE_URL = 'https://custom.example.com'\n"
@@ -45,7 +45,7 @@ def test_standard_generator_removes_existing_manifest():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
         output_dir.mkdir(parents=True)
-        
+
         # Create an existing MANIFEST.md file
         existing_manifest = output_dir / "MANIFEST.md"
         existing_manifest.write_text("# Old manifest content\n")
@@ -83,10 +83,10 @@ def test_standard_generator_handles_ruff_formatting_error():
                 cmd=['ruff', 'format'],
                 stderr='Formatting error occurred'
             )
-            
+
             # Should not raise exception, just log warning
             generator.generate()
-            
+
             # Verify client was still generated despite formatting error
             assert (Path(output_dir) / "client.py").exists()
 
@@ -106,9 +106,9 @@ def test_standard_generator_handles_ruff_not_found():
         # Mock subprocess.run to raise FileNotFoundError
         with patch('subprocess.run') as mock_run:
             mock_run.side_effect = FileNotFoundError("ruff: command not found")
-            
+
             # Should not raise exception, just log warning
             generator.generate()
-            
+
             # Verify client was still generated despite missing ruff
             assert (Path(output_dir) / "client.py").exists()

@@ -1,10 +1,9 @@
 """Additional tests for classbase generator to increase coverage."""
 
-import os
 import subprocess
 import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import patch
 
 from clientele.generators.classbase.generator import ClassbaseGenerator
 from tests.generators.integration_utils import get_spec_path, load_spec
@@ -18,7 +17,7 @@ def test_classbase_generator_removes_existing_client_py():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
         output_dir.mkdir(parents=True)
-        
+
         # Create an existing client.py file
         existing_file = output_dir / "client.py"
         existing_file.write_text("# Old client content\n")
@@ -45,7 +44,7 @@ def test_classbase_generator_removes_existing_schemas_py():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
         output_dir.mkdir(parents=True)
-        
+
         # Create an existing schemas.py file
         existing_file = output_dir / "schemas.py"
         existing_file.write_text("# Old schemas content\n")
@@ -71,7 +70,7 @@ def test_classbase_generator_preserves_existing_config_py():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
         output_dir.mkdir(parents=True)
-        
+
         # Create an existing config.py with custom content
         existing_config = output_dir / "config.py"
         custom_content = "# Custom config\nclass Config:\n    custom_setting = 'preserved'\n"
@@ -99,7 +98,7 @@ def test_classbase_generator_removes_existing_manifest():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
         output_dir.mkdir(parents=True)
-        
+
         # Create an existing MANIFEST.md file
         existing_manifest = output_dir / "MANIFEST.md"
         existing_manifest.write_text("# Old manifest\n")
@@ -137,10 +136,10 @@ def test_classbase_generator_handles_ruff_formatting_error():
                 cmd=['ruff', 'format'],
                 stderr='Ruff formatting failed'
             )
-            
+
             # Should not raise exception, just log warning
             generator.generate()
-            
+
             # Verify client was still generated despite formatting error
             assert (Path(output_dir) / "client.py").exists()
 
@@ -160,9 +159,9 @@ def test_classbase_generator_handles_ruff_not_found():
         # Mock subprocess.run to raise FileNotFoundError
         with patch('subprocess.run') as mock_run:
             mock_run.side_effect = FileNotFoundError("ruff: command not found")
-            
+
             # Should not raise exception, just log warning
             generator.generate()
-            
+
             # Verify client was still generated despite missing ruff
             assert (Path(output_dir) / "client.py").exists()

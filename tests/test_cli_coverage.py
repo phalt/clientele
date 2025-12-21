@@ -52,8 +52,8 @@ def openapi_v3_spec():
 
 def test_load_openapi_spec_else_branch():
     """Test assertion in _load_openapi_spec when neither url nor file provided.
-    
-    Note: The else branch on line 35 is unreachable defensive code because 
+
+    Note: The else branch on line 35 is unreachable defensive code because
     the assertion on line 28 catches this case first. We test the assertion here.
     """
     # Test that assertion fires when neither url nor file is provided
@@ -63,7 +63,7 @@ def test_load_openapi_spec_else_branch():
 
 def test_generate_command_with_swagger_spec(runner, openapi_v2_spec):
     """Test generate command with Swagger 2.0 spec (gets auto-converted to 3.0).
-    
+
     Note: Cicerone automatically converts Swagger 2.0 to OpenAPI 3.0, so the version
     check on lines 96-97 would only trigger for malformed specs, not valid Swagger 2.0.
     """
@@ -88,7 +88,7 @@ def test_generate_command_with_swagger_spec(runner, openapi_v2_spec):
 
 def test_generate_class_command_with_swagger_spec(runner, openapi_v2_spec):
     """Test generate-class command with Swagger 2.0 spec (gets auto-converted to 3.0).
-    
+
     Note: Cicerone automatically converts Swagger 2.0 to OpenAPI 3.0, so the version
     check on lines 144-145 would only trigger for malformed specs, not valid Swagger 2.0.
     """

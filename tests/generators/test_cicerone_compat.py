@@ -17,9 +17,9 @@ def test_parameter_to_dict_with_ref():
     """Test parameter_to_dict handles $ref (line 105)."""
     mock_param = Mock()
     mock_param.ref = "#/components/parameters/TestParam"
-    
+
     result = cicerone_compat.parameter_to_dict(mock_param)
-    
+
     assert result == {"$ref": "#/components/parameters/TestParam"}
 
 
@@ -45,17 +45,17 @@ def test_request_body_to_dict_with_content():
     mock_schema.format = None
     mock_schema.items = None
     mock_schema.title = None
-    
+
     mock_media_type = Mock()
     mock_media_type.schema_ = mock_schema
-    
+
     mock_request_body = Mock()
     mock_request_body.content = {
         "application/json": mock_media_type
     }
-    
+
     result = cicerone_compat.request_body_to_dict(mock_request_body)
-    
+
     assert "content" in result
     assert "application/json" in result["content"]
     assert "schema" in result["content"]["application/json"]
@@ -83,18 +83,18 @@ def test_response_to_dict_with_description_and_content():
     mock_schema.format = None
     mock_schema.items = None
     mock_schema.title = None
-    
+
     mock_media_type = Mock()
     mock_media_type.schema_ = mock_schema
-    
+
     mock_response = Mock()
     mock_response.description = "Success response"
     mock_response.content = {
         "application/json": mock_media_type
     }
-    
+
     result = cicerone_compat.response_to_dict(mock_response)
-    
+
     assert result["description"] == "Success response"
     assert "content" in result
     assert "application/json" in result["content"]
@@ -128,7 +128,7 @@ def test_path_item_to_operations_dict_with_path_level_parameters():
     mock_operation.responses = {}
     mock_operation.__pydantic_extra__ = {}
     mock_operation.request_body = None
-    
+
     # Create mock schema for parameter
     mock_schema = Mock()
     mock_schema.__pydantic_extra__ = {}
@@ -141,7 +141,7 @@ def test_path_item_to_operations_dict_with_path_level_parameters():
     mock_schema.format = None
     mock_schema.items = None
     mock_schema.title = None
-    
+
     # Create mock parameter
     mock_param = Mock()
     mock_param.name = "id"
@@ -149,14 +149,14 @@ def test_path_item_to_operations_dict_with_path_level_parameters():
     mock_param.required = True
     mock_param.schema_ = mock_schema
     mock_param.ref = None
-    
+
     # Create mock path item with path-level parameters
     mock_path_item = Mock()
     mock_path_item.operations = {"get": mock_operation}
     mock_path_item.parameters = [mock_param]
-    
+
     result = cicerone_compat.path_item_to_operations_dict(mock_path_item)
-    
+
     assert "get" in result
     assert "parameters" in result
     assert len(result["parameters"]) == 1
@@ -173,7 +173,7 @@ def test_path_item_to_operations_dict_with_pydantic_extra_parameters():
     mock_operation.responses = {}
     mock_operation.__pydantic_extra__ = {}
     mock_operation.request_body = None
-    
+
     # Create mock path item WITHOUT direct parameters attribute
     mock_path_item = Mock(spec=[])
     mock_path_item.operations = {"get": mock_operation}
@@ -181,9 +181,9 @@ def test_path_item_to_operations_dict_with_pydantic_extra_parameters():
     mock_path_item.__pydantic_extra__ = {
         "parameters": [{"name": "id", "in": "path", "required": True}]
     }
-    
+
     result = cicerone_compat.path_item_to_operations_dict(mock_path_item)
-    
+
     assert "get" in result
     assert "parameters" in result
     assert result["parameters"] == [{"name": "id", "in": "path", "required": True}]
@@ -194,11 +194,11 @@ def test_get_pydantic_extra_with_no_extra():
     # Create a plain object without __pydantic_extra__
     class PlainObject:
         pass
-    
+
     obj = PlainObject()
-    
+
     result = cicerone_compat.get_pydantic_extra(obj, "test_key")
-    
+
     assert result is None
 
 
@@ -206,9 +206,9 @@ def test_get_pydantic_extra_with_empty_extra():
     """Test get_pydantic_extra when extra dict is empty."""
     obj = Mock()
     obj.__pydantic_extra__ = {}
-    
+
     result = cicerone_compat.get_pydantic_extra(obj, "test_key")
-    
+
     assert result is None
 
 
@@ -216,7 +216,7 @@ def test_get_pydantic_extra_with_key_present():
     """Test get_pydantic_extra when key is present in extra."""
     obj = Mock()
     obj.__pydantic_extra__ = {"test_key": "test_value"}
-    
+
     result = cicerone_compat.get_pydantic_extra(obj, "test_key")
-    
+
     assert result == "test_value"

@@ -1,6 +1,5 @@
 """Additional tests for standard utils to increase coverage."""
 
-import pytest
 
 from clientele.generators.standard import utils
 
@@ -19,8 +18,8 @@ def test_snake_case_prop_with_only_special_chars():
 
 def test_snake_case_prop_with_digit_start():
     """Test snake_case_prop handles identifiers starting with digit (line 57).
-    
-    Note: The function adds underscore prefix on line 57, but then strips it on 
+
+    Note: The function adds underscore prefix on line 57, but then strips it on
     line 66, so the result doesn't have the underscore. This test still covers line 57.
     """
     result = utils.snake_case_prop("123test")
@@ -109,7 +108,7 @@ def test_get_schema_from_ref_basic():
     # Use existing test spec that has components
     from tests.generators.integration_utils import load_spec
     spec = load_spec("best.json")
-    
+
     # This spec should have some schemas we can reference
     if spec.components and spec.components.schemas:
         # Get first available schema key
@@ -118,7 +117,7 @@ def test_get_schema_from_ref_basic():
             first_key = schema_keys[0]
             ref = f"#/components/schemas/{first_key}"
             result = utils.get_schema_from_ref(spec=spec, ref=ref)
-            
+
             # Should return a dict
             assert result is not None
             assert isinstance(result, dict)
