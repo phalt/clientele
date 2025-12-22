@@ -158,9 +158,7 @@ class ClientIntrospector:
             if operation_info:
                 self.operations[name] = operation_info
 
-    def _analyze_operation(
-        self, func: typing.Callable, name: str, is_method: bool = False
-    ) -> OperationInfo | None:
+    def _analyze_operation(self, func: typing.Callable, name: str, is_method: bool = False) -> OperationInfo | None:
         """Analyze a function/method to extract operation information.
 
         Args:
