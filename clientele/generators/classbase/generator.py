@@ -64,13 +64,13 @@ class ClassbaseGenerator(generators.Generator):
     def generate_templates_files(self):
         new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
-        
+
         # Extract base_url from OpenAPI spec servers
         base_url = "http://localhost"
         if self.spec.servers and len(self.spec.servers) > 0:
             base_url = self.spec.servers[0].url
             console.log(f"[cyan]Detected base URL from spec: {base_url}[/cyan]")
-        
+
         writer.write_to_init(output_dir=self.output_dir)
 
         # Generate the client.py header with class definition
