@@ -64,6 +64,73 @@ uv tool install clientele
 clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o api_client/
 ```
 
+## Interactive API Explorer
+
+Clientele includes an **interactive REPL** that lets you explore and test APIs without writing any code:
+
+```sh
+# Explore an existing client
+clientele explore -o api_client/
+
+# Or generate a temporary client and explore directly from a schema
+clientele explore -f openapi.json
+clientele explore -u https://api.example.com/openapi.json
+```
+
+### Features
+
+- **🔍 Autocomplete**: Press TAB to discover operations and parameters with type hints
+- **⚡ Execute instantly**: Test API operations with Python-like syntax
+- **🎨 Beautiful output**: Syntax-highlighted JSON responses with timing information
+- **📝 Command history**: Navigate previous commands with UP/DOWN arrows
+- **🛠️ Special commands**: Built-in helpers like `.list`, `.help`, and more
+
+### Example Session
+
+```
+clientele explore v0.10.0 - Interactive API Explorer
+═══════════════════════════════════════════════════════════
+
+>>> .list
+Available Operations
+┌────────────────────────────────┬────────┬─────────────────┐
+│ Operation                      │ Method │ Description     │
+├────────────────────────────────┼────────┼─────────────────┤
+│ get_users                      │ GET    │ List all users  │
+│ create_user                    │ POST   │ Create new user │
+└────────────────────────────────┴────────┴─────────────────┘
+
+>>> get_users(limit=10)
+✓ Success in 0.45s
+[
+  {"id": 1, "name": "Alice"},
+  {"id": 2, "name": "Bob"}
+]
+
+>>> create_user(data={"name": "Charlie", "email": "charlie@example.com"})
+✓ Success in 0.23s
+{
+  "id": 3,
+  "name": "Charlie",
+  "email": "charlie@example.com"
+}
+
+>>> .help
+Special Commands:
+  .list      - List all available operations
+  .help      - Show help message
+  .exit      - Exit the REPL
+
+>>> .exit
+Goodbye! 👋
+```
+
+The explore command is perfect for:
+- **API Discovery**: Quickly learn what operations are available
+- **Testing**: Try out API calls before writing code
+- **Debugging**: Validate request/response behavior interactively
+- **Documentation**: Live API exploration for your team
+
 ## Generated code
 
 The generated code uses modern tooling and has a great developer experience.

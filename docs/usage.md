@@ -223,6 +223,314 @@ Print the current version of Clientele:
 Clientele 0.9.0
 ```
 
+## `explore`
+
+The `explore` command launches an **interactive REPL** (Read-Eval-Print Loop) that lets you explore and test API operations without writing any code. It's perfect for API discovery, testing, and debugging.
+
+### Usage Modes
+
+#### Explore an Existing Client
+
+If you've already generated a client, you can explore it directly:
+
+```sh
+clientele explore -o my_client/
+```
+
+This loads the generated client and discovers all available operations.
+
+#### Explore from a Schema File
+
+Generate a temporary client and explore it in one command:
+
+```sh
+clientele explore -f path/to/openapi.json
+```
+
+Clientele will:
+1. Generate a temporary client from the schema
+2. Load it into the REPL
+3. Clean up the temporary files when you exit
+
+#### Explore from a Schema URL
+
+You can also explore directly from a URL:
+
+```sh
+clientele explore -u https://api.example.com/openapi.json
+```
+
+This is great for quickly testing remote APIs without saving the client locally.
+
+### Interactive Features
+
+Once inside the REPL, you have access to several powerful features:
+
+#### Tab Autocomplete
+
+Press **TAB** to autocomplete:
+
+- **Operation names** - See all available API operations
+- **Parameter names** - Get suggestions for function parameters
+- **Type hints** - View parameter types and whether they're required
+
+```
+>>> get_  <TAB>
+get_users                    get_user_by_id
+get_user_profile            get_user_settings
+
+>>> get_users(  <TAB>
+limit=    (int, optional)
+offset=   (int, optional)
+```
+
+#### Execute Operations
+
+Call API operations using Python-like syntax:
+
+```python
+# Simple operation with no parameters
+>>> simple_request_simple_request_get()
+
+# Operation with parameters
+>>> get_users(limit=10, offset=0)
+
+# Operation with complex data
+>>> create_user(data={"name": "Alice", "email": "alice@example.com"})
+```
+
+The REPL will:
+- Validate your arguments against the operation signature
+- Execute the API call
+- Display timing information
+- Format the response with syntax highlighting
+
+#### Special Commands
+
+Commands starting with `.` provide additional functionality:
+
+**`.list`** or **`.operations`** - List all available operations in a table:
+
+```
+>>> .list
+Available Operations
+┌─────────────────────────────────┬────────┬─────────────────┐
+│ Operation                       │ Method │ Description     │
+├─────────────────────────────────┼────────┼─────────────────┤
+│ get_users                       │ GET    │ List all users  │
+│ create_user                     │ POST   │ Create new user │
+│ update_user                     │ PUT    │ Update user     │
+│ delete_user                     │ DELETE │ Delete user     │
+└─────────────────────────────────┴────────┴─────────────────┘
+
+Total: 4 operations
+```
+
+**`.help`** - Show help message with usage information:
+
+```
+>>> .help
+
+Clientele Interactive API Explorer
+
+Usage:
+  • Type operation names and press TAB to autocomplete
+  • Execute operations with Python-like syntax: operation_name(param=value)
+  • Use UP/DOWN arrows to navigate command history
+
+Special Commands:
+  .list, .operations  - List all available operations
+  .help                  - Show this help message
+  .exit, .quit         - Exit the REPL
+
+Examples:
+  get_users()                           - Execute operation without parameters
+  get_user(user_id="123")               - Execute with parameters
+  create_user(data={"name": "John"})   - Pass complex data
+```
+
+**`.exit`** or **`.quit`** - Exit the REPL (you can also use Ctrl+D):
+
+```
+>>> .exit
+Goodbye! 👋
+```
+
+#### Command History
+
+Navigate your command history with **UP** and **DOWN** arrow keys. Your history is saved to `~/.clientele_history` and persists between sessions.
+
+### Example Session
+
+Here's a complete example exploring an API:
+
+```
+$ clientele explore -o my_api_client/
+
+═══════════════════════════════════════════════════════════
+  Clientele Interactive API Explorer v0.10.0
+═══════════════════════════════════════════════════════════
+
+Type .help or ? for commands, .exit or Ctrl+D to quit
+Type .list to see available operations
+
+Press TAB for autocomplete
+
+>>> .list
+Available Operations
+┌─────────────────────────────────┬────────┬─────────────────┐
+│ Operation                       │ Method │ Description     │
+├─────────────────────────────────┼────────┼─────────────────┤
+│ get_users                       │ GET    │ List all users  │
+│ get_user_by_id                  │ GET    │ Get user by ID  │
+│ create_user                     │ POST   │ Create new user │
+└─────────────────────────────────┴────────┴─────────────────┘
+
+Total: 3 operations
+
+>>> get_users(limit=5)
+✓ Success in 0.34s
+[
+  {
+    "id": 1,
+    "name": "Alice",
+    "email": "alice@example.com"
+  },
+  {
+    "id": 2,
+    "name": "Bob",
+    "email": "bob@example.com"
+  }
+]
+
+>>> get_user_by_id(user_id=1)
+✓ Success in 0.12s
+{
+  "id": 1,
+  "name": "Alice",
+  "email": "alice@example.com",
+  "created_at": "2024-01-15T10:30:00Z"
+}
+
+>>> create_user(data={"name": "Charlie", "email": "charlie@example.com"})
+✓ Success in 0.28s
+{
+  "id": 3,
+  "name": "Charlie",
+  "email": "charlie@example.com",
+  "created_at": "2024-01-15T11:45:00Z"
+}
+
+>>> .exit
+Goodbye! 👋
+```
+
+### Response Formatting
+
+The explore command automatically formats responses for readability:
+
+**JSON Responses** - Syntax-highlighted with proper indentation:
+
+```json
+{
+  "id": 1,
+  "name": "Alice",
+  "email": "alice@example.com"
+}
+```
+
+**Timing Information** - Every request shows execution time:
+
+```
+✓ Success in 0.45s
+```
+
+**Error Handling** - Errors are displayed in a clear, formatted panel:
+
+```
+✗ Error in 0.12s
+╭─────────────────────── Error ───────────────────────╮
+│ ValueError: Missing required parameter: user_id     │
+╰─────────────────────────────────────────────────────╯
+```
+
+### Use Cases
+
+#### API Discovery
+
+Quickly explore what operations are available in an API:
+
+```sh
+clientele explore -u https://api.example.com/openapi.json
+>>> .list
+```
+
+#### Testing Before Coding
+
+Try out API calls to understand request/response formats before writing production code:
+
+```sh
+clientele explore -o my_client/
+>>> create_user(data={"name": "Test User"})
+>>> get_users(limit=1)
+```
+
+#### Debugging
+
+Validate that specific API operations work as expected:
+
+```sh
+clientele explore -o my_client/
+>>> get_user_by_id(user_id=123)
+>>> update_user(user_id=123, data={"status": "active"})
+```
+
+#### Documentation & Demos
+
+Use the explore command during demos or documentation to show live API interactions.
+
+### Tips & Tricks
+
+**Use `?` as a shortcut for help:**
+
+```
+>>> ?
+(Shows help message)
+```
+
+**Press Ctrl+C to cancel current input** without exiting the REPL.
+
+**Press Ctrl+D to exit** the REPL quickly.
+
+**Use arrow keys** to navigate command history - perfect for repeating similar commands with small variations.
+
+**Tab completion works everywhere** - try it at any point to see available options.
+
+### Compatibility
+
+The explore command works with:
+
+- ✅ Standard function-based clients (`generate`)
+- ✅ Class-based clients (`generate-class`)
+- ✅ Both sync and async clients
+- ✅ Clients with authentication configured
+- ✅ All OpenAPI 3.0+ schemas
+
+### Limitations
+
+- The explore command is **interactive only** - not suitable for CI/CD or automated testing
+- Operations are executed against the **actual API** - be careful with destructive operations
+- For automated testing, use the generated client directly in your test suite
+
+## `version`
+
+Print the current version of Clientele:
+
+```sh
+> clientele version
+Clientele 0.9.0
+```
+
 ## Regenerating
 
 At times you may wish to regenerate the client. This could be because the API has updated or you just want to use a newer version of clientele.
