@@ -60,8 +60,8 @@ class ClienteleREPL:
 [bold cyan]  Clientele Interactive API Explorer v{settings.VERSION}[/bold cyan]
 [bold cyan]═══════════════════════════════════════════════════════════[/bold cyan]
 
-Type [cyan].help[/cyan] or [cyan]?[/cyan] for commands, [cyan].exit[/cyan] or Ctrl+D to quit
-Type [cyan].list[/cyan] to see available operations
+Type [cyan]/help[/cyan] or [cyan]?[/cyan] for commands, [cyan]/exit[/cyan] or Ctrl+D to quit
+Type [cyan]/list[/cyan] to see available operations
 
 Press [bold]TAB[/bold] for autocomplete
 """
@@ -81,13 +81,13 @@ Press [bold]TAB[/bold] for autocomplete
                     continue
 
                 # Handle special commands
-                if text.strip().startswith("."):
+                if text.strip().startswith("/"):
                     should_exit = self.command_handler.handle_command(text.strip())
                     if should_exit:
                         self.console.print("\n[cyan]Goodbye! 👋[/cyan]")
                         break
                 elif text.strip() == "?":
-                    self.command_handler.handle_command(".help")
+                    self.command_handler.handle_command("/help")
                 else:
                     # Execute operation
                     self._execute_operation(text.strip())

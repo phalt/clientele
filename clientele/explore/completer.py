@@ -16,14 +16,14 @@ class ClienteleCompleter(Completer):
 
     # Special commands available in the REPL
     SPECIAL_COMMANDS = [
-        (".list", "List all available operations"),
-        (".operations", "List all available operations (alias for .list)"),
-        (".schemas", "List all available schemas or show schema details"),
-        (".config", "Show or set configuration"),
-        (".debug", "Enable/disable debug mode"),
-        (".help", "Show help message"),
-        (".exit", "Exit the REPL"),
-        (".quit", "Exit the REPL (alias for .exit)"),
+        ("/list", "List all available operations"),
+        ("/operations", "List all available operations (alias for /list)"),
+        ("/schemas", "List all available schemas or show schema details"),
+        ("/config", "Show or set configuration"),
+        ("/debug", "Enable/disable debug mode"),
+        ("/help", "Show help message"),
+        ("/exit", "Exit the REPL"),
+        ("/quit", "Exit the REPL (alias for /exit)"),
     ]
 
     def __init__(self, introspector: ClientIntrospector):
@@ -47,11 +47,11 @@ class ClienteleCompleter(Completer):
         text = document.text_before_cursor
         word = document.get_word_before_cursor()
 
-        # Special commands (starting with .)
-        if text.startswith("."):
-            # Check if we're completing after ".schemas "
-            if text.startswith(".schemas "):
-                schema_arg = text[9:]  # Everything after ".schemas "
+        # Special commands (starting with /)
+        if text.startswith("/"):
+            # Check if we're completing after "/schemas "
+            if text.startswith("/schemas "):
+                schema_arg = text[9:]  # Everything after "/schemas "
                 yield from self._complete_schema_names(schema_arg)
             else:
                 yield from self._complete_special_commands(word)
@@ -82,7 +82,7 @@ class ClienteleCompleter(Completer):
                 )
 
     def _complete_schema_names(self, word: str):
-        """Complete schema names after .schemas command.
+        """Complete schema names after /schemas command.
 
         Args:
             word: Current word being typed

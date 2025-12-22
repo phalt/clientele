@@ -200,10 +200,10 @@ def generate_class(url, file, output, asyncio, regen):
 
 
 @click.command()
-@click.option("-o", "--output", help="Path to generated client directory", required=False)
+@click.option("-c", "--client", help="Path to generated client directory", required=False)
 @click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
 @click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
-def explore(output, file, url):
+def explore(client, file, url):
     """
     Interactive API explorer - test and discover APIs interactively
     """
@@ -219,9 +219,9 @@ def explore(output, file, url):
     client_path = None
     temp_dir = None
 
-    if output:
+    if client:
         # Use existing client
-        client_path = Path(output)
+        client_path = Path(client)
         if not client_path.exists():
             console.log(f"[red]Client directory not found: {client_path}[/red]")
             return
@@ -254,9 +254,9 @@ def explore(output, file, url):
         console.log(f"[green]Client generated at {client_path}[/green]")
 
     else:
-        console.log("[red]Error: Must provide either --output, --file, or --url[/red]")
+        console.log("[red]Error: Must provide either --client, --file, or --url[/red]")
         console.log("Examples:")
-        console.log("  clientele explore -o ./my_client")
+        console.log("  clientele explore -c ./my_client")
         console.log("  clientele explore -f ./openapi.json")
         console.log("  clientele explore -u https://api.example.com/openapi.json")
         return

@@ -37,7 +37,7 @@ class CommandHandler:
         """Handle a special command.
 
         Args:
-            command: Command string (including the leading .)
+            command: Command string (including the leading /)
 
         Returns:
             True if should exit REPL, False otherwise
@@ -47,24 +47,24 @@ class CommandHandler:
         cmd = parts[0]
         arg = parts[1] if len(parts) > 1 else None
 
-        if cmd in [".exit", ".quit"]:
+        if cmd in ["/exit", "/quit"]:
             return True
-        elif cmd in [".list", ".operations"]:
+        elif cmd in ["/list", "/operations"]:
             self._list_operations()
-        elif cmd == ".schemas":
+        elif cmd == "/schemas":
             if arg:
                 self._show_schema_detail(arg)
             else:
                 self._list_schemas()
-        elif cmd == ".config":
+        elif cmd == "/config":
             self._handle_config(arg)
-        elif cmd == ".debug":
+        elif cmd == "/debug":
             self._handle_debug(arg)
-        elif cmd == ".help":
+        elif cmd == "/help":
             self._show_help()
         else:
             self.console.print(f"[yellow]Unknown command: {cmd}[/yellow]")
-            self.console.print("Type [cyan].help[/cyan] for available commands")
+            self.console.print("Type [cyan]/help[/cyan] for available commands")
 
         return False
 
@@ -102,25 +102,25 @@ class CommandHandler:
   • Use UP/DOWN arrows to navigate command history
 
 [bold]Special Commands:[/bold]
-  [cyan].list[/cyan], [cyan].operations[/cyan]  - List all available operations
-  [cyan].schemas[/cyan]              - List all available schemas
-  [cyan].schemas <name>[/cyan]       - Show details for a specific schema
-  [cyan].config[/cyan]               - Show current configuration
-  [cyan].config set <key> <value>[/cyan] - Set a configuration value
-  [cyan].debug on[/cyan]             - Enable request/response logging
-  [cyan].debug off[/cyan]            - Disable request/response logging
-  [cyan].help[/cyan]                  - Show this help message
-  [cyan].exit[/cyan], [cyan].quit[/cyan]         - Exit the REPL
+  [cyan]/list[/cyan], [cyan]/operations[/cyan]  - List all available operations
+  [cyan]/schemas[/cyan]              - List all available schemas
+  [cyan]/schemas <name>[/cyan]       - Show details for a specific schema
+  [cyan]/config[/cyan]               - Show current configuration
+  [cyan]/config set <key> <value>[/cyan] - Set a configuration value
+  [cyan]/debug on[/cyan]             - Enable request/response logging
+  [cyan]/debug off[/cyan]            - Disable request/response logging
+  [cyan]/help[/cyan]                  - Show this help message
+  [cyan]/exit[/cyan], [cyan]/quit[/cyan]         - Exit the REPL
 
 [bold]Examples:[/bold]
   [cyan]get_users()[/cyan]                           - Execute operation without parameters
   [cyan]get_user(user_id="123")[/cyan]               - Execute with parameters
   [cyan]create_user(data={"name": "John"})[/cyan]   - Pass complex data
-  [cyan].schemas[/cyan]                              - List all schemas
-  [cyan].schemas User[/cyan]                         - Show User schema details
-  [cyan].config[/cyan]                               - Show current config
-  [cyan].config set base_url https://api.example.com[/cyan] - Set base URL
-  [cyan].debug on[/cyan]                             - Enable debug mode
+  [cyan]/schemas[/cyan]                              - List all schemas
+  [cyan]/schemas User[/cyan]                         - Show User schema details
+  [cyan]/config[/cyan]                               - Show current config
+  [cyan]/config set base_url https://api.example.com[/cyan] - Set base URL
+  [cyan]/debug on[/cyan]                             - Enable debug mode
 
 [bold]Tips:[/bold]
   • Press TAB to see available completions
@@ -173,7 +173,7 @@ class CommandHandler:
 
         if not schema_info:
             self.console.print(f"[red]Schema not found: {schema_name}[/red]")
-            self.console.print("[dim]Use [cyan].schemas[/cyan] to see all available schemas[/dim]")
+            self.console.print("[dim]Use [cyan]/schemas[/cyan] to see all available schemas[/dim]")
             return
 
         # Create title with schema name
