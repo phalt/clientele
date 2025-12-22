@@ -1,5 +1,9 @@
 from __future__ import annotations
 
+import shutil
+import tempfile
+from pathlib import Path
+
 import click
 
 
@@ -158,9 +162,6 @@ def explore(output, file, url):
     """
     Interactive API explorer - test and discover APIs interactively
     """
-    import tempfile
-    from pathlib import Path
-
     from rich.console import Console
 
     from clientele.explore.introspector import ClientIntrospector
@@ -234,8 +235,6 @@ def explore(output, file, url):
     finally:
         # Clean up temporary directory if created
         if temp_dir:
-            import shutil
-
             try:
                 shutil.rmtree(temp_dir)
             except Exception:

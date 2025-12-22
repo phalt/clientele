@@ -60,7 +60,7 @@ class ResponseFormatter:
                 response_dict = result.response
             elif isinstance(result.response, (list, tuple)):
                 # Handle lists
-                if result.response and hasattr(result.response[0], "model_dump"):
+                if result.response and len(result.response) > 0 and hasattr(result.response[0], "model_dump"):
                     response_dict = [item.model_dump() for item in result.response]
                 else:
                     response_dict = result.response
