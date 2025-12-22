@@ -25,14 +25,36 @@ def normalize_openapi_31_schema(schema_dict: dict) -> dict:
     Normalize OpenAPI 3.1 schema to OpenAPI 3.0 compatible format.
 
     OpenAPI 3.1 allows type to be an array (e.g., ['integer', 'null'] for nullable),
-    while OpenAPI 3.0 uses 'nullable: true'. This function converts the 3.1 format
-    to 3.0 format for compatibility with cicerone.
+    while OpenAPI 3.0 uses 'nullable: true'. This function converts both formats
+    to anyOf pattern for compatibility with cicerone/Pydantic.
+
+    CICERONE BUG WORKAROUND:
+    Cicerone doesn't properly convert 'nullable: true' to Optional[] Pydantic types.
+    
+    Expected behavior:
+        OpenAPI schema:
+            type: string
+            nullable: true
+        Should generate Pydantic model:
+            field: Optional[str]
+    
+    Actual behavior (without this workaround):
+        Generates:
+            field: str
+        Which rejects null values causing validation errors.
+    
+    Workaround:
+        Convert nullable fields to anyOf pattern which Pydantic handles correctly:
+            anyOf:
+              - type: string
+              - type: null
+        This properly generates: field: Optional[str]
 
     Args:
         schema_dict: Schema dictionary that may contain OpenAPI 3.1 features
 
     Returns:
-        Normalized schema dictionary compatible with OpenAPI 3.0
+        Normalized schema dictionary with anyOf patterns for nullable fields
     """
     if not isinstance(schema_dict, dict):
         return schema_dict
