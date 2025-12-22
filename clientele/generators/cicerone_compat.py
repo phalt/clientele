@@ -14,9 +14,136 @@ These conversions handle:
 - Pydantic extra fields (e.g., $ref, deprecated, enum)
 - Nested object conversion
 - Mixed types (both Pydantic models and raw dicts)
+- OpenAPI 3.1 compatibility (e.g., array-based type definitions)
 """
 
 import typing
+
+
+def normalize_openapi_31_schema(schema_dict: dict) -> dict:
+    """
+    Normalize OpenAPI 3.1 schema to OpenAPI 3.0 compatible format.
+
+    OpenAPI 3.1 allows type to be an array (e.g., ['integer', 'null'] for nullable),
+    while OpenAPI 3.0 uses 'nullable: true'. This function converts the 3.1 format
+    to 3.0 format for compatibility with cicerone.
+
+    Args:
+        schema_dict: Schema dictionary that may contain OpenAPI 3.1 features
+
+    Returns:
+        Normalized schema dictionary compatible with OpenAPI 3.0
+    """
+    if not isinstance(schema_dict, dict):
+        return schema_dict
+
+    # Create a copy to avoid modifying the original
+    normalized = schema_dict.copy()
+
+    # Handle type as array (OpenAPI 3.1 nullable types)
+    if "type" in normalized and isinstance(normalized["type"], list):
+        types = normalized["type"]
+        # Filter out 'null' and get the actual type
+        non_null_types = [t for t in types if t != "null"]
+        has_null = "null" in types
+
+        if non_null_types:
+            # Use the first non-null type
+            normalized["type"] = non_null_types[0]
+            # Mark as nullable if null was in the array OR if already marked nullable
+            if has_null or normalized.get("nullable", False):
+                normalized["nullable"] = True
+        else:
+            # Only null type - treat as nullable string
+            normalized["type"] = "string"
+            normalized["nullable"] = True
+    # Preserve existing nullable: true even if type is not an array
+    elif "nullable" in normalized and normalized["nullable"]:
+        # Ensure it stays nullable through normalization
+        normalized["nullable"] = True
+
+    # Recursively normalize nested schemas
+    if "properties" in normalized and isinstance(normalized["properties"], dict):
+        normalized["properties"] = {k: normalize_openapi_31_schema(v) for k, v in normalized["properties"].items()}
+
+    if "items" in normalized:
+        normalized["items"] = normalize_openapi_31_schema(normalized["items"])
+
+    if "allOf" in normalized and isinstance(normalized["allOf"], list):
+        normalized["allOf"] = [normalize_openapi_31_schema(s) for s in normalized["allOf"]]
+
+    if "oneOf" in normalized and isinstance(normalized["oneOf"], list):
+        normalized["oneOf"] = [normalize_openapi_31_schema(s) for s in normalized["oneOf"]]
+
+    if "anyOf" in normalized and isinstance(normalized["anyOf"], list):
+        normalized["anyOf"] = [normalize_openapi_31_schema(s) for s in normalized["anyOf"]]
+
+    return normalized
+
+
+def normalize_openapi_31_spec(spec_dict: dict) -> dict:
+    """
+    Normalize an entire OpenAPI 3.1 spec to OpenAPI 3.0 compatible format.
+
+    This recursively processes all schemas in the components section and throughout
+    the spec to handle OpenAPI 3.1 specific features.
+
+    Args:
+        spec_dict: Full OpenAPI spec dictionary
+
+    Returns:
+        Normalized spec dictionary compatible with OpenAPI 3.0/cicerone
+    """
+    if not isinstance(spec_dict, dict):
+        return spec_dict
+
+    normalized = spec_dict.copy()
+
+    # Normalize schemas in components
+    if "components" in normalized and isinstance(normalized["components"], dict):
+        if "schemas" in normalized["components"] and isinstance(normalized["components"]["schemas"], dict):
+            normalized["components"]["schemas"] = {
+                k: normalize_openapi_31_schema(v) for k, v in normalized["components"]["schemas"].items()
+            }
+
+    # Normalize schemas in paths
+    if "paths" in normalized and isinstance(normalized["paths"], dict):
+        for path, path_item in normalized["paths"].items():
+            if not isinstance(path_item, dict):
+                continue
+
+            for method, operation in path_item.items():
+                if not isinstance(operation, dict) or method.startswith("$"):
+                    continue
+
+                # Normalize request body schemas
+                if "requestBody" in operation and isinstance(operation["requestBody"], dict):
+                    if "content" in operation["requestBody"]:
+                        for content_type, content in operation["requestBody"]["content"].items():
+                            if "schema" in content:
+                                operation["requestBody"]["content"][content_type]["schema"] = (
+                                    normalize_openapi_31_schema(content["schema"])
+                                )
+
+                # Normalize response schemas
+                if "responses" in operation and isinstance(operation["responses"], dict):
+                    for status, response in operation["responses"].items():
+                        if not isinstance(response, dict):
+                            continue
+                        if "content" in response:
+                            for content_type, content in response["content"].items():
+                                if "schema" in content:
+                                    operation["responses"][status]["content"][content_type]["schema"] = (
+                                        normalize_openapi_31_schema(content["schema"])
+                                    )
+
+                # Normalize parameter schemas
+                if "parameters" in operation and isinstance(operation["parameters"], list):
+                    for param in operation["parameters"]:
+                        if isinstance(param, dict) and "schema" in param:
+                            param["schema"] = normalize_openapi_31_schema(param["schema"])
+
+    return normalized
 
 
 def schema_to_dict(schema) -> dict:
@@ -75,6 +202,10 @@ def schema_to_dict(schema) -> dict:
     if hasattr(schema, "format") and schema.format:
         result["format"] = schema.format
 
+    # Handle nullable
+    if hasattr(schema, "nullable") and schema.nullable:
+        result["nullable"] = schema.nullable
+
     # Handle items (for arrays)
     if hasattr(schema, "items") and schema.items:
         result["items"] = schema_to_dict(schema.items)
@@ -130,7 +261,7 @@ def request_body_to_dict(request_body) -> dict:
     if isinstance(request_body, dict):
         return request_body
 
-    result = {}
+    result: dict[str, typing.Any] = {}
 
     if hasattr(request_body, "content") and request_body.content:
         result["content"] = {}
@@ -256,7 +387,7 @@ def path_item_to_operations_dict(path_item) -> dict:
 
     # Add path-level parameters if they exist
     if hasattr(path_item, "parameters") and path_item.parameters:
-        operations_dict["parameters"] = [parameter_to_dict(p) for p in path_item.parameters]
+        operations_dict["parameters"] = [parameter_to_dict(p) for p in path_item.parameters]  # type: ignore[assignment]
     else:
         # Check in pydantic extra fields
         parameters = get_pydantic_extra(path_item, "parameters")

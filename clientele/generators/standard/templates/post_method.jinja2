@@ -1,6 +1,6 @@
 
 
-{{asyncio and "async " or ""}}def {{func_name}}({% if function_arguments %}{{function_arguments}}, {% endif %}data: {{data_class_name}}{% if header_class_name%}, headers: {{header_class_name}}{% endif %}) -> {{response_types}}:
+{{asyncio and "async " or ""}}def {{func_name}}({% if function_arguments.get_required_args_as_string() %}{{function_arguments.get_required_args_as_string()}}, {% endif %}data: {{data_class_name}}{% if function_arguments.get_optional_args_as_string() %}, {{function_arguments.get_optional_args_as_string()}}{% endif %}{% if header_class_name%}, headers: {{header_class_name}}{% endif %}) -> {{response_types}}:
     {% if summary or description or deprecated %}"""{% if summary %} {{summary}}{% endif %}{% if description %}
     
     {{description}}{% endif %}{% if deprecated %}

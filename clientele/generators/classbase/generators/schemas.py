@@ -2,6 +2,8 @@
 Wrapper for schemas generator that uses classbase writer.
 """
 
+import typing
+
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 
 from clientele.generators.classbase import writer
@@ -18,9 +20,9 @@ class SchemasGenerator(StandardSchemasGenerator):
     def __init__(self, spec: cicerone_openapi_spec.OpenAPISpec, output_dir: str) -> None:
         # Initialize parent but we'll override writer calls
         self.spec = spec
-        self.schemas = {}
+        self.schemas: dict[str, typing.Any] = {}  # Can be dict or str
         self.output_dir = output_dir
-        self.generated_response_class_names = []
+        self.generated_response_class_names: list[str] = []
 
     def generate_headers_class(self, properties: dict, func_name: str) -> str:
         """

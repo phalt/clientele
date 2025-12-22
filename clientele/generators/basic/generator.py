@@ -1,5 +1,5 @@
 import os
-from os import path
+import pathlib
 
 from clientele import generators, settings, utils
 from clientele.generators.basic import writer
@@ -28,8 +28,9 @@ class BasicGenerator(generators.Generator):
 
     def generate(self) -> None:
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
-        if path.exists(f"{self.output_dir}/MANIFEST.md"):
-            os.remove(f"{self.output_dir}/MANIFEST.md")
+        manifest_file = pathlib.Path(self.output_dir) / "MANIFEST.md"
+        if manifest_file.exists():
+            os.remove(manifest_file)
         manifest_template = writer.templates.get_template("manifest.jinja2")
         manifest_content = manifest_template.render(command=f"-o {self.output_dir}", clientele_version=settings.VERSION)
         writer.write_to_manifest(content=manifest_content + "\n", output_dir=self.output_dir)
@@ -39,8 +40,9 @@ class BasicGenerator(generators.Generator):
             client_template_file,
             write_func,
         ) in self.file_name_writer_tuple:
-            if path.exists(f"{self.output_dir}/{client_file}"):
-                os.remove(f"{self.output_dir}/{client_file}")
+            file_path = pathlib.Path(self.output_dir) / client_file
+            if file_path.exists():
+                os.remove(file_path)
             template = writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,

@@ -64,11 +64,19 @@ class ClassbaseGenerator(generators.Generator):
     def generate_templates_files(self):
         new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
+
+        # Extract base_url from OpenAPI spec servers
+        base_url = "http://localhost"
+        if self.spec.servers and len(self.spec.servers) > 0:
+            base_url = self.spec.servers[0].url
+            console.log(f"[cyan]Detected base URL from spec: {base_url}[/cyan]")
+
         writer.write_to_init(output_dir=self.output_dir)
 
         # Generate the client.py header with class definition
-        if path.exists(f"{self.output_dir}/client.py"):
-            os.remove(f"{self.output_dir}/client.py")
+        client_file = pathlib.Path(self.output_dir) / "client.py"
+        if client_file.exists():
+            os.remove(client_file)
         template = writer.templates.get_template("client_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,
@@ -77,8 +85,9 @@ class ClassbaseGenerator(generators.Generator):
         writer.write_to_client(content, output_dir=self.output_dir)
 
         # Generate the schemas.py header
-        if path.exists(f"{self.output_dir}/schemas.py"):
-            os.remove(f"{self.output_dir}/schemas.py")
+        schemas_file = pathlib.Path(self.output_dir) / "schemas.py"
+        if schemas_file.exists():
+            os.remove(schemas_file)
         template = writer.templates.get_template("schemas_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,
@@ -101,6 +110,7 @@ class ClassbaseGenerator(generators.Generator):
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
                 new_unions=new_unions,
+                base_url=base_url,
             )
             write_func(content, output_dir=self.output_dir)
 

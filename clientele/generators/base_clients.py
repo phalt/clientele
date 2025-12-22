@@ -26,7 +26,35 @@ class ParametersResponse(pydantic.BaseModel):
     def get_path_args_as_string(self) -> str:
         # Get all the path arguments, and the query arguments and make a big string out of them.
         args = list(self.path_args.items()) + list(self.query_args.items())
-        return ", ".join(f"{k}: {v}" for k, v in args)
+        # Separate required and optional parameters
+        # Python requires all required parameters (no default) before optional ones (with default)
+        required_args = []
+        optional_args = []
+        for k, v in args:
+            if v.startswith("typing.Optional["):
+                optional_args.append(f"{k}: {v} = None")
+            else:
+                required_args.append(f"{k}: {v}")
+        # Return required parameters first, then optional ones
+        return ", ".join(required_args + optional_args)
+
+    def get_required_args_as_string(self) -> str:
+        """Get only required parameters (those without Optional wrapper)."""
+        args = list(self.path_args.items()) + list(self.query_args.items())
+        required_args = []
+        for k, v in args:
+            if not v.startswith("typing.Optional["):
+                required_args.append(f"{k}: {v}")
+        return ", ".join(required_args) if required_args else ""
+
+    def get_optional_args_as_string(self) -> str:
+        """Get only optional parameters (those with Optional wrapper)."""
+        args = list(self.path_args.items()) + list(self.query_args.items())
+        optional_args = []
+        for k, v in args:
+            if v.startswith("typing.Optional["):
+                optional_args.append(f"{k}: {v} = None")
+        return ", ".join(optional_args) if optional_args else ""
 
 
 class BaseClientsGenerator:
@@ -262,7 +290,7 @@ class BaseClientsGenerator:
         content = template.render(
             asyncio=self.asyncio,
             func_name=func_name,
-            function_arguments=function_arguments.get_path_args_as_string(),
+            function_arguments=function_arguments,  # Pass the object, not the string
             response_types=response_types,
             data_class_name=data_class_name,
             header_class_name=header_class_name,
