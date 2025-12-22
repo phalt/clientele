@@ -1,1 +1,1 @@
-"""Tests for clientele explore module."""
+"""Tests for the explore module."""
