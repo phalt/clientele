@@ -37,7 +37,7 @@ class ParametersResponse(pydantic.BaseModel):
                 required_args.append(f"{k}: {v}")
         # Return required parameters first, then optional ones
         return ", ".join(required_args + optional_args)
-    
+
     def get_required_args_as_string(self) -> str:
         """Get only required parameters (those without Optional wrapper)."""
         args = list(self.path_args.items()) + list(self.query_args.items())
@@ -46,7 +46,7 @@ class ParametersResponse(pydantic.BaseModel):
             if not v.startswith("typing.Optional["):
                 required_args.append(f"{k}: {v}")
         return ", ".join(required_args) if required_args else ""
-    
+
     def get_optional_args_as_string(self) -> str:
         """Get only optional parameters (those with Optional wrapper)."""
         args = list(self.path_args.items()) + list(self.query_args.items())

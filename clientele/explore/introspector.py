@@ -62,9 +62,10 @@ class ClientIntrospector:
         package_name = self.client_path.name
 
         # Create package module
-        package_module = importlib.util.module_from_spec(
-            importlib.util.spec_from_file_location(package_name, init_file)
-        )
+        spec = importlib.util.spec_from_file_location(package_name, init_file)
+        if spec is None:
+            raise ImportError(f"Could not create spec for package {package_name}")
+        package_module = importlib.util.module_from_spec(spec)
         package_module.__path__ = [str(self.client_path)]
         sys.modules[package_name] = package_module
 
@@ -85,10 +86,10 @@ class ClientIntrospector:
                 f"{package_name}.schemas", schemas_file, submodule_search_locations=[str(self.client_path)]
             )
             if spec and spec.loader:
-                self.schemas_module = importlib.util.module_from_spec(spec)
-                self.schemas_module.__package__ = package_name
-                sys.modules[f"{package_name}.schemas"] = self.schemas_module
-                spec.loader.exec_module(self.schemas_module)
+                self.schemas_module = importlib.util.module_from_spec(spec)  # type: ignore[assignment]
+                self.schemas_module.__package__ = package_name  # type: ignore[attr-defined]
+                sys.modules[f"{package_name}.schemas"] = self.schemas_module  # type: ignore[assignment]
+                spec.loader.exec_module(self.schemas_module)  # type: ignore[arg-type]
 
         # Import http module if it exists
         if http_file.exists():
@@ -96,20 +97,20 @@ class ClientIntrospector:
                 f"{package_name}.http", http_file, submodule_search_locations=[str(self.client_path)]
             )
             if spec and spec.loader:
-                http_module = importlib.util.module_from_spec(spec)
-                http_module.__package__ = package_name
-                sys.modules[f"{package_name}.http"] = http_module
-                spec.loader.exec_module(http_module)
+                http_module = importlib.util.module_from_spec(spec)  # type: ignore[assignment]
+                http_module.__package__ = package_name  # type: ignore[attr-defined]
+                sys.modules[f"{package_name}.http"] = http_module  # type: ignore[assignment]
+                spec.loader.exec_module(http_module)  # type: ignore[arg-type]
 
         # Import client module (this must be last as it depends on others)
         spec = importlib.util.spec_from_file_location(
             f"{package_name}.client", client_file, submodule_search_locations=[str(self.client_path)]
         )
         if spec and spec.loader:
-            self.client_module = importlib.util.module_from_spec(spec)
-            self.client_module.__package__ = package_name
-            sys.modules[f"{package_name}.client"] = self.client_module
-            spec.loader.exec_module(self.client_module)
+            self.client_module = importlib.util.module_from_spec(spec)  # type: ignore[assignment]
+            self.client_module.__package__ = package_name  # type: ignore[attr-defined]
+            sys.modules[f"{package_name}.client"] = self.client_module  # type: ignore[assignment]
+            spec.loader.exec_module(self.client_module)  # type: ignore[arg-type]
 
     def discover_operations(self) -> dict[str, OperationInfo]:
         """Discover all operations in the client.

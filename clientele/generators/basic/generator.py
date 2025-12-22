@@ -1,6 +1,5 @@
 import os
 import pathlib
-from os import path
 
 from clientele import generators, settings, utils
 from clientele.generators.basic import writer

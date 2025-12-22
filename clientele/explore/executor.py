@@ -61,7 +61,9 @@ class RequestExecutor:
 
         # Initialize timing variable
         start_time = time.time()
-        debug_info = {} if self.session_config and self.session_config.debug_mode else None
+        debug_info: dict[str, typing.Any] | None = (
+            {} if self.session_config and self.session_config.debug_mode else None
+        )
 
         try:
             # Validate arguments
