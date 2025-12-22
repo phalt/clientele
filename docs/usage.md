@@ -310,10 +310,10 @@ The REPL will:
 
 Commands starting with `.` provide additional functionality:
 
-**`.list`** or **`.operations`** - List all available operations in a table:
+**`/list`** or **`/operations`** - List all available operations in a table:
 
 ```
->>> .list
+>>> /list
 Available Operations
 ┌──────────────────────────────┬────────┬─────────────────────────────┐
 │ Operation                    │ Method │ Description                 │
@@ -329,10 +329,10 @@ Available Operations
 Total: 6 operations
 ```
 
-**`.help`** - Show help message with usage information:
+**`/help`** - Show help message with usage information:
 
 ```
->>> .help
+>>> /help
 
 Clientele Interactive API Explorer
 
@@ -342,9 +342,9 @@ Usage:
   • Use UP/DOWN arrows to navigate command history
 
 Special Commands:
-  .list, .operations  - List all available operations
-  .help                  - Show this help message
-  .exit, .quit         - Exit the REPL
+  /list, /operations  - List all available operations
+  /help                  - Show this help message
+  /exit, /quit         - Exit the REPL
 
 Examples:
   get_users()                           - Execute operation without parameters
@@ -352,10 +352,10 @@ Examples:
   create_user(data={"name": "John"})   - Pass complex data
 ```
 
-**`.exit`** or **`.quit`** - Exit the REPL (you can also use Ctrl+D):
+**`/exit`** or **`/quit`** - Exit the REPL (you can also use Ctrl+D):
 
 ```
->>> .exit
+>>> /exit
 Goodbye! 👋
 ```
 
@@ -374,12 +374,12 @@ $ clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/
   Clientele Interactive API Explorer v0.10.0
 ═══════════════════════════════════════════════════════════
 
-Type .help or ? for commands, .exit or Ctrl+D to quit
-Type .list to see available operations
+Type /help or ? for commands, /exit or Ctrl+D to quit
+Type /list to see available operations
 
 Press TAB for autocomplete
 
->>> .list
+>>> /list
 Available Operations
 ┌──────────────────────────────┬────────┬─────────────────────────────┐
 │ Operation                    │ Method │ Description                 │
@@ -473,7 +473,7 @@ Total: 6 operations
   ]
 }
 
->>> .exit
+>>> /exit
 Goodbye! 👋
 ```
 
@@ -514,7 +514,7 @@ Quickly explore what operations are available in an API:
 
 ```sh
 clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
->>> .list
+>>> /list
 ```
 
 #### Testing Before Coding

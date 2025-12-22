@@ -70,7 +70,7 @@ Clientele includes an **interactive REPL** that lets you explore and test APIs w
 
 ```sh
 # Explore an existing client
-clientele explore -o pokeapi_client/
+clientele explore -c pokeapi_client/
 
 # Or generate a temporary client and explore directly from a schema
 clientele explore -f pokeapi_openapi.yml
@@ -83,7 +83,7 @@ clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/op
 - **⚡ Execute instantly**: Test API operations with Python-like syntax
 - **🎨 Beautiful output**: Syntax-highlighted JSON responses with timing information
 - **📝 Command history**: Navigate previous commands with UP/DOWN arrows
-- **🛠️ Special commands**: Built-in helpers like `.list`, `.help`, and more
+- **🛠️ Special commands**: Built-in helpers like `/list`, `/help`, and more
 
 ### Example Session
 
@@ -93,7 +93,7 @@ $ clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/
 clientele explore v0.10.0 - Interactive API Explorer
 ═══════════════════════════════════════════════════════════
 
->>> .list
+>>> /list
 Available Operations
 ┌──────────────────────────────┬────────┬─────────────────────────────┐
 │ Operation                    │ Method │ Description                 │
@@ -164,13 +164,13 @@ Available Operations
   ]
 }
 
->>> .help
+>>> /help
 Special Commands:
-  .list      - List all available operations
-  .help      - Show help message
-  .exit      - Exit the REPL
+  /list      - List all available operations
+  /help      - Show help message
+  /exit      - Exit the REPL
 
->>> .exit
+>>> /exit
 Goodbye! 👋
 ```
 
