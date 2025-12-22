@@ -26,7 +26,14 @@ class ParametersResponse(pydantic.BaseModel):
     def get_path_args_as_string(self) -> str:
         # Get all the path arguments, and the query arguments and make a big string out of them.
         args = list(self.path_args.items()) + list(self.query_args.items())
-        return ", ".join(f"{k}: {v}" for k, v in args)
+        # Add default value of None for Optional parameters
+        formatted_args = []
+        for k, v in args:
+            if v.startswith("typing.Optional["):
+                formatted_args.append(f"{k}: {v} = None")
+            else:
+                formatted_args.append(f"{k}: {v}")
+        return ", ".join(formatted_args)
 
 
 class BaseClientsGenerator:
