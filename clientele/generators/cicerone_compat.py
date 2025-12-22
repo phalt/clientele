@@ -50,13 +50,17 @@ def normalize_openapi_31_schema(schema_dict: dict) -> dict:
         if non_null_types:
             # Use the first non-null type
             normalized["type"] = non_null_types[0]
-            # Mark as nullable if null was in the array
-            if has_null:
+            # Mark as nullable if null was in the array OR if already marked nullable
+            if has_null or normalized.get("nullable", False):
                 normalized["nullable"] = True
         else:
             # Only null type - treat as nullable string
             normalized["type"] = "string"
             normalized["nullable"] = True
+    # Preserve existing nullable: true even if type is not an array
+    elif "nullable" in normalized and normalized["nullable"]:
+        # Ensure it stays nullable through normalization
+        normalized["nullable"] = True
 
     # Recursively normalize nested schemas
     if "properties" in normalized and isinstance(normalized["properties"], dict):
