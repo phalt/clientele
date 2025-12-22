@@ -4,7 +4,7 @@
 
 - **🎉 Major New Feature**: Interactive API Explorer! Use `clientele explore` to test and discover APIs interactively without writing any code.
 - **New command**: `clientele explore` - Launch an interactive REPL for exploring API operations in real-time.
-- Explore from existing clients: `clientele explore -o my_client/`
+- Explore from existing clients: `clientele explore -c my_client/` (or `--client`)
 - Explore directly from schema files: `clientele explore -f openapi.json`
 - Explore from remote schemas: `clientele explore -u https://api.example.com/openapi.json`
 - **Interactive features**:
@@ -12,12 +12,18 @@
   - Execute operations with Python-like syntax: `pokemon_list(limit=10)`
   - Syntax-highlighted JSON responses with timing information
   - Command history with up/down arrows (persistent in `~/.clientele_history`)
-  - Special commands: `.list` (show all operations), `.help` (show help), `.exit` (quit)
+  - Slash commands: `/list` (show all operations), `/schemas` (inspect schemas), `/config` (view/set config), `/debug on/off` (toggle debug), `/help` (show help), `/exit` (quit)
+- **Smart configuration**: Automatically detects and sets `base_url` from the OpenAPI schema's `servers` field (e.g., `https://pokeapi.co/api/v2`), falling back to `http://localhost` if not specified
 - Built on `prompt_toolkit` for professional REPL experience
 - Supports both standard (function-based) and class-based generated clients
 - Works with sync and async clients
 - Automatic request validation and beautiful error formatting
 - Perfect for API discovery, testing, and debugging workflows
+- **Code generation improvements**:
+  - Optional parameters now correctly have default values (`= None`)
+  - Fixed parameter ordering (required parameters before optional ones)
+  - Nullable fields properly handled (OpenAPI 3.0 `nullable: true` and OpenAPI 3.1 array type notation)
+  - Large response code maps formatted with proper indentation (fixes syntax errors with complex schemas)
 - See the [documentation](https://phalt.github.io/clientele/usage/#explore) for complete usage guide
 
 ## 0.11.0
