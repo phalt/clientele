@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 if typing.TYPE_CHECKING:
     from clientele.explore.introspector import ClientIntrospector
+    from clientele.explore.session import SessionConfig
 
 
 @dataclass
@@ -21,18 +22,21 @@ class ExecutionResult:
     duration: float
     operation: str
     error: Exception | None = None
+    debug_info: dict[str, typing.Any] | None = None  # HTTP request/response details
 
 
 class RequestExecutor:
     """Executes API operations using the generated client."""
 
-    def __init__(self, introspector: ClientIntrospector):
+    def __init__(self, introspector: ClientIntrospector, session_config: SessionConfig | None = None):
         """Initialize the executor.
 
         Args:
             introspector: Client introspector for operation discovery
+            session_config: Session configuration (for debug mode)
         """
         self.introspector = introspector
+        self.session_config = session_config
 
     def execute(self, operation_name: str, args: dict[str, typing.Any]) -> ExecutionResult:
         """Execute an API operation.
@@ -57,6 +61,7 @@ class RequestExecutor:
 
         # Initialize timing variable
         start_time = time.time()
+        debug_info = {} if self.session_config and self.session_config.debug_mode else None
 
         try:
             # Validate arguments
@@ -72,6 +77,24 @@ class RequestExecutor:
                 # For function-based clients, use the function directly
                 method = op_info.function
 
+            # Capture debug info if enabled
+            if debug_info is not None:
+                debug_info["operation"] = operation_name
+                debug_info["method"] = op_info.http_method
+                debug_info["args"] = args
+                # Try to get base URL from config
+                try:
+                    import sys
+
+                    package_name = self.introspector.client_path.name
+                    config_module_name = f"{package_name}.config"
+                    if config_module_name in sys.modules:
+                        config_module = sys.modules[config_module_name]
+                        if hasattr(config_module, "api_base_url"):
+                            debug_info["base_url"] = config_module.api_base_url()
+                except Exception:
+                    pass
+
             # Check if the operation is async
             if inspect.iscoroutinefunction(method):
                 # Run async operation in event loop
@@ -82,22 +105,36 @@ class RequestExecutor:
 
             duration = time.time() - start_time
 
+            # Add response info to debug
+            if debug_info is not None:
+                debug_info["response_type"] = type(result).__name__
+                if hasattr(result, "__dict__"):
+                    debug_info["response_preview"] = str(result)[:200]
+
             return ExecutionResult(
                 success=True,
                 response=result,
                 duration=duration,
                 operation=operation_name,
                 error=None,
+                debug_info=debug_info,
             )
 
         except Exception as e:
             duration = time.time() - start_time
+
+            # Add error info to debug
+            if debug_info is not None:
+                debug_info["error"] = str(e)
+                debug_info["error_type"] = type(e).__name__
+
             return ExecutionResult(
                 success=False,
                 response=None,
                 duration=duration,
                 operation=operation_name,
                 error=e,
+                debug_info=debug_info,
             )
 
     def _validate_args(self, op_info, args: dict[str, typing.Any]) -> None:

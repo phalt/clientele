@@ -19,6 +19,8 @@ class ClienteleCompleter(Completer):
         (".list", "List all available operations"),
         (".operations", "List all available operations (alias for .list)"),
         (".schemas", "List all available schemas or show schema details"),
+        (".config", "Show or set configuration"),
+        (".debug", "Enable/disable debug mode"),
         (".help", "Show help message"),
         (".exit", "Exit the REPL"),
         (".quit", "Exit the REPL (alias for .exit)"),

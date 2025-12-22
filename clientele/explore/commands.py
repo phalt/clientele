@@ -5,23 +5,32 @@ from __future__ import annotations
 import typing
 
 from rich.console import Console
+from rich.panel import Panel
 from rich.table import Table
 
 if typing.TYPE_CHECKING:
     from clientele.explore.introspector import ClientIntrospector
+    from clientele.explore.session import SessionConfig
 
 
 class CommandHandler:
     """Handles special commands in the REPL."""
 
-    def __init__(self, introspector: ClientIntrospector, console: Console | None = None):
+    def __init__(
+        self,
+        introspector: ClientIntrospector,
+        session_config: SessionConfig | None = None,
+        console: Console | None = None,
+    ):
         """Initialize the command handler.
 
         Args:
             introspector: Client introspector for operation discovery
+            session_config: Session configuration
             console: Rich console for output
         """
         self.introspector = introspector
+        self.session_config = session_config
         self.console = console or Console()
 
     def handle_command(self, command: str) -> bool:
@@ -47,6 +56,10 @@ class CommandHandler:
                 self._show_schema_detail(arg)
             else:
                 self._list_schemas()
+        elif cmd == ".config":
+            self._handle_config(arg)
+        elif cmd == ".debug":
+            self._handle_debug(arg)
         elif cmd == ".help":
             self._show_help()
         else:
@@ -92,6 +105,10 @@ class CommandHandler:
   [cyan].list[/cyan], [cyan].operations[/cyan]  - List all available operations
   [cyan].schemas[/cyan]              - List all available schemas
   [cyan].schemas <name>[/cyan]       - Show details for a specific schema
+  [cyan].config[/cyan]               - Show current configuration
+  [cyan].config set <key> <value>[/cyan] - Set a configuration value
+  [cyan].debug on[/cyan]             - Enable request/response logging
+  [cyan].debug off[/cyan]            - Disable request/response logging
   [cyan].help[/cyan]                  - Show this help message
   [cyan].exit[/cyan], [cyan].quit[/cyan]         - Exit the REPL
 
@@ -101,6 +118,9 @@ class CommandHandler:
   [cyan]create_user(data={"name": "John"})[/cyan]   - Pass complex data
   [cyan].schemas[/cyan]                              - List all schemas
   [cyan].schemas User[/cyan]                         - Show User schema details
+  [cyan].config[/cyan]                               - Show current config
+  [cyan].config set base_url https://api.example.com[/cyan] - Set base URL
+  [cyan].debug on[/cyan]                             - Enable debug mode
 
 [bold]Tips:[/bold]
   • Press TAB to see available completions
@@ -223,3 +243,178 @@ class CommandHandler:
 
             self.console.print(fields_table)
             self.console.print(f"\n[dim]Total: {len(schema_info['fields'])} fields[/dim]")
+
+    def _handle_config(self, arg: str | None) -> None:
+        """Handle .config command.
+
+        Args:
+            arg: Optional arguments (e.g., "set key value")
+        """
+        if not arg:
+            # Show current configuration
+            self._show_config()
+        elif arg.startswith("set "):
+            # Set configuration value
+            parts = arg[4:].split(maxsplit=1)
+            if len(parts) != 2:
+                self.console.print("[red]Usage: .config set <key> <value>[/red]")
+                self.console.print("[dim]Example: .config set base_url https://pokeapi.co[/dim]")
+                return
+            key, value = parts
+            self._set_config(key, value)
+        else:
+            self.console.print(f"[yellow]Unknown config command: {arg}[/yellow]")
+            self.console.print("[dim]Use '.config' to show config or '.config set <key> <value>' to set values[/dim]")
+
+    def _show_config(self) -> None:
+        """Show current configuration from config module and runtime overrides."""
+        import sys
+
+        # Get the config module
+        package_name = self.introspector.client_path.name
+        config_module_name = f"{package_name}.config"
+
+        if config_module_name not in sys.modules:
+            self.console.print("[yellow]No configuration module found[/yellow]")
+            return
+
+        config_module = sys.modules[config_module_name]
+
+        # Create configuration table
+        table = Table(title="Current Configuration", show_header=True, header_style="bold magenta")
+        table.add_column("Setting", style="cyan", no_wrap=True)
+        table.add_column("Value", style="white")
+        table.add_column("Source", style="yellow")
+
+        # Get config values
+        config_funcs = {
+            "base_url": "api_base_url",
+            "bearer_token": "get_bearer_token",
+            "user_key": "get_user_key",
+            "pass_key": "get_pass_key",
+        }
+
+        for display_name, func_name in config_funcs.items():
+            if hasattr(config_module, func_name):
+                func = getattr(config_module, func_name)
+                try:
+                    # Check for runtime override first
+                    if self.session_config and display_name in self.session_config.config_overrides:
+                        value = self.session_config.config_overrides[display_name]
+                        source = "runtime"
+                    else:
+                        value = func()
+                        source = "config.py"
+
+                    # Mask sensitive values
+                    if display_name in ["bearer_token", "pass_key"] and value and value != "token" and value != "password":
+                        value = "***" + value[-4:] if len(value) > 4 else "***"
+
+                    table.add_row(display_name, str(value), source)
+                except Exception as e:
+                    table.add_row(display_name, f"[red]Error: {e}[/red]", "error")
+
+        # Add additional headers
+        if hasattr(config_module, "additional_headers"):
+            try:
+                headers = config_module.additional_headers()
+                if headers:
+                    for key, val in headers.items():
+                        table.add_row(f"header.{key}", str(val), "config.py")
+            except Exception:
+                pass
+
+        self.console.print(table)
+
+        # Show debug mode
+        if self.session_config:
+            debug_status = "[green]ON[/green]" if self.session_config.debug_mode else "[dim]OFF[/dim]"
+            self.console.print(f"\n[bold]Debug Mode:[/bold] {debug_status}")
+
+        self.console.print("\n[dim]Use '.config set <key> <value>' to override values for this session[/dim]")
+        self.console.print("[dim]Supported keys: base_url, bearer_token, user_key, pass_key[/dim]")
+
+    def _set_config(self, key: str, value: str) -> None:
+        """Set a configuration value for the current session.
+
+        Args:
+            key: Configuration key
+            value: Configuration value
+        """
+        if not self.session_config:
+            self.console.print("[red]Session config not available[/red]")
+            return
+
+        # Validate key
+        valid_keys = ["base_url", "bearer_token", "user_key", "pass_key"]
+        if key not in valid_keys:
+            self.console.print(f"[red]Invalid config key: {key}[/red]")
+            self.console.print(f"[dim]Supported keys: {', '.join(valid_keys)}[/dim]")
+            return
+
+        # Store the override
+        self.session_config.config_overrides[key] = value
+        self.console.print(f"[green]✓[/green] Set {key} = {value}")
+        self.console.print("[dim]This override applies only to the current REPL session[/dim]")
+
+        # Apply the override to the config module
+        self._apply_config_override(key, value)
+
+    def _apply_config_override(self, key: str, value: str) -> None:
+        """Apply a config override to the loaded config module.
+
+        Args:
+            key: Configuration key
+            value: Configuration value
+        """
+        import sys
+
+        package_name = self.introspector.client_path.name
+        config_module_name = f"{package_name}.config"
+
+        if config_module_name not in sys.modules:
+            return
+
+        config_module = sys.modules[config_module_name]
+
+        # Map display names to function names
+        func_map = {
+            "base_url": "api_base_url",
+            "bearer_token": "get_bearer_token",
+            "user_key": "get_user_key",
+            "pass_key": "get_pass_key",
+        }
+
+        func_name = func_map.get(key)
+        if func_name and hasattr(config_module, func_name):
+            # Replace the function with a lambda that returns the new value
+            setattr(config_module, func_name, lambda: value)
+
+    def _handle_debug(self, arg: str | None) -> None:
+        """Handle .debug command.
+
+        Args:
+            arg: "on" or "off" to enable/disable debug mode
+        """
+        if not self.session_config:
+            self.console.print("[red]Session config not available[/red]")
+            return
+
+        if not arg:
+            # Show current debug status
+            status = "[green]ON[/green]" if self.session_config.debug_mode else "[dim]OFF[/dim]"
+            self.console.print(f"[bold]Debug Mode:[/bold] {status}")
+            self.console.print("\n[dim]Use '.debug on' or '.debug off' to toggle debug mode[/dim]")
+            return
+
+        arg = arg.lower()
+        if arg == "on":
+            self.session_config.debug_mode = True
+            self.console.print("[green]✓ Debug mode enabled[/green]")
+            self.console.print("[dim]HTTP requests and responses will be logged[/dim]")
+        elif arg == "off":
+            self.session_config.debug_mode = False
+            self.console.print("[yellow]Debug mode disabled[/yellow]")
+        else:
+            self.console.print(f"[red]Invalid argument: {arg}[/red]")
+            self.console.print("[dim]Use '.debug on' or '.debug off'[/dim]")

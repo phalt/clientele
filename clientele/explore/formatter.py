@@ -44,6 +44,10 @@ class ResponseFormatter:
         # Show timing
         self.console.print(f"[green]✓ Success in {result.duration:.2f}s[/green]")
 
+        # Show debug info if available
+        if result.debug_info:
+            self._format_debug_info(result.debug_info)
+
         # Format the response
         if result.response is None:
             self.console.print("[dim]No response body[/dim]")
@@ -87,6 +91,10 @@ class ResponseFormatter:
         # Show timing
         self.console.print(f"[red]✗ Error in {result.duration:.2f}s[/red]")
 
+        # Show debug info if available
+        if result.debug_info:
+            self._format_debug_info(result.debug_info)
+
         # Show error details
         if result.error:
             error_text = f"{type(result.error).__name__}: {str(result.error)}"
@@ -98,3 +106,37 @@ class ResponseFormatter:
             self.console.print(panel)
         else:
             self.console.print("[red]Unknown error occurred[/red]")
+
+    def _format_debug_info(self, debug_info: dict[str, typing.Any]) -> None:
+        """Format debug information about the request.
+
+        Args:
+            debug_info: Dictionary containing debug information
+        """
+        from rich.table import Table
+
+        self.console.print("\n[bold cyan]Debug Information:[/bold cyan]")
+
+        table = Table(show_header=False, box=None, padding=(0, 1))
+        table.add_column("Key", style="yellow", no_wrap=True)
+        table.add_column("Value", style="white")
+
+        # Show relevant debug info
+        if "operation" in debug_info:
+            table.add_row("Operation", debug_info["operation"])
+        if "method" in debug_info:
+            table.add_row("HTTP Method", debug_info["method"])
+        if "base_url" in debug_info:
+            table.add_row("Base URL", debug_info["base_url"])
+        if "args" in debug_info and debug_info["args"]:
+            args_str = json.dumps(debug_info["args"], indent=2, default=str)
+            table.add_row("Arguments", args_str)
+        if "response_type" in debug_info:
+            table.add_row("Response Type", debug_info["response_type"])
+        if "error" in debug_info:
+            table.add_row("Error Details", debug_info["error"])
+        if "error_type" in debug_info:
+            table.add_row("Error Type", debug_info["error_type"])
+
+        self.console.print(table)
+        self.console.print("")  # Empty line for spacing
