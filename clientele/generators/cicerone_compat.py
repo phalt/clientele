@@ -48,19 +48,41 @@ def normalize_openapi_31_schema(schema_dict: dict) -> dict:
         has_null = "null" in types
 
         if non_null_types:
-            # Use the first non-null type
-            normalized["type"] = non_null_types[0]
-            # Mark as nullable if null was in the array OR if already marked nullable
-            if has_null or normalized.get("nullable", False):
-                normalized["nullable"] = True
+            # Use anyOf pattern for nullable fields (Pydantic handles this correctly)
+            base_type = non_null_types[0]
+            if has_null:
+                # Convert to anyOf pattern which Pydantic understands as Optional[]
+                normalized["anyOf"] = [
+                    {"type": base_type},
+                    {"type": "null"}
+                ]
+                # Remove the type field as anyOf takes precedence
+                del normalized["type"]
+            else:
+                normalized["type"] = base_type
         else:
             # Only null type - treat as nullable string
-            normalized["type"] = "string"
-            normalized["nullable"] = True
-    # Preserve existing nullable: true even if type is not an array
+            normalized["anyOf"] = [
+                {"type": "string"},
+                {"type": "null"}
+            ]
+            if "type" in normalized:
+                del normalized["type"]
+    # Convert nullable: true to anyOf pattern (Pydantic-compatible)
     elif "nullable" in normalized and normalized["nullable"]:
-        # Ensure it stays nullable through normalization
-        normalized["nullable"] = True
+        # If there's a type field, convert nullable to anyOf pattern
+        if "type" in normalized:
+            base_type = normalized["type"]
+            normalized["anyOf"] = [
+                {"type": base_type},
+                {"type": "null"}
+            ]
+            # Preserve format if present
+            if "format" in normalized:
+                normalized["anyOf"][0]["format"] = normalized["format"]
+                del normalized["format"]
+            del normalized["type"]
+            del normalized["nullable"]
 
     # Recursively normalize nested schemas
     if "properties" in normalized and isinstance(normalized["properties"], dict):
