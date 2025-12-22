@@ -16,6 +16,8 @@ dependencies = [
     "types-pyyaml>=6.0.12.20250915",
     "jinja2>=3.1.6",
     "ruff>=0.14.10",
+    "prompt_toolkit>=3.0.0,<4.0.0",
+    "cli-helpers>=2.4.0",
 ]
 
 [project.urls]
