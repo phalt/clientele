@@ -65,25 +65,35 @@ class StandardGenerator(generators.Generator):
     def generate_templates_files(self):
         new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
+
+        # Extract base_url from OpenAPI spec servers
+        base_url = "http://localhost"
+        if self.spec.servers and len(self.spec.servers) > 0:
+            base_url = self.spec.servers[0].url
+            console.log(f"[cyan]Detected base URL from spec: {base_url}[/cyan]")
+
         writer.write_to_init(output_dir=self.output_dir)
         for (
             client_file,
             client_template_file,
             write_func,
         ) in self.file_name_writer_tuple:
-            if path.exists(f"{self.output_dir}/{client_file}"):
+            file_path = pathlib.Path(self.output_dir) / client_file
+            if file_path.exists():
                 if client_file == "config.py":  # do not replace config.py if exists
                     continue
-                os.remove(f"{self.output_dir}/{client_file}")
+                os.remove(file_path)
             template = writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
                 new_unions=new_unions,
+                base_url=base_url,
             )
             write_func(content, output_dir=self.output_dir)
         # Manifest file
-        if path.exists(f"{self.output_dir}/MANIFEST.md"):
-            os.remove(f"{self.output_dir}/MANIFEST.md")
+        manifest_file = pathlib.Path(self.output_dir) / "MANIFEST.md"
+        if manifest_file.exists():
+            os.remove(manifest_file)
         template = writer.templates.get_template("manifest.jinja2")
         generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio t' if self.asyncio else ''} --regen t"  # noqa
         content = (

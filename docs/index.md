@@ -60,9 +60,125 @@ uv tool install clientele
 ## Quick Start
 
 ```sh
-# Generate a client from an OpenAPI schema
-clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o api_client/
+# Generate a client from the PokeAPI OpenAPI schema
+clientele generate -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml -o pokeapi_client/
 ```
+
+## Interactive API Explorer
+
+Clientele includes an **interactive REPL** that lets you explore and test APIs without writing any code:
+
+```sh
+# Explore an existing client
+clientele explore -c pokeapi_client/
+
+# Or generate a temporary client and explore directly from a schema
+clientele explore -f pokeapi_openapi.yml
+clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
+```
+
+### Features
+
+- **🔍 Autocomplete**: Press TAB to discover operations and parameters with type hints
+- **⚡ Execute instantly**: Test API operations with Python-like syntax
+- **🎨 Beautiful output**: Syntax-highlighted JSON responses with timing information
+- **📝 Command history**: Navigate previous commands with UP/DOWN arrows
+- **🛠️ Special commands**: Built-in helpers like `/list`, `/help`, and more
+
+### Example Session
+
+```
+$ clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
+
+clientele explore v0.10.0 - Interactive API Explorer
+═══════════════════════════════════════════════════════════
+
+>>> /list
+Available Operations
+┌──────────────────────────────┬────────┬─────────────────────────────┐
+│ Operation                    │ Method │ Description                 │
+├──────────────────────────────┼────────┼─────────────────────────────┤
+│ ability_list                 │ GET    │ List abilities              │
+│ ability_read                 │ GET    │ Get ability by ID or name   │
+│ pokemon_list                 │ GET    │ List pokemon                │
+│ pokemon_read                 │ GET    │ Get pokemon by ID or name   │
+│ berry_list                   │ GET    │ List berries                │
+│ berry_read                   │ GET    │ Get berry by ID or name     │
+└──────────────────────────────┴────────┴─────────────────────────────┘
+
+>>> pokemon_list(limit=3)
+✓ Success in 0.52s
+{
+  "count": 1302,
+  "next": "https://pokeapi.co/api/v2/pokemon?offset=3&limit=3",
+  "previous": null,
+  "results": [
+    {
+      "name": "bulbasaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/1/"
+    },
+    {
+      "name": "ivysaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/2/"
+    },
+    {
+      "name": "venusaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/3/"
+    }
+  ]
+}
+
+>>> pokemon_read(id="pikachu")
+✓ Success in 0.38s
+{
+  "id": 25,
+  "name": "pikachu",
+  "height": 4,
+  "weight": 60,
+  "types": [
+    {
+      "slot": 1,
+      "type": {
+        "name": "electric",
+        "url": "https://pokeapi.co/api/v2/type/13/"
+      }
+    }
+  ],
+  "abilities": [
+    {
+      "ability": {
+        "name": "static",
+        "url": "https://pokeapi.co/api/v2/ability/9/"
+      },
+      "is_hidden": false,
+      "slot": 1
+    },
+    {
+      "ability": {
+        "name": "lightning-rod",
+        "url": "https://pokeapi.co/api/v2/ability/31/"
+      },
+      "is_hidden": true,
+      "slot": 3
+    }
+  ]
+}
+
+>>> /help
+Special Commands:
+  /list      - List all available operations
+  /help      - Show help message
+  /exit      - Exit the REPL
+
+>>> /exit
+Goodbye! 👋
+```
+
+The explore command is perfect for:
+- **API Discovery**: Quickly learn what operations are available
+- **Testing**: Try out API calls before writing code
+- **Debugging**: Validate request/response behavior interactively
+- **Documentation**: Live API exploration for your team
 
 ## Generated code
 

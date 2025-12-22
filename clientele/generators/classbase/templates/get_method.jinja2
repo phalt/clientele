@@ -1,6 +1,6 @@
 
 
-    {{asyncio and "async " or ""}}def {{func_name}}(self{% if function_arguments %}, {{function_arguments}}{% endif %}{% if header_class_name %}, headers: {{header_class_name}}{% endif %}) -> {{response_types}}:
+    {{asyncio and "async " or ""}}def {{func_name}}(self{% if function_arguments.get_path_args_as_string() %}, {{function_arguments.get_path_args_as_string()}}{% endif %}{% if header_class_name %}, headers: {{header_class_name}}{% endif %}) -> {{response_types}}:
         {% if summary or description or deprecated %}"""{% if summary %}{{summary}}{% endif %}{% if description %}
         
         {{description}}{% endif %}{% if deprecated %}
