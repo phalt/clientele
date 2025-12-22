@@ -230,23 +230,34 @@ class CommandHandler:
             for field_name, field_data in schema_info["fields"].items():
                 field_type = field_data.get("type", "Unknown")
                 # Simplify type display - remove verbose typing module prefixes
-                field_type_str = str(field_type)
-                field_type_str = field_type_str.replace("typing.", "")
-                field_type_str = field_type_str.replace("Annotated[", "")
-                # Remove trailing annotation markers
-                if field_type_str.endswith(", ...]"):
-                    field_type_str = field_type_str[:-6] + "]"
-
-                # Shorten very long type strings
-                if len(field_type_str) > 50:
-                    field_type_str = field_type_str[:47] + "..."
-
+                field_type_str = self._simplify_type_display(str(field_type))
                 required = "✓" if field_data.get("required", True) else "✗"
 
                 fields_table.add_row(field_name, field_type_str, required)
 
             self.console.print(fields_table)
             self.console.print(f"\n[dim]Total: {len(schema_info['fields'])} fields[/dim]")
+
+    def _simplify_type_display(self, type_str: str) -> str:
+        """Simplify type display by removing verbose prefixes.
+
+        Args:
+            type_str: Type string to simplify
+
+        Returns:
+            Simplified type string
+        """
+        # Remove common verbose patterns
+        replacements = {
+            "typing.": "",
+            "Annotated[": "",
+            ", ...]": "]",
+        }
+        for old, new in replacements.items():
+            type_str = type_str.replace(old, new)
+
+        # Shorten very long type strings
+        return type_str[:47] + "..." if len(type_str) > 50 else type_str
 
     def _handle_config(self, arg: str | None) -> None:
         """Handle .config command.

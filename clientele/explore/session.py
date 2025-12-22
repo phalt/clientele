@@ -6,7 +6,14 @@ from pathlib import Path
 
 
 class SessionConfig:
-    """Configuration for a REPL session."""
+    """Configuration for a REPL session.
+
+    Attributes:
+        output_format: Output format (json, table, or raw)
+        history_file: Path to command history file
+        debug_mode: Enable HTTP request/response logging
+        config_overrides: Runtime configuration overrides
+    """
 
     def __init__(self):
         """Initialize session configuration."""
