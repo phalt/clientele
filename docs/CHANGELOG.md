@@ -1,5 +1,25 @@
 # Change log
 
+## 1.0.0
+
+- **🎉 Major New Feature**: Interactive API Explorer! Use `clientele explore` to test and discover APIs interactively without writing any code.
+- **New command**: `clientele explore` - Launch an interactive REPL for exploring API operations in real-time.
+- Explore from existing clients: `clientele explore -o my_client/`
+- Explore directly from schema files: `clientele explore -f openapi.json`
+- Explore from remote schemas: `clientele explore -u https://api.example.com/openapi.json`
+- **Interactive features**:
+  - Tab autocomplete for operation names and parameters with type hints
+  - Execute operations with Python-like syntax: `pokemon_list(limit=10)`
+  - Syntax-highlighted JSON responses with timing information
+  - Command history with up/down arrows (persistent in `~/.clientele_history`)
+  - Special commands: `.list` (show all operations), `.help` (show help), `.exit` (quit)
+- Built on `prompt_toolkit` for professional REPL experience
+- Supports both standard (function-based) and class-based generated clients
+- Works with sync and async clients
+- Automatic request validation and beautiful error formatting
+- Perfect for API discovery, testing, and debugging workflows
+- See the [documentation](https://phalt.github.io/clientele/usage/#explore) for complete usage guide
+
 ## 0.11.0
 
 - Replaced `openapi-core` dependency with `cicerone==0.3.0` for OpenAPI schema parsing and introspection. This change provides faster, more minimal, and fully typed OpenAPI schema handling.
