@@ -53,6 +53,9 @@ class RequestExecutor:
                 error=ValueError(f"Operation not found: {operation_name}"),
             )
 
+        # Initialize timing variable
+        start_time = time.time()
+
         try:
             # Validate arguments
             self._validate_args(op_info, args)

@@ -13,6 +13,7 @@ from prompt_toolkit.lexers import PygmentsLexer
 from pygments.lexers.python import PythonLexer
 from rich.console import Console
 
+from clientele import settings
 from clientele.explore.commands import CommandHandler
 from clientele.explore.completer import ClienteleCompleter
 from clientele.explore.executor import RequestExecutor
@@ -54,8 +55,6 @@ class ClienteleREPL:
 
     def show_welcome(self) -> None:
         """Display welcome message."""
-        from clientele import settings
-
         welcome = f"""
 [bold cyan]═══════════════════════════════════════════════════════════[/bold cyan]
 [bold cyan]  Clientele Interactive API Explorer v{settings.VERSION}[/bold cyan]
