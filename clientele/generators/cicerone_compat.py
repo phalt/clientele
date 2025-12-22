@@ -202,6 +202,10 @@ def schema_to_dict(schema) -> dict:
     if hasattr(schema, "format") and schema.format:
         result["format"] = schema.format
 
+    # Handle nullable
+    if hasattr(schema, "nullable") and schema.nullable:
+        result["nullable"] = schema.nullable
+
     # Handle items (for arrays)
     if hasattr(schema, "items") and schema.items:
         result["items"] = schema_to_dict(schema.items)
