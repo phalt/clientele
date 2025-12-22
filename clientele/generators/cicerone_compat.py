@@ -25,36 +25,14 @@ def normalize_openapi_31_schema(schema_dict: dict) -> dict:
     Normalize OpenAPI 3.1 schema to OpenAPI 3.0 compatible format.
 
     OpenAPI 3.1 allows type to be an array (e.g., ['integer', 'null'] for nullable),
-    while OpenAPI 3.0 uses 'nullable: true'. This function converts both formats
-    to anyOf pattern for compatibility with cicerone/Pydantic.
-
-    CICERONE BUG WORKAROUND:
-    Cicerone doesn't properly convert 'nullable: true' to Optional[] Pydantic types.
-    
-    Expected behavior:
-        OpenAPI schema:
-            type: string
-            nullable: true
-        Should generate Pydantic model:
-            field: Optional[str]
-    
-    Actual behavior (without this workaround):
-        Generates:
-            field: str
-        Which rejects null values causing validation errors.
-    
-    Workaround:
-        Convert nullable fields to anyOf pattern which Pydantic handles correctly:
-            anyOf:
-              - type: string
-              - type: null
-        This properly generates: field: Optional[str]
+    while OpenAPI 3.0 uses 'nullable: true'. This function converts the 3.1 format
+    to 3.0 format for compatibility with cicerone.
 
     Args:
         schema_dict: Schema dictionary that may contain OpenAPI 3.1 features
 
     Returns:
-        Normalized schema dictionary with anyOf patterns for nullable fields
+        Normalized schema dictionary compatible with OpenAPI 3.0
     """
     if not isinstance(schema_dict, dict):
         return schema_dict
@@ -70,41 +48,19 @@ def normalize_openapi_31_schema(schema_dict: dict) -> dict:
         has_null = "null" in types
 
         if non_null_types:
-            # Use anyOf pattern for nullable fields (Pydantic handles this correctly)
-            base_type = non_null_types[0]
-            if has_null:
-                # Convert to anyOf pattern which Pydantic understands as Optional[]
-                normalized["anyOf"] = [
-                    {"type": base_type},
-                    {"type": "null"}
-                ]
-                # Remove the type field as anyOf takes precedence
-                del normalized["type"]
-            else:
-                normalized["type"] = base_type
+            # Use the first non-null type
+            normalized["type"] = non_null_types[0]
+            # Mark as nullable if null was in the array OR if already marked nullable
+            if has_null or normalized.get("nullable", False):
+                normalized["nullable"] = True
         else:
             # Only null type - treat as nullable string
-            normalized["anyOf"] = [
-                {"type": "string"},
-                {"type": "null"}
-            ]
-            if "type" in normalized:
-                del normalized["type"]
-    # Convert nullable: true to anyOf pattern (Pydantic-compatible)
+            normalized["type"] = "string"
+            normalized["nullable"] = True
+    # Preserve existing nullable: true even if type is not an array
     elif "nullable" in normalized and normalized["nullable"]:
-        # If there's a type field, convert nullable to anyOf pattern
-        if "type" in normalized:
-            base_type = normalized["type"]
-            normalized["anyOf"] = [
-                {"type": base_type},
-                {"type": "null"}
-            ]
-            # Preserve format if present
-            if "format" in normalized:
-                normalized["anyOf"][0]["format"] = normalized["format"]
-                del normalized["format"]
-            del normalized["type"]
-            del normalized["nullable"]
+        # Ensure it stays nullable through normalization
+        normalized["nullable"] = True
 
     # Recursively normalize nested schemas
     if "properties" in normalized and isinstance(normalized["properties"], dict):
