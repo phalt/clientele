@@ -26,15 +26,61 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
     """
     Load OpenAPI spec from URL or file.
     Returns the spec object and handles JSON/YAML parsing.
+
+    Also normalizes OpenAPI 3.1 schemas to be compatible with OpenAPI 3.0/cicerone.
     """
     from cicerone import parse as cicerone_parse
 
+    from clientele.generators.cicerone_compat import normalize_openapi_31_spec
+
     assert url or file, "Must pass either a URL or a file"
 
+    # First, load the spec as a dict to normalize it
     if url:
-        return cicerone_parse.parse_spec_from_url(url)
+        import httpx
+        import yaml
+
+        response = httpx.get(url, follow_redirects=True)
+        response.raise_for_status()
+        content = response.text
+
+        # Try to parse as YAML (which also handles JSON)
+        try:
+            spec_dict = yaml.safe_load(content)
+        except yaml.YAMLError:
+            import json
+
+            spec_dict = json.loads(content)
+
+        # Normalize OpenAPI 3.1 to 3.0
+        spec_dict = normalize_openapi_31_spec(spec_dict)
+
+        # Now parse with cicerone
+        from cicerone.parse.parser import parse_spec_from_dict
+
+        return parse_spec_from_dict(spec_dict)
+
     elif file:
-        return cicerone_parse.parse_spec_from_file(file)
+        import yaml
+
+        with open(file, "r") as f:
+            content = f.read()
+
+        # Try to parse as YAML (which also handles JSON)
+        try:
+            spec_dict = yaml.safe_load(content)
+        except yaml.YAMLError:
+            import json
+
+            spec_dict = json.loads(content)
+
+        # Normalize OpenAPI 3.1 to 3.0
+        spec_dict = normalize_openapi_31_spec(spec_dict)
+
+        # Now parse with cicerone
+        from cicerone.parse.parser import parse_spec_from_dict
+
+        return parse_spec_from_dict(spec_dict)
     else:
         raise ValueError("Must provide either url or file")
 
