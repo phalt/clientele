@@ -261,7 +261,7 @@ def request_body_to_dict(request_body) -> dict:
     if isinstance(request_body, dict):
         return request_body
 
-    result = {}
+    result: dict[str, typing.Any] = {}
 
     if hasattr(request_body, "content") and request_body.content:
         result["content"] = {}
@@ -387,7 +387,7 @@ def path_item_to_operations_dict(path_item) -> dict:
 
     # Add path-level parameters if they exist
     if hasattr(path_item, "parameters") and path_item.parameters:
-        operations_dict["parameters"] = [parameter_to_dict(p) for p in path_item.parameters]
+        operations_dict["parameters"] = [parameter_to_dict(p) for p in path_item.parameters]  # type: ignore[assignment]
     else:
         # Check in pydantic extra fields
         parameters = get_pydantic_extra(path_item, "parameters")

@@ -77,7 +77,8 @@ class BaseHTTPGenerator:
                             client_type=client_type,
                         )
                     console.log(
-                        f"[yellow]Please see {pathlib.Path(self.output_dir) / 'config.py'} to set authentication variables"
+                        f"[yellow]Please see {pathlib.Path(self.output_dir) / 'config.py'} "
+                        "to set authentication variables"
                     )
                 elif info.type == "oauth2":
                     template = self.writer.templates.get_template("bearer_client.jinja2")

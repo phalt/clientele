@@ -29,7 +29,6 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
 
     Also normalizes OpenAPI 3.1 schemas to be compatible with OpenAPI 3.0/cicerone.
     """
-    from cicerone import parse as cicerone_parse
 
     from clientele.generators.cicerone_compat import normalize_openapi_31_spec
 

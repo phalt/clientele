@@ -160,7 +160,7 @@ class CommandHandler:
 
         self.console.print(table)
         self.console.print(f"\n[dim]Total: {len(schemas)} schemas[/dim]")
-        self.console.print(f"[dim]Use [cyan].schemas <name>[/cyan] to see details[/dim]")
+        self.console.print("[dim]Use [cyan].schemas <name>[/cyan] to see details[/dim]")
 
     def _show_schema_detail(self, schema_name: str) -> None:
         """Show detailed information about a specific schema.
@@ -168,7 +168,6 @@ class CommandHandler:
         Args:
             schema_name: Name of the schema to inspect
         """
-        from rich.panel import Panel
 
         schema_info = self.introspector.get_schema_info(schema_name)
 
@@ -207,6 +206,7 @@ class CommandHandler:
 
             # Convert table to string (this is a workaround to add to details list)
             from io import StringIO
+
             from rich.console import Console as TempConsole
 
             temp_console = TempConsole(file=StringIO(), width=120)
@@ -236,7 +236,7 @@ class CommandHandler:
                 # Remove trailing annotation markers
                 if field_type_str.endswith(", ...]"):
                     field_type_str = field_type_str[:-6] + "]"
-                
+
                 # Shorten very long type strings
                 if len(field_type_str) > 50:
                     field_type_str = field_type_str[:47] + "..."
@@ -311,7 +311,12 @@ class CommandHandler:
                         source = "config.py"
 
                     # Mask sensitive values
-                    if display_name in ["bearer_token", "pass_key"] and value and value != "token" and value != "password":
+                    if (
+                        display_name in ["bearer_token", "pass_key"]
+                        and value
+                        and value != "token"
+                        and value != "password"
+                    ):
                         value = "***" + value[-4:] if len(value) > 4 else "***"
 
                     table.add_row(display_name, str(value), source)
