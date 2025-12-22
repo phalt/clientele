@@ -234,7 +234,7 @@ The `explore` command launches an **interactive REPL** (Read-Eval-Print Loop) th
 If you've already generated a client, you can explore it directly:
 
 ```sh
-clientele explore -o my_client/
+clientele explore -o pokeapi_client/
 ```
 
 This loads the generated client and discovers all available operations.
@@ -244,7 +244,7 @@ This loads the generated client and discovers all available operations.
 Generate a temporary client and explore it in one command:
 
 ```sh
-clientele explore -f path/to/openapi.json
+clientele explore -f pokeapi_openapi.yml
 ```
 
 Clientele will:
@@ -257,7 +257,7 @@ Clientele will:
 You can also explore directly from a URL:
 
 ```sh
-clientele explore -u https://api.example.com/openapi.json
+clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
 ```
 
 This is great for quickly testing remote APIs without saving the client locally.
@@ -275,13 +275,14 @@ Press **TAB** to autocomplete:
 - **Type hints** - View parameter types and whether they're required
 
 ```
->>> get_  <TAB>
-get_users                    get_user_by_id
-get_user_profile            get_user_settings
+>>> pokemon_  <TAB>
+pokemon_list                 pokemon_read
+pokemon_encounter_list       pokemon_form_list
 
->>> get_users(  <TAB>
+>>> pokemon_list(  <TAB>
 limit=    (int, optional)
 offset=   (int, optional)
+q=        (str, optional)
 ```
 
 #### Execute Operations
@@ -290,13 +291,13 @@ Call API operations using Python-like syntax:
 
 ```python
 # Simple operation with no parameters
->>> simple_request_simple_request_get()
+>>> ability_list()
 
 # Operation with parameters
->>> get_users(limit=10, offset=0)
+>>> pokemon_list(limit=5, offset=0)
 
-# Operation with complex data
->>> create_user(data={"name": "Alice", "email": "alice@example.com"})
+# Operation with a specific ID
+>>> pokemon_read(id="pikachu")
 ```
 
 The REPL will:
@@ -314,16 +315,18 @@ Commands starting with `.` provide additional functionality:
 ```
 >>> .list
 Available Operations
-┌─────────────────────────────────┬────────┬─────────────────┐
-│ Operation                       │ Method │ Description     │
-├─────────────────────────────────┼────────┼─────────────────┤
-│ get_users                       │ GET    │ List all users  │
-│ create_user                     │ POST   │ Create new user │
-│ update_user                     │ PUT    │ Update user     │
-│ delete_user                     │ DELETE │ Delete user     │
-└─────────────────────────────────┴────────┴─────────────────┘
+┌──────────────────────────────┬────────┬─────────────────────────────┐
+│ Operation                    │ Method │ Description                 │
+├──────────────────────────────┼────────┼─────────────────────────────┤
+│ ability_list                 │ GET    │ List abilities              │
+│ ability_read                 │ GET    │ Get ability by ID or name   │
+│ pokemon_list                 │ GET    │ List pokemon                │
+│ pokemon_read                 │ GET    │ Get pokemon by ID or name   │
+│ berry_list                   │ GET    │ List berries                │
+│ move_list                    │ GET    │ List moves                  │
+└──────────────────────────────┴────────┴─────────────────────────────┘
 
-Total: 4 operations
+Total: 6 operations
 ```
 
 **`.help`** - Show help message with usage information:
@@ -362,10 +365,10 @@ Navigate your command history with **UP** and **DOWN** arrow keys. Your history 
 
 ### Example Session
 
-Here's a complete example exploring an API:
+Here's a complete example exploring the PokeAPI:
 
 ```
-$ clientele explore -o my_api_client/
+$ clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
 
 ═══════════════════════════════════════════════════════════
   Clientele Interactive API Explorer v0.10.0
@@ -378,47 +381,96 @@ Press TAB for autocomplete
 
 >>> .list
 Available Operations
-┌─────────────────────────────────┬────────┬─────────────────┐
-│ Operation                       │ Method │ Description     │
-├─────────────────────────────────┼────────┼─────────────────┤
-│ get_users                       │ GET    │ List all users  │
-│ get_user_by_id                  │ GET    │ Get user by ID  │
-│ create_user                     │ POST   │ Create new user │
-└─────────────────────────────────┴────────┴─────────────────┘
+┌──────────────────────────────┬────────┬─────────────────────────────┐
+│ Operation                    │ Method │ Description                 │
+├──────────────────────────────┼────────┼─────────────────────────────┤
+│ ability_list                 │ GET    │ List abilities              │
+│ ability_read                 │ GET    │ Get ability by ID or name   │
+│ pokemon_list                 │ GET    │ List pokemon                │
+│ pokemon_read                 │ GET    │ Get pokemon by ID or name   │
+│ berry_list                   │ GET    │ List berries                │
+│ move_list                    │ GET    │ List moves                  │
+└──────────────────────────────┴────────┴─────────────────────────────┘
 
-Total: 3 operations
+Total: 6 operations
 
->>> get_users(limit=5)
-✓ Success in 0.34s
-[
-  {
-    "id": 1,
-    "name": "Alice",
-    "email": "alice@example.com"
-  },
-  {
-    "id": 2,
-    "name": "Bob",
-    "email": "bob@example.com"
-  }
-]
-
->>> get_user_by_id(user_id=1)
-✓ Success in 0.12s
+>>> pokemon_list(limit=3)
+✓ Success in 0.52s
 {
-  "id": 1,
-  "name": "Alice",
-  "email": "alice@example.com",
-  "created_at": "2024-01-15T10:30:00Z"
+  "count": 1302,
+  "next": "https://pokeapi.co/api/v2/pokemon?offset=3&limit=3",
+  "previous": null,
+  "results": [
+    {
+      "name": "bulbasaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/1/"
+    },
+    {
+      "name": "ivysaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/2/"
+    },
+    {
+      "name": "venusaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/3/"
+    }
+  ]
 }
 
->>> create_user(data={"name": "Charlie", "email": "charlie@example.com"})
-✓ Success in 0.28s
+>>> pokemon_read(id="pikachu")
+✓ Success in 0.38s
 {
-  "id": 3,
-  "name": "Charlie",
-  "email": "charlie@example.com",
-  "created_at": "2024-01-15T11:45:00Z"
+  "id": 25,
+  "name": "pikachu",
+  "height": 4,
+  "weight": 60,
+  "types": [
+    {
+      "slot": 1,
+      "type": {
+        "name": "electric",
+        "url": "https://pokeapi.co/api/v2/type/13/"
+      }
+    }
+  ],
+  "abilities": [
+    {
+      "ability": {
+        "name": "static",
+        "url": "https://pokeapi.co/api/v2/ability/9/"
+      },
+      "is_hidden": false,
+      "slot": 1
+    },
+    {
+      "ability": {
+        "name": "lightning-rod",
+        "url": "https://pokeapi.co/api/v2/ability/31/"
+      },
+      "is_hidden": true,
+      "slot": 3
+    }
+  ]
+}
+
+>>> ability_read(id="lightning-rod")
+✓ Success in 0.29s
+{
+  "id": 31,
+  "name": "lightning-rod",
+  "is_main_series": true,
+  "generation": {
+    "name": "generation-iii",
+    "url": "https://pokeapi.co/api/v2/generation/3/"
+  },
+  "effect_entries": [
+    {
+      "effect": "All single-target Electric-type moves are redirected to this Pokémon...",
+      "language": {
+        "name": "en",
+        "url": "https://pokeapi.co/api/v2/language/9/"
+      }
+    }
+  ]
 }
 
 >>> .exit
@@ -461,7 +513,7 @@ The explore command automatically formats responses for readability:
 Quickly explore what operations are available in an API:
 
 ```sh
-clientele explore -u https://api.example.com/openapi.json
+clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
 >>> .list
 ```
 
@@ -470,9 +522,10 @@ clientele explore -u https://api.example.com/openapi.json
 Try out API calls to understand request/response formats before writing production code:
 
 ```sh
-clientele explore -o my_client/
->>> create_user(data={"name": "Test User"})
->>> get_users(limit=1)
+clientele explore -o pokeapi_client/
+>>> pokemon_list(limit=5)
+>>> pokemon_read(id="charizard")
+>>> ability_read(id="blaze")
 ```
 
 #### Debugging
@@ -480,9 +533,9 @@ clientele explore -o my_client/
 Validate that specific API operations work as expected:
 
 ```sh
-clientele explore -o my_client/
->>> get_user_by_id(user_id=123)
->>> update_user(user_id=123, data={"status": "active"})
+clientele explore -o pokeapi_client/
+>>> pokemon_read(id="pikachu")
+>>> berry_read(id=1)
 ```
 
 #### Documentation & Demos
