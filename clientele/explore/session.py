@@ -12,6 +12,8 @@ class SessionConfig:
         """Initialize session configuration."""
         self.output_format = "json"  # json, table, or raw
         self.history_file = Path.home() / ".clientele_history"
+        self.debug_mode = False  # Enable HTTP request/response logging
+        self.config_overrides: dict[str, str] = {}  # Runtime config overrides
 
     def ensure_history_file(self) -> Path:
         """Ensure history file exists and return its path.

@@ -38,9 +38,9 @@ class ClienteleREPL:
 
         # Initialize components
         self.completer = ClienteleCompleter(introspector)
-        self.executor = RequestExecutor(introspector)
+        self.executor = RequestExecutor(introspector, self.config)
         self.formatter = ResponseFormatter(self.console)
-        self.command_handler = CommandHandler(introspector, self.console)
+        self.command_handler = CommandHandler(introspector, self.config, self.console)
 
         # Create prompt session
         history_file = self.config.ensure_history_file()
