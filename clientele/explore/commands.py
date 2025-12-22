@@ -226,20 +226,24 @@ class CommandHandler:
             fields_table.add_column("Field", style="cyan", no_wrap=True)
             fields_table.add_column("Type", style="green")
             fields_table.add_column("Required", style="yellow")
-            fields_table.add_column("Description", style="white")
 
             for field_name, field_data in schema_info["fields"].items():
                 field_type = field_data.get("type", "Unknown")
-                # Shorten long type strings
-                if len(str(field_type)) > 50:
-                    field_type = str(field_type)[:47] + "..."
+                # Simplify type display - remove verbose typing module prefixes
+                field_type_str = str(field_type)
+                field_type_str = field_type_str.replace("typing.", "")
+                field_type_str = field_type_str.replace("Annotated[", "")
+                # Remove trailing annotation markers
+                if field_type_str.endswith(", ...]"):
+                    field_type_str = field_type_str[:-6] + "]"
+                
+                # Shorten very long type strings
+                if len(field_type_str) > 50:
+                    field_type_str = field_type_str[:47] + "..."
 
                 required = "✓" if field_data.get("required", True) else "✗"
-                description = field_data.get("description", "")
-                if not description and field_data.get("default") is not None:
-                    description = f"Default: {field_data['default']}"
 
-                fields_table.add_row(field_name, str(field_type), required, description)
+                fields_table.add_row(field_name, field_type_str, required)
 
             self.console.print(fields_table)
             self.console.print(f"\n[dim]Total: {len(schema_info['fields'])} fields[/dim]")
