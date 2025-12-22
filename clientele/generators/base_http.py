@@ -1,6 +1,7 @@
 """Base HTTP generator shared by standard and classbase generators."""
 
 import collections
+import pathlib
 import typing
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
@@ -75,7 +76,9 @@ class BaseHTTPGenerator:
                         content = template.render(
                             client_type=client_type,
                         )
-                    console.log(f"[yellow]Please see {self.output_dir}config.py to set authentication variables")
+                    console.log(
+                        f"[yellow]Please see {pathlib.Path(self.output_dir) / 'config.py'} to set authentication variables"
+                    )
                 elif info.type == "oauth2":
                     template = self.writer.templates.get_template("bearer_client.jinja2")
                     content = template.render(

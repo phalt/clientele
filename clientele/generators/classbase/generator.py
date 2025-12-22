@@ -67,8 +67,9 @@ class ClassbaseGenerator(generators.Generator):
         writer.write_to_init(output_dir=self.output_dir)
 
         # Generate the client.py header with class definition
-        if path.exists(f"{self.output_dir}/client.py"):
-            os.remove(f"{self.output_dir}/client.py")
+        client_file = pathlib.Path(self.output_dir) / "client.py"
+        if client_file.exists():
+            os.remove(client_file)
         template = writer.templates.get_template("client_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,
@@ -77,8 +78,9 @@ class ClassbaseGenerator(generators.Generator):
         writer.write_to_client(content, output_dir=self.output_dir)
 
         # Generate the schemas.py header
-        if path.exists(f"{self.output_dir}/schemas.py"):
-            os.remove(f"{self.output_dir}/schemas.py")
+        schemas_file = pathlib.Path(self.output_dir) / "schemas.py"
+        if schemas_file.exists():
+            os.remove(schemas_file)
         template = writer.templates.get_template("schemas_py.jinja2")
         content = template.render(
             client_project_directory_path=client_project_directory_path,

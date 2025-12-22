@@ -71,10 +71,11 @@ class StandardGenerator(generators.Generator):
             client_template_file,
             write_func,
         ) in self.file_name_writer_tuple:
-            if path.exists(f"{self.output_dir}/{client_file}"):
+            file_path = pathlib.Path(self.output_dir) / client_file
+            if file_path.exists():
                 if client_file == "config.py":  # do not replace config.py if exists
                     continue
-                os.remove(f"{self.output_dir}/{client_file}")
+                os.remove(file_path)
             template = writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
@@ -82,8 +83,9 @@ class StandardGenerator(generators.Generator):
             )
             write_func(content, output_dir=self.output_dir)
         # Manifest file
-        if path.exists(f"{self.output_dir}/MANIFEST.md"):
-            os.remove(f"{self.output_dir}/MANIFEST.md")
+        manifest_file = pathlib.Path(self.output_dir) / "MANIFEST.md"
+        if manifest_file.exists():
+            os.remove(manifest_file)
         template = writer.templates.get_template("manifest.jinja2")
         generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio t' if self.asyncio else ''} --regen t"  # noqa
         content = (
