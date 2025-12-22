@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import asyncio
+import inspect
 import time
 import typing
 from dataclasses import dataclass
@@ -66,10 +68,17 @@ class RequestExecutor:
             if self.introspector.is_class_based:
                 # For class-based clients, call the method on the instance
                 method = getattr(self.introspector.client_instance, operation_name)
-                result = method(**args)
             else:
-                # For function-based clients, call the function directly
-                result = op_info.function(**args)
+                # For function-based clients, use the function directly
+                method = op_info.function
+
+            # Check if the operation is async
+            if inspect.iscoroutinefunction(method):
+                # Run async operation in event loop
+                result = asyncio.run(method(**args))
+            else:
+                # Run sync operation normally
+                result = method(**args)
 
             duration = time.time() - start_time
 

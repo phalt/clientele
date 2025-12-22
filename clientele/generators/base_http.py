@@ -37,7 +37,12 @@ class BaseHTTPGenerator:
         self.function_and_status_codes_bundle[func_name] = status_code_map
 
     def writeable_function_and_status_codes_bundle(self) -> str:
-        return f"\nfunc_response_code_maps = {self.function_and_status_codes_bundle}"
+        """Format the function-to-status-code mapping as readable Python code."""
+        import json
+
+        # Use json.dumps with indentation for readable multi-line output
+        json_str = json.dumps(self.function_and_status_codes_bundle, indent=4)
+        return f"\nfunc_response_code_maps = {json_str}\n"
 
     def generate_http_content(self) -> None:
         """Generate HTTP client setup code."""
