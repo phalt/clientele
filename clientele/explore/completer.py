@@ -18,6 +18,7 @@ class ClienteleCompleter(Completer):
     SPECIAL_COMMANDS = [
         (".list", "List all available operations"),
         (".operations", "List all available operations (alias for .list)"),
+        (".schemas", "List all available schemas or show schema details"),
         (".help", "Show help message"),
         (".exit", "Exit the REPL"),
         (".quit", "Exit the REPL (alias for .exit)"),
@@ -46,7 +47,12 @@ class ClienteleCompleter(Completer):
 
         # Special commands (starting with .)
         if text.startswith("."):
-            yield from self._complete_special_commands(word)
+            # Check if we're completing after ".schemas "
+            if text.startswith(".schemas "):
+                schema_arg = text[9:]  # Everything after ".schemas "
+                yield from self._complete_schema_names(schema_arg)
+            else:
+                yield from self._complete_special_commands(word)
 
         # Inside function call - suggest parameters
         elif "(" in text and ")" not in text:
@@ -71,6 +77,24 @@ class ClienteleCompleter(Completer):
                     text=cmd,
                     start_position=-len(word),
                     display_meta=description,
+                )
+
+    def _complete_schema_names(self, word: str):
+        """Complete schema names after .schemas command.
+
+        Args:
+            word: Current word being typed
+
+        Yields:
+            Completion objects for matching schema names
+        """
+        schemas = self.introspector.get_all_schemas()
+        for schema_name in schemas.keys():
+            if schema_name.startswith(word):
+                yield Completion(
+                    text=schema_name,
+                    start_position=-len(word),
+                    display_meta="Pydantic schema",
                 )
 
     def _complete_operations(self, word: str):

@@ -223,23 +223,101 @@ class ClientIntrospector:
             docstring: Operation docstring
 
         Returns:
-            HTTP method (GET, POST, PUT, PATCH, DELETE, or UNKNOWN)
+            HTTP method string (GET, POST, PUT, PATCH, DELETE, or UNKNOWN)
         """
         name_lower = name.lower()
 
-        # Common patterns in generated client function names
-        if "_get" in name_lower or name_lower.startswith("get_"):
+        # Check function name for HTTP method hints
+        if any(x in name_lower for x in ["_get", "_list", "_retrieve", "_read"]):
             return "GET"
-        elif "_post" in name_lower or name_lower.startswith("post_"):
+        elif "_post" in name_lower or "_create" in name_lower:
             return "POST"
-        elif "_put" in name_lower or name_lower.startswith("put_"):
+        elif "_put" in name_lower or "_update" in name_lower:
             return "PUT"
-        elif "_patch" in name_lower or name_lower.startswith("patch_"):
+        elif "_patch" in name_lower:
             return "PATCH"
-        elif "_delete" in name_lower or name_lower.startswith("delete_"):
+        elif "_delete" in name_lower:
             return "DELETE"
 
+        # Check docstring for HTTP method hints
+        if docstring:
+            doc_lower = docstring.lower()
+            if "get " in doc_lower or "retrieve" in doc_lower or "fetch" in doc_lower:
+                return "GET"
+            elif "create" in doc_lower or "post " in doc_lower:
+                return "POST"
+            elif "update" in doc_lower or "put " in doc_lower:
+                return "PUT"
+            elif "patch" in doc_lower:
+                return "PATCH"
+            elif "delete" in doc_lower:
+                return "DELETE"
+
         return "UNKNOWN"
+
+    def get_all_schemas(self) -> dict[str, typing.Any]:
+        """Get all Pydantic schemas from the schemas module.
+
+        Returns:
+            Dictionary of schema name to schema class
+        """
+        if not self.schemas_module:
+            return {}
+
+        schemas = {}
+        for name, obj in inspect.getmembers(self.schemas_module):
+            # Skip private members and imports
+            if name.startswith("_"):
+                continue
+
+            # Check if it's a Pydantic model
+            if inspect.isclass(obj):
+                # Check if it has model_fields (Pydantic v2) or __fields__ (Pydantic v1)
+                if hasattr(obj, "model_fields") or hasattr(obj, "__fields__"):
+                    schemas[name] = obj
+
+        return schemas
+
+    def get_schema_info(self, schema_name: str) -> dict[str, typing.Any] | None:
+        """Get detailed information about a specific schema.
+
+        Args:
+            schema_name: Name of the schema to inspect
+
+        Returns:
+            Dictionary with schema information or None if not found
+        """
+        schemas = self.get_all_schemas()
+        if schema_name not in schemas:
+            return None
+
+        schema_class = schemas[schema_name]
+        info: dict[str, typing.Any] = {
+            "name": schema_name,
+            "docstring": inspect.getdoc(schema_class),
+            "fields": {},
+        }
+
+        # Get field information (Pydantic v2)
+        if hasattr(schema_class, "model_fields"):
+            for field_name, field_info in schema_class.model_fields.items():
+                info["fields"][field_name] = {
+                    "type": str(field_info.annotation) if hasattr(field_info, "annotation") else "Unknown",
+                    "required": field_info.is_required() if hasattr(field_info, "is_required") else True,
+                    "default": field_info.default if hasattr(field_info, "default") else None,
+                    "description": field_info.description if hasattr(field_info, "description") else None,
+                }
+        # Fallback to Pydantic v1
+        elif hasattr(schema_class, "__fields__"):
+            for field_name, field_info in schema_class.__fields__.items():
+                info["fields"][field_name] = {
+                    "type": str(field_info.outer_type_) if hasattr(field_info, "outer_type_") else "Unknown",
+                    "required": field_info.required,
+                    "default": field_info.default,
+                    "description": field_info.field_info.description if hasattr(field_info, "field_info") else None,
+                }
+
+        return info
 
     def get_client_instance(self) -> typing.Any:
         """Get the client instance for class-based clients.
