@@ -200,7 +200,9 @@ def explore(output, file, url):
         client_path = Path(temp_dir)
 
         # Generate client
-        generator = StandardGenerator(spec=spec, asyncio=False, regen=True, output_dir=str(client_path), url=url, file=file)
+        generator = StandardGenerator(
+            spec=spec, asyncio=False, regen=True, output_dir=str(client_path), url=url, file=file
+        )
         generator.generate()
 
         console.log(f"[green]Client generated at {client_path}[/green]")
