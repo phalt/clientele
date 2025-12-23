@@ -96,6 +96,7 @@ func_response_code_maps = {
     "deprecated_endpoint_deprecated_endpoint_get": {"200": "SimpleResponse"},
 }
 
+
 auth_key = c.get_bearer_token()
 client_headers = c.additional_headers()
 client_headers.update(Authorization=f"Bearer {auth_key}")

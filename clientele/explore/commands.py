@@ -260,7 +260,7 @@ class CommandHandler:
         return type_str[:47] + "..." if len(type_str) > 50 else type_str
 
     def _handle_config(self, arg: str | None) -> None:
-        """Handle .config command.
+        """Handle /config command.
 
         Args:
             arg: Optional arguments (e.g., "set key value")
@@ -272,14 +272,14 @@ class CommandHandler:
             # Set configuration value
             parts = arg[4:].split(maxsplit=1)
             if len(parts) != 2:
-                self.console.print("[red]Usage: .config set <key> <value>[/red]")
-                self.console.print("[dim]Example: .config set base_url https://pokeapi.co[/dim]")
+                self.console.print("[red]Usage: /config set <key> <value>[/red]")
+                self.console.print("[dim]Example: /config set base_url https://pokeapi.co[/dim]")
                 return
             key, value = parts
             self._set_config(key, value)
         else:
             self.console.print(f"[yellow]Unknown config command: {arg}[/yellow]")
-            self.console.print("[dim]Use '.config' to show config or '.config set <key> <value>' to set values[/dim]")
+            self.console.print("[dim]Use '/config' to show config or '/config set <key> <value>' to set values[/dim]")
 
     def _show_config(self) -> None:
         """Show current configuration from config module and runtime overrides."""
@@ -351,7 +351,7 @@ class CommandHandler:
             debug_status = "[green]ON[/green]" if self.session_config.debug_mode else "[dim]OFF[/dim]"
             self.console.print(f"\n[bold]Debug Mode:[/bold] {debug_status}")
 
-        self.console.print("\n[dim]Use '.config set <key> <value>' to override values for this session[/dim]")
+        self.console.print("\n[dim]Use '/config set <key> <value>' to override values for this session[/dim]")
         self.console.print("[dim]Supported keys: base_url, bearer_token, user_key, pass_key[/dim]")
 
     def _set_config(self, key: str, value: str) -> None:
@@ -411,7 +411,7 @@ class CommandHandler:
             setattr(config_module, func_name, lambda: value)
 
     def _handle_debug(self, arg: str | None) -> None:
-        """Handle .debug command.
+        """Handle /debug command.
 
         Args:
             arg: "on" or "off" to enable/disable debug mode
@@ -424,7 +424,7 @@ class CommandHandler:
             # Show current debug status
             status = "[green]ON[/green]" if self.session_config.debug_mode else "[dim]OFF[/dim]"
             self.console.print(f"[bold]Debug Mode:[/bold] {status}")
-            self.console.print("\n[dim]Use '.debug on' or '.debug off' to toggle debug mode[/dim]")
+            self.console.print("\n[dim]Use '/debug on' or '/debug off' to toggle debug mode[/dim]")
             return
 
         arg = arg.lower()
@@ -437,4 +437,4 @@ class CommandHandler:
             self.console.print("[yellow]Debug mode disabled[/yellow]")
         else:
             self.console.print(f"[red]Invalid argument: {arg}[/red]")
-            self.console.print("[dim]Use '.debug on' or '.debug off'[/dim]")
+            self.console.print("[dim]Use '/debug on' or '/debug off'[/dim]")
