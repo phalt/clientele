@@ -52,7 +52,19 @@ jobs:
       - name: Extract compatibility percentage
         run: |
           # Extract the percentage from the test output
-          PERCENTAGE=$(grep "Success rate:" test_output.txt | grep -oP '\d+\.\d+(?=%)')
+          PERCENTAGE=$(grep "Success rate:" test_output.txt | grep -oP '\d+\.\d+(?=%)' || echo "")
+          
+          # Check if extraction was successful
+          if [ -z "$PERCENTAGE" ]; then
+            echo "Error: Failed to extract percentage from test output"
+            echo "Falling back to previous value if exists, or using 0.00"
+            if [ -f .github/compatibility.json ]; then
+              echo "Keeping existing compatibility.json"
+              exit 0
+            else
+              PERCENTAGE="0.00"
+            fi
+          fi
           
           # Create JSON file for shields.io endpoint badge
           mkdir -p .github
