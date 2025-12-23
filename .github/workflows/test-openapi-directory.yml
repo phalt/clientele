@@ -68,7 +68,7 @@ jobs:
           
           # Create JSON file for shields.io endpoint badge
           mkdir -p .github
-          echo "{\"schemaVersion\": 1, \"label\": \"compatibility\", \"message\": \"${PERCENTAGE}%\", \"color\": \"brightgreen\"}" > .github/compatibility.json
+          echo "{\"schemaVersion\": 1, \"label\": \"OpenAPI Compatibility\", \"message\": \"${PERCENTAGE}%\", \"color\": \"brightgreen\"}" > .github/compatibility.json
           
           echo "Extracted compatibility: ${PERCENTAGE}%"
       
