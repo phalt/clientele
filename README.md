@@ -6,6 +6,7 @@
 [![codecov](https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM)](https://codecov.io/github/phalt/clientele)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/clientele)
 ![PyPI - License](https://img.shields.io/pypi/l/clientele)
+![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
 
 Clientele generates fully-typed, pythonic HTTP API clients from OpenAPI 3.0+ schemas. 
 
