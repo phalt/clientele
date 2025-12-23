@@ -9,10 +9,16 @@ pipx install clientele
 
 API VERSION: 0.1.0
 OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 0.10.0
+CLIENTELE VERSION: 1.0.0
 
 Regenerate using this command:
 
 ```sh
 clientele generate-class -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
+```
+
+Explore this API interactively:
+
+```sh
+clientele explore -c .
 ```

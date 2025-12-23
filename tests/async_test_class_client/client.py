@@ -114,7 +114,7 @@ class Client:
         return http.handle_response(self.query_request_simple_query_get, response)
 
     async def query_request_optional_query_get(
-        self, your_input: typing.Optional[str]
+        self, your_input: typing.Optional[str] = None
     ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
         """Optional Query Request
 

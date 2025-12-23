@@ -19,6 +19,7 @@ nav:
   - Documentation:
     - Client Examples: examples.md
     - Testing: testing.md
+    - Explorer Mode: explore.md
     - Compatibility & Limitations: compatibility.md
     - Complex Schemas: complex_schemas.md
     - References in OpenAPI: references.md

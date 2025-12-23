@@ -97,7 +97,7 @@ async def query_request_simple_query_get(
 
 
 async def query_request_optional_query_get(
-    your_input: typing.Optional[str],
+    your_input: typing.Optional[str] = None,
 ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
     """Optional Query Request
 
