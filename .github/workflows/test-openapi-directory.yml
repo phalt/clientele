@@ -51,8 +51,8 @@ jobs:
       #----------------------------------------------
       - name: Extract compatibility percentage
         run: |
-          # Extract the percentage from the test output
-          PERCENTAGE=$(grep "Success rate:" test_output.txt | grep -oP '\d+\.\d+(?=%)' || echo "")
+          # Extract the percentage from the test output using sed for portability
+          PERCENTAGE=$(sed -n 's/.*Success rate: \([0-9]*\.[0-9]*\)%.*/\1/p' test_output.txt)
           
           # Check if extraction was successful
           if [ -z "$PERCENTAGE" ]; then
