@@ -402,6 +402,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interactive-api-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive API Explorer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive API Explorer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explorer-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Explorer Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#framework-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
       Framework Compatibility
@@ -765,6 +789,29 @@
   
   
     <li class="md-nav__item">
+      <a href="explore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Explorer Mode
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="compatibility/" class="md-nav__link">
         
   
@@ -1078,6 +1125,30 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#interactive-api-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Interactive API Explorer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interactive API Explorer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#explorer-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Explorer Features
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#framework-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
       Framework Compatibility
@@ -1161,7 +1232,8 @@
 <p><a href="https://pypi.org/project/clientele"><img alt="Package version" src="https://img.shields.io/pypi/v/clientele?color=%2334D058&amp;label=latest%20version" /></a>
 <a href="https://codecov.io/github/phalt/clientele"><img alt="codecov" src="https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM" /></a>
 <img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/clientele" />
-<img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele" /></p>
+<img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele" />
+<img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json" /></p>
 <p>Clientele generates fully-typed, pythonic HTTP API clients from OpenAPI 3.0+ schemas. </p>
 <p>Built by Python developers for Python developers, it works seamlessly with:</p>
 <ul>
@@ -1202,8 +1274,8 @@
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>clientele
 </code></pre></div>
 <h2 id="quick-start">Quick Start</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Generate a client from an OpenAPI schema</span>
-clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>api_client/
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate a client from the PokeAPI OpenAPI schema</span>
+clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml<span class="w"> </span>-o<span class="w"> </span>pokeapi_client/
 </code></pre></div>
 <h2 id="generated-code">Generated code</h2>
 <p>The generated code uses modern tooling and has a great developer experience.</p>
@@ -1256,6 +1328,28 @@ clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="
 <span class="c1"># Async client functions</span>
 <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
 </code></pre></div>
+<h2 id="interactive-api-explorer">Interactive API Explorer</h2>
+<p>Clientele includes an <strong>interactive REPL</strong> that lets you explore and test APIs without writing any code:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Explore an existing client</span>
+clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>pokeapi_client/
+
+<span class="c1"># Or generate a temporary client and explore directly from a schema</span>
+clientele<span class="w"> </span>explore<span class="w"> </span>-f<span class="w"> </span>pokeapi_openapi.yml
+clientele<span class="w"> </span>explore<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
+</code></pre></div>
+<h3 id="explorer-features">Explorer Features</h3>
+<ul>
+<li><strong>Autocomplete</strong>: Press TAB to discover operations and parameters with type hints</li>
+<li><strong>Execute instantly</strong>: Test API operations with Python-like syntax</li>
+<li><strong>Beautiful output</strong>: Syntax-highlighted JSON responses with timing information</li>
+<li><strong>Command history</strong>: Navigate previous commands with UP/DOWN arrows</li>
+<li><strong>Special commands</strong>: Built-in helpers like <code>/list</code>, <code>/help</code>, and more</li>
+</ul>
+<p>The explore command is perfect for:</p>
+<ul>
+<li><strong>API Discovery</strong>: Quickly learn what operations are available</li>
+<li><strong>Testing</strong>: Try out API calls before writing code</li>
+</ul>
 <h2 id="framework-compatibility">Framework Compatibility</h2>
 <p>Clientele works by consuming OpenAPI 3.0+ schemas. </p>
 <p>Any framework or tool that generates standard-compliant OpenAPI schemas will work with Clientele.</p>
