@@ -69,6 +69,9 @@ class RequestExecutor:
             # Validate arguments
             self._validate_args(op_info, args)
 
+            # Convert dict arguments to Pydantic models where needed
+            args = self._convert_dict_args_to_models(op_info, args)
+
             # Execute the operation
             start_time = time.time()
 
@@ -159,3 +162,73 @@ class RequestExecutor:
         for arg_name in args:
             if arg_name not in valid_params:
                 raise ValueError(f"Unknown parameter: {arg_name}")
+
+    def _convert_dict_args_to_models(self, op_info, args: dict[str, typing.Any]) -> dict[str, typing.Any]:
+        """Convert dictionary arguments to Pydantic models where needed.
+
+        Args:
+            op_info: OperationInfo object
+            args: Arguments to convert
+
+        Returns:
+            Arguments with dicts converted to Pydantic models where appropriate
+        """
+        # Get type hints for the operation function
+        try:
+            type_hints = typing.get_type_hints(op_info.function)
+        except Exception:
+            # If we can't get type hints, return args unchanged
+            return args
+
+        converted_args = {}
+        for arg_name, arg_value in args.items():
+            # Only convert if the argument is a dict
+            if not isinstance(arg_value, dict):
+                converted_args[arg_name] = arg_value
+                continue
+
+            # Get the expected type for this parameter
+            expected_type = type_hints.get(arg_name)
+            if expected_type is None:
+                converted_args[arg_name] = arg_value
+                continue
+
+            # Handle Optional types - unwrap to get the actual type
+            origin = typing.get_origin(expected_type)
+            if origin is typing.Union:
+                # For Optional[X], get X (the non-None type)
+                type_args = typing.get_args(expected_type)
+                non_none_types = [t for t in type_args if t is not type(None)]
+                if len(non_none_types) == 1:
+                    expected_type = non_none_types[0]
+
+            # Check if the expected type is a Pydantic model
+            if self._is_pydantic_model(expected_type):
+                try:
+                    # Instantiate the Pydantic model from the dict
+                    converted_args[arg_name] = expected_type(**arg_value)
+                except Exception as e:
+                    # If conversion fails, raise a helpful error
+                    raise ValueError(
+                        f"Failed to convert dict to {expected_type.__name__} for parameter '{arg_name}': {e}"
+                    ) from e
+            else:
+                # Not a Pydantic model, keep the dict as is
+                converted_args[arg_name] = arg_value
+
+        return converted_args
+
+    def _is_pydantic_model(self, type_obj: typing.Any) -> bool:
+        """Check if a type is a Pydantic model.
+
+        Args:
+            type_obj: Type to check
+
+        Returns:
+            True if the type is a Pydantic model, False otherwise
+        """
+        # Check if it's a class with model_fields (Pydantic v2) or __fields__ (Pydantic v1)
+        return (
+            inspect.isclass(type_obj)
+            and (hasattr(type_obj, "model_fields") or hasattr(type_obj, "__fields__"))
+        )
