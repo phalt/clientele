@@ -18,7 +18,7 @@ def api_base_url() -> str:
     """
     Modify this function to provide the current api_base_url.
     """
-    return "http://localhost"
+    return "http://localhost:8000"
 
 
 def get_user_key() -> str:
