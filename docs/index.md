@@ -5,7 +5,7 @@
 </div>
 
 [![Package version](https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version)](https://pypi.org/project/clientele)
-![Python versions](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue)
+![Python versions](https://img.shields.io/badge/python-3.10+-blue)
 [![codecov](https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM)](https://codecov.io/github/phalt/clientele)
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads)](https://pepy.tech/projects/clientele)
 ![PyPI - License](https://img.shields.io/pypi/l/clientele)
@@ -120,6 +120,8 @@ response = await client.list_books()
 ```
 
 ## API Explorer
+
+![repl demo](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele.gif)
 
 Clientele includes an **interactive REPL** that lets you explore and test APIs without writing any code:
 
