@@ -410,6 +410,58 @@ class TestArrayResponses:
         assert "ResponseListUsers = list[User]" in schemas_content
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
 
+
+class TestNoContentResponses:
+    """Test 204 No Content response handling."""
+
+    def test_204_response_is_included_in_status_code_map(self, tmp_path):
+        """Test that 204 No Content responses are included in func_response_code_maps."""
+        spec = load_spec("complex_schemas.json")
+        spec_path = get_spec_path("complex_schemas.json")
+        generator = StandardGenerator(
+            spec=spec,
+            output_dir=str(tmp_path),
+            asyncio=False,
+            regen=True,
+            url=None,
+            file=str(spec_path),
+        )
+        generator.generate()
+
+        http_file = tmp_path / "http.py"
+        http_content = http_file.read_text()
+
+        # Verify the delete function is in the map
+        assert '"delete_user_delete_user_user_id_delete":' in http_content
+
+        # Verify it's NOT empty (the bug we're fixing)
+        assert '"delete_user_delete_user_user_id_delete": {}' not in http_content
+
+        # Verify it has the 204 status code mapped
+        assert '"204":' in http_content
+
+    def test_204_response_classbase_generator(self, tmp_path):
+        """Test that 204 No Content responses work with class-based generator."""
+        spec = load_spec("complex_schemas.json")
+        spec_path = get_spec_path("complex_schemas.json")
+        generator = ClassbaseGenerator(
+            spec=spec,
+            output_dir=str(tmp_path),
+            asyncio=False,
+            regen=True,
+            url=None,
+            file=str(spec_path),
+        )
+        generator.generate()
+
+        http_file = tmp_path / "http.py"
+        http_content = http_file.read_text()
+
+        # Same validation for classbase
+        assert '"delete_user_delete_user_user_id_delete":' in http_content
+        assert '"delete_user_delete_user_user_id_delete": {}' not in http_content
+        assert '"204":' in http_content
+
     def test_array_response_client_function(self, tmp_path):
         """Test that client functions use array type aliases correctly."""
         spec = load_spec("complex_schemas.json")

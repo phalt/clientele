@@ -146,6 +146,28 @@
           }
         }
       }
+    },
+    "/delete-user/{user_id}": {
+      "delete": {
+        "summary": "Delete User",
+        "description": "Demonstrates 204 No Content response - reproduces Django REST Framework delete issue",
+        "operationId": "delete_user_delete_user_user_id_delete",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted successfully - no content returned"
+          }
+        }
+      }
     }
   },
   "components": {
