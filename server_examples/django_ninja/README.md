@@ -13,14 +13,14 @@ uv sync --dev
 2. Run migrations:
 
 ```sh
-cd server_examples/django-ninja
-python manage.py migrate
+cd server_examples/django_ninja
+uv run python manage.py migrate
 ```
 
 3. Run the server:
 
 ```sh
-python manage.py runserver
+uv run python manage.py runserver
 ```
 
 The server will start at `http://localhost:8000`.
@@ -28,7 +28,6 @@ The server will start at `http://localhost:8000`.
 ## Accessing the OpenAPI Schema
 
 - **OpenAPI JSON**: http://localhost:8000/api/openapi.json
-- **Interactive Docs**: http://localhost:8000/api/docs
 
 ## Generate a Client
 
@@ -36,7 +35,7 @@ From the root of the repository:
 
 ```sh
 # Generate a client into the client/ directory
-uv run clientele generate -u http://localhost:8000/api/openapi.json -o server_examples/django-ninja/client/
+uv run clientele generate -u http://localhost:8000/api/openapi.json -o server_examples/django_ninja/client/
 ```
 
 ## API Endpoints
