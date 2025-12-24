@@ -101,6 +101,29 @@
           }
         }
       }
+    },
+    "/list-users": {
+      "get": {
+        "summary": "List Users",
+        "description": "Demonstrates top-level array response",
+        "operationId": "list_users_list_users_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  },
+                  "title": "Response List Users"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -295,6 +318,23 @@
           }
         },
         "required": ["transaction_id", "status", "payment_method"]
+      },
+      "User": {
+        "type": "object",
+        "title": "User",
+        "description": "A user object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "email"]
       }
     }
   }
