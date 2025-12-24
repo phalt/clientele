@@ -77,23 +77,6 @@ def version():
 
 
 @click.command()
-@click.option("-u", "--url", help="URL to openapi schema (json file)", required=False)
-@click.option("-f", "--file", help="Path to openapi schema (json file)", required=False)
-def validate(url, file):
-    """
-    Validate an OpenAPI schema. Will error if anything is wrong with the schema
-    """
-    from rich.console import Console
-
-    console = Console()
-
-    spec = _prepare_spec(console=console, url=url, file=file)
-    if not spec:
-        return
-    console.log("schema validated successfully! You can generate a client with it")
-
-
-@click.command()
 @click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
 @click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
 @click.option("-o", "--output", help="Directory for the generated client", required=True)
@@ -255,7 +238,6 @@ cli_group.add_command(generate)
 cli_group.add_command(generate_basic)
 cli_group.add_command(generate_class)
 cli_group.add_command(version)
-cli_group.add_command(validate)
 cli_group.add_command(explore)
 
 if __name__ == "__main__":

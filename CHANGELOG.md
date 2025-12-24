@@ -23,6 +23,7 @@
   - **Fixed**: Array responses without a `title` field now correctly generate type aliases instead of wrapper classes with a `test` property.
   - **Fixed**: Responses with no content (e.g., 204 No Content) are now properly included in the status code map with `None` as the response type.
   - Correctly handle reserved python keywords for schema model properties (i.e. `type`, `next` etc)
+- Removed the `validate` command from the CLI
 
 ## 0.11.0
 
