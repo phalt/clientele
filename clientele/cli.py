@@ -24,64 +24,38 @@ def _print_dependency_instructions(console):
 
 def _load_openapi_spec(url: str | None = None, file: str | None = None):
     """
-    Load OpenAPI spec from URL or file.
-    Returns the spec object and handles JSON/YAML parsing.
-
-    Also normalizes OpenAPI 3.1 schemas to be compatible with OpenAPI 3.0/cicerone.
+    Load OpenAPI spec from URL or file using cicerone's parsers, normalizing
+    OpenAPI 3.1 schemas for cicerone compatibility when needed.
     """
+
+    from cicerone import parse as cicerone_parse
 
     from clientele.generators.cicerone_compat import normalize_openapi_31_spec
 
     assert url or file, "Must pass either a URL or a file"
 
-    # First, load the spec as a dict to normalize it
-    if url:
-        import httpx
-        import yaml
+    if url is not None:
+        spec = cicerone_parse.parse_spec_from_url(url)
+    elif file is not None:
+        spec = cicerone_parse.parse_spec_from_file(file)
+    else:  # pragma: no cover - guarded by the assert above
+        raise AssertionError("Must pass either a URL or a file")
 
-        response = httpx.get(url, follow_redirects=True)
-        response.raise_for_status()
-        content = response.text
+    normalized_raw = normalize_openapi_31_spec(spec.raw)
+    if normalized_raw is spec.raw:
+        return spec
 
-        # Try to parse as YAML (which also handles JSON)
-        try:
-            spec_dict = yaml.safe_load(content)
-        except yaml.YAMLError:
-            import json
+    return cicerone_parse.parse_spec_from_dict(normalized_raw)
 
-            spec_dict = json.loads(content)
 
-        # Normalize OpenAPI 3.1 to 3.0
-        spec_dict = normalize_openapi_31_spec(spec_dict)
-
-        # Now parse with cicerone
-        from cicerone.parse.parser import parse_spec_from_dict
-
-        return parse_spec_from_dict(spec_dict)
-
-    elif file:
-        import yaml
-
-        with open(file, "r") as f:
-            content = f.read()
-
-        # Try to parse as YAML (which also handles JSON)
-        try:
-            spec_dict = yaml.safe_load(content)
-        except yaml.YAMLError:
-            import json
-
-            spec_dict = json.loads(content)
-
-        # Normalize OpenAPI 3.1 to 3.0
-        spec_dict = normalize_openapi_31_spec(spec_dict)
-
-        # Now parse with cicerone
-        from cicerone.parse.parser import parse_spec_from_dict
-
-        return parse_spec_from_dict(spec_dict)
-    else:
-        raise ValueError("Must provide either url or file")
+def _prepare_spec(console, url: str | None = None, file: str | None = None):
+    spec = _load_openapi_spec(url=url, file=file)
+    console.log(f"Found API specification: {spec.info.title} | version {spec.info.version}")
+    major, _, _ = str(spec.version).partition(".")
+    if major and int(major) < 3:
+        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec.version}")
+        return None
+    return spec
 
 
 @click.group()
@@ -113,11 +87,8 @@ def validate(url, file):
 
     console = Console()
 
-    spec = _load_openapi_spec(url=url, file=file)
-    console.log(f"Found API specification: {spec.info.title} | version {spec.info.version}")
-    major, _, _ = str(spec.version).split(".")
-    if int(major) < 3:
-        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec.version}")
+    spec = _prepare_spec(console=console, url=url, file=file)
+    if not spec:
         return
     console.log("schema validated successfully! You can generate a client with it")
 
@@ -138,11 +109,8 @@ def generate(url, file, output, asyncio, regen):
 
     from clientele.generators.standard.generator import StandardGenerator
 
-    spec = _load_openapi_spec(url=url, file=file)
-    console.log(f"Found API specification: {spec.info.title} | version {spec.info.version}")
-    major, _, _ = str(spec.version).split(".")
-    if int(major) < 3:
-        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec.version}")
+    spec = _prepare_spec(console=console, url=url, file=file)
+    if not spec:
         return
     generator = StandardGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
@@ -186,11 +154,8 @@ def generate_class(url, file, output, asyncio, regen):
 
     from clientele.generators.classbase.generator import ClassbaseGenerator
 
-    spec = _load_openapi_spec(url=url, file=file)
-    console.log(f"Found API specification: {spec.info.title} | version {spec.info.version}")
-    major, _, _ = str(spec.version).split(".")
-    if int(major) < 3:
-        console.log(f"[red]Clientele only supports OpenAPI version 3.0.0 and up, and you have {spec.version}")
+    spec = _prepare_spec(console=console, url=url, file=file)
+    if not spec:
         return
     generator = ClassbaseGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
