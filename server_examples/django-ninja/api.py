@@ -1,10 +1,6 @@
 from ninja import NinjaAPI, Schema
 
-api = NinjaAPI(
-    title="Django Ninja Example",
-    version="1.0.0",
-    description="Example API for Clientele documentation"
-)
+api = NinjaAPI(title="Django Ninja Example", version="1.0.0", description="Example API for Clientele documentation")
 
 
 class UserIn(Schema):
@@ -50,7 +46,7 @@ def create_user(request, user: UserIn):
 def get_user(request, user_id: int, include_posts: bool = False):
     """
     Get a specific user by ID.
-    
+
     The include_posts parameter is for demonstration purposes.
     """
     for user in users_db:
