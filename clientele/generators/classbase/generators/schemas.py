@@ -6,6 +6,7 @@ import typing
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 
+from clientele.generators import schema_utils
 from clientele.generators.classbase import writer
 from clientele.generators.standard import utils
 from clientele.generators.standard.generators.schemas import SchemasGenerator as StandardSchemasGenerator
@@ -50,17 +51,8 @@ class SchemasGenerator(StandardSchemasGenerator):
             schema_key: Name of the schema
             schema_options: List of schema options from oneOf or anyOf
         """
-        union_types = []
-        for schema_option in schema_options:
-            if ref := schema_option.get("$ref"):
-                ref_name = utils.class_name_titled(utils.schema_ref(ref))
-                # Use direct reference without quotes
-                union_types.append(ref_name)
-            else:
-                # Inline schema - convert to type
-                union_types.append(utils.get_type(schema_option))
+        union_type = schema_utils.build_union_type_string(schema_options)
         template = writer.templates.get_template("schema_type_alias.jinja2")
-        union_type = utils.union_for_py_ver(union_types)
         content = template.render(class_name=schema_key, union_type=union_type)
         writer.write_to_schemas(content, output_dir=self.output_dir)
         self.schemas[schema_key] = ""  # Mark as processed
