@@ -71,7 +71,7 @@ select = [
 ]
 
 [tool.coverage.run]
-omit = ["*/templates/*.jinja2", "clientele/generators/*/templates/*.jinja2"]
+omit = ["*/templates/*.jinja2", "clientele/generators/*/templates/*.jinja2", "server_examples/*"]
 
 [tool.coverage.report]
 exclude_lines = [
