@@ -20,7 +20,8 @@
 - **Clientele code generation improvements**:
   - Fixed parameter ordering (required parameters before optional ones)
   - Nullable fields properly handled (OpenAPI 3.0 `nullable: true` and OpenAPI 3.1 array type notation)
-  - Array responses now generate type aliases (e.g., `list["UserResponse"]`) instead of empty classes
+  - **Fixed**: Array responses without a `title` field now correctly generate type aliases instead of wrapper classes with a `test` property.
+  - **Fixed**: Responses with no content (e.g., 204 No Content) are now properly included in the status code map with `None` as the response type.
   - Correctly handle reserved python keywords for schema model properties (i.e. `type`, `next` etc)
 
 ## 0.11.0

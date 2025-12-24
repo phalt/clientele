@@ -162,6 +162,13 @@ class BaseClientsGenerator:
         status_code_map: dict[str, str] = {}
         response_classes = []
         for status_code, details in responses.items():
+            # Handle responses without content (e.g., 204 No Content)
+            if "content" not in details or not details.get("content"):
+                # For no-content responses, use None as the response type
+                status_code_map[status_code] = "None"
+                # Don't add None to response_classes list as it's not a schema class
+                continue
+
             for _, content in details.get("content", {}).items():
                 # Skip if no schema is defined (e.g., only examples)
                 if "schema" not in content:
