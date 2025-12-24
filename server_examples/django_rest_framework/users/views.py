@@ -1,12 +1,12 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 
-from .models import User
-from .serializers import UserRequestSerializer, UserSerializer
+from server_examples.django_rest_framework.users.models import User
+from server_examples.django_rest_framework.users.serializers import UserRequestSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all()  # type: ignore[assignment]
     serializer_class = UserSerializer
 
     @extend_schema(operation_id="list_users")
