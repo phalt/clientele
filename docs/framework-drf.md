@@ -2,6 +2,8 @@
 
 This guide shows you how to generate a Python client for a Django REST Framework (DRF) API using Clientele and **drf-spectacular**.
 
+> **💡 Working Example**: See a real Django REST Framework application with code examples from this guide in [`server_examples/django-rest-framework/`](https://github.com/phalt/clientele/tree/main/server_examples/django-rest-framework)
+
 ## Prerequisites
 
 - A Django REST Framework application
