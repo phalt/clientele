@@ -309,3 +309,77 @@ class TestEdgeCases:
         # Each schema should only be defined once
         assert schemas_content.count("class Cat(pydantic.BaseModel):") == 1
         assert schemas_content.count("class Dog(pydantic.BaseModel):") == 1
+
+
+class TestArrayResponses:
+    """Test top-level array response handling."""
+
+    def test_array_response_generates_type_alias(self, tmp_path):
+        """Test that top-level array responses generate type aliases, not empty classes."""
+        spec = load_spec("complex_schemas.json")
+        spec_path = get_spec_path("complex_schemas.json")
+        generator = StandardGenerator(
+            spec=spec,
+            output_dir=str(tmp_path),
+            asyncio=False,
+            regen=True,
+            url=None,
+            file=str(spec_path),
+        )
+        generator.generate()
+
+        schemas_file = tmp_path / "schemas.py"
+        schemas_content = schemas_file.read_text()
+
+        # Verify array response creates a type alias
+        assert 'ResponseListUsers = list["User"]' in schemas_content
+
+        # Verify it's NOT an empty class
+        assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
+
+        # Verify the User schema is properly defined
+        assert "class User(pydantic.BaseModel):" in schemas_content
+        assert "id: int" in schemas_content
+        assert "name: str" in schemas_content
+        assert "email: str" in schemas_content
+
+    def test_array_response_classbase_generator(self, tmp_path):
+        """Test array responses work with class-based generator."""
+        spec = load_spec("complex_schemas.json")
+        spec_path = get_spec_path("complex_schemas.json")
+        generator = ClassbaseGenerator(
+            spec=spec,
+            output_dir=str(tmp_path),
+            asyncio=False,
+            regen=True,
+            url=None,
+            file=str(spec_path),
+        )
+        generator.generate()
+
+        schemas_file = tmp_path / "schemas.py"
+        schemas_content = schemas_file.read_text()
+
+        # Same validation for classbase
+        assert 'ResponseListUsers = list["User"]' in schemas_content
+        assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
+
+    def test_array_response_client_function(self, tmp_path):
+        """Test that client functions use array type aliases correctly."""
+        spec = load_spec("complex_schemas.json")
+        spec_path = get_spec_path("complex_schemas.json")
+        generator = StandardGenerator(
+            spec=spec,
+            output_dir=str(tmp_path),
+            asyncio=False,
+            regen=True,
+            url=None,
+            file=str(spec_path),
+        )
+        generator.generate()
+
+        client_file = tmp_path / "client.py"
+        client_content = client_file.read_text()
+
+        # Verify the function signature uses the type alias
+        assert "def list_users_list_users_get() -> schemas.ResponseListUsers:" in client_content
