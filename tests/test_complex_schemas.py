@@ -333,10 +333,10 @@ class TestArrayResponses:
 
         # Verify array response creates a type alias
         assert 'ResponseListUsers = list["User"]' in schemas_content
-        
+
         # Verify it's NOT an empty class
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
-        
+
         # Verify the User schema is properly defined
         assert "class User(pydantic.BaseModel):" in schemas_content
         assert "id: int" in schemas_content
