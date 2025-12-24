@@ -1348,9 +1348,13 @@
 <li>Slash commands: <code>/list</code> (show all operations), <code>/schemas</code> (inspect schemas), <code>/config</code> (view/set config), <code>/debug on/off</code> (toggle debug), <code>/help</code> (show help), <code>/exit</code> (quit)</li>
 </ul>
 </li>
+<li><strong>Fixed</strong>: Explorer CLI now correctly accepts dictionary arguments for parameters expecting Pydantic models (e.g., <code>create_user(data={"name": "test", "email": "foo@test.com"})</code>). Previously, this would fail with <code>AttributeError: 'dict' object has no attribute 'model_dump'</code>.</li>
 <li><strong>Clientele code generation improvements</strong>:</li>
 <li>Fixed parameter ordering (required parameters before optional ones)</li>
 <li>Nullable fields properly handled (OpenAPI 3.0 <code>nullable: true</code> and OpenAPI 3.1 array type notation)</li>
+<li><strong>Fixed</strong>: Array responses without a <code>title</code> field now correctly generate type aliases instead of wrapper classes with a <code>test</code> property.</li>
+<li><strong>Fixed</strong>: Responses with no content (e.g., 204 No Content) are now properly included in the status code map with <code>None</code> as the response type.</li>
+<li>Correctly handle reserved python keywords for schema model properties (i.e. <code>type</code>, <code>next</code> etc)</li>
 </ul>
 <h2 id="0110">0.11.0</h2>
 <ul>
