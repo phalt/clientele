@@ -15,3 +15,4 @@ htmlcov/
 *.coverage*
 coverage.xml
 server_examples/**/db.sqlite3
+.cache/
