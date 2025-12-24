@@ -8,8 +8,8 @@ from urllib import parse
 
 import httpx
 
-from server_examples.django_rest_framework.client import config as c  # noqa
-from server_examples.django_rest_framework.client import schemas  # noqa
+from server_examples.django_rest_framework import config as c  # noqa
+from server_examples.django_rest_framework import schemas  # noqa
 
 
 def json_serializer(obj):
@@ -114,7 +114,7 @@ func_response_code_maps = {
     "users_destroy": {},
 }
 client_headers = c.additional_headers()
-client = httpx.Client(headers=client_headers)
+client = httpx.Client(auth=(c.get_user_key(), c.get_pass_key()), headers=client_headers)
 
 
 def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
