@@ -16,6 +16,7 @@
     - Syntax-highlighted JSON responses with timing information
     - Command history (persistent in `~/.clientele_history`)
     - Slash commands: `/list` (show all operations), `/schemas` (inspect schemas), `/config` (view/set config), `/debug on/off` (toggle debug), `/help` (show help), `/exit` (quit)
+  - **Fixed**: Explorer CLI now correctly accepts dictionary arguments for parameters expecting Pydantic models (e.g., `create_user(data={"name": "test", "email": "foo@test.com"})`). Previously, this would fail with `AttributeError: 'dict' object has no attribute 'model_dump'`.
 - **Clientele code generation improvements**:
   - Fixed parameter ordering (required parameters before optional ones)
   - Nullable fields properly handled (OpenAPI 3.0 `nullable: true` and OpenAPI 3.1 array type notation)
