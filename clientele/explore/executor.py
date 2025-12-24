@@ -198,7 +198,7 @@ class RequestExecutor:
             if origin is typing.Union:
                 # For Optional[X], get X (the non-None type)
                 type_args = typing.get_args(expected_type)
-                non_none_types = [t for t in type_args if t != type(None)]
+                non_none_types = [t for t in type_args if t is not type(None)]
                 if len(non_none_types) == 1:
                     expected_type = non_none_types[0]
 
@@ -230,7 +230,4 @@ class RequestExecutor:
             True if the type is a Pydantic model, False otherwise
         """
         # Check if it's a class with model_fields (Pydantic v2) or __fields__ (Pydantic v1)
-        return (
-            inspect.isclass(type_obj)
-            and (hasattr(type_obj, "model_fields") or hasattr(type_obj, "__fields__"))
-        )
+        return inspect.isclass(type_obj) and (hasattr(type_obj, "model_fields") or hasattr(type_obj, "__fields__"))
