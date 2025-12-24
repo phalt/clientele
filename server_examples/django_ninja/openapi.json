@@ -1,0 +1,158 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Django Ninja Example",
+    "version": "1.0.0",
+    "description": "Example API for Clientele documentation"
+  },
+  "paths": {
+    "/api/users": {
+      "get": {
+        "operationId": "list_users",
+        "summary": "List Users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/UserOut"
+                  },
+                  "title": "Response",
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "description": "List all users."
+      },
+      "post": {
+        "operationId": "create_user",
+        "summary": "Create User",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          }
+        },
+        "description": "Create a new user.",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserIn"
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/api/users/{user_id}": {
+      "get": {
+        "operationId": "get_user",
+        "summary": "Get User",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "schema": {
+              "title": "User Id",
+              "type": "integer"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "include_posts",
+            "schema": {
+              "default": false,
+              "title": "Include Posts",
+              "type": "boolean"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserOut"
+                }
+              }
+            }
+          }
+        },
+        "description": "Get a specific user by ID.\n\nThe include_posts parameter is for demonstration purposes."
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserOut": {
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "age": {
+            "title": "Age",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "username",
+          "email",
+          "age"
+        ],
+        "title": "UserOut",
+        "type": "object"
+      },
+      "UserIn": {
+        "properties": {
+          "username": {
+            "title": "Username",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "age": {
+            "title": "Age",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "age"
+        ],
+        "title": "UserIn",
+        "type": "object"
+      }
+    }
+  },
+  "servers": []
+}
