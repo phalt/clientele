@@ -14,16 +14,16 @@ class AnotherModel(pydantic.BaseModel):
 
 class ComplexModelResponse(pydantic.BaseModel):
     a_dict_response: dict[str, typing.Any]
-    a_enum: ExampleEnum
-    a_list_of_enums: list[ExampleEnum]
+    a_enum: "ExampleEnum"
+    a_list_of_enums: list["ExampleEnum"]
     a_list_of_numbers: list[int]
-    a_list_of_other_models: list[AnotherModel]
+    a_list_of_other_models: list["AnotherModel"]
     a_list_of_strings: list[str]
     a_number: int
     a_string: str
     a_decimal: decimal.Decimal
     a_float: float
-    another_model: AnotherModel
+    another_model: "AnotherModel"
 
 
 class DeleteResponse(pydantic.BaseModel):
@@ -40,7 +40,7 @@ class HeadersResponse(pydantic.BaseModel):
 
 
 class HTTPValidationError(pydantic.BaseModel):
-    detail: list[ValidationError]
+    detail: list["ValidationError"]
 
 
 class OptionalParametersResponse(pydantic.BaseModel):
@@ -85,7 +85,9 @@ class SimpleResponse(pydantic.BaseModel):
 class ValidationError(pydantic.BaseModel):
     loc: list[str | int]
     msg: str
-    type_: str
+    type_: str = pydantic.Field(alias="type")
+
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
 
 class HeaderRequestHeaderRequestGetHeaders(pydantic.BaseModel):
