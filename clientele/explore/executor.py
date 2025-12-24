@@ -198,7 +198,7 @@ class RequestExecutor:
             if origin is typing.Union:
                 # For Optional[X], get X (the non-None type)
                 type_args = typing.get_args(expected_type)
-                non_none_types = [t for t in type_args if t is not type(None)]
+                non_none_types = [t for t in type_args if t != type(None)]
                 if len(non_none_types) == 1:
                     expected_type = non_none_types[0]
 
@@ -208,9 +208,11 @@ class RequestExecutor:
                     # Instantiate the Pydantic model from the dict
                     converted_args[arg_name] = expected_type(**arg_value)
                 except Exception as e:
-                    # If conversion fails, raise a helpful error
+                    # If conversion fails, raise a helpful error with the validation details
+                    error_type = type(e).__name__
                     raise ValueError(
-                        f"Failed to convert dict to {expected_type.__name__} for parameter '{arg_name}': {e}"
+                        f"Failed to convert dict to {expected_type.__name__} for parameter '{arg_name}'. "
+                        f"{error_type}: {e}"
                     ) from e
             else:
                 # Not a Pydantic model, keep the dict as is
