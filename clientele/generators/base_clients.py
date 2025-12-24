@@ -162,6 +162,13 @@ class BaseClientsGenerator:
         status_code_map: dict[str, str] = {}
         response_classes = []
         for status_code, details in responses.items():
+            # Handle responses without content (e.g., 204 No Content)
+            if "content" not in details or not details.get("content"):
+                # For no-content responses, use None as the response type
+                status_code_map[status_code] = "None"
+                # Don't add None to response_classes list as it's not a schema class
+                continue
+
             for _, content in details.get("content", {}).items():
                 # Skip if no schema is defined (e.g., only examples)
                 if "schema" not in content:
@@ -191,9 +198,10 @@ class BaseClientsGenerator:
                     # It is likely it isn't an object it is just a simple response.
                     class_name = utils.class_name_titled(func_name + status_code + "Response")
                     # We need to generate the class at this point because it does not exist
+                    # Pass the schema directly - make_schema_class knows how to handle arrays
                     self.schemas_generator.make_schema_class(
                         func_name + status_code + "Response",
-                        schema={"properties": {"test": content["schema"]}},
+                        schema=content["schema"],
                     )
                 status_code_map[status_code] = class_name
                 response_classes.append(class_name)

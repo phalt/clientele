@@ -25,8 +25,7 @@ class UserRequest(pydantic.BaseModel):
     email: str
 
 
-class ListUsers200Response(pydantic.BaseModel):
-    test: list["User"]
+ListUsers200Response = list[User]
 
 
 def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:

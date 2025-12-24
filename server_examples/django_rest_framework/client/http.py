@@ -76,6 +76,10 @@ def handle_response(func, response):
     else:
         expected_response_class_name = expected_responses[str(status_code)]
 
+    # Handle None responses (e.g., 204 No Content)
+    if expected_response_class_name == "None":
+        return None
+
     # Get the correct response type and build it
     # First try to match by __name__ (works for classes)
     response_type = None
@@ -111,7 +115,7 @@ func_response_code_maps = {
     "get_user": {"200": "User"},
     "users_update": {"200": "User"},
     "users_partial_update": {"200": "User"},
-    "users_destroy": {},
+    "users_destroy": {"204": "None"},
 }
 client_headers = c.additional_headers()
 client = httpx.Client(headers=client_headers)

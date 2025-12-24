@@ -26,7 +26,7 @@ def get_user_key() -> str:
     HTTP Basic authentication.
     Username parameter
     """
-    return ""
+    return "user"
 
 
 def get_pass_key() -> str:
@@ -34,7 +34,7 @@ def get_pass_key() -> str:
     HTTP Basic authentication.
     Password parameter
     """
-    return ""
+    return "password"
 
 
 def get_bearer_token() -> str:

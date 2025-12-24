@@ -76,6 +76,10 @@ def handle_response(func, response):
     else:
         expected_response_class_name = expected_responses[str(status_code)]
 
+    # Handle None responses (e.g., 204 No Content)
+    if expected_response_class_name == "None":
+        return None
+
     # Get the correct response type and build it
     # First try to match by __name__ (works for classes)
     response_type = None
