@@ -2,6 +2,8 @@
 
 This guide shows you how to generate a Python client for a Django Ninja API using Clientele.
 
+> **💡 Working Example**: See a real Django Ninja application with code examples from this guide in [`server_examples/django-ninja/`](https://github.com/phalt/clientele/tree/main/server_examples/django-ninja)
+
 ## Prerequisites
 
 - A Django application with [Django Ninja](https://django-ninja.dev/) installed
