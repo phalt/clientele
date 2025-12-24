@@ -177,3 +177,83 @@ def test_validate_args_with_all_optional():
     executor = RequestExecutor(Mock())
     # Should not raise exception when no args provided for all optional
     executor._validate_args(mock_op_info, {})
+
+
+def test_convert_dict_to_pydantic_model(introspector):
+    """Test converting dict to Pydantic model for data parameter."""
+    executor = RequestExecutor(introspector)
+
+    # Get operation that expects a Pydantic model
+    op_info = introspector.operations.get("request_data_request_data_post")
+
+    # Test with dict argument
+    args = {"data": {"my_input": "test", "my_decimal_input": 3.14}}
+    converted_args = executor._convert_dict_args_to_models(op_info, args)
+
+    # Should convert dict to Pydantic model
+    assert "data" in converted_args
+    assert hasattr(converted_args["data"], "model_dump")
+    assert converted_args["data"].my_input == "test"
+
+
+def test_convert_dict_preserves_non_dict_args(introspector):
+    """Test that non-dict arguments are preserved unchanged."""
+    executor = RequestExecutor(introspector)
+
+    # Get operation with string parameter
+    op_info = introspector.operations.get("parameter_request_simple_request")
+
+    # Test with string argument
+    args = {"your_input": "test"}
+    converted_args = executor._convert_dict_args_to_models(op_info, args)
+
+    # Should preserve string argument
+    assert converted_args == args
+    assert isinstance(converted_args["your_input"], str)
+
+
+def test_convert_dict_handles_optional_pydantic_model(introspector):
+    """Test converting dict to optional Pydantic model."""
+    executor = RequestExecutor(introspector)
+
+    # Get operation with optional Pydantic parameter
+    op_info = introspector.operations.get("header_request_header_request_get")
+
+    # Test with dict argument (use correct field name from schema)
+    args = {"headers": {"x_test": "value"}}
+    converted_args = executor._convert_dict_args_to_models(op_info, args)
+
+    # Should convert dict to Pydantic model even if optional
+    assert "headers" in converted_args
+    assert hasattr(converted_args["headers"], "model_dump")
+
+
+def test_convert_dict_invalid_model_data_raises_error(introspector):
+    """Test that invalid dict data raises helpful error."""
+    executor = RequestExecutor(introspector)
+
+    # Get operation that expects a Pydantic model
+    op_info = introspector.operations.get("request_data_request_data_post")
+
+    # Test with invalid dict (missing required field)
+    args = {"data": {"invalid_field": "test"}}
+
+    with pytest.raises(ValueError, match="Failed to convert dict"):
+        executor._convert_dict_args_to_models(op_info, args)
+
+
+def test_is_pydantic_model(introspector):
+    """Test identifying Pydantic models."""
+    executor = RequestExecutor(introspector)
+
+    # Get a Pydantic model from schemas
+    schemas = introspector.get_all_schemas()
+    request_data_model = schemas["RequestDataRequest"]
+
+    # Should identify as Pydantic model
+    assert executor._is_pydantic_model(request_data_model)
+
+    # Should not identify non-models
+    assert not executor._is_pydantic_model(str)
+    assert not executor._is_pydantic_model(dict)
+    assert not executor._is_pydantic_model(int)
