@@ -54,7 +54,8 @@ class SchemasGenerator(StandardSchemasGenerator):
         for schema_option in schema_options:
             if ref := schema_option.get("$ref"):
                 ref_name = utils.class_name_titled(utils.schema_ref(ref))
-                union_types.append(f'"{ref_name}"')
+                # Use direct reference without quotes
+                union_types.append(ref_name)
             else:
                 # Inline schema - convert to type
                 union_types.append(utils.get_type(schema_option))

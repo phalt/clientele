@@ -12,7 +12,7 @@ class CreateUserRequest(pydantic.BaseModel):
 
 
 class HTTPValidationError(pydantic.BaseModel):
-    detail: list["ValidationError"]
+    detail: list[ValidationError]
 
 
 class UserResponse(pydantic.BaseModel):
@@ -27,7 +27,7 @@ class ValidationError(pydantic.BaseModel):
     type_: str
 
 
-ResponseListUsers = list["UserResponse"]
+ResponseListUsers = list[UserResponse]
 
 
 def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:
