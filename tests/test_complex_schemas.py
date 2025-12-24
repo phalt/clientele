@@ -343,6 +343,30 @@ class TestArrayResponses:
         assert "name: str" in schemas_content
         assert "email: str" in schemas_content
 
+    def test_array_response_without_title_generates_type_alias(self, tmp_path):
+        """Test that array responses without title also generate type aliases correctly."""
+        spec = load_spec("complex_schemas.json")
+        spec_path = get_spec_path("complex_schemas.json")
+        generator = StandardGenerator(
+            spec=spec,
+            output_dir=str(tmp_path),
+            asyncio=False,
+            regen=True,
+            url=None,
+            file=str(spec_path),
+        )
+        generator.generate()
+
+        schemas_file = tmp_path / "schemas.py"
+        schemas_content = schemas_file.read_text()
+
+        # Verify array response without title creates a type alias (without quotes)
+        assert "ListUsersNoTitleListUsersNoTitleGet200Response = list[User]" in schemas_content
+
+        # Verify it's NOT a class with a "test" property (the bug we're fixing)
+        assert "class ListUsersNoTitleListUsersNoTitleGet200Response(pydantic.BaseModel):" not in schemas_content
+        assert "test: list[" not in schemas_content
+
     def test_array_response_classbase_generator(self, tmp_path):
         """Test array responses work with class-based generator."""
         spec = load_spec("complex_schemas.json")

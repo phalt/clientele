@@ -191,9 +191,10 @@ class BaseClientsGenerator:
                     # It is likely it isn't an object it is just a simple response.
                     class_name = utils.class_name_titled(func_name + status_code + "Response")
                     # We need to generate the class at this point because it does not exist
+                    # Pass the schema directly - make_schema_class knows how to handle arrays
                     self.schemas_generator.make_schema_class(
                         func_name + status_code + "Response",
-                        schema={"properties": {"test": content["schema"]}},
+                        schema=content["schema"],
                     )
                 status_code_map[status_code] = class_name
                 response_classes.append(class_name)

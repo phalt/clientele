@@ -124,6 +124,28 @@
           }
         }
       }
+    },
+    "/list-users-no-title": {
+      "get": {
+        "summary": "List Users Without Title",
+        "description": "Demonstrates top-level array response without title - reproduces Django REST Framework issue",
+        "operationId": "list_users_no_title_list_users_no_title_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
