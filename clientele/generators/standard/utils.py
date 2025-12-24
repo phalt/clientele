@@ -134,6 +134,8 @@ def get_type(t):
     elif ref := t.get("$ref"):
         # Handle component-based references
         if "#/components/schemas/" in ref:
+            # Use forward reference (quoted string) for Pydantic model properties
+            # This allows classes to reference other classes that may be defined later
             base_type = f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
         else:
             # Path-based references are not supported - use typing.Any
@@ -246,3 +248,20 @@ def union_for_py_ver(union_items: list) -> str:
         return f"typing.Union[{', '.join(union_items)}]"
     else:
         return " | ".join(union_items)
+
+
+def remove_forward_ref_quotes(type_string: str) -> str:
+    """
+    Remove quotes from forward references in a type string.
+
+    Converts 'list["SomeType"]' to 'list[SomeType]'
+    Converts 'dict[str, "SomeType"]' to 'dict[str, SomeType]'
+
+    This is used for type aliases where forward references are not needed
+    because all types are defined in the same module and model_rebuild() is called.
+    """
+    import re
+
+    # Replace quoted strings within type annotations
+    # Pattern: matches quoted strings that are type names (alphanumeric + underscore)
+    return re.sub(r'"([A-Za-z_][A-Za-z0-9_]*)"', r"\1", type_string)

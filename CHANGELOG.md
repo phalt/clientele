@@ -21,6 +21,7 @@
   - Fixed parameter ordering (required parameters before optional ones)
   - Nullable fields properly handled (OpenAPI 3.0 `nullable: true` and OpenAPI 3.1 array type notation)
   - Array responses now generate type aliases (e.g., `list["UserResponse"]`) instead of empty classes
+  - Correctly handle reserved python keywords for schema model properties (i.e. `type`, `next` etc)
 
 ## 0.11.0
 

@@ -24,10 +24,12 @@ class UserResponse(pydantic.BaseModel):
 class ValidationError(pydantic.BaseModel):
     loc: list[str | int]
     msg: str
-    type_: str
+    type_: str = pydantic.Field(alias="type")
+
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
 
-ResponseListUsers = list["UserResponse"]
+ResponseListUsers = list[UserResponse]
 
 
 def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:
