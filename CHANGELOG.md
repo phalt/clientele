@@ -19,6 +19,7 @@
 - **Clientele code generation improvements**:
   - Fixed parameter ordering (required parameters before optional ones)
   - Nullable fields properly handled (OpenAPI 3.0 `nullable: true` and OpenAPI 3.1 array type notation)
+  - Array responses now generate type aliases (e.g., `list["UserResponse"]`) instead of empty classes
 
 ## 0.11.0
 
