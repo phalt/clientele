@@ -19,7 +19,7 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "rest_framework",
     "drf_spectacular",
-    "users",
+    "server_examples.django_rest_framework.users",
 ]
 
 MIDDLEWARE = [
@@ -39,6 +39,9 @@ DATABASES = {
 # REST Framework settings
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.BasicAuthentication",
+    ],
 }
 
 # drf-spectacular settings
@@ -55,3 +58,9 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",
+    },
+}
