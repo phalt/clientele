@@ -1,14 +1,16 @@
 """Shared utilities for schema generation across different generators."""
 
+import typing
+
 from clientele.generators.standard import utils
 
 
-def build_union_type_string(schema_options: list[dict]) -> str:
+def build_union_type_string(schema_options: list[typing.Dict[str, typing.Any]]) -> str:
     """
     Build a union type string from a list of schema options (for oneOf or anyOf).
     
     Args:
-        schema_options: List of schema options from oneOf or anyOf
+        schema_options: List of schema option dictionaries from oneOf or anyOf
         
     Returns:
         A union type string (e.g., "Cat | Dog" or "typing.Union[Cat, Dog]")

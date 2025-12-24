@@ -61,7 +61,7 @@ def handle_response(func, response):
     status_code = response.status_code
     # Get the response types, merging function's globals with schemas module for forward reference resolution
     # This handles both cases: schemas.ResponseType and type aliases like list[UserResponse]
-    globalns = {**func.__globals__, **vars(schemas)}
+    globalns = {**func.__globals__, **schemas.__dict__}
     response_types = typing.get_type_hints(func, globalns=globalns)["return"]
 
     if typing.get_origin(response_types) in [typing.Union, types.UnionType]:
