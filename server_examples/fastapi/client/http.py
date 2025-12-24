@@ -9,6 +9,7 @@ from urllib import parse
 import httpx
 
 from server_examples.fastapi.client import config as c  # noqa
+from server_examples.fastapi.client import schemas  # noqa
 
 
 def json_serializer(obj):
@@ -58,8 +59,10 @@ def handle_response(func, response):
     If it can't find a matching schema it will raise an error with details of the response.
     """
     status_code = response.status_code
-    # Get the response types
-    response_types = typing.get_type_hints(func)["return"]
+    # Get the response types, merging function's globals with schemas module for forward reference resolution
+    # This handles both cases: schemas.ResponseType and type aliases like list[UserResponse]
+    globalns = {**func.__globals__, **vars(schemas)}
+    response_types = typing.get_type_hints(func, globalns=globalns)["return"]
 
     if typing.get_origin(response_types) in [typing.Union, types.UnionType]:
         response_types = list(typing.get_args(response_types))
@@ -74,9 +77,31 @@ def handle_response(func, response):
         expected_response_class_name = expected_responses[str(status_code)]
 
     # Get the correct response type and build it
-    response_type = [t for t in response_types if t.__name__ == expected_response_class_name][0]
+    # First try to match by __name__ (works for classes)
+    response_type = None
+    for t in response_types:
+        if hasattr(t, "__name__") and t.__name__ == expected_response_class_name:
+            response_type = t
+            break
+
+    # If not found, try to get it from the schemas module (works for type aliases)
+    if response_type is None and hasattr(schemas, expected_response_class_name):
+        response_type = getattr(schemas, expected_response_class_name)
+
+    if response_type is None:
+        raise APIException(response=response, reason=f"Could not find response type {expected_response_class_name}")
+
     data = response.json()
-    return response_type.model_validate(data)
+
+    # Handle array/list responses
+    if typing.get_origin(response_type) is list:
+        # Get the item type from the list
+        item_type = typing.get_args(response_type)[0]
+        # Validate each item in the list
+        return [item_type.model_validate(item) for item in data]
+    else:
+        # Regular model validation for single objects
+        return response_type.model_validate(data)
 
 
 # Func map

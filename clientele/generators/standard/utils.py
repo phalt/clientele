@@ -134,7 +134,9 @@ def get_type(t):
     elif ref := t.get("$ref"):
         # Handle component-based references
         if "#/components/schemas/" in ref:
-            base_type = f'"{class_name_titled(ref.replace("#/components/schemas/", ""))}"'
+            # Use direct reference without quotes for type aliases
+            # The model_rebuild() at the end of schemas.py will resolve forward refs in classes
+            base_type = class_name_titled(ref.replace("#/components/schemas/", ""))
         else:
             # Path-based references are not supported - use typing.Any
             # These are inline schemas in the OpenAPI spec
