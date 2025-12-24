@@ -14,13 +14,13 @@ uv sync --dev
 
 ```sh
 cd server_examples/django-rest-framework
-python manage.py migrate
+uv run python manage.py migrate
 ```
 
 3. Run the server:
 
 ```sh
-python manage.py runserver
+uv run python manage.py runserver
 ```
 
 The server will start at `http://localhost:8000`.
@@ -36,7 +36,7 @@ From the root of the repository:
 
 ```sh
 # Generate a client into the client/ directory
-uv run clientele generate -u http://localhost:8000/api/schema/ -o server_examples/django-rest-framework/client/
+uv run clientele generate -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/
 ```
 
 ## API Endpoints
