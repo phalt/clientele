@@ -34,6 +34,22 @@ def simple_openapi_spec():
     }
 
 
+@pytest.fixture
+def write_spec_file(tmp_path, simple_openapi_spec):
+    """Create an OpenAPI spec file with the requested suffix."""
+
+    def _write(suffix: str, spec: dict | None = None) -> Path:
+        spec_path = tmp_path / f"spec{suffix}"
+        payload = spec or simple_openapi_spec
+        if suffix in {".yaml", ".yml"}:
+            spec_path.write_text(yaml.dump(payload))
+        else:
+            spec_path.write_text(json.dumps(payload))
+        return spec_path
+
+    return _write
+
+
 def test_version_command(runner):
     """Test the version command displays version."""
     from clientele import settings
@@ -44,33 +60,15 @@ def test_version_command(runner):
     assert settings.VERSION in result.output
 
 
-def test_validate_command_with_valid_json_file(runner, simple_openapi_spec):
-    """Test validate command with a valid JSON OpenAPI spec file."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(simple_openapi_spec, f)
-        spec_file = f.name
+@pytest.mark.parametrize("suffix", [".json", ".yaml"])
+def test_validate_command_with_valid_file(runner, write_spec_file, suffix):
+    """Test validate command with valid OpenAPI spec files."""
 
-    try:
-        result = runner.invoke(cli.cli_group, ["validate", "--file", spec_file])
-        assert result.exit_code == 0
-        assert "Test API" in result.output
-        assert "1.0.0" in result.output
-    finally:
-        Path(spec_file).unlink()
-
-
-def test_validate_command_with_valid_yaml_file(runner, simple_openapi_spec):
-    """Test validate command with a valid YAML OpenAPI spec file."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-        yaml.dump(simple_openapi_spec, f)
-        spec_file = f.name
-
-    try:
-        result = runner.invoke(cli.cli_group, ["validate", "--file", spec_file])
-        assert result.exit_code == 0
-        assert "Test API" in result.output
-    finally:
-        Path(spec_file).unlink()
+    spec_file = write_spec_file(suffix)
+    result = runner.invoke(cli.cli_group, ["validate", "--file", str(spec_file)])
+    assert result.exit_code == 0
+    assert "Test API" in result.output
+    assert "1.0.0" in result.output
 
 
 def test_validate_command_with_old_openapi_version(runner):
@@ -144,38 +142,20 @@ def test_print_dependency_instructions():
     cli._print_dependency_instructions(console)
 
 
-def test_load_openapi_spec_from_file(simple_openapi_spec):
+@pytest.mark.parametrize("suffix", [".json", ".yaml"])
+def test_load_openapi_spec_from_file(write_spec_file, suffix):
     """Test loading OpenAPI spec from a file."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(simple_openapi_spec, f)
-        spec_file = f.name
 
-    try:
-        spec = cli._load_openapi_spec(file=spec_file)
-        assert spec is not None
-        assert spec.info.title == "Test API"
-    finally:
-        Path(spec_file).unlink()
+    spec_file = write_spec_file(suffix)
+    spec = cli._load_openapi_spec(file=str(spec_file))
+    assert spec is not None
+    assert spec.info.title == "Test API"
 
 
 def test_load_openapi_spec_requires_url_or_file():
     """Test that _load_openapi_spec requires either URL or file."""
     with pytest.raises(AssertionError):
         cli._load_openapi_spec()
-
-
-def test_load_openapi_spec_with_yaml_file(simple_openapi_spec):
-    """Test loading YAML OpenAPI spec from a file."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-        yaml.dump(simple_openapi_spec, f)
-        spec_file = f.name
-
-    try:
-        spec = cli._load_openapi_spec(file=spec_file)
-        assert spec is not None
-        assert spec.info.title == "Test API"
-    finally:
-        Path(spec_file).unlink()
 
 
 def test_load_openapi_spec_raises_value_error_when_no_params():
@@ -191,33 +171,22 @@ def test_load_openapi_spec_raises_value_error_when_no_params():
         pass
 
 
-def test_load_openapi_spec_with_yaml_response_from_url(simple_openapi_spec, httpserver):
-    """Test loading OpenAPI spec from URL when response is YAML."""
-    yaml_content = yaml.dump(simple_openapi_spec)
+@pytest.mark.parametrize(
+    "content_type,serializer",
+    [
+        ("application/x-yaml", yaml.dump),
+        ("application/json", json.dumps),
+    ],
+)
+def test_load_openapi_spec_from_url(simple_openapi_spec, httpserver, content_type, serializer):
+    """Test loading OpenAPI spec from URL for multiple content types."""
 
-    # Set up the local HTTP server to return YAML content
-    httpserver.expect_request("/openapi.yaml").respond_with_data(
-        yaml_content,
-        content_type="application/x-yaml",
+    httpserver.expect_request("/openapi").respond_with_data(
+        serializer(simple_openapi_spec),
+        content_type=content_type,
     )
 
-    url = httpserver.url_for("/openapi.yaml")
-    spec = cli._load_openapi_spec(url=url)
-    assert spec is not None
-    assert spec.info.title == "Test API"
-
-
-def test_load_openapi_spec_with_json_from_url(simple_openapi_spec, httpserver):
-    """Test loading OpenAPI spec from URL when response is JSON."""
-    json_content = json.dumps(simple_openapi_spec)
-
-    # Set up the local HTTP server to return JSON content
-    httpserver.expect_request("/openapi.json").respond_with_data(
-        json_content,
-        content_type="application/json",
-    )
-
-    url = httpserver.url_for("/openapi.json")
+    url = httpserver.url_for("/openapi")
     spec = cli._load_openapi_spec(url=url)
     assert spec is not None
     assert spec.info.title == "Test API"
