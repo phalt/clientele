@@ -8,10 +8,10 @@ from clientele.generators.standard import utils
 def build_union_type_string(schema_options: list[typing.Dict[str, typing.Any]]) -> str:
     """
     Build a union type string from a list of schema options (for oneOf or anyOf).
-    
+
     Args:
         schema_options: List of schema option dictionaries from oneOf or anyOf
-        
+
     Returns:
         A union type string (e.g., "Cat | Dog" or "typing.Union[Cat, Dog]")
     """
@@ -24,5 +24,5 @@ def build_union_type_string(schema_options: list[typing.Dict[str, typing.Any]]) 
         else:
             # Inline schema - convert to type
             union_types.append(utils.get_type(schema_option))
-    
+
     return utils.union_for_py_ver(union_types)

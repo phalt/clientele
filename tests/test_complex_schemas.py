@@ -57,7 +57,7 @@ class TestOneOfSchemas:
         schemas_content = schemas_file.read_text()
 
         # Verify oneOf creates a type alias with pipe syntax (Python 3.10+)
-        assert 'PetRequest = Cat | Dog' in schemas_content
+        assert "PetRequest = Cat | Dog" in schemas_content
         assert "class Cat(pydantic.BaseModel):" in schemas_content
         assert "class Dog(pydantic.BaseModel):" in schemas_content
 
@@ -79,7 +79,7 @@ class TestOneOfSchemas:
         schemas_content = schemas_file.read_text()
 
         # Verify PaymentMethodRequest with three options (pipe syntax)
-        assert 'PaymentMethodRequest = CreditCard | BankTransfer | PayPal' in schemas_content
+        assert "PaymentMethodRequest = CreditCard | BankTransfer | PayPal" in schemas_content
         assert "class CreditCard(pydantic.BaseModel):" in schemas_content
         assert "class BankTransfer(pydantic.BaseModel):" in schemas_content
         assert "class PayPal(pydantic.BaseModel):" in schemas_content
@@ -102,7 +102,7 @@ class TestOneOfSchemas:
         schemas_content = schemas_file.read_text()
 
         # Same validation for classbase (pipe syntax)
-        assert 'PetRequest = Cat | Dog' in schemas_content
+        assert "PetRequest = Cat | Dog" in schemas_content
 
 
 class TestAnyOfSchemas:
@@ -332,7 +332,7 @@ class TestArrayResponses:
         schemas_content = schemas_file.read_text()
 
         # Verify array response creates a type alias (without quotes)
-        assert 'ResponseListUsers = list[User]' in schemas_content
+        assert "ResponseListUsers = list[User]" in schemas_content
 
         # Verify it's NOT an empty class
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
@@ -361,7 +361,7 @@ class TestArrayResponses:
         schemas_content = schemas_file.read_text()
 
         # Same validation for classbase (without quotes)
-        assert 'ResponseListUsers = list[User]' in schemas_content
+        assert "ResponseListUsers = list[User]" in schemas_content
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
 
     def test_array_response_client_function(self, tmp_path):
@@ -387,7 +387,7 @@ class TestArrayResponses:
     def test_array_response_handle_response_runtime(self):
         """Test that handle_response works correctly with array type aliases at runtime."""
         from unittest.mock import Mock
-        
+
         # Use the already generated server_examples/fastapi/client
         from server_examples.fastapi.client import client, http
 
