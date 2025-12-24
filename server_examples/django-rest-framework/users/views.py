@@ -1,0 +1,21 @@
+from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema
+from .models import User
+from .serializers import UserSerializer, UserRequestSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+    @extend_schema(operation_id="list_users")
+    def list(self, request):
+        return super().list(request)
+    
+    @extend_schema(operation_id="create_user", request=UserRequestSerializer)
+    def create(self, request):
+        return super().create(request)
+    
+    @extend_schema(operation_id="get_user")
+    def retrieve(self, request, pk=None):
+        return super().retrieve(request, pk)
