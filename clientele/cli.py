@@ -34,8 +34,12 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
 
     assert url or file, "Must pass either a URL or a file"
 
-    loader = cicerone_parse.parse_spec_from_url if url else cicerone_parse.parse_spec_from_file
-    spec = loader(url or file)
+    if url is not None:
+        spec = cicerone_parse.parse_spec_from_url(url)
+    elif file is not None:
+        spec = cicerone_parse.parse_spec_from_file(file)
+    else:  # pragma: no cover - guarded by the assert above
+        raise AssertionError("Must pass either a URL or a file")
 
     normalized_raw = normalize_openapi_31_spec(spec.raw)
     if normalized_raw is spec.raw:
