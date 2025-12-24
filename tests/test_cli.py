@@ -60,45 +60,6 @@ def test_version_command(runner):
     assert settings.VERSION in result.output
 
 
-@pytest.mark.parametrize("suffix", [".json", ".yaml"])
-def test_validate_command_with_valid_file(runner, write_spec_file, suffix):
-    """Test validate command with valid OpenAPI spec files."""
-
-    spec_file = write_spec_file(suffix)
-    result = runner.invoke(cli.cli_group, ["validate", "--file", str(spec_file)])
-    assert result.exit_code == 0
-    assert "Test API" in result.output
-    assert "1.0.0" in result.output
-
-
-def test_validate_command_with_old_openapi_version(runner):
-    """Test validate command warns about old OpenAPI versions."""
-    OLD_OPENAPI_VERSION = "2.0.0"
-    old_spec = {
-        "openapi": OLD_OPENAPI_VERSION,
-        "info": {"title": "Old API", "version": "1.0.0"},
-        "paths": {},
-    }
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(old_spec, f)
-        spec_file = f.name
-
-    try:
-        result = runner.invoke(cli.cli_group, ["validate", "--file", spec_file])
-        # Should warn about old version
-        assert "supports openapi version 3" in result.output.lower()
-        assert OLD_OPENAPI_VERSION in result.output
-    finally:
-        Path(spec_file).unlink()
-
-
-def test_validate_command_requires_url_or_file(runner):
-    """Test validate command fails without URL or file."""
-    result = runner.invoke(cli.cli_group, ["validate"])
-    # Should require either url or file parameter
-    assert result.exit_code != 0
-
-
 def test_generate_command_exists_and_is_callable(runner):
     """Test generate command exists and can be invoked."""
     # Just test that the command exists and handles missing parameters correctly

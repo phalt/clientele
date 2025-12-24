@@ -171,34 +171,6 @@ Use function-based clients (`generate`) when:
 - You don't need to maintain state between requests
 - You only need a single static configuration
 
-## `validate`
-
-Validate lets you check if an OpenAPI schema will work with clientele.
-
-!!! note
-
-    Some OpenAPI schema generators do not conform to the [specification](https://spec.openapis.org/oas/v3.1.0).
-
-    Clientele uses [openapi-core](https://openapi-core.readthedocs.io/en/latest/) to validate the schema.
-
-### From a URL
-
-Use the `-u` or `--url` argument.
-
-`-o` or `--output` is the target directory for the generated client.
-
-```sh
-clientele validate -u http://path.com/to/openapi.json
-```
-
-### From a file path
-
-Alternatively you can provide a local file using the `-f` or `--file` argument.
-
-```sh
-clientele validate -f /path/to/openapi.json
-```
-
 ## generate-basic
 
 The `generate-basic` command can be used to generate a basic file structure for an HTTP client.
@@ -225,7 +197,7 @@ Print the current version of Clientele:
 
 ```sh
 > clientele version
-Clientele 0.9.0
+Clientele 1.0.0
 ```
 
 ## Regenerating
@@ -283,7 +255,7 @@ pipx install clientele
 
 API VERSION: 0.1.0
 OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 0.10.0
+CLIENTELE VERSION: 1.0.0
 
 Regenerate using this command:
 
