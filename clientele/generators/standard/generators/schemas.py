@@ -3,7 +3,7 @@ import typing
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
-from clientele.generators import cicerone_compat
+from clientele.generators import cicerone_compat, schema_utils
 from clientele.generators.standard import utils, writer
 
 console = rich_console.Console()
@@ -61,22 +61,45 @@ class SchemasGenerator:
     def generate_class_properties(self, properties: dict, required: typing.Optional[list] = None) -> str:
         """
         Generate a string list of the properties for this pydantic class.
+        Returns a tuple of (properties_string, has_aliases)
         """
         lines = []
+        has_aliases = False
+
         for arg, arg_details in properties.items():
             # Sanitize property names to ensure valid Python identifiers
             sanitized_arg = utils.snake_case_prop(arg)
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
+
+            # Check if we need an alias (when sanitized name differs from original)
+            needs_alias = sanitized_arg != arg
+            if needs_alias:
+                has_aliases = True
+
             # Only wrap in Optional if not already optional (e.g., from nullable)
             if is_optional and not arg_type.startswith("typing.Optional["):
-                type_string = f"typing.Optional[{arg_type}] = None"
+                if needs_alias:
+                    type_string = f'typing.Optional[{arg_type}] = pydantic.Field(default=None, alias="{arg}")'
+                else:
+                    type_string = f"typing.Optional[{arg_type}] = None"
             elif arg_type.startswith("typing.Optional["):
                 # Field is already Optional (e.g., from nullable), add default
-                type_string = f"{arg_type} = None"
+                if needs_alias:
+                    type_string = f'{arg_type} = pydantic.Field(default=None, alias="{arg}")'
+                else:
+                    type_string = f"{arg_type} = None"
             else:
-                type_string = arg_type
+                if needs_alias:
+                    type_string = f'{arg_type} = pydantic.Field(alias="{arg}")'
+                else:
+                    type_string = arg_type
             lines.append(f"    {sanitized_arg}: {type_string}\n")
+
+        # Add model_config if we have aliases to support populate_by_name
+        if has_aliases:
+            lines.append("\n    model_config = pydantic.ConfigDict(populate_by_name=True)\n")
+
         return "".join(lines)
 
     def generate_input_class(self, schema: dict, func_name: str) -> None:
@@ -109,16 +132,8 @@ class SchemasGenerator:
             schema_key: Name of the schema
             schema_options: List of schema options from oneOf or anyOf
         """
-        union_types = []
-        for schema_option in schema_options:
-            if ref := schema_option.get("$ref"):
-                ref_name = utils.class_name_titled(utils.schema_ref(ref))
-                union_types.append(f'"{ref_name}"')
-            else:
-                # Inline schema - convert to type
-                union_types.append(utils.get_type(schema_option))
+        union_type = schema_utils.build_union_type_string(schema_options)
         template = writer.templates.get_template("schema_type_alias.jinja2")
-        union_type = utils.union_for_py_ver(union_types)
         content = template.render(class_name=schema_key, union_type=union_type)
         writer.write_to_schemas(
             content,
@@ -144,6 +159,8 @@ class SchemasGenerator:
         # Handle array type - create a type alias for list types
         if schema.get("type") == "array":
             array_type = utils.get_type(schema)
+            # Remove forward reference quotes for type aliases
+            array_type = utils.remove_forward_ref_quotes(array_type)
             template = writer.templates.get_template("schema_type_alias.jinja2")
             content = template.render(class_name=schema_key, union_type=array_type)
             writer.write_to_schemas(

@@ -56,8 +56,8 @@ class TestOneOfSchemas:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        # Verify oneOf creates a type alias with Union
-        assert 'PetRequest = typing.Union["Cat", "Dog"]' in schemas_content
+        # Verify oneOf creates a type alias with pipe syntax (Python 3.10+)
+        assert "PetRequest = Cat | Dog" in schemas_content
         assert "class Cat(pydantic.BaseModel):" in schemas_content
         assert "class Dog(pydantic.BaseModel):" in schemas_content
 
@@ -78,8 +78,8 @@ class TestOneOfSchemas:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        # Verify PaymentMethodRequest with three options
-        assert 'PaymentMethodRequest = typing.Union["CreditCard", "BankTransfer", "PayPal"]' in schemas_content
+        # Verify PaymentMethodRequest with three options (pipe syntax)
+        assert "PaymentMethodRequest = CreditCard | BankTransfer | PayPal" in schemas_content
         assert "class CreditCard(pydantic.BaseModel):" in schemas_content
         assert "class BankTransfer(pydantic.BaseModel):" in schemas_content
         assert "class PayPal(pydantic.BaseModel):" in schemas_content
@@ -101,8 +101,8 @@ class TestOneOfSchemas:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        # Same validation for classbase
-        assert 'PetRequest = typing.Union["Cat", "Dog"]' in schemas_content
+        # Same validation for classbase (pipe syntax)
+        assert "PetRequest = Cat | Dog" in schemas_content
 
 
 class TestAnyOfSchemas:
@@ -331,8 +331,8 @@ class TestArrayResponses:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        # Verify array response creates a type alias
-        assert 'ResponseListUsers = list["User"]' in schemas_content
+        # Verify array response creates a type alias (without quotes)
+        assert "ResponseListUsers = list[User]" in schemas_content
 
         # Verify it's NOT an empty class
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
@@ -360,8 +360,8 @@ class TestArrayResponses:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        # Same validation for classbase
-        assert 'ResponseListUsers = list["User"]' in schemas_content
+        # Same validation for classbase (without quotes)
+        assert "ResponseListUsers = list[User]" in schemas_content
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
 
     def test_array_response_client_function(self, tmp_path):
@@ -383,3 +383,32 @@ class TestArrayResponses:
 
         # Verify the function signature uses the type alias
         assert "def list_users_list_users_get() -> schemas.ResponseListUsers:" in client_content
+
+    def test_array_response_handle_response_runtime(self):
+        """Test that handle_response works correctly with array type aliases at runtime."""
+        from unittest.mock import Mock
+
+        # Use the already generated server_examples/fastapi/client
+        from server_examples.fastapi.client import client, http
+
+        # Create a mock response with array data
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = [
+            {"id": 1, "name": "Alice", "email": "alice@example.com"},
+            {"id": 2, "name": "Bob", "email": "bob@example.com"},
+        ]
+
+        # Call handle_response with the list_users function
+        result = http.handle_response(client.list_users, mock_response)
+
+        # Verify the result is a list of UserResponse objects
+        assert isinstance(result, list)
+        assert len(result) == 2
+        assert hasattr(result[0], "id")
+        assert hasattr(result[0], "name")
+        assert hasattr(result[0], "email")
+        assert result[0].id == 1
+        assert result[0].name == "Alice"
+        assert result[1].id == 2
+        assert result[1].name == "Bob"
