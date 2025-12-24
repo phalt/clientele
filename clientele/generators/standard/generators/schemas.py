@@ -141,6 +141,18 @@ class SchemasGenerator:
             self._create_union_type_alias(schema_key, any_of)
             return
 
+        # Handle array type - create a type alias for list types
+        if schema.get("type") == "array":
+            array_type = utils.get_type(schema)
+            template = writer.templates.get_template("schema_type_alias.jinja2")
+            content = template.render(class_name=schema_key, union_type=array_type)
+            writer.write_to_schemas(
+                content,
+                output_dir=self.output_dir,
+            )
+            self.schemas[schema_key] = ""  # Mark as processed
+            return
+
         if all_of := schema.get("allOf"):
             # This schema uses "all of" the properties inside it
             property_parts = []

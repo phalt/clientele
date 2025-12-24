@@ -27,8 +27,7 @@ class ValidationError(pydantic.BaseModel):
     type_: str
 
 
-class ResponseListUsers(pydantic.BaseModel):
-    pass
+ResponseListUsers = list["UserResponse"]
 
 
 def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:
