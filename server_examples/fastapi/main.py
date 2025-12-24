@@ -54,7 +54,7 @@ def create_user(user: CreateUserRequest):
 def get_user(user_id: int, include_posts: bool = False):
     """
     Get a specific user by ID.
-    
+
     The include_posts parameter is for demonstration purposes.
     """
     for user in users_db:
