@@ -12,7 +12,7 @@ class CreateUserRequest(pydantic.BaseModel):
 
 
 class HTTPValidationError(pydantic.BaseModel):
-    detail: list[ValidationError]
+    detail: list["ValidationError"]
 
 
 class UserResponse(pydantic.BaseModel):
@@ -24,7 +24,9 @@ class UserResponse(pydantic.BaseModel):
 class ValidationError(pydantic.BaseModel):
     loc: list[str | int]
     msg: str
-    type_: str
+    type_: str = pydantic.Field(alias="type")
+
+    model_config = pydantic.ConfigDict(populate_by_name=True)
 
 
 ResponseListUsers = list[UserResponse]
