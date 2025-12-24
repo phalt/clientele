@@ -198,6 +198,16 @@ We specifically test and support:
 - It's not carbon intensive for the problem it's solving.
 - LLM compute would be wasteful overkill for this task.
 
+## Server Examples
+
+Working example server applications are available in the [`server_examples/`](./server_examples/) directory demonstrating integration with:
+
+- **FastAPI** - See [`server_examples/fastapi/`](./server_examples/fastapi/)
+- **Django REST Framework** - See [`server_examples/django-rest-framework/`](./server_examples/django-rest-framework/)
+- **Django Ninja** - See [`server_examples/django-ninja/`](./server_examples/django-ninja/)
+
+These examples match the code shown in our framework-specific documentation and provide real, working servers you can run locally to test Clientele's client generation.
+
 ## Getting Started
 
 👉 See our [framework-specific guides](https://phalt.github.io/clientele/) for FastAPI, Django REST Framework, and Django Ninja

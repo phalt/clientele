@@ -2,6 +2,8 @@
 
 This guide shows you how to generate a Python client for a FastAPI application using Clientele.
 
+> **💡 Working Example**: See a real FastAPI application with code examples from this guide in [`server_examples/fastapi/`](https://github.com/phalt/clientele/tree/main/server_examples/fastapi)
+
 ## Prerequisites
 
 - A FastAPI application with API endpoints
