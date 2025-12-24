@@ -474,39 +474,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="validate">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#from-a-url_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      From a URL
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#from-a-file-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      From a file path
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#generate-basic" class="md-nav__link">
     <span class="md-ellipsis">
       generate-basic
@@ -1144,39 +1111,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validate" class="md-nav__link">
-    <span class="md-ellipsis">
-      validate
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="validate">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#from-a-url_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      From a URL
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#from-a-file-path" class="md-nav__link">
-    <span class="md-ellipsis">
-      From a file path
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#generate-basic" class="md-nav__link">
     <span class="md-ellipsis">
       generate-basic
@@ -1423,22 +1357,6 @@
 <li>You don't need to maintain state between requests</li>
 <li>You only need a single static configuration</li>
 </ul>
-<h2 id="validate"><code>validate</code></h2>
-<p>Validate lets you check if an OpenAPI schema will work with clientele.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Some OpenAPI schema generators do not conform to the <a href="https://spec.openapis.org/oas/v3.1.0">specification</a>.</p>
-<p>Clientele uses <a href="https://openapi-core.readthedocs.io/en/latest/">openapi-core</a> to validate the schema.</p>
-</div>
-<h3 id="from-a-url_1">From a URL</h3>
-<p>Use the <code>-u</code> or <code>--url</code> argument.</p>
-<p><code>-o</code> or <code>--output</code> is the target directory for the generated client.</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>validate<span class="w"> </span>-u<span class="w"> </span>http://path.com/to/openapi.json
-</code></pre></div>
-<h3 id="from-a-file-path">From a file path</h3>
-<p>Alternatively you can provide a local file using the <code>-f</code> or <code>--file</code> argument.</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>validate<span class="w"> </span>-f<span class="w"> </span>/path/to/openapi.json
-</code></pre></div>
 <h2 id="generate-basic">generate-basic</h2>
 <p>The <code>generate-basic</code> command can be used to generate a basic file structure for an HTTP client.</p>
 <p>It does not require an OpenAPI schema, just a path.</p>
@@ -1454,7 +1372,7 @@
 <h2 id="version"><code>version</code></h2>
 <p>Print the current version of Clientele:</p>
 <div class="highlight"><pre><span></span><code>&gt;<span class="w"> </span>clientele<span class="w"> </span>version
-Clientele<span class="w"> </span><span class="m">0</span>.9.0
+Clientele<span class="w"> </span><span class="m">1</span>.0.0
 </code></pre></div>
 <h2 id="regenerating">Regenerating</h2>
 <p>At times you may wish to regenerate the client. This could be because the API has updated or you just want to use a newer version of clientele.</p>
@@ -1499,7 +1417,7 @@ pipx install clientele
 </code></pre></div>
 <p>API VERSION: 0.1.0
 OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 0.10.0</p>
+CLIENTELE VERSION: 1.0.0</p>
 <p>Regenerate using this command:</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>tests/async_test_client/<span class="w"> </span>--asyncio<span class="w"> </span>t<span class="w"> </span>--regen<span class="w"> </span>t
 </code></pre></div>
