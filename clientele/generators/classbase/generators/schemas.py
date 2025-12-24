@@ -81,6 +81,8 @@ class SchemasGenerator(StandardSchemasGenerator):
         # Handle array type - create a type alias for list types
         if schema.get("type") == "array":
             array_type = utils.get_type(schema)
+            # Remove forward reference quotes for type aliases
+            array_type = utils.remove_forward_ref_quotes(array_type)
             template = writer.templates.get_template("schema_type_alias.jinja2")
             content = template.render(class_name=schema_key, union_type=array_type)
             writer.write_to_schemas(content, output_dir=self.output_dir)
