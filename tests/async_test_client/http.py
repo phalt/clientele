@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import decimal
 import json
 import types
@@ -139,11 +140,18 @@ client = httpx.AsyncClient(
 )
 
 
+@contextlib.asynccontextmanager
+async def _client_context():
+    """Async context manager for the HTTP client."""
+    yield client
+
+
 async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
-    return await client.get(parse_url(url), headers=client_headers)
+    async with _client_context() as async_client:
+        return await async_client.get(parse_url(url), headers=client_headers)
 
 
 async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
@@ -151,7 +159,8 @@ async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> h
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    return await client.post(parse_url(url), json=json_data, headers=client_headers)
+    async with _client_context() as async_client:
+        return await async_client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
 async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
@@ -159,11 +168,13 @@ async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> ht
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    return await client.put(parse_url(url), json=json_data, headers=client_headers)
+    async with _client_context() as async_client:
+        return await async_client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
 async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)
-    return await client.delete(parse_url(url), headers=client_headers)
+    async with _client_context() as async_client:
+        return await async_client.delete(parse_url(url), headers=client_headers)

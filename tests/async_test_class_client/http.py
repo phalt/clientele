@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import decimal
 import json
 import types
@@ -156,35 +157,40 @@ class HTTPClient:
             headers.update(additional_headers)
         return headers
 
+    @contextlib.asynccontextmanager
+    async def _client_context(self):
+        """Async context manager for the HTTP client."""
+        yield self._get_client()
+
     async def get(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
         """Issue an HTTP GET request"""
         request_headers = self._get_headers(headers)
-        client = self._get_client()
-        return await client.get(parse_url(url, self.config), headers=request_headers)
+        async with self._client_context() as async_client:
+            return await async_client.get(parse_url(url, self.config), headers=request_headers)
 
     async def post(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
         """Issue an HTTP POST request"""
         request_headers = self._get_headers(headers)
         json_data = json.loads(json.dumps(data, default=json_serializer))
-        client = self._get_client()
-        return await client.post(parse_url(url, self.config), json=json_data, headers=request_headers)
+        async with self._client_context() as async_client:
+            return await async_client.post(parse_url(url, self.config), json=json_data, headers=request_headers)
 
     async def put(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
         """Issue an HTTP PUT request"""
         request_headers = self._get_headers(headers)
         json_data = json.loads(json.dumps(data, default=json_serializer))
-        client = self._get_client()
-        return await client.put(parse_url(url, self.config), json=json_data, headers=request_headers)
+        async with self._client_context() as async_client:
+            return await async_client.put(parse_url(url, self.config), json=json_data, headers=request_headers)
 
     async def patch(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
         """Issue an HTTP PATCH request"""
         request_headers = self._get_headers(headers)
         json_data = json.loads(json.dumps(data, default=json_serializer))
-        client = self._get_client()
-        return await client.patch(parse_url(url, self.config), json=json_data, headers=request_headers)
+        async with self._client_context() as async_client:
+            return await async_client.patch(parse_url(url, self.config), json=json_data, headers=request_headers)
 
     async def delete(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
         """Issue an HTTP DELETE request"""
         request_headers = self._get_headers(headers)
-        client = self._get_client()
-        return await client.delete(parse_url(url, self.config), headers=request_headers)
+        async with self._client_context() as async_client:
+            return await async_client.delete(parse_url(url, self.config), headers=request_headers)
