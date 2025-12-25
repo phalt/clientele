@@ -2,12 +2,11 @@
 
 import httpx
 import pytest
-from httpx import Response
 from respx import MockRouter
 
-from .test_client import client, config, http
-from .test_class_client.client import Client
 from .test_class_client import config as class_config
+from .test_class_client.client import Client
+from .test_client import config, http
 
 
 def test_functional_client_timeout_config():
