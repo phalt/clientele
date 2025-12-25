@@ -35,7 +35,7 @@ def parse_url(url: str) -> str:
 
     Will filter out any optional query parameters if they are None.
     """
-    api_url = f"{c.api_base_url()}{url}"
+    api_url = f"{c.config.api_base_url}{url}"
     url_parts = parse.urlparse(url=api_url)
     # Filter out "None" optional query parameters
     filtered_query_params = {k: v for k, v in parse.parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
@@ -117,8 +117,23 @@ func_response_code_maps = {
     "users_partial_update": {"200": "User"},
     "users_destroy": {"204": "None"},
 }
-client_headers = c.additional_headers()
-client = httpx.Client(headers=client_headers)
+client_headers = c.config.additional_headers.copy()
+_limits = c.config.limits
+_transport = c.config.transport
+_client_kwargs = dict(
+    auth=(c.config.user_key, c.config.pass_key),
+    headers=client_headers,
+    timeout=c.config.timeout,
+    follow_redirects=c.config.follow_redirects,
+    verify=c.config.verify_ssl,
+    http2=c.config.http2,
+    max_redirects=c.config.max_redirects,
+)
+if _limits is not None:
+    _client_kwargs["limits"] = _limits
+if _transport is not None:
+    _client_kwargs["transport"] = _transport
+client = httpx.Client(**_client_kwargs)
 
 
 def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:

@@ -12,7 +12,7 @@ class Config(BaseSettings):
     Configuration object for the API client.
     
     Values can be set via:
-    1. Environment variables (prefixed with the service name, e.g., MY_API_BASE_URL)
+    1. Environment variables (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
     2. Direct instantiation with keyword arguments
     3. .env file (if python-dotenv is installed)
     
@@ -53,4 +53,3 @@ class Config(BaseSettings):
 
 # Create a singleton instance that can be imported and used
 config = Config()
-
