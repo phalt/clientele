@@ -8,8 +8,8 @@ from urllib import parse
 
 import httpx
 
-from . import config as c  # noqa
-from . import schemas  # noqa
+from server_examples.django_ninja.client import config as c  # noqa
+from server_examples.django_ninja.client import schemas  # noqa
 
 
 def json_serializer(obj):
@@ -116,14 +116,14 @@ func_response_code_maps = {
 }
 
 client_headers = c.config.additional_headers.copy()
-_client_kwargs = dict(
-    headers=client_headers,
-    timeout=c.config.timeout,
-    follow_redirects=c.config.follow_redirects,
-    verify=c.config.verify_ssl,
-    http2=c.config.http2,
-    max_redirects=c.config.max_redirects,
-)
+_client_kwargs: dict[str, typing.Any] = {
+    "headers": client_headers,
+    "timeout": c.config.timeout,
+    "follow_redirects": c.config.follow_redirects,
+    "verify": c.config.verify_ssl,
+    "http2": c.config.http2,
+    "max_redirects": c.config.max_redirects,
+}
 if _limits := c.config.limits:
     _client_kwargs["limits"] = _limits
 if _transport := c.config.transport:

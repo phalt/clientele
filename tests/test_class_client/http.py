@@ -138,14 +138,14 @@ class HTTPClient:
         if self._client is None:
             client_headers = self.config.additional_headers.copy()
             client_headers.update(Authorization=f"Bearer {self.config.bearer_token}")
-            client_kwargs = dict(
-                headers=client_headers,
-                timeout=self.config.timeout,
-                follow_redirects=self.config.follow_redirects,
-                verify=self.config.verify_ssl,
-                http2=self.config.http2,
-                max_redirects=self.config.max_redirects,
-            )
+            client_kwargs: dict[str, typing.Any] = {
+                "headers": client_headers,
+                "timeout": self.config.timeout,
+                "follow_redirects": self.config.follow_redirects,
+                "verify": self.config.verify_ssl,
+                "http2": self.config.http2,
+                "max_redirects": self.config.max_redirects,
+            }
             if _limits := self.config.limits:
                 client_kwargs["limits"] = _limits
             if _transport := self.config.transport:
