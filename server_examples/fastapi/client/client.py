@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing  # noqa
 
-from . import http, schemas  # noqa
+from server_examples.fastapi import http, schemas  # noqa
 
 
 def list_users() -> schemas.ResponseListUsers:

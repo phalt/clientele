@@ -153,6 +153,7 @@ def test_class_based_client_config_custom_limits():
     custom_limits = httpx.Limits(max_connections=50, max_keepalive_connections=20)
     cfg = class_config.Config(limits=custom_limits)
     assert cfg.limits == custom_limits
+    assert cfg.limits is not None
     assert cfg.limits.max_connections == 50
 
 
