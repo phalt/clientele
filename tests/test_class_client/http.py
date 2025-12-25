@@ -146,10 +146,10 @@ class HTTPClient:
                 http2=self.config.http2,
                 max_redirects=self.config.max_redirects,
             )
-            if self.config.limits is not None:
-                client_kwargs["limits"] = self.config.limits
-            if self.config.transport is not None:
-                client_kwargs["transport"] = self.config.transport
+            if _limits := self.config.limits:
+                client_kwargs["limits"] = _limits
+            if _transport := self.config.transport:
+                client_kwargs["transport"] = _transport
             self._client = httpx.Client(**client_kwargs)
         return self._client
 

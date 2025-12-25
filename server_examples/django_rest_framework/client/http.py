@@ -8,8 +8,8 @@ from urllib import parse
 
 import httpx
 
-from server_examples.django_rest_framework.client import config as c  # noqa
-from server_examples.django_rest_framework.client import schemas  # noqa
+from . import config as c  # noqa
+from . import schemas  # noqa
 
 
 def json_serializer(obj):
@@ -118,10 +118,7 @@ func_response_code_maps = {
     "users_destroy": {"204": "None"},
 }
 client_headers = c.config.additional_headers.copy()
-_limits = c.config.limits
-_transport = c.config.transport
 _client_kwargs = dict(
-    auth=(c.config.user_key, c.config.pass_key),
     headers=client_headers,
     timeout=c.config.timeout,
     follow_redirects=c.config.follow_redirects,
@@ -129,10 +126,12 @@ _client_kwargs = dict(
     http2=c.config.http2,
     max_redirects=c.config.max_redirects,
 )
-if _limits is not None:
+if _limits := c.config.limits:
     _client_kwargs["limits"] = _limits
-if _transport is not None:
+if _transport := c.config.transport:
     _client_kwargs["transport"] = _transport
+if c.config.user_key and c.config.pass_key:
+    _client_kwargs["auth"] = (c.config.user_key, c.config.pass_key)
 client = httpx.Client(**_client_kwargs)
 
 

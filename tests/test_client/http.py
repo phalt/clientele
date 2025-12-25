@@ -129,8 +129,6 @@ func_response_code_maps = {
 auth_key = c.config.bearer_token
 client_headers = c.config.additional_headers.copy()
 client_headers.update(Authorization=f"Bearer {auth_key}")
-_limits = c.config.limits
-_transport = c.config.transport
 _client_kwargs = dict(
     headers=client_headers,
     timeout=c.config.timeout,
@@ -139,9 +137,9 @@ _client_kwargs = dict(
     http2=c.config.http2,
     max_redirects=c.config.max_redirects,
 )
-if _limits is not None:
+if _limits := c.config.limits:
     _client_kwargs["limits"] = _limits
-if _transport is not None:
+if _transport := c.config.transport:
     _client_kwargs["transport"] = _transport
 client = httpx.Client(**_client_kwargs)
 

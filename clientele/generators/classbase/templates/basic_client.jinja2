@@ -10,7 +10,6 @@ class HTTPClient:
         if self._client is None:
             client_headers = self.config.additional_headers.copy()
             client_kwargs = dict(
-                auth=(self.config.user_key, self.config.pass_key),
                 headers=client_headers,
                 timeout=self.config.timeout,
                 follow_redirects=self.config.follow_redirects,
@@ -18,10 +17,12 @@ class HTTPClient:
                 http2=self.config.http2,
                 max_redirects=self.config.max_redirects,
             )
-            if self.config.limits is not None:
-                client_kwargs['limits'] = self.config.limits
-            if self.config.transport is not None:
-                client_kwargs['transport'] = self.config.transport
+            if _limits := self.config.limits:
+                client_kwargs['limits'] = _limits
+            if _transport := self.config.transport:
+                client_kwargs['transport'] = _transport
+            if self.config.user_key and self.config.pass_key:
+                client_kwargs['auth'] = (self.config.user_key, self.config.pass_key)
             self._client = httpx.{{client_type}}(**client_kwargs)
         return self._client
     
