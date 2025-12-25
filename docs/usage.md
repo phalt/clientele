@@ -209,26 +209,52 @@ All generated clients support the following configuration options:
 
 ### Function-Based Client Configuration
 
-For function-based clients, modify the functions in `config.py`:
+Function-based clients use a `Config` object (similar to class-based clients) that supports loading values from environment variables using pydantic-settings:
 
 ```python
 # In your generated client's config.py file
+from pydantic_settings import BaseSettings
 
-def get_timeout() -> float:
-    """Request timeout in seconds."""
-    return 30.0  # Increase timeout to 30 seconds
+class Config(BaseSettings):
+    api_base_url: str = "http://localhost"
+    bearer_token: str = "token"
+    timeout: float = 5.0
+    follow_redirects: bool = False
+    verify_ssl: bool = True
+    http2: bool = False
+    # ... other configuration options
 
-def get_follow_redirects() -> bool:
-    """Whether to follow redirects."""
-    return True  # Enable redirect following
+# Create a singleton instance
+config = Config()
+```
 
-def get_http2() -> bool:
-    """Enable HTTP/2 support."""
-    return True  # Enable HTTP/2
+**Setting Values:**
 
-def get_verify_ssl() -> bool:
-    """Whether to verify SSL certificates."""
-    return False  # Only for development!
+1. **Environment Variables** (recommended for production):
+```bash
+export API_BASE_URL="https://api.production.com"
+export BEARER_TOKEN="your-secret-token"
+export TIMEOUT=30.0
+export HTTP2=true
+```
+
+2. **Direct Modification** (for testing/development):
+```python
+# Modify the default values in config.py
+config = Config(
+    api_base_url="https://api.example.com",
+    bearer_token="my-token",
+    timeout=30.0,
+    http2=True
+)
+```
+
+3. **.env File** (requires python-dotenv):
+```
+# .env file
+API_BASE_URL=https://api.example.com
+BEARER_TOKEN=my-token
+TIMEOUT=30.0
 ```
 
 ### Class-Based Client Configuration
@@ -258,9 +284,12 @@ client = Client(config=custom_config)
 #### Increase Timeout for Slow APIs
 
 ```python
-# Function-based client
-def get_timeout() -> float:
-    return 60.0  # 60 second timeout
+# Function-based client (via environment variable)
+export TIMEOUT=60.0
+
+# Function-based client (via code)
+from my_client import config
+config.config = config.Config(timeout=60.0)
 
 # Class-based client
 config = Config(timeout=60.0)
@@ -270,9 +299,12 @@ client = Client(config=config)
 #### Enable HTTP/2 for Better Performance
 
 ```python
-# Function-based client
-def get_http2() -> bool:
-    return True
+# Function-based client (via environment variable)
+export HTTP2=true
+
+# Function-based client (via code)
+from my_client import config
+config.config = config.Config(http2=True)
 
 # Class-based client
 config = Config(http2=True)
@@ -286,9 +318,12 @@ client = Client(config=config)
     Only disable SSL verification in development environments. Never disable it in production!
 
 ```python
-# Function-based client
-def get_verify_ssl() -> bool:
-    return False  # For development only!
+# Function-based client (via environment variable)
+export VERIFY_SSL=false
+
+# Function-based client (via code)
+from my_client import config
+config.config = config.Config(verify_ssl=False)
 
 # Class-based client
 config = Config(verify_ssl=False)
@@ -298,12 +333,13 @@ client = Client(config=config)
 #### Follow Redirects
 
 ```python
-# Function-based client
-def get_follow_redirects() -> bool:
-    return True
+# Function-based client (via environment variables)
+export FOLLOW_REDIRECTS=true
+export MAX_REDIRECTS=5
 
-def get_max_redirects() -> int:
-    return 5
+# Function-based client (via code)
+from my_client import config
+config.config = config.Config(follow_redirects=True, max_redirects=5)
 
 # Class-based client
 config = Config(follow_redirects=True, max_redirects=5)
@@ -318,12 +354,15 @@ Control connection pooling behavior with `httpx.Limits`:
 import httpx
 
 # Function-based client
-def get_limits() -> httpx.Limits | None:
-    return httpx.Limits(
+# Note: Complex objects like httpx.Limits must be set in code, not env vars
+from my_client import config
+config.config = config.Config(
+    limits=httpx.Limits(
         max_keepalive_connections=10,
         max_connections=20,
         keepalive_expiry=5.0
     )
+)
 
 # Class-based client
 config = Config(
@@ -343,17 +382,20 @@ Customize low-level HTTP behavior with a custom transport:
 import httpx
 
 # Function-based client (sync)
-def get_transport() -> httpx.BaseTransport | httpx.AsyncBaseTransport | None:
-    return httpx.HTTPTransport(
+# Note: Complex objects like httpx.HTTPTransport must be set in code
+from my_client import config
+config.config = config.Config(
+    transport=httpx.HTTPTransport(
         retries=3,
         local_address="0.0.0.0"
     )
+)
 
 # Function-based client (async)
-def get_transport() -> httpx.BaseTransport | httpx.AsyncBaseTransport | None:
-    return httpx.AsyncHTTPTransport(
-        retries=3
-    )
+from my_async_client import config
+config.config = config.Config(
+    transport=httpx.AsyncHTTPTransport(retries=3)
+)
 
 # Class-based client (sync)
 config = Config(

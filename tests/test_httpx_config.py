@@ -11,35 +11,35 @@ from .test_client import config, http
 
 def test_functional_client_timeout_config():
     """Test that timeout configuration is accessible."""
-    timeout = config.get_timeout()
+    timeout = config.config.timeout
     assert timeout == 5.0
     assert isinstance(timeout, float)
 
 
 def test_functional_client_follow_redirects_config():
     """Test that follow_redirects configuration is accessible."""
-    follow_redirects = config.get_follow_redirects()
+    follow_redirects = config.config.follow_redirects
     assert follow_redirects is False
     assert isinstance(follow_redirects, bool)
 
 
 def test_functional_client_verify_ssl_config():
     """Test that verify_ssl configuration is accessible."""
-    verify_ssl = config.get_verify_ssl()
+    verify_ssl = config.config.verify_ssl
     assert verify_ssl is True
     assert isinstance(verify_ssl, bool)
 
 
 def test_functional_client_http2_config():
     """Test that http2 configuration is accessible."""
-    http2 = config.get_http2()
+    http2 = config.config.http2
     assert http2 is False
     assert isinstance(http2, bool)
 
 
 def test_functional_client_max_redirects_config():
     """Test that max_redirects configuration is accessible."""
-    max_redirects = config.get_max_redirects()
+    max_redirects = config.config.max_redirects
     assert max_redirects == 20
     assert isinstance(max_redirects, int)
 
@@ -138,13 +138,13 @@ def test_functional_client_uses_max_redirects(respx_mock: MockRouter):
 
 def test_functional_client_limits_config():
     """Test that limits configuration is accessible and returns None by default."""
-    limits = config.get_limits()
+    limits = config.config.limits
     assert limits is None
 
 
 def test_functional_client_transport_config():
     """Test that transport configuration is accessible and returns None by default."""
-    transport = config.get_transport()
+    transport = config.config.transport
     assert transport is None
 
 
