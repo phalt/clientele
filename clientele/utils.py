@@ -17,13 +17,13 @@ def get_client_project_directory_path(output_dir: str) -> str:
     # Normalize the path and convert to Python module notation
     # Strip trailing slashes first
     normalized_path = output_dir.rstrip(os.sep)
-    
+
     # Split by path separator and join with dots
     parts = normalized_path.split(os.sep)
-    
+
     # Filter out empty parts
     parts = [p for p in parts if p]
-    
+
     # Return the full path as a Python module path
     if parts:
         return ".".join(parts)
