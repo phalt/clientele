@@ -11,3 +11,11 @@ client = httpx.{{client_type}}(
     http2=c.get_http2(),
     max_redirects=c.get_max_redirects(),
 )
+
+
+{% if client_type == 'AsyncClient' %}
+@contextlib.asynccontextmanager
+async def _client_context():
+    """Async context manager for the HTTP client."""
+    yield client
+{% endif %}

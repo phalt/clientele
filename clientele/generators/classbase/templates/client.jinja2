@@ -26,3 +26,10 @@ class HTTPClient:
         if additional_headers:
             headers.update(additional_headers)
         return headers
+
+{% if client_type == 'AsyncClient' %}
+    @contextlib.asynccontextmanager
+    async def _client_context(self):
+        """Async context manager for the HTTP client."""
+        yield self._get_client()
+{% endif %}
