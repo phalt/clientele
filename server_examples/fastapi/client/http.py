@@ -8,8 +8,8 @@ from urllib import parse
 
 import httpx
 
-from server_examples.fastapi import config as c  # noqa
-from server_examples.fastapi import schemas  # noqa
+from server_examples.fastapi.client import config as c  # noqa
+from server_examples.fastapi.client import schemas  # noqa
 
 
 def json_serializer(obj):
