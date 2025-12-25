@@ -14,12 +14,18 @@ def get_client_project_directory_path(output_dir: str) -> str:
     if os.path.isabs(output_dir):
         return ""
 
-    # Use the original logic but handle path separators properly
-    # os.path.join with a single argument just returns the path
-    parts = os.path.join(output_dir).split(os.sep)
-
-    # Remove the last component (empty string for trailing slash, or directory name)
-    if len(parts) > 1:
-        return ".".join(parts[:-1])
+    # Normalize the path and convert to Python module notation
+    # Strip trailing slashes first
+    normalized_path = output_dir.rstrip(os.sep)
+    
+    # Split by path separator and join with dots
+    parts = normalized_path.split(os.sep)
+    
+    # Filter out empty parts
+    parts = [p for p in parts if p]
+    
+    # Return the full path as a Python module path
+    if parts:
+        return ".".join(parts)
 
     return ""
