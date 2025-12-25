@@ -49,6 +49,9 @@ generate-test-clients:  ## regenerate the test clients in the tests/ directory
 	uv run clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/test_class_client/ --regen t
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
+	uv run clientele generate -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client --regen t
+	uv run clientele generate -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/ --regen t
+	uv run clientele generate -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/ --regen t
 
 brew-status:  ## Check the status of Homebrew publishing setup
 	@homebrew/check_status.sh
