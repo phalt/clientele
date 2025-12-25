@@ -13,7 +13,9 @@ class Config:
     Example:
         config = Config(
             api_base_url="https://api.example.com",
-            bearer_token="my-token"
+            bearer_token="my-token",
+            timeout=10.0,
+            follow_redirects=True
         )
         client = Client(config=config)
     """
@@ -25,6 +27,11 @@ class Config:
         user_key: str = "user",
         pass_key: str = "password",
         bearer_token: str = "token",
+        timeout: float = 5.0,
+        follow_redirects: bool = False,
+        verify_ssl: bool = True,
+        http2: bool = False,
+        max_redirects: int = 20,
     ):
         """
         Initialize the configuration object.
@@ -35,9 +42,19 @@ class Config:
             user_key: Username for HTTP Basic authentication (default: "user")
             pass_key: Password for HTTP Basic authentication (default: "password")
             bearer_token: Token for HTTP Bearer authentication (default: "token")
+            timeout: Request timeout in seconds (default: 5.0)
+            follow_redirects: Whether to follow HTTP redirects (default: False)
+            verify_ssl: Whether to verify SSL certificates (default: True)
+            http2: Whether to enable HTTP/2 support (default: False)
+            max_redirects: Maximum number of redirects to follow (default: 20)
         """
         self.api_base_url = api_base_url
         self.additional_headers = additional_headers or {}
         self.user_key = user_key
         self.pass_key = pass_key
         self.bearer_token = bearer_token
+        self.timeout = timeout
+        self.follow_redirects = follow_redirects
+        self.verify_ssl = verify_ssl
+        self.http2 = http2
+        self.max_redirects = max_redirects

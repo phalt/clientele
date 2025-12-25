@@ -44,3 +44,44 @@ def get_bearer_token() -> str:
     Does not require the "Bearer" content, just the key as a string.
     """
     return "token"
+
+
+def get_timeout() -> float:
+    """
+    HTTP request timeout in seconds.
+    Default is 5.0 seconds for all requests.
+    Set to None for no timeout.
+    """
+    return 5.0
+
+
+def get_follow_redirects() -> bool:
+    """
+    Whether to automatically follow HTTP redirects.
+    Default is False.
+    """
+    return False
+
+
+def get_verify_ssl() -> bool:
+    """
+    Whether to verify SSL certificates.
+    Default is True. Set to False to disable SSL verification (not recommended for production).
+    """
+    return True
+
+
+def get_http2() -> bool:
+    """
+    Whether to enable HTTP/2 support.
+    Default is False.
+    """
+    return False
+
+
+def get_max_redirects() -> int:
+    """
+    Maximum number of redirects to follow.
+    Default is 20. Only applies when follow_redirects is True.
+    """
+    return 20
