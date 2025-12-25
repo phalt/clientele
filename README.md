@@ -58,6 +58,8 @@ clientele generate -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/o
 clientele explore -c pokeapi_client/
 ```
 
+![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
+
 ## The generated code
 
 We offer many different flavours of client to suit your needs:
