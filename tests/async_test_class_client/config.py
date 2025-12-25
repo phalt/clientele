@@ -3,6 +3,8 @@ This file will never be updated on subsequent clientele runs.
 Use it as a space to store configuration and constants.
 """
 
+import httpx
+
 
 class Config:
     """
@@ -32,6 +34,7 @@ class Config:
         verify_ssl: bool = True,
         http2: bool = False,
         max_redirects: int = 20,
+        limits: httpx.Limits | None = None,
     ):
         """
         Initialize the configuration object.
@@ -47,6 +50,7 @@ class Config:
             verify_ssl: Whether to verify SSL certificates (default: True)
             http2: Whether to enable HTTP/2 support (default: False)
             max_redirects: Maximum number of redirects to follow (default: 20)
+            limits: Connection pool limits (default: None, uses httpx defaults)
         """
         self.api_base_url = api_base_url
         self.additional_headers = additional_headers or {}
@@ -58,3 +62,4 @@ class Config:
         self.verify_ssl = verify_ssl
         self.http2 = http2
         self.max_redirects = max_redirects
+        self.limits = limits

@@ -130,7 +130,8 @@ func_response_code_maps = {
 auth_key = c.get_bearer_token()
 client_headers = c.additional_headers()
 client_headers.update(Authorization=f"Bearer {auth_key}")
-client = httpx.AsyncClient(
+_limits = c.get_limits()
+_client_kwargs = dict(
     headers=client_headers,
     timeout=c.get_timeout(),
     follow_redirects=c.get_follow_redirects(),
@@ -138,6 +139,9 @@ client = httpx.AsyncClient(
     http2=c.get_http2(),
     max_redirects=c.get_max_redirects(),
 )
+if _limits is not None:
+    _client_kwargs["limits"] = _limits
+client = httpx.AsyncClient(**_client_kwargs)
 
 
 @contextlib.asynccontextmanager
