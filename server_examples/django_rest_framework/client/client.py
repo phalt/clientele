@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing  # noqa
 
-from server_examples.django_rest_framework.client import http, schemas  # noqa
+from . import http, schemas  # noqa
 
 
 def list_users() -> schemas.ListUsers200Response:
