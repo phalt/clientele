@@ -35,6 +35,7 @@ class Config:
         http2: bool = False,
         max_redirects: int = 20,
         limits: httpx.Limits | None = None,
+        transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None,
     ):
         """
         Initialize the configuration object.
@@ -51,6 +52,7 @@ class Config:
             http2: Whether to enable HTTP/2 support (default: False)
             max_redirects: Maximum number of redirects to follow (default: 20)
             limits: Connection pool limits (default: None, uses httpx defaults)
+            transport: Custom transport instance (default: None, uses httpx defaults)
         """
         self.api_base_url = api_base_url
         self.additional_headers = additional_headers or {}
@@ -63,3 +65,5 @@ class Config:
         self.http2 = http2
         self.max_redirects = max_redirects
         self.limits = limits
+        self.transport = transport
+        self.transport = transport

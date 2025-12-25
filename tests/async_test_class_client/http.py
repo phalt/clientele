@@ -149,6 +149,8 @@ class HTTPClient:
             )
             if self.config.limits is not None:
                 client_kwargs["limits"] = self.config.limits
+            if self.config.transport is not None:
+                client_kwargs["transport"] = self.config.transport
             self._client = httpx.AsyncClient(**client_kwargs)
         return self._client
 

@@ -130,6 +130,7 @@ auth_key = c.get_bearer_token()
 client_headers = c.additional_headers()
 client_headers.update(Authorization=f"Bearer {auth_key}")
 _limits = c.get_limits()
+_transport = c.get_transport()
 _client_kwargs = dict(
     headers=client_headers,
     timeout=c.get_timeout(),
@@ -140,6 +141,8 @@ _client_kwargs = dict(
 )
 if _limits is not None:
     _client_kwargs["limits"] = _limits
+if _transport is not None:
+    _client_kwargs["transport"] = _transport
 client = httpx.Client(**_client_kwargs)
 
 

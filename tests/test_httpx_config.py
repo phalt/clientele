@@ -134,3 +134,48 @@ def test_functional_client_uses_max_redirects(respx_mock: MockRouter):
     """Test that functional client uses max_redirects configuration."""
     # The httpx client should be created with max_redirects from config
     assert http.client.max_redirects == 20
+
+
+def test_functional_client_limits_config():
+    """Test that limits configuration is accessible and returns None by default."""
+    limits = config.get_limits()
+    assert limits is None
+
+
+def test_functional_client_transport_config():
+    """Test that transport configuration is accessible and returns None by default."""
+    transport = config.get_transport()
+    assert transport is None
+
+
+def test_class_based_client_config_custom_limits():
+    """Test that class-based client Config can be created with custom limits."""
+    custom_limits = httpx.Limits(max_connections=50, max_keepalive_connections=20)
+    cfg = class_config.Config(limits=custom_limits)
+    assert cfg.limits == custom_limits
+    assert cfg.limits.max_connections == 50
+
+
+def test_class_based_client_config_custom_transport():
+    """Test that class-based client Config can be created with custom transport."""
+    custom_transport = httpx.HTTPTransport(retries=3)
+    cfg = class_config.Config(transport=custom_transport)
+    assert cfg.transport == custom_transport
+
+
+def test_class_based_client_with_custom_limits():
+    """Test that class-based client can be instantiated with custom limits."""
+    custom_limits = httpx.Limits(max_connections=100)
+    cfg = class_config.Config(limits=custom_limits)
+    test_client = Client(config=cfg)
+    # The client should use the custom limits
+    assert test_client._http_client.config.limits == custom_limits
+
+
+def test_class_based_client_with_custom_transport():
+    """Test that class-based client can be instantiated with custom transport."""
+    custom_transport = httpx.HTTPTransport(retries=5)
+    cfg = class_config.Config(transport=custom_transport)
+    test_client = Client(config=cfg)
+    # The client should use the custom transport
+    assert test_client._http_client.config.transport == custom_transport

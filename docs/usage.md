@@ -204,6 +204,8 @@ All generated clients support the following configuration options:
 
 #### Performance
 - `http2`: Whether to enable HTTP/2 support (default: `False`)
+- `limits`: Connection pool limits via `httpx.Limits` (default: `None`)
+- `transport`: Custom transport via `httpx.HTTPTransport` or `httpx.AsyncHTTPTransport` (default: `None`)
 
 ### Function-Based Client Configuration
 
@@ -306,6 +308,64 @@ def get_max_redirects() -> int:
 # Class-based client
 config = Config(follow_redirects=True, max_redirects=5)
 client = Client(config=config)
+```
+
+#### Configure Connection Pool Limits
+
+Control connection pooling behavior with `httpx.Limits`:
+
+```python
+import httpx
+
+# Function-based client
+def get_limits() -> httpx.Limits | None:
+    return httpx.Limits(
+        max_keepalive_connections=10,
+        max_connections=20,
+        keepalive_expiry=5.0
+    )
+
+# Class-based client
+config = Config(
+    limits=httpx.Limits(
+        max_keepalive_connections=10,
+        max_connections=20
+    )
+)
+client = Client(config=config)
+```
+
+#### Configure Custom Transport
+
+Customize low-level HTTP behavior with a custom transport:
+
+```python
+import httpx
+
+# Function-based client (sync)
+def get_transport() -> httpx.BaseTransport | httpx.AsyncBaseTransport | None:
+    return httpx.HTTPTransport(
+        retries=3,
+        local_address="0.0.0.0"
+    )
+
+# Function-based client (async)
+def get_transport() -> httpx.BaseTransport | httpx.AsyncBaseTransport | None:
+    return httpx.AsyncHTTPTransport(
+        retries=3
+    )
+
+# Class-based client (sync)
+config = Config(
+    transport=httpx.HTTPTransport(retries=3)
+)
+client = Client(config=config)
+
+# Class-based client (async)
+config = Config(
+    transport=httpx.AsyncHTTPTransport(retries=3)
+)
+client = AsyncClient(config=config)
 ```
 
 ## generate-basic

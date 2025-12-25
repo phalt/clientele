@@ -105,3 +105,22 @@ def get_limits() -> httpx.Limits | None:
     Default is None (uses httpx defaults).
     """
     return None
+
+
+def get_transport() -> httpx.BaseTransport | httpx.AsyncBaseTransport | None:
+    """
+    Configure a custom transport for the HTTP client.
+    Return an httpx transport object to customize low-level HTTP behavior,
+    or None to use httpx defaults.
+    
+    Use httpx.HTTPTransport for sync clients or httpx.AsyncHTTPTransport for async clients.
+    
+    Example:
+        return httpx.HTTPTransport(
+            retries=3,
+            local_address="0.0.0.0"
+        )
+    
+    Default is None (uses httpx defaults).
+    """
+    return None
