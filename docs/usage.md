@@ -123,11 +123,19 @@ The `Config` class supports the following parameters:
 - `user_key`: Username for HTTP Basic authentication (default: `"user"`)
 - `pass_key`: Password for HTTP Basic authentication (default: `"password"`)
 - `bearer_token`: Token for HTTP Bearer authentication (default: `"token"`)
+- `timeout`: Request timeout in seconds (default: `5.0`)
+- `follow_redirects`: Whether to automatically follow HTTP redirects (default: `False`)
+- `verify_ssl`: Whether to verify SSL certificates (default: `True`)
+- `http2`: Whether to enable HTTP/2 support (default: `False`)
+- `max_redirects`: Maximum number of redirects to follow (default: `20`)
 
 This makes it easy to:
 - Switch between different API environments (dev, staging, production)
 - Use different authentication tokens for different users or sessions
 - Add custom headers per client instance
+- Configure timeout and retry behavior
+- Control SSL verification for development environments
+- Enable HTTP/2 for improved performance
 - Test your code with mock configurations
 
 ### Async Class-Based Client
@@ -170,6 +178,135 @@ Use function-based clients (`generate`) when:
 - You want the simplest possible client with no boilerplate
 - You don't need to maintain state between requests
 - You only need a single static configuration
+
+## Client Configuration
+
+Both function-based and class-based clients support extensive configuration options to customize HTTP client behavior.
+
+### Configuration Options
+
+All generated clients support the following configuration options:
+
+#### Authentication
+- `api_base_url`: Base URL for the API (default: `"http://localhost"`)
+- `user_key`: Username for HTTP Basic authentication (default: `"user"`)
+- `pass_key`: Password for HTTP Basic authentication (default: `"password"`)
+- `bearer_token`: Token for HTTP Bearer authentication (default: `"token"`)
+- `additional_headers`: Additional headers to include in all requests (default: `{}`)
+
+#### HTTP Behavior
+- `timeout`: Request timeout in seconds (default: `5.0`)
+- `follow_redirects`: Whether to automatically follow HTTP redirects (default: `False`)
+- `max_redirects`: Maximum number of redirects to follow (default: `20`)
+
+#### Security
+- `verify_ssl`: Whether to verify SSL certificates (default: `True`)
+
+#### Performance
+- `http2`: Whether to enable HTTP/2 support (default: `False`)
+
+### Function-Based Client Configuration
+
+For function-based clients, modify the functions in `config.py`:
+
+```python
+# In your generated client's config.py file
+
+def get_timeout() -> float:
+    """Request timeout in seconds."""
+    return 30.0  # Increase timeout to 30 seconds
+
+def get_follow_redirects() -> bool:
+    """Whether to follow redirects."""
+    return True  # Enable redirect following
+
+def get_http2() -> bool:
+    """Enable HTTP/2 support."""
+    return True  # Enable HTTP/2
+
+def get_verify_ssl() -> bool:
+    """Whether to verify SSL certificates."""
+    return False  # Only for development!
+```
+
+### Class-Based Client Configuration
+
+For class-based clients, pass configuration options when creating the client:
+
+```python
+from my_client.client import Client
+from my_client import config
+
+# Custom configuration
+custom_config = config.Config(
+    api_base_url="https://api.production.com",
+    bearer_token="your-api-token",
+    timeout=30.0,
+    follow_redirects=True,
+    verify_ssl=True,
+    http2=True,
+    max_redirects=10,
+)
+
+client = Client(config=custom_config)
+```
+
+### Configuration Examples
+
+#### Increase Timeout for Slow APIs
+
+```python
+# Function-based client
+def get_timeout() -> float:
+    return 60.0  # 60 second timeout
+
+# Class-based client
+config = Config(timeout=60.0)
+client = Client(config=config)
+```
+
+#### Enable HTTP/2 for Better Performance
+
+```python
+# Function-based client
+def get_http2() -> bool:
+    return True
+
+# Class-based client
+config = Config(http2=True)
+client = Client(config=config)
+```
+
+#### Development Environment (Disable SSL Verification)
+
+!!! warning
+    
+    Only disable SSL verification in development environments. Never disable it in production!
+
+```python
+# Function-based client
+def get_verify_ssl() -> bool:
+    return False  # For development only!
+
+# Class-based client
+config = Config(verify_ssl=False)
+client = Client(config=config)
+```
+
+#### Follow Redirects
+
+```python
+# Function-based client
+def get_follow_redirects() -> bool:
+    return True
+
+def get_max_redirects() -> int:
+    return 5
+
+# Class-based client
+config = Config(follow_redirects=True, max_redirects=5)
+client = Client(config=config)
+```
 
 ## generate-basic
 
