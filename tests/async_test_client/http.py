@@ -143,15 +143,7 @@ async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
-    async with httpx.AsyncClient(
-        headers=client_headers,
-        timeout=c.get_timeout(),
-        follow_redirects=c.get_follow_redirects(),
-        verify=c.get_verify_ssl(),
-        http2=c.get_http2(),
-        max_redirects=c.get_max_redirects(),
-    ) as async_client:
-        return await async_client.get(parse_url(url))
+    return await client.get(parse_url(url), headers=client_headers)
 
 
 async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
@@ -159,15 +151,7 @@ async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> h
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(
-        headers=client_headers,
-        timeout=c.get_timeout(),
-        follow_redirects=c.get_follow_redirects(),
-        verify=c.get_verify_ssl(),
-        http2=c.get_http2(),
-        max_redirects=c.get_max_redirects(),
-    ) as async_client:
-        return await async_client.post(parse_url(url), json=json_data)
+    return await client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
 async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
@@ -175,27 +159,11 @@ async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> ht
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(
-        headers=client_headers,
-        timeout=c.get_timeout(),
-        follow_redirects=c.get_follow_redirects(),
-        verify=c.get_verify_ssl(),
-        http2=c.get_http2(),
-        max_redirects=c.get_max_redirects(),
-    ) as async_client:
-        return await async_client.put(parse_url(url), json=json_data)
+    return await client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
 async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)
-    async with httpx.AsyncClient(
-        headers=client_headers,
-        timeout=c.get_timeout(),
-        follow_redirects=c.get_follow_redirects(),
-        verify=c.get_verify_ssl(),
-        http2=c.get_http2(),
-        max_redirects=c.get_max_redirects(),
-    ) as async_client:
-        return await async_client.delete(parse_url(url))
+    return await client.delete(parse_url(url), headers=client_headers)
