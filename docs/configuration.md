@@ -96,6 +96,53 @@ TIMEOUT=30.0
 VERIFY_SSL=false
 ```
 
+#### 4. Custom Environment Variable Names
+
+If the default environment variable names are too generic for your use case, you can customize them using pydantic's `Field` with the `validation_alias` parameter:
+
+```python
+# In your generated client's config.py file
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Config(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
+    )
+    
+    api_base_url: str = Field(
+        default="http://localhost",
+        validation_alias="MY_APP_API_BASE_URL"
+    )
+    bearer_token: str = Field(
+        default="token",
+        validation_alias="MY_APP_BEARER_TOKEN"
+    )
+    timeout: float = Field(
+        default=5.0,
+        validation_alias="MY_APP_TIMEOUT"
+    )
+    # ... other configuration options
+
+config = Config()
+```
+
+Now you can use custom environment variable names:
+
+```bash
+export MY_APP_API_BASE_URL="https://api.production.com"
+export MY_APP_BEARER_TOKEN="your-secret-token"
+export MY_APP_TIMEOUT=30.0
+```
+
+This is particularly useful when:
+- You have multiple API clients in the same application
+- You want to avoid naming conflicts with other environment variables
+- Your organization has specific naming conventions for environment variables
+
 ## Class-Based Client Configuration
 
 Class-based clients use the same `Config` class with the same pydantic-settings support. Pass configuration options when creating the client:
