@@ -1,2 +1,10 @@
 client_headers = c.additional_headers()
-client = httpx.{{client_type}}(auth=(c.get_user_key(), c.get_pass_key()), headers=client_headers)
+client = httpx.{{client_type}}(
+    auth=(c.get_user_key(), c.get_pass_key()),
+    headers=client_headers,
+    timeout=c.get_timeout(),
+    follow_redirects=c.get_follow_redirects(),
+    verify=c.get_verify_ssl(),
+    http2=c.get_http2(),
+    max_redirects=c.get_max_redirects(),
+)

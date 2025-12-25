@@ -129,7 +129,14 @@ func_response_code_maps = {
 auth_key = c.get_bearer_token()
 client_headers = c.additional_headers()
 client_headers.update(Authorization=f"Bearer {auth_key}")
-client = httpx.Client(headers=client_headers)
+client = httpx.Client(
+    headers=client_headers,
+    timeout=c.get_timeout(),
+    follow_redirects=c.get_follow_redirects(),
+    verify=c.get_verify_ssl(),
+    http2=c.get_http2(),
+    max_redirects=c.get_max_redirects(),
+)
 
 
 def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
