@@ -1,10 +1,17 @@
 # Manifest
 
 Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
+
 Install with pipx:
 
 ```sh
 pipx install clientele
+```
+
+Or with uv:
+
+```sh
+uv tool install clientele
 ```
 
 API VERSION: 1.0.0

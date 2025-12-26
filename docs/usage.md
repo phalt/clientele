@@ -3,19 +3,19 @@
 
 !!! note
 
-    You can type `clientele COMMAND --help` at anytime to see explicit information about the available arguments.
+    You can type `clientele COMMAND --help` at anytime to see information about the available arguments.
 
 ## Client Types
 
-Clientele offers three types of client generators:
+Clientele offers five types of generators:
 
-1. **`generate`** - Standard function-based client (recommended for most use cases)
-2. **`generate-class`** - Class-based client with methods
-3. **`generate-basic`** - Basic file structure with no generated code
+1. **`generate`** - a function-based client either as async or sync.
+2. **`generate-class`** - a class-based client either as async or sync.
+3. **`generate-basic`** - Basic file structure with no generated code.
 
 ## `generate`
 
-Generate a Python HTTP Client from an OpenAPI Schema.
+Generate a function-based Python HTTP Client from an OpenAPI Schema.
 
 ### From a URL
 
@@ -26,10 +26,6 @@ Use the `-u` or `--url` argument.
 ```sh
 clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/
 ```
-
-!!! note
-
-    The example above uses one of our test schemas, and will work if you copy/paste it!
 
 ### From a file
 
@@ -49,7 +45,7 @@ clientele generate -f path/to/file.json -o my_client/ --asyncio t
 
 ## `generate-class`
 
-Generate a class-based Python HTTP Client from an OpenAPI Schema. This generator creates a `Client` class with methods for each API endpoint.
+Generate a class-based Python HTTP Client from an OpenAPI Schema. This generator creates a `Client` class object with methods for each API endpoint instead of functions in a module.
 
 ### Usage
 
@@ -59,173 +55,62 @@ The `generate-class` command accepts the same arguments as `generate`:
 clientele generate-class -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/
 ```
 
-### Example Usage
-
-With a class-based client, you instantiate the `Client` class and call methods:
-
-```python
-from my_client.client import Client
-from my_client import schemas
-
-# Create a client instance with default configuration
-client = Client()
-
-# Call API methods
-data = schemas.RequestDataRequest(my_input="test")
-response = client.request_data_request_data_post(data=data)
-
-# Handle responses
-match response:
-    case schemas.RequestDataResponse():
-        print(f"Success: {response}")
-    case schemas.ValidationError():
-        print(f"Validation error: {response}")
-```
-
-### Dynamic Configuration
-
-Class-based clients support dynamic configuration, allowing you to create multiple clients with different settings:
-
-```python
-from my_client.client import Client
-from my_client import config
-
-# Create a client with custom configuration
-custom_config = config.Config(
-    api_base_url="https://api.example.com",
-    bearer_token="my-auth-token",
-    additional_headers={"X-Custom-Header": "value"}
-)
-client = Client(config=custom_config)
-
-# Create multiple clients with different configurations
-prod_config = config.Config(
-    api_base_url="https://api.production.com",
-    bearer_token="prod-token"
-)
-dev_config = config.Config(
-    api_base_url="https://api.development.com",
-    bearer_token="dev-token"
-)
-
-prod_client = Client(config=prod_config)
-dev_client = Client(config=dev_config)
-
-# Each client uses its own configuration
-prod_response = prod_client.get_data()
-dev_response = dev_client.get_data()
-```
-
-The `Config` class supports the following parameters:
-
-- `api_base_url`: Base URL for the API (default: `"http://localhost"`)
-- `additional_headers`: Additional headers to include in all requests (default: `{}`)
-- `user_key`: Username for HTTP Basic authentication (default: `"user"`)
-- `pass_key`: Password for HTTP Basic authentication (default: `"password"`)
-- `bearer_token`: Token for HTTP Bearer authentication (default: `"token"`)
-- `timeout`: Request timeout in seconds (default: `5.0`)
-- `follow_redirects`: Whether to automatically follow HTTP redirects (default: `False`)
-- `verify_ssl`: Whether to verify SSL certificates (default: `True`)
-- `http2`: Whether to enable HTTP/2 support (default: `False`)
-- `max_redirects`: Maximum number of redirects to follow (default: `20`)
-
-This makes it easy to:
-- Switch between different API environments (dev, staging, production)
-- Use different authentication tokens for different users or sessions
-- Add custom headers per client instance
-- Configure timeout and retry behavior
-- Control SSL verification for development environments
-- Enable HTTP/2 for improved performance
-- Test your code with mock configurations
-
-### Async Class-Based Client
-
-You can generate an async class-based client as well:
-
-```sh
-clientele generate-class -f path/to/file.json -o my_client/ --asyncio t
-```
-
-Then use it with async/await:
-
-```python
-from my_async_client.client import Client
-from my_async_client import config
-
-# With default configuration
-client = Client()
-response = await client.simple_request_simple_request_get()
-
-# With custom configuration
-custom_config = config.Config(api_base_url="https://api.example.com")
-client = Client(config=custom_config)
-response = await client.simple_request_simple_request_get()
-```
-
-### When to Use Class-Based Clients
-
-Use class-based clients when:
-
-- You prefer object-oriented programming style
-- You want to easily mock the client for testing
-- You need to maintain state or configuration in the client instance
-- You want to subclass and extend the client behavior
-- **You need dynamic configuration or multiple clients with different settings**
-
-Use function-based clients (`generate`) when:
-
-- You prefer functional programming style
-- You want the simplest possible client with no boilerplate
-- You don't need to maintain state between requests
-- You only need a single static configuration
-
-## Configuration
-
-Both client types support extensive configuration options. See the [Configuration Guide](configuration.md) for detailed information on:
-
-- Available configuration options (timeout, SSL, HTTP/2, connection pools, etc.)
-- Environment variable support
-- Custom transports and limits
-- Configuration examples
-
 ## generate-basic
 
 The `generate-basic` command can be used to generate a basic file structure for an HTTP client.
 
-It does not require an OpenAPI schema, just a path.
+It does not require an OpenAPI schema. It does not generate any code.
 
-This command serves two purposes:
-
-1. You may have an HTTP API without an OpenAPI schema and you want to keep a consistent file structure with other Clientele clients.
-2. The generator for this basic client can be extended for your own client in the future, if you choose.
+This command is there for when have an HTTP API without an OpenAPI schema, but you want to keep a consistent file structure with other Clientele clients.
 
 ```sh
 clientele generate-basic -o my_client/
 ```
 
+## Functional vs Class
+
+Use function-based clients (`generate`) when:
+
+- You prefer a functional programming style.
+- You want the simplest possible client.
+- You don't need to maintain state between requests.
+- You only need a single static configuration.
+
+Use class-based (`generate-class`) clients when:
+
+- You prefer an object-oriented programming style.
+- You need to maintain state or configuration in the client instance.
+- You want to subclass and extend the client behavior.
+- You need dynamic configuration or multiple clients with different settings.
+
+## Configuration
+
+See the [Configuration Guide](configuration.md).
+
 ## `explore`
 
 Run the explorer mode. See [explore](explore.md).
-
 
 ## `version`
 
 Print the current version of Clientele:
 
-```sh
-> clientele version
-Clientele 1.0.0
-```
+    ```sh
+    > clientele version
+    Clientele 1.0.0
+    ```
 
 ## Regenerating
 
-At times you may wish to regenerate the client. This could be because the API has updated or you just want to use a newer version of clientele.
+At times you may wish to regenerate the client. 
+
+This could be because the API has updated or you just want to use a newer version of Clientele.
 
 To force a regeneration you must pass the `--regen` or `-r` argument, for example:
 
-```sh
-clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
-```
+    ```sh
+    clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
+    ```
 
 !!! note
 
@@ -260,27 +145,30 @@ Every generated client includes a `MANIFEST.md` file that records:
 
 Example `MANIFEST.md`:
 
-```markdown
-# Manifest
+    # Manifest
 
-Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
-Install with pipx:
+    Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
+    Install with pipx:
 
-```sh
-pipx install clientele
-```
+    ```sh
+    pipx install clientele
+    ```
 
-API VERSION: 0.1.0
-OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 1.0.0
+    API VERSION: 0.1.0
+    OPENAPI VERSION: 3.0.2
+    CLIENTELE VERSION: 1.0.0
 
-Regenerate using this command:
+    Regenerate using this command:
 
-```sh
-clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
-```
+    ```sh
+    clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
+    ```
 
-You can copy the command directly from this file to regenerate your client.
+    Explore this API interactively:
+
+    ```sh
+    clientele explore -c .
+    ```
 
 ### Regeneration Workflow
 
@@ -288,26 +176,23 @@ Here's the recommended workflow for keeping your client in sync:
 
 1. **API Updated**: Your API has new endpoints or changed schemas
 2. **Regenerate**: Run `clientele generate` with `--regen t`
-   ```sh
-   clientele generate -u http://localhost:8000/openapi.json -o my_client/ --regen t
-   ```
+```sh
+clientele generate -u http://localhost:8000/openapi.json -o my_client/ --regen t
+```
 3. **Review Changes**: Use git to see what changed
-   ```sh
-   git diff my_client/
-   ```
-4. **Inspect**: Look at:
-   - New functions in `client.py`
-   - Modified schemas in `schemas.py`
-   - Changes to function signatures
+```sh
+git diff my_client/
+```
+4. **Inspect** the changes.
 5. **Test**: Run your test suite to catch breaking changes
-   ```sh
-   pytest tests/
-   ```
+```sh
+pytest tests/
+```
 6. **Commit**: Add the changes to git
-   ```sh
-   git add my_client/
-   git commit -m "Regenerate client for API v2.1"
-   ```
+```sh
+git add my_client/
+git commit -m "Regenerate client for API v2.1"
+```
 
 ### Handling Breaking Changes
 
@@ -318,23 +203,9 @@ When the API introduces breaking changes, regeneration will reflect them:
 - **New required fields** → Function signatures updated
 - **Changed response types** → Schema unions modified
 
-Your tests should catch these issues. If you need to support multiple API versions, consider:
+You should have tests to catch these issues.
 
-- Generating separate clients for each version
-- Using version-specific directories (e.g., `my_client_v1/`, `my_client_v2/`)
-
-### Regenerating vs. Fresh Generation
-
-**Regenerating** (`--regen t`):
-
-- Overwrites most files except `config.py`
-- Preserves your configuration
-- Intended for updating an existing client
-
-**Fresh Generation** (without `--regen`):
-
-- Will fail if the output directory already exists
-- Use for creating a new client from scratch
+If you need to support multiple API versions, consider generating separate clients for each version sing version-specific directories (e.g., `my_client_v1/`, `my_client_v2/`).
 
 ### Integration with CI/CD
 
