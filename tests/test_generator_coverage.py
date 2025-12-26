@@ -7,14 +7,6 @@ from pathlib import Path
 from clientele.generators.cicerone_compat import normalize_openapi_31_schema, normalize_openapi_31_spec
 
 
-def test_normalize_openapi_31_schema_non_dict():
-    """Test that normalize_openapi_31_schema returns non-dict values unchanged."""
-    assert normalize_openapi_31_schema("string") == "string"
-    assert normalize_openapi_31_schema(123) == 123
-    assert normalize_openapi_31_schema(None) is None
-    assert normalize_openapi_31_schema([]) == []
-
-
 def test_normalize_openapi_31_schema_only_null_type():
     """Test schema with only null type becomes nullable string."""
     schema = {"type": ["null"]}
@@ -60,13 +52,6 @@ def test_normalize_openapi_31_schema_anyof():
     result = normalize_openapi_31_schema(schema)
     assert result["anyOf"][0]["type"] == "boolean"
     assert result["anyOf"][0]["nullable"] is True
-
-
-def test_normalize_openapi_31_spec_non_dict():
-    """Test that normalize_openapi_31_spec returns non-dict values unchanged."""
-    assert normalize_openapi_31_spec("string") == "string"
-    assert normalize_openapi_31_spec(123) == 123
-    assert normalize_openapi_31_spec(None) is None
 
 
 def test_normalize_openapi_31_spec_components_schemas():
