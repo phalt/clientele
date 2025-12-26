@@ -335,7 +335,8 @@ class TestGeneratorCoverage:
                 # Verify client was created with the server URL
                 assert (output_dir / "client.py").exists()
                 client_content = (output_dir / "client.py").read_text()
-                assert "api.example.com" in client_content
+                # Check that the domain from the test spec is in the generated code
+                assert "api.example.com" in client_content  # nosec: B113 - False positive, this is a test assertion
 
             finally:
                 Path(spec_file).unlink()
