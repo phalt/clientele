@@ -2,6 +2,8 @@
 
 This document describes the workflow for publishing clientele to Homebrew.
 
+> **📖 Looking for setup instructions?** See [HOMEBREW_SETUP.md](HOMEBREW_SETUP.md) for a simplified step-by-step guide.
+
 ## Prerequisites
 
 1. Have a new version ready to release

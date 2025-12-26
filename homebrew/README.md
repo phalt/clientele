@@ -2,6 +2,8 @@
 
 This directory contains the tooling and templates needed to publish clientele on Homebrew (brew.sh).
 
+> **📖 New to Homebrew publishing?** See [../HOMEBREW_SETUP.md](../HOMEBREW_SETUP.md) for a complete step-by-step setup guide.
+
 ## Overview
 
 Homebrew is a popular package manager for macOS and Linux. Publishing clientele on Homebrew makes it accessible to a wider audience without requiring Python knowledge.
