@@ -13,7 +13,7 @@
 
 Clientele generates fully-typed, idiomatic python HTTP API clients from OpenAPI 3.0+ schemas.
 
-It is designed and tested to work seamlessly with:
+It is designed and tested to work perfectly with the most popular Python API frameworks:
 
 - **[FastAPI](https://fastapi.tiangolo.com/)**.
 - **[Django REST Framework](https://www.django-rest-framework.org/)** via **[drf-spectacular](https://github.com/tfranzel/drf-spectacular)**.
