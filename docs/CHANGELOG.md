@@ -2,30 +2,26 @@
 
 ## 1.0.0
 
-- 🆕 **Explorer CLI**: Use `clientele explore` to explore and discover APIs interactively without writing any code.
-  - Explore from existing clients: `clientele explore -c my_client/` (or `--client`)
-  - Explore directly from schema files: `clientele explore -f openapi.json`
-  - Explore from remote schemas: `clientele explore -u https://api.example.com/openapi.json`
-  - Supports both standard (function-based) and class-based generated clients
-  - Works with sync and async clients
-  - Automatic request validation and beautiful error formatting
-  - - See the [documentation](https://phalt.github.io/clientele/usage/#explore) for complete usage guide
-  - **CLI Features**:
-    - Tab autocomplete for operation names and parameters with type hints
-    - Execute operations with Python-like syntax: `pokemon_list(limit=10)`
-    - Syntax-highlighted JSON responses with timing information
-    - Command history (persistent in `~/.clientele_history`)
-    - Slash commands: `/list` (show all operations), `/schemas` (inspect schemas), `/config` (view/set config), `/debug on/off` (toggle debug), `/help` (show help), `/exit` (quit)
-  - **Fixed**: Explorer CLI now correctly accepts dictionary arguments for parameters expecting Pydantic models (e.g., `create_user(data={"name": "test", "email": "foo@test.com"})`). Previously, this would fail with `AttributeError: 'dict' object has no attribute 'model_dump'`.
-- **Clientele code generation improvements**:
-  - Fixed parameter ordering (required parameters before optional ones)
-  - Nullable fields properly handled (OpenAPI 3.0 `nullable: true` and OpenAPI 3.1 array type notation)
-  - **Fixed**: Array responses without a `title` field now correctly generate type aliases instead of wrapper classes with a `test` property.
-  - **Fixed**: Responses with no content (e.g., 204 No Content) are now properly included in the status code map with `None` as the response type.
-  - Correctly handle reserved python keywords for schema model properties (i.e. `type`, `next` etc)
-  - ⚠️ **BREAKING** ⚠️: `config.py` re-engineered to use [pydantic settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/). Pleas delete your `config.py` file and regenerate to update.
-  - **New**: Extended httpx configuration options in generated clients - timeout, follow_redirects, verify_ssl, http2, and max_redirects are now configurable.
-  - Removed the `validate` command from the CLI
+Version 1.0.0 represents 12 months of work, planning, testing and using clientele with real APIs. It has major new features and some breaking changes. I recommend completely deleting your previous clients and rebuilding to ensure a smooth rollout.
+
+For most of this year I've been constrained by a lack of time to build the features I have planned. With the assistance of supervised agents I have been able to build out most of what I needed, and then spent time correcting and improving the agent's code to be functionally correct. The productivity boost has been immense and has helped me to realise the goals and ambitions I have for this project.
+
+### Major new features
+
+- 🆕 **Explorer CLI**: Use `clientele explore` to use a REPL and discover APIs interactively, even without writing any code.
+- ⚙️ **Rebuilt configuration**: `config.py` has been re-engineered to use [pydantic settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/).
+- Clientele now specifically offers 100% support for all major Python API frameworks: FastAPI, Django REST Framework, and Django-Ninja.
+- Clientele is now tested and proven to generate clients for 2000+ openapi schemas as part of our CI. It runs weekly and we use it to ensure broad capability with all OpenAPI services.
+
+### Clientele code generation improvements
+
+- Fixed function parameter ordering (required parameters before optional ones).
+- Nullable fields properly handled (OpenAPI 3.0 `nullable: true` and OpenAPI 3.1 array type notation)
+- **Fixed**: Array responses without a `title` field now correctly generate type aliases instead of wrapper classes with a `test` property.
+- **Fixed**: Responses with no content (e.g., 204 No Content) are now properly included in the status code map with `None` as the response type.
+- Correctly handle reserved python keywords for schema model properties (i.e. `type`, `next` etc).
+- **New**: Extended httpx configuration options in generated clients - timeout, follow_redirects, verify_ssl, http2, and max_redirects are now configurable.
+- Removed the `validate` command from the CLI.
 
 ## 0.11.0
 
