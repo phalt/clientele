@@ -1,7 +1,5 @@
 """Tests for explore module and other missing coverage."""
 
-import pytest
-
 from clientele import settings
 
 

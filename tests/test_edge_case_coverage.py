@@ -76,9 +76,7 @@ def test_explore_command_temp_dir_cleanup_exception():
             raise OSError("Simulated cleanup error")
 
         with patch("shutil.rmtree", side_effect=rmtree_raises):
-            with patch("clientele.explore.repl.ClienteleREPL") as mock_repl:
-                mock_repl_instance = mock_repl.return_value
-
+            with patch("clientele.explore.repl.ClienteleREPL"):
                 result = runner.invoke(cli.cli_group, ["explore", "--file", spec_file])
 
                 # Should complete successfully even with cleanup error (lines 233-234)

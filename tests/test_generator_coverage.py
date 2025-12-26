@@ -4,8 +4,6 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from clientele.generators.cicerone_compat import normalize_openapi_31_schema, normalize_openapi_31_spec
 
 
@@ -88,11 +86,7 @@ def test_normalize_openapi_31_spec_request_body():
         "openapi": "3.1.0",
         "paths": {
             "/test": {
-                "post": {
-                    "requestBody": {
-                        "content": {"application/json": {"schema": {"type": ["string", "null"]}}}
-                    }
-                }
+                "post": {"requestBody": {"content": {"application/json": {"schema": {"type": ["string", "null"]}}}}}
             }
         },
     }
@@ -109,11 +103,7 @@ def test_normalize_openapi_31_spec_response_schemas():
         "paths": {
             "/test": {
                 "get": {
-                    "responses": {
-                        "200": {
-                            "content": {"application/json": {"schema": {"type": ["integer", "null"]}}}
-                        }
-                    }
+                    "responses": {"200": {"content": {"application/json": {"schema": {"type": ["integer", "null"]}}}}}
                 }
             }
         },
@@ -165,11 +155,7 @@ def test_normalize_openapi_31_spec_dollar_prefixed_keys():
     """Test that $-prefixed keys (like $ref) are skipped."""
     spec = {
         "openapi": "3.1.0",
-        "paths": {
-            "/test": {
-                "$ref": "#/components/paths/TestPath"
-            }
-        },
+        "paths": {"/test": {"$ref": "#/components/paths/TestPath"}},
     }
     # Should not raise an error
     result = normalize_openapi_31_spec(spec)
@@ -180,15 +166,7 @@ def test_normalize_openapi_31_spec_non_dict_response():
     """Test that non-dict responses are skipped."""
     spec = {
         "openapi": "3.1.0",
-        "paths": {
-            "/test": {
-                "get": {
-                    "responses": {
-                        "200": "not a dict"
-                    }
-                }
-            }
-        },
+        "paths": {"/test": {"get": {"responses": {"200": "not a dict"}}}},
     }
     # Should not raise an error
     result = normalize_openapi_31_spec(spec)
@@ -199,15 +177,7 @@ def test_normalize_openapi_31_spec_non_dict_parameter():
     """Test that non-dict parameters are handled."""
     spec = {
         "openapi": "3.1.0",
-        "paths": {
-            "/test": {
-                "get": {
-                    "parameters": [
-                        "not a dict"
-                    ]
-                }
-            }
-        },
+        "paths": {"/test": {"get": {"parameters": ["not a dict"]}}},
     }
     # Should not raise an error
     result = normalize_openapi_31_spec(spec)
@@ -372,8 +342,9 @@ class TestGeneratorCoverage:
 
     def test_schemas_generator_no_components(self):
         """Test schemas generator with no components in spec."""
-        from clientele.generators.standard.generators.schemas import SchemasGenerator
         from rich.console import Console
+
+        from clientele.generators.standard.generators.schemas import SchemasGenerator
 
         openapi_spec = {
             "openapi": "3.0.0",
@@ -398,7 +369,7 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                console = Console()
+                Console()
                 generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir))
 
                 # Should handle missing components gracefully
@@ -412,8 +383,9 @@ class TestGeneratorCoverage:
 
     def test_schemas_generator_no_schemas_in_components(self):
         """Test schemas generator with components but no schemas."""
-        from clientele.generators.standard.generators.schemas import SchemasGenerator
         from rich.console import Console
+
+        from clientele.generators.standard.generators.schemas import SchemasGenerator
 
         openapi_spec = {
             "openapi": "3.0.0",
@@ -439,7 +411,7 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                console = Console()
+                Console()
                 generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir))
 
                 # Should handle missing schemas gracefully
