@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import decimal
 import json
 import types
@@ -35,7 +36,7 @@ def parse_url(url: str) -> str:
 
     Will filter out any optional query parameters if they are None.
     """
-    api_url = f"{c.api_base_url()}{url}"
+    api_url = f"{c.config.api_base_url}{url}"
     url_parts = parse.urlparse(url=api_url)
     # Filter out "None" optional query parameters
     filtered_query_params = {k: v for k, v in parse.parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
@@ -126,18 +127,36 @@ func_response_code_maps = {
 }
 
 
-auth_key = c.get_bearer_token()
-client_headers = c.additional_headers()
+auth_key = c.config.bearer_token
+client_headers = c.config.additional_headers.copy()
 client_headers.update(Authorization=f"Bearer {auth_key}")
-client = httpx.AsyncClient(headers=client_headers)
+_client_kwargs: dict[str, typing.Any] = {
+    "headers": client_headers,
+    "timeout": c.config.timeout,
+    "follow_redirects": c.config.follow_redirects,
+    "verify": c.config.verify_ssl,
+    "http2": c.config.http2,
+    "max_redirects": c.config.max_redirects,
+}
+if _limits := c.config.limits:
+    _client_kwargs["limits"] = _limits
+if _transport := c.config.transport:
+    _client_kwargs["transport"] = _transport
+client = httpx.AsyncClient(**_client_kwargs)
+
+
+@contextlib.asynccontextmanager
+async def _client_context():
+    """Async context manager for the HTTP client."""
+    yield client
 
 
 async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.get(parse_url(url))
+    async with _client_context() as async_client:
+        return await async_client.get(parse_url(url), headers=client_headers)
 
 
 async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
@@ -145,8 +164,8 @@ async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> h
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.post(parse_url(url), json=json_data)
+    async with _client_context() as async_client:
+        return await async_client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
 async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
@@ -154,13 +173,13 @@ async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> ht
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.put(parse_url(url), json=json_data)
+    async with _client_context() as async_client:
+        return await async_client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
 async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)
-    async with httpx.AsyncClient(headers=client_headers) as async_client:
-        return await async_client.delete(parse_url(url))
+    async with _client_context() as async_client:
+        return await async_client.delete(parse_url(url), headers=client_headers)

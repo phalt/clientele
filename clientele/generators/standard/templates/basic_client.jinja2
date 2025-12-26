@@ -1,2 +1,24 @@
-client_headers = c.additional_headers()
-client = httpx.{{client_type}}(auth=(c.get_user_key(), c.get_pass_key()), headers=client_headers)
+client_headers = c.config.additional_headers.copy()
+_client_kwargs: dict[str, typing.Any] = {
+    'headers': client_headers,
+    'timeout': c.config.timeout,
+    'follow_redirects': c.config.follow_redirects,
+    'verify': c.config.verify_ssl,
+    'http2': c.config.http2,
+    'max_redirects': c.config.max_redirects,
+}
+if _limits := c.config.limits:
+    _client_kwargs['limits'] = _limits
+if _transport := c.config.transport:
+    _client_kwargs['transport'] = _transport
+if c.config.user_key and c.config.pass_key:
+    _client_kwargs['auth'] = (c.config.user_key, c.config.pass_key)
+client = httpx.{{client_type}}(**_client_kwargs)
+
+
+{% if client_type == 'AsyncClient' %}
+@contextlib.asynccontextmanager
+async def _client_context():
+    """Async context manager for the HTTP client."""
+    yield client
+{% endif %}

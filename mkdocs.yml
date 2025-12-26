@@ -17,6 +17,7 @@ nav:
     - Django REST Framework: framework-drf.md
     - Django Ninja: framework-django-ninja.md
   - Documentation:
+    - Configuration: configuration.md
     - Client Examples: examples.md
     - Testing: testing.md
     - Explorer Mode: explore.md

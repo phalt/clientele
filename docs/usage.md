@@ -123,11 +123,19 @@ The `Config` class supports the following parameters:
 - `user_key`: Username for HTTP Basic authentication (default: `"user"`)
 - `pass_key`: Password for HTTP Basic authentication (default: `"password"`)
 - `bearer_token`: Token for HTTP Bearer authentication (default: `"token"`)
+- `timeout`: Request timeout in seconds (default: `5.0`)
+- `follow_redirects`: Whether to automatically follow HTTP redirects (default: `False`)
+- `verify_ssl`: Whether to verify SSL certificates (default: `True`)
+- `http2`: Whether to enable HTTP/2 support (default: `False`)
+- `max_redirects`: Maximum number of redirects to follow (default: `20`)
 
 This makes it easy to:
 - Switch between different API environments (dev, staging, production)
 - Use different authentication tokens for different users or sessions
 - Add custom headers per client instance
+- Configure timeout and retry behavior
+- Control SSL verification for development environments
+- Enable HTTP/2 for improved performance
 - Test your code with mock configurations
 
 ### Async Class-Based Client
@@ -170,6 +178,15 @@ Use function-based clients (`generate`) when:
 - You want the simplest possible client with no boilerplate
 - You don't need to maintain state between requests
 - You only need a single static configuration
+
+## Configuration
+
+Both client types support extensive configuration options. See the [Configuration Guide](configuration.md) for detailed information on:
+
+- Available configuration options (timeout, SSL, HTTP/2, connection pools, etc.)
+- Environment variable support
+- Custom transports and limits
+- Configuration examples
 
 ## generate-basic
 

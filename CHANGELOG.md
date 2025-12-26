@@ -2,7 +2,7 @@
 
 ## 1.0.0
 
-- **Explorer CLI**: Use `clientele explore` to explore and discover APIs interactively without writing any code.
+- 🆕 **Explorer CLI**: Use `clientele explore` to explore and discover APIs interactively without writing any code.
   - Explore from existing clients: `clientele explore -c my_client/` (or `--client`)
   - Explore directly from schema files: `clientele explore -f openapi.json`
   - Explore from remote schemas: `clientele explore -u https://api.example.com/openapi.json`
@@ -23,7 +23,9 @@
   - **Fixed**: Array responses without a `title` field now correctly generate type aliases instead of wrapper classes with a `test` property.
   - **Fixed**: Responses with no content (e.g., 204 No Content) are now properly included in the status code map with `None` as the response type.
   - Correctly handle reserved python keywords for schema model properties (i.e. `type`, `next` etc)
-- Removed the `validate` command from the CLI
+  - ⚠️ **BREAKING** ⚠️: `config.py` re-engineered to use [pydantic settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/). Pleas delete your `config.py` file and regenerate to update.
+  - **New**: Extended httpx configuration options in generated clients - timeout, follow_redirects, verify_ssl, http2, and max_redirects are now configurable.
+  - Removed the `validate` command from the CLI
 
 ## 0.11.0
 

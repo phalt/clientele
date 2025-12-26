@@ -138,7 +138,19 @@ class HTTPClient:
         if self._client is None:
             client_headers = self.config.additional_headers.copy()
             client_headers.update(Authorization=f"Bearer {self.config.bearer_token}")
-            self._client = httpx.Client(headers=client_headers)
+            client_kwargs: dict[str, typing.Any] = {
+                "headers": client_headers,
+                "timeout": self.config.timeout,
+                "follow_redirects": self.config.follow_redirects,
+                "verify": self.config.verify_ssl,
+                "http2": self.config.http2,
+                "max_redirects": self.config.max_redirects,
+            }
+            if _limits := self.config.limits:
+                client_kwargs["limits"] = _limits
+            if _transport := self.config.transport:
+                client_kwargs["transport"] = _transport
+            self._client = httpx.Client(**client_kwargs)
         return self._client
 
     def _get_headers(self, additional_headers: typing.Optional[dict] = None) -> dict:

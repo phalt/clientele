@@ -3,41 +3,52 @@ This file will never be updated on subsequent clientele runs.
 Use it as a space to store configuration and constants.
 """
 
+import httpx
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-class Config:
+
+class Config(BaseSettings):
     """
     Configuration object for the API client.
-    Pass an instance of this class to the Client constructor to configure
-    the client with custom settings.
+
+    Values can be set via:
+    1. Environment variables (e.g., API_BASE_URL, BEARER_TOKEN, TIMEOUT)
+    2. Direct instantiation with keyword arguments
+    3. .env file (if python-dotenv is installed)
 
     Example:
+        # From environment variables
+        export API_BASE_URL="https://api.example.com"
+        export BEARER_TOKEN="my-secret-token"
+        config = Config()
+
+        # Direct instantiation
         config = Config(
             api_base_url="https://api.example.com",
-            bearer_token="my-token"
+            bearer_token="my-token",
+            timeout=10.0,
+            follow_redirects=True,
+            limits=httpx.Limits(max_connections=50)
         )
         client = Client(config=config)
     """
 
-    def __init__(
-        self,
-        api_base_url: str = "http://localhost",
-        additional_headers: dict | None = None,
-        user_key: str = "user",
-        pass_key: str = "password",
-        bearer_token: str = "token",
-    ):
-        """
-        Initialize the configuration object.
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
+    )
 
-        Args:
-            api_base_url: Base URL for the API (default: "http://localhost")
-            additional_headers: Additional headers to include in all requests (default: {})
-            user_key: Username for HTTP Basic authentication (default: "user")
-            pass_key: Password for HTTP Basic authentication (default: "password")
-            bearer_token: Token for HTTP Bearer authentication (default: "token")
-        """
-        self.api_base_url = api_base_url
-        self.additional_headers = additional_headers or {}
-        self.user_key = user_key
-        self.pass_key = pass_key
-        self.bearer_token = bearer_token
+    api_base_url: str = "http://localhost"
+    additional_headers: dict = {}
+    user_key: str = "user"
+    pass_key: str = "password"
+    bearer_token: str = "token"
+    timeout: float = 5.0
+    follow_redirects: bool = False
+    verify_ssl: bool = True
+    http2: bool = False
+    max_redirects: int = 20
+    limits: httpx.Limits | None = None
+    transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
