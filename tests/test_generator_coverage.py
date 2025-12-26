@@ -342,7 +342,6 @@ class TestGeneratorCoverage:
 
     def test_schemas_generator_no_components(self):
         """Test schemas generator with no components in spec."""
-        from rich.console import Console
 
         from clientele.generators.standard.generators.schemas import SchemasGenerator
 
@@ -369,7 +368,6 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                Console()
                 generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir))
 
                 # Should handle missing components gracefully
@@ -383,7 +381,6 @@ class TestGeneratorCoverage:
 
     def test_schemas_generator_no_schemas_in_components(self):
         """Test schemas generator with components but no schemas."""
-        from rich.console import Console
 
         from clientele.generators.standard.generators.schemas import SchemasGenerator
 
@@ -411,7 +408,6 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                Console()
                 generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir))
 
                 # Should handle missing schemas gracefully

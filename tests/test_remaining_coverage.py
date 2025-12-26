@@ -1,29 +1,22 @@
 """Tests for explore module and other missing coverage."""
 
-from clientele import settings
+from unittest.mock import patch
 
 
 def test_standard_utils_forward_reference():
     """Test standard utils union_for_py_ver with Python < 3.10."""
+    from clientele import settings
     from clientele.generators.standard import utils
 
     # Test the branch that uses typing.Union for Python < 3.10
-    # This requires mocking settings.PY_VERSION
-    original_version = settings.PY_VERSION
-
-    try:
-        # Mock Python 3.9
-        settings.PY_VERSION = [3, 9, 0]
-
+    # Mock settings.PY_VERSION to simulate Python 3.9
+    with patch.object(settings, "PY_VERSION", [3, 9, 0]):
         # Test with a union that would normally use | syntax
         union_items = ["str", "int"]
         result = utils.union_for_py_ver(union_items)
 
         # Should use typing.Union for Python < 3.10
         assert result == "typing.Union[str, int]"
-
-    finally:
-        settings.PY_VERSION = original_version
 
 
 def test_completer_type_checking_import():
