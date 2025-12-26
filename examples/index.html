@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://phalt.github.io/clientele/examples/">
       
       
-        <link rel="prev" href="../framework-django-ninja/">
+        <link rel="prev" href="../configuration/">
       
       
         <link rel="next" href="../testing/">
@@ -492,6 +492,29 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -628,30 +651,6 @@
       Configuration
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Authentication
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#additional-headers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Additional headers
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -988,30 +987,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Authentication
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#additional-headers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Additional headers
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
     </ul>
@@ -1176,67 +1151,7 @@ This works beautifully with the new <a href="https://peps.python.org/pep-0636/">
     <span class="n">TWO</span> <span class="o">=</span> <span class="s2">&quot;TWO&quot;</span>
 </code></pre></div></td></tr></table></div>
 <h2 id="configuration">Configuration</h2>
-<p>One of the problems with auto-generated clients is that you often need to configure them, and if you try to regenerate the client later, your configuration gets wiped clean and you have to do it all over again.</p>
-<p>Clientele solves this by providing an <em>entry point</em> for configuration that will never be overwritten: <code>config.py</code>.</p>
-<p>When you first generate the project, you'll see a file called <code>config.py</code> with configuration functions like this:</p>
-<div class="highlight"><pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This file will never be updated on subsequent clientele runs.</span>
-<span class="sd">Use it as a space to store configuration and constants.</span>
-
-<span class="sd">DO NOT CHANGE THE FUNCTION NAMES</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">api_base_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify this function to provide the current api_base_url.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="s2">&quot;http://localhost&quot;</span>
-</code></pre></div>
-<p>Subsequent runs of the <code>generate</code> command with <code>--regen t</code> will not change this file if it exists, so you are free to modify the defaults to suit your needs. </p>
-<p>For example, if you need to source the base url of your API for different configurations, you can modify the <code>api_base_url</code> function like this:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_project</span><span class="w"> </span><span class="kn">import</span> <span class="n">my_config</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">api_base_url</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify this function to provide the current api_base_url.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">my_config</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;http://localhost:8000&quot;</span>
-    <span class="k">elif</span> <span class="n">my_config</span><span class="o">.</span><span class="n">production</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">&quot;http://my-production-url.com&quot;</span>
-</code></pre></div>
-<p>Just keep the function names the same and you're good to go.</p>
-<h3 id="authentication">Authentication</h3>
-<p>If your OpenAPI spec provides security information for the following authentication methods:</p>
-<ul>
-<li>HTTP Bearer</li>
-<li>HTTP Basic</li>
-</ul>
-<p>Then clientele will provide you information on the environment variables you need to set to
-make this work during the generation. For example:</p>
-<div class="highlight"><pre><span></span><code>Please<span class="w"> </span>see<span class="w"> </span>my_client/config.py<span class="w"> </span>to<span class="w"> </span><span class="nb">set</span><span class="w"> </span>authentication<span class="w"> </span>variables
-</code></pre></div>
-<p>The <code>config.py</code> file will have entry points for you to configure, for example, HTTP Bearer authentication will need the <code>get_bearer_token</code> function to be updated, something like this:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_bearer_token</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    HTTP Bearer authentication.</span>
-<span class="sd">    Used by many authentication methods - token, jwt, etc.</span>
-<span class="sd">    Does not require the &quot;Bearer&quot; content, just the key as a string.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">environ</span>
-    <span class="k">return</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MY_AUTHENTICATION_TOKEN&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="additional-headers">Additional headers</h3>
-<p>If you want to pass specific headers with all requests made by the client, you can configure the <code>additional_headers</code> function in <code>config.py</code> to do this.</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">additional_headers</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Modify this function to provide additional headers to all</span>
-<span class="sd">    HTTP requests made by this client.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="p">{}</span>
-</code></pre></div>
-<p>Note that if you're using authentication headers, the authentication headers <strong>will overwrite these defaults</strong> if the keys match.</p>
+<p>See <a href="../configuration/">configuration</a>.</p>
 
 
 

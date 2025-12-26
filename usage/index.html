@@ -432,42 +432,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Usage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dynamic-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Dynamic Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#async-class-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Async Class-Based Client
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-class-based-clients" class="md-nav__link">
-    <span class="md-ellipsis">
-      When to Use Class-Based Clients
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -477,6 +441,24 @@
   <a href="#generate-basic" class="md-nav__link">
     <span class="md-ellipsis">
       generate-basic
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functional-vs-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functional vs Class
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
     </span>
   </a>
   
@@ -541,15 +523,6 @@
   <a href="#handling-breaking-changes" class="md-nav__link">
     <span class="md-ellipsis">
       Handling Breaking Changes
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#regenerating-vs-fresh-generation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Regenerating vs. Fresh Generation
     </span>
   </a>
   
@@ -736,6 +709,29 @@
             Documentation
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1069,42 +1065,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#example-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Example Usage
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#dynamic-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Dynamic Configuration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#async-class-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Async Class-Based Client
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-class-based-clients" class="md-nav__link">
-    <span class="md-ellipsis">
-      When to Use Class-Based Clients
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -1114,6 +1074,24 @@
   <a href="#generate-basic" class="md-nav__link">
     <span class="md-ellipsis">
       generate-basic
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#functional-vs-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      Functional vs Class
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
     </span>
   </a>
   
@@ -1184,15 +1162,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#regenerating-vs-fresh-generation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Regenerating vs. Fresh Generation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#integration-with-cicd" class="md-nav__link">
     <span class="md-ellipsis">
       Integration with CI/CD
@@ -1228,26 +1197,22 @@
 <h1 id="use-clientele">📝 Use Clientele</h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can type <code>clientele COMMAND --help</code> at anytime to see explicit information about the available arguments.</p>
+<p>You can type <code>clientele COMMAND --help</code> at anytime to see information about the available arguments.</p>
 </div>
 <h2 id="client-types">Client Types</h2>
-<p>Clientele offers three types of client generators:</p>
+<p>Clientele offers five types of generators:</p>
 <ol>
-<li><strong><code>generate</code></strong> - Standard function-based client (recommended for most use cases)</li>
-<li><strong><code>generate-class</code></strong> - Class-based client with methods</li>
-<li><strong><code>generate-basic</code></strong> - Basic file structure with no generated code</li>
+<li><strong><code>generate</code></strong> - a function-based client either as async or sync.</li>
+<li><strong><code>generate-class</code></strong> - a class-based client either as async or sync.</li>
+<li><strong><code>generate-basic</code></strong> - Basic file structure with no generated code.</li>
 </ol>
 <h2 id="generate"><code>generate</code></h2>
-<p>Generate a Python HTTP Client from an OpenAPI Schema.</p>
+<p>Generate a function-based Python HTTP Client from an OpenAPI Schema.</p>
 <h3 id="from-a-url">From a URL</h3>
 <p>Use the <code>-u</code> or <code>--url</code> argument.</p>
 <p><code>-o</code> or <code>--output</code> is the target directory for the generated client.</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The example above uses one of our test schemas, and will work if you copy/paste it!</p>
-</div>
 <h3 id="from-a-file">From a file</h3>
 <p>Alternatively you can provide a local file using the <code>-f</code> or <code>--file</code> argument.</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/
@@ -1257,127 +1222,50 @@
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
 </code></pre></div>
 <h2 id="generate-class"><code>generate-class</code></h2>
-<p>Generate a class-based Python HTTP Client from an OpenAPI Schema. This generator creates a <code>Client</code> class with methods for each API endpoint.</p>
+<p>Generate a class-based Python HTTP Client from an OpenAPI Schema. This generator creates a <code>Client</code> class object with methods for each API endpoint instead of functions in a module.</p>
 <h3 id="usage">Usage</h3>
 <p>The <code>generate-class</code> command accepts the same arguments as <code>generate</code>:</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-class<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
-<h3 id="example-usage">Example Usage</h3>
-<p>With a class-based client, you instantiate the <code>Client</code> class and call methods:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
-
-<span class="c1"># Create a client instance with default configuration</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-
-<span class="c1"># Call API methods</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataRequest</span><span class="p">(</span><span class="n">my_input</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">request_data_request_data_post</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-
-<span class="c1"># Handle responses</span>
-<span class="k">match</span> <span class="n">response</span><span class="p">:</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">RequestDataResponse</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Success: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation error: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="dynamic-configuration">Dynamic Configuration</h3>
-<p>Class-based clients support dynamic configuration, allowing you to create multiple clients with different settings:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
-
-<span class="c1"># Create a client with custom configuration</span>
-<span class="n">custom_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
-    <span class="n">api_base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
-    <span class="n">bearer_token</span><span class="o">=</span><span class="s2">&quot;my-auth-token&quot;</span><span class="p">,</span>
-    <span class="n">additional_headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;X-Custom-Header&quot;</span><span class="p">:</span> <span class="s2">&quot;value&quot;</span><span class="p">}</span>
-<span class="p">)</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">custom_config</span><span class="p">)</span>
-
-<span class="c1"># Create multiple clients with different configurations</span>
-<span class="n">prod_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
-    <span class="n">api_base_url</span><span class="o">=</span><span class="s2">&quot;https://api.production.com&quot;</span><span class="p">,</span>
-    <span class="n">bearer_token</span><span class="o">=</span><span class="s2">&quot;prod-token&quot;</span>
-<span class="p">)</span>
-<span class="n">dev_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
-    <span class="n">api_base_url</span><span class="o">=</span><span class="s2">&quot;https://api.development.com&quot;</span><span class="p">,</span>
-    <span class="n">bearer_token</span><span class="o">=</span><span class="s2">&quot;dev-token&quot;</span>
-<span class="p">)</span>
-
-<span class="n">prod_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">prod_config</span><span class="p">)</span>
-<span class="n">dev_client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">dev_config</span><span class="p">)</span>
-
-<span class="c1"># Each client uses its own configuration</span>
-<span class="n">prod_response</span> <span class="o">=</span> <span class="n">prod_client</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
-<span class="n">dev_response</span> <span class="o">=</span> <span class="n">dev_client</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
-</code></pre></div>
-<p>The <code>Config</code> class supports the following parameters:</p>
-<ul>
-<li><code>api_base_url</code>: Base URL for the API (default: <code>"http://localhost"</code>)</li>
-<li><code>additional_headers</code>: Additional headers to include in all requests (default: <code>{}</code>)</li>
-<li><code>user_key</code>: Username for HTTP Basic authentication (default: <code>"user"</code>)</li>
-<li><code>pass_key</code>: Password for HTTP Basic authentication (default: <code>"password"</code>)</li>
-<li><code>bearer_token</code>: Token for HTTP Bearer authentication (default: <code>"token"</code>)</li>
-</ul>
-<p>This makes it easy to:
-- Switch between different API environments (dev, staging, production)
-- Use different authentication tokens for different users or sessions
-- Add custom headers per client instance
-- Test your code with mock configurations</p>
-<h3 id="async-class-based-client">Async Class-Based Client</h3>
-<p>You can generate an async class-based client as well:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-class<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
-</code></pre></div>
-<p>Then use it with async/await:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_async_client.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_async_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
-
-<span class="c1"># With default configuration</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
-
-<span class="c1"># With custom configuration</span>
-<span class="n">custom_config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">api_base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">custom_config</span><span class="p">)</span>
-<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
-</code></pre></div>
-<h3 id="when-to-use-class-based-clients">When to Use Class-Based Clients</h3>
-<p>Use class-based clients when:</p>
-<ul>
-<li>You prefer object-oriented programming style</li>
-<li>You want to easily mock the client for testing</li>
-<li>You need to maintain state or configuration in the client instance</li>
-<li>You want to subclass and extend the client behavior</li>
-<li><strong>You need dynamic configuration or multiple clients with different settings</strong></li>
-</ul>
-<p>Use function-based clients (<code>generate</code>) when:</p>
-<ul>
-<li>You prefer functional programming style</li>
-<li>You want the simplest possible client with no boilerplate</li>
-<li>You don't need to maintain state between requests</li>
-<li>You only need a single static configuration</li>
-</ul>
 <h2 id="generate-basic">generate-basic</h2>
 <p>The <code>generate-basic</code> command can be used to generate a basic file structure for an HTTP client.</p>
-<p>It does not require an OpenAPI schema, just a path.</p>
-<p>This command serves two purposes:</p>
-<ol>
-<li>You may have an HTTP API without an OpenAPI schema and you want to keep a consistent file structure with other Clientele clients.</li>
-<li>The generator for this basic client can be extended for your own client in the future, if you choose.</li>
-</ol>
+<p>It does not require an OpenAPI schema. It does not generate any code.</p>
+<p>This command is there for when have an HTTP API without an OpenAPI schema, but you want to keep a consistent file structure with other Clientele clients.</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-basic<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
+<h2 id="functional-vs-class">Functional vs Class</h2>
+<p>Use function-based clients (<code>generate</code>) when:</p>
+<ul>
+<li>You prefer a functional programming style.</li>
+<li>You want the simplest possible client.</li>
+<li>You don't need to maintain state between requests.</li>
+<li>You only need a single static configuration.</li>
+</ul>
+<p>Use class-based (<code>generate-class</code>) clients when:</p>
+<ul>
+<li>You prefer an object-oriented programming style.</li>
+<li>You need to maintain state or configuration in the client instance.</li>
+<li>You want to subclass and extend the client behavior.</li>
+<li>You need dynamic configuration or multiple clients with different settings.</li>
+</ul>
+<h2 id="configuration">Configuration</h2>
+<p>See the <a href="../configuration/">Configuration Guide</a>.</p>
 <h2 id="explore"><code>explore</code></h2>
 <p>Run the explorer mode. See <a href="../explore/">explore</a>.</p>
 <h2 id="version"><code>version</code></h2>
 <p>Print the current version of Clientele:</p>
-<div class="highlight"><pre><span></span><code>&gt;<span class="w"> </span>clientele<span class="w"> </span>version
-Clientele<span class="w"> </span><span class="m">1</span>.0.0
+<div class="highlight"><pre><span></span><code>```sh
+&gt; clientele version
+Clientele 1.0.0
+```
 </code></pre></div>
 <h2 id="regenerating">Regenerating</h2>
-<p>At times you may wish to regenerate the client. This could be because the API has updated or you just want to use a newer version of clientele.</p>
+<p>At times you may wish to regenerate the client. </p>
+<p>This could be because the API has updated or you just want to use a newer version of Clientele.</p>
 <p>To force a regeneration you must pass the <code>--regen</code> or <code>-r</code> argument, for example:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w">  </span>--regen<span class="w"> </span>t
+<div class="highlight"><pre><span></span><code>```sh
+clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
+```
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -1407,40 +1295,47 @@ Clientele<span class="w"> </span><span class="m">1</span>.0.0
 <li>Generation timestamp</li>
 </ul>
 <p>Example <code>MANIFEST.md</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="gh"># Manifest</span>
+<div class="highlight"><pre><span></span><code># Manifest
 
-Generated with [<span class="nt">https://github.com/phalt/clientele</span>](<span class="na">https://github.com/phalt/clientele</span>)
+Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
 Install with pipx:
 
 ```sh
 pipx install clientele
-</code></pre></div>
-<p>API VERSION: 0.1.0
+```
+
+API VERSION: 0.1.0
 OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 1.0.0</p>
-<p>Regenerate using this command:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>tests/async_test_client/<span class="w"> </span>--asyncio<span class="w"> </span>t<span class="w"> </span>--regen<span class="w"> </span>t
+CLIENTELE VERSION: 1.0.0
+
+Regenerate using this command:
+
+```sh
+clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
+```
+
+Explore this API interactively:
+
+```sh
+clientele explore -c .
+```
 </code></pre></div>
-<p>You can copy the command directly from this file to regenerate your client.</p>
 <h3 id="regeneration-workflow">Regeneration Workflow</h3>
 <p>Here's the recommended workflow for keeping your client in sync:</p>
 <ol>
 <li><strong>API Updated</strong>: Your API has new endpoints or changed schemas</li>
 <li><strong>Regenerate</strong>: Run <code>clientele generate</code> with <code>--regen t</code>
-   <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen<span class="w"> </span>t
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen<span class="w"> </span>t
 </code></pre></div></li>
 <li><strong>Review Changes</strong>: Use git to see what changed
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>diff<span class="w"> </span>my_client/
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>diff<span class="w"> </span>my_client/
 </code></pre></div></li>
-<li><strong>Inspect</strong>: Look at:</li>
-<li>New functions in <code>client.py</code></li>
-<li>Modified schemas in <code>schemas.py</code></li>
-<li>Changes to function signatures</li>
+<li><strong>Inspect</strong> the changes.</li>
 <li><strong>Test</strong>: Run your test suite to catch breaking changes
-   <div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/
+<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/
 </code></pre></div></li>
 <li><strong>Commit</strong>: Add the changes to git
-   <div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>my_client/
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>my_client/
 git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Regenerate client for API v2.1&quot;</span>
 </code></pre></div></li>
 </ol>
@@ -1452,23 +1347,8 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <li><strong>New required fields</strong> → Function signatures updated</li>
 <li><strong>Changed response types</strong> → Schema unions modified</li>
 </ul>
-<p>Your tests should catch these issues. If you need to support multiple API versions, consider:</p>
-<ul>
-<li>Generating separate clients for each version</li>
-<li>Using version-specific directories (e.g., <code>my_client_v1/</code>, <code>my_client_v2/</code>)</li>
-</ul>
-<h3 id="regenerating-vs-fresh-generation">Regenerating vs. Fresh Generation</h3>
-<p><strong>Regenerating</strong> (<code>--regen t</code>):</p>
-<ul>
-<li>Overwrites most files except <code>config.py</code></li>
-<li>Preserves your configuration</li>
-<li>Intended for updating an existing client</li>
-</ul>
-<p><strong>Fresh Generation</strong> (without <code>--regen</code>):</p>
-<ul>
-<li>Will fail if the output directory already exists</li>
-<li>Use for creating a new client from scratch</li>
-</ul>
+<p>You should have tests to catch these issues.</p>
+<p>If you need to support multiple API versions, consider generating separate clients for each version sing version-specific directories (e.g., <code>my_client_v1/</code>, <code>my_client_v2/</code>).</p>
 <h3 id="integration-with-cicd">Integration with CI/CD</h3>
 <p>You can automate regeneration in CI/CD:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Example GitHub Actions workflow</span>
