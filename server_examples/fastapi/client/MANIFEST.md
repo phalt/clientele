@@ -14,7 +14,7 @@ CLIENTELE VERSION: 1.0.0
 Regenerate using this command:
 
 ```sh
-clientele generate -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client  --regen t
+clientele generate -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/  --regen t
 ```
 
 Explore this API interactively:
