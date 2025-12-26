@@ -4,7 +4,9 @@
 
 Version 1.0.0 represents 12 months of work, planning, testing and using clientele with real APIs. It has major new features and some breaking changes. I recommend completely deleting your previous clients and rebuilding to ensure a smooth rollout.
 
-For most of this year I've been constrained by a lack of time to build the features I have planned. With the assistance of supervised agents I have been able to build out most of what I needed, and then spent time correcting and improving the agent's code to be functionally correct. The productivity boost has been immense and has helped me to realise the goals and ambitions I have for this project.
+For most of this year I've been constrained by a lack of time to build the features I have planned. With the assistance of supervised agents I have been able to build out most of what I needed, and then spent time correcting and improving the agent's code to be functionally correct. 
+
+The productivity boost has been immense and has helped me to realise the goals and ambitions I have for this project.
 
 ### Major new features
 
