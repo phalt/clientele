@@ -1,8 +1,9 @@
 # Change log
 
-## Unreleased
+## 1.1.0
 
-- **Improved**: Schema inspection in explore REPL - typing a schema name without parentheses now displays the schema's docstring and fields instead of the verbose inherited Pydantic BaseModel documentation.
+- Schema inspection in explore REPL has been improved. Typing a schema name without parentheses now displays the schema's docstring and fields instead of the verbose inherited Pydantic BaseModel documentation.
+- Config objects now handle correctly in explore REPL. Supports old style config functions and the new style classes
 
 ## 1.0.1
 
