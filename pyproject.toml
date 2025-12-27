@@ -18,7 +18,6 @@ dependencies = [
     "ruff>=0.14.10",
     "prompt_toolkit>=3.0.0,<4.0.0",
     "cli-helpers>=2.4.0",
-    "fastapi[standard]>=0.127.0",
 ]
 
 [project.urls]
@@ -32,6 +31,7 @@ clientele = "clientele.cli:cli_group"
 
 [dependency-groups]
 dev = [
+    "fastapi[standard]>=0.127.0",
     "ty",
     "mkdocs>=1.6.1",
     "ipython>=8.37.0",
@@ -71,7 +71,11 @@ select = [
 ]
 
 [tool.coverage.run]
-omit = ["*/templates/*.jinja2", "clientele/generators/*/templates/*.jinja2", "server_examples/*"]
+omit = [
+    "*/templates/*.jinja2",
+    "clientele/generators/*/templates/*.jinja2",
+    "server_examples/*",
+]
 
 [tool.coverage.report]
 exclude_lines = [
