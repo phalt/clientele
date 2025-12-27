@@ -16,6 +16,10 @@ class HTTPValidationError(pydantic.BaseModel):
 
 
 class UserResponse(pydantic.BaseModel):
+    """Represents a user in the system.
+    
+    This schema is returned when fetching user information.
+    """
     id: int
     name: str
     email: str
