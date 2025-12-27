@@ -36,22 +36,22 @@ class CommandHandler:
 
     def _get_config_instance(self, config_module):
         """Get or create a config instance from the config module.
-        
+
         This handles three cases:
         1. Module has a singleton 'config' instance (functional clients)
         2. Module has a 'Config' class but no singleton (class-based clients)
         3. Old function-based config (backward compatibility)
-        
+
         Args:
             config_module: The loaded config module
-            
+
         Returns:
             The config instance if available, None otherwise
         """
         # Case 1: Module has singleton config instance
         if hasattr(config_module, "config"):
             return config_module.config
-        
+
         # Case 2: Module has Config class but no singleton - create temporary instance
         if hasattr(config_module, "Config"):
             # Reuse the same temporary instance across calls
@@ -63,7 +63,7 @@ class CommandHandler:
                     # If instantiation fails, we can't use this config
                     return None
             return self._temp_config_instance
-        
+
         # Case 3: Old function-based config (return None, will be handled separately)
         return None
 
@@ -339,7 +339,7 @@ class CommandHandler:
 
         # Get config instance (if available)
         config_instance = self._get_config_instance(config_module)
-        
+
         # Map of display names to attribute/function names
         config_attrs = {
             "base_url": "api_base_url",
@@ -385,12 +385,7 @@ class CommandHandler:
                         continue
 
                 # Mask sensitive values
-                if (
-                    display_name in ["bearer_token", "pass_key"]
-                    and value
-                    and value != "token"
-                    and value != "password"
-                ):
+                if display_name in ["bearer_token", "pass_key"] and value and value != "token" and value != "password":
                     value = "***" + value[-4:] if len(value) > 4 else "***"
 
                 table.add_row(display_name, str(value), source)
@@ -482,7 +477,7 @@ class CommandHandler:
 
         # Get or create config instance using the helper method
         config_instance = self._get_config_instance(config_module)
-        
+
         if config_instance is not None:
             # New Pydantic Config format: Update the instance attribute
             if hasattr(config_instance, attr_name):
