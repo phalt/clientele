@@ -56,7 +56,12 @@ class CommandHandler:
         if hasattr(config_module, "Config"):
             # Reuse the same temporary instance across calls
             if self._temp_config_instance is None:
-                self._temp_config_instance = config_module.Config()
+                try:
+                    # Try to instantiate with no arguments (default config)
+                    self._temp_config_instance = config_module.Config()
+                except Exception:
+                    # If instantiation fails, we can't use this config
+                    return None
             return self._temp_config_instance
         
         # Case 3: Old function-based config (return None, will be handled separately)
@@ -483,8 +488,10 @@ class CommandHandler:
             if hasattr(config_instance, attr_name):
                 setattr(config_instance, attr_name, value)
         else:
-            # Old format: Replace the function with a lambda that returns the new value
-            # Map to old function names
+            # Old function-based config format: Replace the function with a lambda
+            # The old format had functions like get_bearer_token() that returned config values.
+            # We replace these with lambdas that return the overridden value.
+            # Map display names to old function names
             old_func_map = {
                 "base_url": "api_base_url",
                 "bearer_token": "get_bearer_token",
@@ -493,7 +500,8 @@ class CommandHandler:
             }
             func_name = old_func_map.get(key)
             if func_name and hasattr(config_module, func_name):
-                # Capture value at definition time to avoid lambda closure issue
+                # Replace the old function with a new one that returns the override value
+                # Note: Captures value at definition time (v=value) to avoid late-binding closure issues
                 setattr(config_module, func_name, lambda v=value: v)
 
     def _handle_debug(self, arg: str | None) -> None:
