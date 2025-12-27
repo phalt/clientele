@@ -216,3 +216,13 @@ def test_inspect_nonexistent_schema_falls_through(repl):
 
         # Should not call _show_schema_detail
         mock_show_schema.assert_not_called()
+
+
+def test_inspect_invalid_identifier_falls_through(repl):
+    """Test that typing an invalid identifier doesn't trigger schema inspection."""
+    with patch.object(repl.command_handler, "_show_schema_detail") as mock_show_schema:
+        # Type something that's not a valid identifier
+        repl._execute_operation("not a valid identifier")
+
+        # Should not call _show_schema_detail
+        mock_show_schema.assert_not_called()
