@@ -293,9 +293,12 @@ class ClientIntrospector:
             return None
 
         schema_class = schemas[schema_name]
+        # Use __doc__ directly instead of inspect.getdoc() to avoid inheriting
+        # from parent classes (like pydantic.BaseModel's verbose docstring)
+        docstring = schema_class.__doc__
         info: dict[str, typing.Any] = {
             "name": schema_name,
-            "docstring": inspect.getdoc(schema_class),
+            "docstring": docstring,
             "fields": {},
         }
 
