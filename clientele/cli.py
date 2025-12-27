@@ -29,6 +29,10 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
 
     Normalization must happen BEFORE parsing with cicerone to avoid validation errors
     on OpenAPI 3.1 features like type arrays (e.g., type: ['string', 'null']).
+
+    Note: This function only normalizes OpenAPI 3.x specs. Swagger 2.x specs are
+    parsed as-is and will be auto-converted by cicerone (though they should be
+    rejected by _prepare_spec).
     """
     import json
     import pathlib
@@ -69,8 +73,14 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
     else:  # pragma: no cover - guarded by the assert above
         raise AssertionError("Must pass either a URL or a file")
 
-    # Normalize OpenAPI 3.1 features before parsing with cicerone
-    normalized_spec_dict = normalize_openapi_31_spec(spec_dict)
+    # Only normalize if this is OpenAPI 3.x (not Swagger 2.x)
+    # Check for 'openapi' field to identify OpenAPI 3.x specs
+    if "openapi" in spec_dict:
+        # Normalize OpenAPI 3.1 features before parsing with cicerone
+        normalized_spec_dict = normalize_openapi_31_spec(spec_dict)
+    else:
+        # Swagger 2.x or other format - parse as-is
+        normalized_spec_dict = spec_dict
 
     # Parse with cicerone
     return cicerone_parse.parse_spec_from_dict(normalized_spec_dict)

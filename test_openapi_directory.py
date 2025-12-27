@@ -52,18 +52,41 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
     """Test generating a client for a single schema file.
 
     Returns:
-        Tuple of (status: str, error_message: str, exception: Exception | None)
+        Tuple of (status: str, error_message: str, exception: Exception | None]
         where status is one of: "success", "skipped", "failed"
     """
     try:
-        # Use centralized loading function that handles OpenAPI 3.1 normalization
+        # First, check if this is a Swagger 2.x file before attempting to load
+        # Cicerone cannot parse Swagger 2.x specs properly
+        import json
+
+        import yaml
+
+        content = schema_path.read_text()
+
+        # Parse to dict based on file extension
+        if schema_path.suffix.lower() in [".yaml", ".yml"]:
+            spec_dict = yaml.safe_load(content)
+        else:
+            spec_dict = json.loads(content)
+
+        # Check if this is a Swagger 2.x file
+        if "swagger" in spec_dict:
+            swagger_version = str(spec_dict["swagger"])
+            # Check if it's Swagger 2.x (2.0, 2.1, etc.)
+            try:
+                if swagger_version.split(".")[0] == "2":
+                    return "skipped", f"Swagger {swagger_version} (not supported, clientele requires OpenAPI 3.x)", None
+            except (IndexError, ValueError):
+                pass  # If we can't parse version, continue with OpenAPI check
+
+        # Now use centralized loading function that handles OpenAPI 3.1 normalization
         spec = _load_openapi_spec(file=str(schema_path))
 
         # Basic validation - ensure we got a spec with some content
         if spec is None:
             return "failed", "Parsed spec is None", None
 
-        # Check if this is a Swagger 2.x file
         # Check version from parsed spec
         version_parts = str(spec.version).split(".")
         if not version_parts or not version_parts[0]:
@@ -76,10 +99,6 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
 
         # Clientele requires OpenAPI 3.x
         if major < 3:
-            # Check if it's actually Swagger 2.x
-            if "swagger" in spec.raw:
-                swagger_version = str(spec.raw.get("swagger", ""))
-                return "skipped", f"Swagger {swagger_version} (not supported, clientele requires OpenAPI 3.x)", None
             return "skipped", f"OpenAPI {spec.version} (clientele requires 3.x)", None
 
         # Try to generate a client in a temporary directory
