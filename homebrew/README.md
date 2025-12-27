@@ -12,7 +12,6 @@ Homebrew is a popular package manager for macOS and Linux. Publishing clientele 
 
 ## Files
 
-- `clientele.rb.template` - (Deprecated) Template for the Homebrew formula - now generated programmatically
 - `generate_formula.py` - Python script to auto-generate the formula with all dependencies
 - `clientele.rb` - Generated Homebrew formula (created by running the script)
 
