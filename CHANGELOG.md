@@ -4,7 +4,7 @@
 
 Version 1.0.0 represents 12 months of work, planning, testing and using clientele with real APIs. It has major new features and some breaking changes. I recommend completely deleting your previous clients and rebuilding to ensure a smooth rollout.
 
-For most of this year I've been constrained by a lack of time to build the features I have planned. With the assistance of supervised agents I have been able to build out most of what I needed, and then spent time correcting and improving the agent's code to be functionally correct. 
+For most of this year I've been constrained by a lack of time to build the features I have planned. With the assistance of supervised agents I have been able to build out most of what I needed, and then spent time correcting and improving the agent's code to be functionally correct.
 
 The productivity boost has been immense and has helped me to realise the goals and ambitions I have for this project.
 
@@ -12,6 +12,7 @@ The productivity boost has been immense and has helped me to realise the goals a
 
 - 🆕 **Explorer CLI**: Use `clientele explore` to use a REPL and discover APIs interactively, even without writing any code.
 - ⚙️ **Rebuilt configuration**: `config.py` has been re-engineered to use [pydantic settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/).
+- 📜 **Rebuilt parser** - parsing OpenAPI schema into python objects is now handled entirely by [Cicerone](https://github.com/phalt/cicerone), our own OpenAPI parser that was built to meet our unique needs.
 - Clientele now specifically offers 100% support for all major Python API frameworks: FastAPI, Django REST Framework, and Django-Ninja.
 - Clientele is now tested and proven to generate clients for 2000+ openapi schemas as part of our CI. It runs weekly and we use it to ensure broad capability with all OpenAPI services.
 
