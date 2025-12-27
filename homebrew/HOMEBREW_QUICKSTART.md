@@ -5,7 +5,6 @@
 ## ✅ What's Already Done
 
 All the tooling is ready! The repository includes:
-- ✅ Formula template (`homebrew/clientele.rb.template`)
 - ✅ Automatic formula generator (`homebrew/generate_formula.py`)
 - ✅ Makefile commands (`brew-formula`, `brew-verify`, `brew-test-local`)
 - ✅ Documentation (HOMEBREW_SETUP.md, HOMEBREW_PUBLISHING.md)
