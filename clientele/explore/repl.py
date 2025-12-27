@@ -108,6 +108,15 @@ Press [bold]TAB[/bold] for autocomplete
         Args:
             text: Operation call text (e.g., "get_users(limit=10)")
         """
+        # Check if user is trying to inspect a schema (no parentheses)
+        if "(" not in text:
+            # Check if this matches a schema name
+            schemas = self.introspector.get_all_schemas()
+            if text in schemas:
+                # Display schema information
+                self.command_handler._show_schema_detail(text)
+                return
+
         try:
             # Parse the operation call
             operation_name, args = self._parse_operation(text)

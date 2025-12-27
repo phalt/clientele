@@ -72,6 +72,44 @@ The REPL will:
 - Display timing information
 - Format the response with syntax highlighting
 
+### Inspect Schemas
+
+You can inspect Pydantic schemas by simply typing their name (without parentheses):
+
+```sh
+>>> UserResponse
+╭─────────────────────────────── UserResponse ───────────────────────────────╮
+│ User response model containing user information.                           │
+╰────────────────────────────────────────────────────────────────────────────╯
+
+Fields:
+┏━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━┓
+┃ Field   ┃ Type   ┃ Required ┃
+┡━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━┩
+│ id      │ int    │ ✓        │
+│ name    │ str    │ ✓        │
+│ email   │ str    │ ✓        │
+│ active  │ bool   │ ✗        │
+└─────────┴────────┴──────────┘
+
+Total: 4 fields
+```
+
+This displays:
+- The schema's docstring (if it has one)
+- All fields with their types
+- Whether each field is required or optional
+
+You can also use the `/schemas` command to list all available schemas or view specific schema details:
+
+```sh
+# List all schemas
+>>> /schemas
+
+# View a specific schema
+>>> /schemas UserResponse
+```
+
 ### Special Commands
 
 Commands starting with `/` provide additional functionality:
