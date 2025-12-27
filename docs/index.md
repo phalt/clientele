@@ -166,7 +166,7 @@ Any framework or tool that generates standards-compliant OpenAPI schemas should 
 
 We test Clientele against 2000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) through a CI cron job.
 
-As of our latest run, we successfully generate clients for **93.86%** of schemas in the directory.
+As of our latest run, we successfully generate clients for **95.39%** of schemas in the directory.
 
 ![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
 
