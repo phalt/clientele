@@ -95,8 +95,19 @@ class RequestExecutor:
                     config_module_name = f"{package_name}.config"
                     if config_module_name in sys.modules:
                         config_module = sys.modules[config_module_name]
-                        if hasattr(config_module, "api_base_url"):
-                            debug_info["base_url"] = config_module.api_base_url()
+                        # Try new Pydantic Config class format first
+                        if hasattr(config_module, "config"):
+                            config_instance = config_module.config
+                            if hasattr(config_instance, "api_base_url"):
+                                debug_info["base_url"] = config_instance.api_base_url
+                        # Fall back to old function-based format
+                        elif hasattr(config_module, "api_base_url"):
+                            api_base_url = config_module.api_base_url
+                            # Call if it's a function
+                            if callable(api_base_url):
+                                debug_info["base_url"] = api_base_url()
+                            else:
+                                debug_info["base_url"] = api_base_url
                 except Exception:
                     pass
 
