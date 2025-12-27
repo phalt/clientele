@@ -30,7 +30,7 @@ Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP 
 - **Minimal footprint** - the generated code is readable, debuggable Python with only two dependencies.
 - **Regeneration-friendly** - update your API, regenerate, review the git diff, ship it!
 - **API REPL** - a dedicated REPL for exploring and testing the client.
-- **Deterministic**: No exepensive LLMs, no hallucinations - same input always produces same output.
+- **Deterministic**: No expensive LLMs, no hallucinations - same input always produces same output.
 
 ### When to Use Clientele
 
@@ -47,11 +47,31 @@ Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP 
 - And you want to offer a client library in Python
 - And you don't want the overhead of maintaining it
 
+## Installation
+
+Clientele can be installed in several ways:
+
+### Using UV (Recommended)
+
+```sh
+uv tool install clientele
+```
+
+### Using Homebrew (macOS/Linux)
+
+```sh
+brew install phalt/clientele/clientele
+```
+
+### Using pip
+
+```sh
+pip install clientele
+```
+
 ## Quick Start
 
 ```sh
-# Best installed as a tool
-uv tool install clientele
 # Generate a client from the PokeAPI OpenAPI schema
 clientele generate -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml -o pokeapi_client/
 # Load the REPL to start testing with the generated code immediately
