@@ -15,20 +15,21 @@ Clientele generates fully-typed, idiomatic python HTTP API clients from OpenAPI 
 
 It is designed and tested to work perfectly with the most popular Python API frameworks:
 
-- **[FastAPI](https://fastapi.tiangolo.com/)**.
-- **[Django REST Framework](https://www.django-rest-framework.org/)** via **[drf-spectacular](https://github.com/tfranzel/drf-spectacular)**.
-- **[Django Ninja](https://django-ninja.dev/)**.
+- **[FastAPI](https://fastapi.tiangolo.com/)**
+- **[Django REST Framework](https://www.django-rest-framework.org/)** via **[drf-spectacular](https://github.com/tfranzel/drf-spectacular)**
+- **[Django Ninja](https://django-ninja.dev/)**
 
 ## What Clientele Does
 
 Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP client with:
 
+- **Developer first approach** designed for a loveable developer experience.
 - **Pydantic models** for request and response validation.
 - **Fully-typed function signatures** for IDE autocomplete and type checking.
-- **Async support** through httpx if you need it.
-- **Your preferences** - class-based or functional, you can choose.
-- **Minimal footprint** - the generated code is readable, debuggable Python with only two dependencies.
-- **Regeneration-friendly** - update your API, regenerate, review the git diff, ship it!
+- **Async support** if you want a concurrent client.
+- **Multiple formats** - class-based or functional, you can choose.
+- **Tiny output** - the generated code is readable, debuggable Python with only two dependencies.
+- **Regeneration-friendly** - update your API, regenerate, review the git diff, then ship it!
 - **API REPL** - a dedicated REPL for exploring and testing the client.
 - **Deterministic**: No exepensive LLMs, no hallucinations - same input always produces same output.
 
@@ -37,15 +38,15 @@ Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP 
 #### Consumer
 
 - You want to use an HTTP API that has an OpenAPI schema
-- And you want to consume that API from another Python service
-- And you need type safety and validation without manual schema maintenance
+- And you want to consume that API from a Python application
+- And you want type safety and validation without manual schema maintenance
 - And you want code that is readable, maintainable, and extendable to suit your project
 
 #### Publisher
 
 - You have an HTTP API that has an OpenAPI schema
 - And you want to offer a client library in Python
-- And you don't want the overhead of maintaining it
+- And you want developers to love using the client
 
 ## Quick Start
 
