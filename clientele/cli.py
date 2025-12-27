@@ -26,8 +26,14 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
     """
     Load OpenAPI spec from URL or file using cicerone's parsers, normalizing
     OpenAPI 3.1 schemas for cicerone compatibility when needed.
-    """
 
+    Normalization must happen BEFORE parsing with cicerone to avoid validation errors
+    on OpenAPI 3.1 features like type arrays (e.g., type: ['string', 'null']).
+    """
+    import json
+    import pathlib
+
+    import yaml
     from cicerone import parse as cicerone_parse
 
     from clientele.generators.cicerone_compat import normalize_openapi_31_spec
@@ -35,17 +41,39 @@ def _load_openapi_spec(url: str | None = None, file: str | None = None):
     assert url or file, "Must pass either a URL or a file"
 
     if url is not None:
-        spec = cicerone_parse.parse_spec_from_url(url)
+        # For URLs, we need to fetch and parse the content first
+        import urllib.request
+
+        with urllib.request.urlopen(url) as response:
+            content = response.read().decode("utf-8")
+
+        # Try to determine format from URL or content
+        if url.endswith((".yaml", ".yml")):
+            spec_dict = yaml.safe_load(content)
+        else:
+            # Try JSON first, fall back to YAML
+            try:
+                spec_dict = json.loads(content)
+            except json.JSONDecodeError:
+                spec_dict = yaml.safe_load(content)
     elif file is not None:
-        spec = cicerone_parse.parse_spec_from_file(file)
+        # Read file content
+        file_path = pathlib.Path(file)
+        content = file_path.read_text()
+
+        # Parse based on file extension
+        if file_path.suffix.lower() in [".yaml", ".yml"]:
+            spec_dict = yaml.safe_load(content)
+        else:
+            spec_dict = json.loads(content)
     else:  # pragma: no cover - guarded by the assert above
         raise AssertionError("Must pass either a URL or a file")
 
-    normalized_raw = normalize_openapi_31_spec(spec.raw)
-    if normalized_raw is spec.raw:
-        return spec
+    # Normalize OpenAPI 3.1 features before parsing with cicerone
+    normalized_spec_dict = normalize_openapi_31_spec(spec_dict)
 
-    return cicerone_parse.parse_spec_from_dict(normalized_raw)
+    # Parse with cicerone
+    return cicerone_parse.parse_spec_from_dict(normalized_spec_dict)
 
 
 def _prepare_spec(console, url: str | None = None, file: str | None = None):

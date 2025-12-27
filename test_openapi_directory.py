@@ -16,9 +16,7 @@ import sys
 import tempfile
 from typing import List, Tuple
 
-from cicerone import parse as cicerone_parse
-
-from clientele.generators.cicerone_compat import normalize_openapi_31_spec
+from clientele.cli import _load_openapi_spec
 from clientele.generators.standard.generator import StandardGenerator
 
 
@@ -58,54 +56,31 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
         where status is one of: "success", "skipped", "failed"
     """
     try:
-        # Read the file content and parse it manually to allow normalization
-        import json
-
-        import yaml
-
-        content = schema_path.read_text()
-
-        # Parse to dict based on file extension
-        if schema_path.suffix.lower() in [".yaml", ".yml"]:
-            spec_dict = yaml.safe_load(content)
-        else:
-            spec_dict = json.loads(content)
-
-        # Check if this is a Swagger 2.x file
-        if "swagger" in spec_dict:
-            swagger_version = str(spec_dict["swagger"])
-            # Check if it's Swagger 2.x (2.0, 2.1, etc.)
-            try:
-                if swagger_version.split(".")[0] == "2":
-                    return "skipped", f"Swagger {swagger_version} (not supported, clientele requires OpenAPI 3.x)", None
-            except (IndexError, ValueError):
-                pass  # If we can't parse version, continue with OpenAPI check
-
-        # Check OpenAPI version
-        openapi_version = spec_dict.get("openapi", "")
-        version_parts = str(openapi_version).split(".")
-        if not version_parts or not version_parts[0]:
-            return "failed", f"Invalid OpenAPI version format: {openapi_version}", None
-
-        try:
-            major = int(version_parts[0])
-        except (ValueError, TypeError):
-            return "failed", f"Invalid OpenAPI version format: {openapi_version}", None
-
-        # Clientele requires OpenAPI 3.x
-        if major < 3:
-            return "skipped", f"OpenAPI {openapi_version} (clientele requires 3.x)", None
-
-        # Normalize OpenAPI 3.1 specs for compatibility with cicerone
-        # This must happen BEFORE parsing with cicerone
-        normalized_spec_dict = normalize_openapi_31_spec(spec_dict)
-
-        # Now parse with cicerone
-        spec = cicerone_parse.parse_spec_from_dict(normalized_spec_dict)
+        # Use centralized loading function that handles OpenAPI 3.1 normalization
+        spec = _load_openapi_spec(file=str(schema_path))
 
         # Basic validation - ensure we got a spec with some content
         if spec is None:
             return "failed", "Parsed spec is None", None
+
+        # Check if this is a Swagger 2.x file
+        # Check version from parsed spec
+        version_parts = str(spec.version).split(".")
+        if not version_parts or not version_parts[0]:
+            return "failed", f"Invalid OpenAPI version format: {spec.version}", None
+
+        try:
+            major = int(version_parts[0])
+        except (ValueError, TypeError):
+            return "failed", f"Invalid OpenAPI version format: {spec.version}", None
+
+        # Clientele requires OpenAPI 3.x
+        if major < 3:
+            # Check if it's actually Swagger 2.x
+            if "swagger" in spec.raw:
+                swagger_version = str(spec.raw.get("swagger", ""))
+                return "skipped", f"Swagger {swagger_version} (not supported, clientele requires OpenAPI 3.x)", None
+            return "skipped", f"OpenAPI {spec.version} (clientele requires 3.x)", None
 
         # Try to generate a client in a temporary directory
         with tempfile.TemporaryDirectory() as tmpdir:
