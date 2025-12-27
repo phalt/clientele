@@ -684,6 +684,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#inspect-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inspect Schemas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#special-commands" class="md-nav__link">
     <span class="md-ellipsis">
       Special Commands
@@ -1030,6 +1039,15 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#inspect-schemas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Inspect Schemas
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#special-commands" class="md-nav__link">
     <span class="md-ellipsis">
       Special Commands
@@ -1170,6 +1188,36 @@ api_v2_pokemon_encounter_list<span class="w">       </span>pokemon_form_list
 <li>Display timing information</li>
 <li>Format the response with syntax highlighting</li>
 </ul>
+<h3 id="inspect-schemas">Inspect Schemas</h3>
+<p>You can inspect Pydantic schemas by simply typing their name (without parentheses):</p>
+<div class="highlight"><pre><span></span><code>&gt;&gt;&gt;<span class="w"> </span>UserResponse
+╭───────────────────────────────<span class="w"> </span>UserResponse<span class="w"> </span>───────────────────────────────╮
+│<span class="w"> </span>User<span class="w"> </span>response<span class="w"> </span>model<span class="w"> </span>containing<span class="w"> </span>user<span class="w"> </span>information.<span class="w">                           </span>│
+╰────────────────────────────────────────────────────────────────────────────╯
+
+Fields:
+┏━━━━━━━━━┳━━━━━━━━┳━━━━━━━━━━┓
+┃<span class="w"> </span>Field<span class="w">   </span>┃<span class="w"> </span>Type<span class="w">   </span>┃<span class="w"> </span>Required<span class="w"> </span>┃
+┡━━━━━━━━━╇━━━━━━━━╇━━━━━━━━━━┩
+│<span class="w"> </span>id<span class="w">      </span>│<span class="w"> </span>int<span class="w">    </span>│<span class="w"> </span>✓<span class="w">        </span>│
+│<span class="w"> </span>name<span class="w">    </span>│<span class="w"> </span>str<span class="w">    </span>│<span class="w"> </span>✓<span class="w">        </span>│
+│<span class="w"> </span>email<span class="w">   </span>│<span class="w"> </span>str<span class="w">    </span>│<span class="w"> </span>✓<span class="w">        </span>│
+│<span class="w"> </span>active<span class="w">  </span>│<span class="w"> </span>bool<span class="w">   </span>│<span class="w"> </span>✗<span class="w">        </span>│
+└─────────┴────────┴──────────┘
+
+Total:<span class="w"> </span><span class="m">4</span><span class="w"> </span>fields
+</code></pre></div>
+<p>This displays:
+- The schema's docstring (if it has one)
+- All fields with their types
+- Whether each field is required or optional</p>
+<p>You can also use the <code>/schemas</code> command to list all available schemas or view specific schema details:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List all schemas</span>
+&gt;&gt;&gt;<span class="w"> </span>/schemas
+
+<span class="c1"># View a specific schema</span>
+&gt;&gt;&gt;<span class="w"> </span>/schemas<span class="w"> </span>UserResponse
+</code></pre></div>
 <h3 id="special-commands">Special Commands</h3>
 <p>Commands starting with <code>/</code> provide additional functionality:</p>
 <p><strong><code>/list</code></strong> or <strong><code>/operations</code></strong> - List all available operations in a table:</p>
