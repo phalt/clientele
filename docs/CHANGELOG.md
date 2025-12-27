@@ -1,5 +1,9 @@
 # Change log
 
+## 1.0.1
+
+- Correct package installation dependencies.
+
 ## 1.0.0
 
 ### 2025-12-27

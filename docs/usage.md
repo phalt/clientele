@@ -97,7 +97,7 @@ Print the current version of Clientele:
 
     ```sh
     > clientele version
-    Clientele 1.0.0
+    Clientele 1.0.1
     ```
 
 ## Regenerating
@@ -156,7 +156,7 @@ Example `MANIFEST.md`:
 
     API VERSION: 0.1.0
     OPENAPI VERSION: 3.0.2
-    CLIENTELE VERSION: 1.0.0
+    CLIENTELE VERSION: 1.0.1
 
     Regenerate using this command:
 
