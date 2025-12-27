@@ -99,6 +99,7 @@ class CommandHandler:
 [bold]Usage:[/bold]
   • Type operation names and press TAB to autocomplete
   • Execute operations with Python-like syntax: [cyan]operation_name(param=value)[/cyan]
+  • Inspect schemas by typing their name: [cyan]SchemaName[/cyan]
   • Use UP/DOWN arrows to navigate command history
 
 [bold]Special Commands:[/bold]
@@ -116,6 +117,7 @@ class CommandHandler:
   [cyan]get_users()[/cyan]                           - Execute operation without parameters
   [cyan]get_user(user_id="123")[/cyan]               - Execute with parameters
   [cyan]create_user(data={"name": "John"})[/cyan]   - Pass complex data
+  [cyan]UserResponse[/cyan]                          - Inspect a schema
   [cyan]/schemas[/cyan]                              - List all schemas
   [cyan]/schemas User[/cyan]                         - Show User schema details
   [cyan]/config[/cyan]                               - Show current config
