@@ -4,7 +4,7 @@ This directory contains the tooling and templates needed to publish clientele on
 
 > **📖 New to Homebrew publishing?** See [HOMEBREW_SETUP.md](HOMEBREW_SETUP.md) for a complete step-by-step setup guide.
 
-> **✨ Recent Fix**: The formula generator now automatically detects all dependencies from `pyproject.toml` and uses binary wheels to avoid Rust/maturin build errors. No manual dependency management needed!
+> **✨ Recent Fix**: The formula generator now automatically detects all dependencies from `pyproject.toml` and includes Rust as a build dependency for packages like pydantic-core and ruff. No manual dependency management needed!
 
 ## Overview
 
@@ -168,18 +168,18 @@ Run `make brew-verify` to see specific issues. Common problems:
 - Ensure all dependencies are included in `pyproject.toml`
 - Check that the entry point is correct (`clientele = "clientele.cli:cli_group"`)
 - Verify the package installs correctly from PyPI
-- For Rust/C extension build errors, ensure binary wheels are used (they are by default)
+- Rust build dependency is included for packages that need it (pydantic-core, ruff)
 
 ## Formula Structure
 
-The formula uses a custom install method with binary wheels:
+The formula uses Homebrew's standard `virtualenv_install_with_resources` method:
 
 1. Creates an isolated Python 3.12 virtual environment
-2. Installs all dependencies using pre-built binary wheels from PyPI
-3. This avoids build issues with Rust packages (pydantic-core, rpds-py, ruff)
+2. Installs all dependencies and the main package from source
+3. Rust is included as a build dependency for packages that require it (pydantic-core, ruff)
 4. Links the CLI command to the Homebrew bin directory
 
-**Key Feature**: Binary wheels are used by default to avoid the need for Rust toolchain, maturin, or other build dependencies. This makes installation much faster and more reliable.
+**Key Feature**: The formula uses Homebrew's standard installation method which builds packages from source. Rust is automatically included as a build dependency to compile Rust-based Python packages.
 
 ## How Dependencies Are Managed
 
