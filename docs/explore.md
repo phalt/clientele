@@ -1,8 +1,8 @@
 # Explorer Mode
 
-The `explore` command launches an **interactive REPL** that lets you explore and test API operations without writing any code. 
+The `explore` command launches an **interactive REPL** that lets you explore and test API operations without writing any code. It's perfect for API discovery, testing, and debugging.
 
-It's perfect for API discovery, testing, and debugging.
+![repl demo](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele.gif)
 
 ## Usage Modes
 
