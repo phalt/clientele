@@ -3,190 +3,190 @@ class Clientele < Formula
 
   desc "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"
   homepage "https://phalt.github.io/clientele/"
-  url "https://files.pythonhosted.org/packages/source/c/clientele/clientele-{{VERSION}}.tar.gz"
+  url "{{URL}}"
   sha256 "{{SHA256}}"
   license "MIT"
 
   depends_on "python@3.12"
 
   resource "httpx" do
-    url "https://files.pythonhosted.org/packages/source/h/httpx/httpx-{{HTTPX_VERSION}}.tar.gz"
+    url "{{HTTPX_URL}}"
     sha256 "{{HTTPX_SHA256}}"
   end
 
   resource "click" do
-    url "https://files.pythonhosted.org/packages/source/c/click/click-{{CLICK_VERSION}}.tar.gz"
+    url "{{CLICK_URL}}"
     sha256 "{{CLICK_SHA256}}"
   end
 
   resource "pydantic" do
-    url "https://files.pythonhosted.org/packages/source/p/pydantic/pydantic-{{PYDANTIC_VERSION}}.tar.gz"
+    url "{{PYDANTIC_URL}}"
     sha256 "{{PYDANTIC_SHA256}}"
   end
 
   resource "rich" do
-    url "https://files.pythonhosted.org/packages/source/r/rich/rich-{{RICH_VERSION}}.tar.gz"
+    url "{{RICH_URL}}"
     sha256 "{{RICH_SHA256}}"
   end
 
   resource "openapi-core" do
-    url "https://files.pythonhosted.org/packages/source/o/openapi-core/openapi_core-{{OPENAPI_CORE_VERSION}}.tar.gz"
+    url "{{OPENAPI_CORE_URL}}"
     sha256 "{{OPENAPI_CORE_SHA256}}"
   end
 
   resource "pyyaml" do
-    url "https://files.pythonhosted.org/packages/source/p/pyyaml/PyYAML-{{PYYAML_VERSION}}.tar.gz"
+    url "{{PYYAML_URL}}"
     sha256 "{{PYYAML_SHA256}}"
   end
 
   resource "jinja2" do
-    url "https://files.pythonhosted.org/packages/source/j/jinja2/jinja2-{{JINJA2_VERSION}}.tar.gz"
+    url "{{JINJA2_URL}}"
     sha256 "{{JINJA2_SHA256}}"
   end
 
   resource "ruff" do
-    url "https://files.pythonhosted.org/packages/source/r/ruff/ruff-{{RUFF_VERSION}}.tar.gz"
+    url "{{RUFF_URL}}"
     sha256 "{{RUFF_SHA256}}"
   end
 
   # Additional dependencies required by the main dependencies
   resource "httpcore" do
-    url "https://files.pythonhosted.org/packages/source/h/httpcore/httpcore-{{HTTPCORE_VERSION}}.tar.gz"
+    url "{{HTTPCORE_URL}}"
     sha256 "{{HTTPCORE_SHA256}}"
   end
 
   resource "h11" do
-    url "https://files.pythonhosted.org/packages/source/h/h11/h11-{{H11_VERSION}}.tar.gz"
+    url "{{H11_URL}}"
     sha256 "{{H11_SHA256}}"
   end
 
   resource "certifi" do
-    url "https://files.pythonhosted.org/packages/source/c/certifi/certifi-{{CERTIFI_VERSION}}.tar.gz"
+    url "{{CERTIFI_URL}}"
     sha256 "{{CERTIFI_SHA256}}"
   end
 
   resource "idna" do
-    url "https://files.pythonhosted.org/packages/source/i/idna/idna-{{IDNA_VERSION}}.tar.gz"
+    url "{{IDNA_URL}}"
     sha256 "{{IDNA_SHA256}}"
   end
 
   resource "sniffio" do
-    url "https://files.pythonhosted.org/packages/source/s/sniffio/sniffio-{{SNIFFIO_VERSION}}.tar.gz"
+    url "{{SNIFFIO_URL}}"
     sha256 "{{SNIFFIO_SHA256}}"
   end
 
   resource "anyio" do
-    url "https://files.pythonhosted.org/packages/source/a/anyio/anyio-{{ANYIO_VERSION}}.tar.gz"
+    url "{{ANYIO_URL}}"
     sha256 "{{ANYIO_SHA256}}"
   end
 
   resource "pydantic-core" do
-    url "https://files.pythonhosted.org/packages/source/p/pydantic-core/pydantic_core-{{PYDANTIC_CORE_VERSION}}.tar.gz"
+    url "{{PYDANTIC_CORE_URL}}"
     sha256 "{{PYDANTIC_CORE_SHA256}}"
   end
 
   resource "typing-extensions" do
-    url "https://files.pythonhosted.org/packages/source/t/typing-extensions/typing_extensions-{{TYPING_EXTENSIONS_VERSION}}.tar.gz"
+    url "{{TYPING_EXTENSIONS_URL}}"
     sha256 "{{TYPING_EXTENSIONS_SHA256}}"
   end
 
   resource "annotated-types" do
-    url "https://files.pythonhosted.org/packages/source/a/annotated-types/annotated_types-{{ANNOTATED_TYPES_VERSION}}.tar.gz"
+    url "{{ANNOTATED_TYPES_URL}}"
     sha256 "{{ANNOTATED_TYPES_SHA256}}"
   end
 
   resource "markdown-it-py" do
-    url "https://files.pythonhosted.org/packages/source/m/markdown-it-py/markdown_it_py-{{MARKDOWN_IT_PY_VERSION}}.tar.gz"
+    url "{{MARKDOWN_IT_PY_URL}}"
     sha256 "{{MARKDOWN_IT_PY_SHA256}}"
   end
 
   resource "mdurl" do
-    url "https://files.pythonhosted.org/packages/source/m/mdurl/mdurl-{{MDURL_VERSION}}.tar.gz"
+    url "{{MDURL_URL}}"
     sha256 "{{MDURL_SHA256}}"
   end
 
   resource "pygments" do
-    url "https://files.pythonhosted.org/packages/source/p/pygments/pygments-{{PYGMENTS_VERSION}}.tar.gz"
+    url "{{PYGMENTS_URL}}"
     sha256 "{{PYGMENTS_SHA256}}"
   end
 
   resource "openapi-schema-validator" do
-    url "https://files.pythonhosted.org/packages/source/o/openapi-schema-validator/openapi_schema_validator-{{OPENAPI_SCHEMA_VALIDATOR_VERSION}}.tar.gz"
+    url "{{OPENAPI_SCHEMA_VALIDATOR_URL}}"
     sha256 "{{OPENAPI_SCHEMA_VALIDATOR_SHA256}}"
   end
 
   resource "openapi-spec-validator" do
-    url "https://files.pythonhosted.org/packages/source/o/openapi-spec-validator/openapi_spec_validator-{{OPENAPI_SPEC_VALIDATOR_VERSION}}.tar.gz"
+    url "{{OPENAPI_SPEC_VALIDATOR_URL}}"
     sha256 "{{OPENAPI_SPEC_VALIDATOR_SHA256}}"
   end
 
   resource "jsonschema" do
-    url "https://files.pythonhosted.org/packages/source/j/jsonschema/jsonschema-{{JSONSCHEMA_VERSION}}.tar.gz"
+    url "{{JSONSCHEMA_URL}}"
     sha256 "{{JSONSCHEMA_SHA256}}"
   end
 
   resource "jsonschema-path" do
-    url "https://files.pythonhosted.org/packages/source/j/jsonschema-path/jsonschema_path-{{JSONSCHEMA_PATH_VERSION}}.tar.gz"
+    url "{{JSONSCHEMA_PATH_URL}}"
     sha256 "{{JSONSCHEMA_PATH_SHA256}}"
   end
 
   resource "jsonschema-specifications" do
-    url "https://files.pythonhosted.org/packages/source/j/jsonschema-specifications/jsonschema_specifications-{{JSONSCHEMA_SPECIFICATIONS_VERSION}}.tar.gz"
+    url "{{JSONSCHEMA_SPECIFICATIONS_URL}}"
     sha256 "{{JSONSCHEMA_SPECIFICATIONS_SHA256}}"
   end
 
   resource "referencing" do
-    url "https://files.pythonhosted.org/packages/source/r/referencing/referencing-{{REFERENCING_VERSION}}.tar.gz"
+    url "{{REFERENCING_URL}}"
     sha256 "{{REFERENCING_SHA256}}"
   end
 
   resource "rpds-py" do
-    url "https://files.pythonhosted.org/packages/source/r/rpds-py/rpds_py-{{RPDS_PY_VERSION}}.tar.gz"
+    url "{{RPDS_PY_URL}}"
     sha256 "{{RPDS_PY_SHA256}}"
   end
 
   resource "attrs" do
-    url "https://files.pythonhosted.org/packages/source/a/attrs/attrs-{{ATTRS_VERSION}}.tar.gz"
+    url "{{ATTRS_URL}}"
     sha256 "{{ATTRS_SHA256}}"
   end
 
   resource "markupsafe" do
-    url "https://files.pythonhosted.org/packages/source/m/markupsafe/MarkupSafe-{{MARKUPSAFE_VERSION}}.tar.gz"
+    url "{{MARKUPSAFE_URL}}"
     sha256 "{{MARKUPSAFE_SHA256}}"
   end
 
   resource "isodate" do
-    url "https://files.pythonhosted.org/packages/source/i/isodate/isodate-{{ISODATE_VERSION}}.tar.gz"
+    url "{{ISODATE_URL}}"
     sha256 "{{ISODATE_SHA256}}"
   end
 
   resource "werkzeug" do
-    url "https://files.pythonhosted.org/packages/source/w/werkzeug/werkzeug-{{WERKZEUG_VERSION}}.tar.gz"
+    url "{{WERKZEUG_URL}}"
     sha256 "{{WERKZEUG_SHA256}}"
   end
 
   resource "pathable" do
-    url "https://files.pythonhosted.org/packages/source/p/pathable/pathable-{{PATHABLE_VERSION}}.tar.gz"
+    url "{{PATHABLE_URL}}"
     sha256 "{{PATHABLE_SHA256}}"
   end
 
   resource "lazy-object-proxy" do
-    url "https://files.pythonhosted.org/packages/source/l/lazy-object-proxy/lazy_object_proxy-{{LAZY_OBJECT_PROXY_VERSION}}.tar.gz"
+    url "{{LAZY_OBJECT_PROXY_URL}}"
     sha256 "{{LAZY_OBJECT_PROXY_SHA256}}"
   end
 
   resource "more-itertools" do
-    url "https://files.pythonhosted.org/packages/source/m/more-itertools/more_itertools-{{MORE_ITERTOOLS_VERSION}}.tar.gz"
+    url "{{MORE_ITERTOOLS_URL}}"
     sha256 "{{MORE_ITERTOOLS_SHA256}}"
   end
 
   resource "rfc3339-validator" do
-    url "https://files.pythonhosted.org/packages/source/r/rfc3339-validator/rfc3339_validator-{{RFC3339_VALIDATOR_VERSION}}.tar.gz"
+    url "{{RFC3339_VALIDATOR_URL}}"
     sha256 "{{RFC3339_VALIDATOR_SHA256}}"
   end
 
   resource "types-pyyaml" do
-    url "https://files.pythonhosted.org/packages/source/t/types-pyyaml/types_PyYAML-{{TYPES_PYYAML_VERSION}}.tar.gz"
+    url "{{TYPES_PYYAML_URL}}"
     sha256 "{{TYPES_PYYAML_SHA256}}"
   end
 

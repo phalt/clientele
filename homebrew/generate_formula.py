@@ -121,6 +121,7 @@ def main():
     # Start with the main package
     template_vars = {
         "VERSION": version,
+        "URL": clientele_info["url"],
         "SHA256": clientele_info["sha256"],
     }
 
@@ -172,6 +173,7 @@ def main():
 
             var_prefix = normalize_package_name(package)
             template_vars[f"{var_prefix}_VERSION"] = info["version"]
+            template_vars[f"{var_prefix}_URL"] = info["url"]
             template_vars[f"{var_prefix}_SHA256"] = info["sha256"]
         except Exception as e:
             print(f"Warning: Could not fetch info for {package}: {e}")
