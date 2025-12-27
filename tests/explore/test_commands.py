@@ -330,3 +330,43 @@ def test_schemas_command_with_argument_whitespace(handler):
     """Test /schemas command with argument and whitespace."""
     result = handler.handle_command("/schemas  SimpleResponse  ")
     assert result is False
+
+
+def test_pydantic_config_handling(introspector, session_config):
+    """Test that explore properly handles the new Pydantic Config class format."""
+    import sys
+    
+    # Verify config module is loaded and has the new format
+    package_name = introspector.client_path.name
+    config_module_name = f"{package_name}.config"
+    assert config_module_name in sys.modules
+    
+    config_module = sys.modules[config_module_name]
+    
+    # Verify new Pydantic Config format exists
+    assert hasattr(config_module, "config"), "Should have config instance"
+    assert hasattr(config_module, "Config"), "Should have Config class"
+    
+    config_instance = config_module.config
+    
+    # Verify config instance has expected attributes
+    assert hasattr(config_instance, "api_base_url")
+    assert hasattr(config_instance, "bearer_token")
+    assert hasattr(config_instance, "user_key")
+    assert hasattr(config_instance, "pass_key")
+    assert hasattr(config_instance, "additional_headers")
+    
+    # Test that CommandHandler can show config
+    handler = CommandHandler(introspector, session_config)
+    handler._show_config()  # Should not raise an exception
+    
+    # Test that we can set config overrides
+    handler._set_config("base_url", "https://test.example.com")
+    assert session_config.config_overrides["base_url"] == "https://test.example.com"
+    
+    # Verify the config was actually updated
+    assert config_instance.api_base_url == "https://test.example.com"
+    
+    # Test other config values
+    handler._set_config("bearer_token", "test_token_xyz")
+    assert config_instance.bearer_token == "test_token_xyz"

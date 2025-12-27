@@ -301,41 +301,78 @@ class CommandHandler:
         table.add_column("Value", style="white")
         table.add_column("Source", style="yellow")
 
-        # Get config values
-        config_funcs = {
+        # Check if this is the new Pydantic Config class or old function-based config
+        has_config_instance = hasattr(config_module, "config")
+        
+        # Map of display names to attribute/function names
+        config_attrs = {
             "base_url": "api_base_url",
-            "bearer_token": "get_bearer_token",
-            "user_key": "get_user_key",
-            "pass_key": "get_pass_key",
+            "bearer_token": "bearer_token",
+            "user_key": "user_key",
+            "pass_key": "pass_key",
         }
 
-        for display_name, func_name in config_funcs.items():
-            if hasattr(config_module, func_name):
-                func = getattr(config_module, func_name)
-                try:
-                    # Check for runtime override first
-                    if self.session_config and display_name in self.session_config.config_overrides:
-                        value = self.session_config.config_overrides[display_name]
-                        source = "runtime"
-                    else:
-                        value = func()
+        for display_name, attr_name in config_attrs.items():
+            try:
+                # Check for runtime override first
+                if self.session_config and display_name in self.session_config.config_overrides:
+                    value = self.session_config.config_overrides[display_name]
+                    source = "runtime"
+                else:
+                    # Try new Pydantic Config class format first
+                    if has_config_instance:
+                        config_instance = config_module.config
+                        if hasattr(config_instance, attr_name):
+                            value = getattr(config_instance, attr_name)
+                            source = "config.py"
+                        else:
+                            continue
+                    # Fall back to old function-based format
+                    elif hasattr(config_module, attr_name):
+                        func = getattr(config_module, attr_name)
+                        # Try calling as function for old format (e.g., get_bearer_token())
+                        if callable(func):
+                            value = func()
+                        else:
+                            value = func
                         source = "config.py"
+                    # For old format with different function names
+                    elif display_name == "bearer_token" and hasattr(config_module, "get_bearer_token"):
+                        value = config_module.get_bearer_token()
+                        source = "config.py"
+                    elif display_name == "user_key" and hasattr(config_module, "get_user_key"):
+                        value = config_module.get_user_key()
+                        source = "config.py"
+                    elif display_name == "pass_key" and hasattr(config_module, "get_pass_key"):
+                        value = config_module.get_pass_key()
+                        source = "config.py"
+                    else:
+                        continue
 
-                    # Mask sensitive values
-                    if (
-                        display_name in ["bearer_token", "pass_key"]
-                        and value
-                        and value != "token"
-                        and value != "password"
-                    ):
-                        value = "***" + value[-4:] if len(value) > 4 else "***"
+                # Mask sensitive values
+                if (
+                    display_name in ["bearer_token", "pass_key"]
+                    and value
+                    and value != "token"
+                    and value != "password"
+                ):
+                    value = "***" + value[-4:] if len(value) > 4 else "***"
 
-                    table.add_row(display_name, str(value), source)
-                except Exception as e:
-                    table.add_row(display_name, f"[red]Error: {e}[/red]", "error")
+                table.add_row(display_name, str(value), source)
+            except Exception as e:
+                table.add_row(display_name, f"[red]Error: {e}[/red]", "error")
 
         # Add additional headers
-        if hasattr(config_module, "additional_headers"):
+        if has_config_instance:
+            # New format: config.additional_headers (dict attribute)
+            config_instance = config_module.config
+            if hasattr(config_instance, "additional_headers"):
+                headers = config_instance.additional_headers
+                if headers:
+                    for key, val in headers.items():
+                        table.add_row(f"header.{key}", str(val), "config.py")
+        elif hasattr(config_module, "additional_headers"):
+            # Old format: additional_headers() function
             try:
                 headers = config_module.additional_headers()
                 if headers:
@@ -397,18 +434,36 @@ class CommandHandler:
 
         config_module = sys.modules[config_module_name]
 
-        # Map display names to function names
-        func_map = {
+        # Map display names to attribute names
+        attr_map = {
             "base_url": "api_base_url",
-            "bearer_token": "get_bearer_token",
-            "user_key": "get_user_key",
-            "pass_key": "get_pass_key",
+            "bearer_token": "bearer_token",
+            "user_key": "user_key",
+            "pass_key": "pass_key",
         }
 
-        func_name = func_map.get(key)
-        if func_name and hasattr(config_module, func_name):
-            # Replace the function with a lambda that returns the new value
-            setattr(config_module, func_name, lambda: value)
+        attr_name = attr_map.get(key)
+        if not attr_name:
+            return
+
+        # Check if this is the new Pydantic Config class or old function-based config
+        if hasattr(config_module, "config"):
+            # New format: Update the config instance attribute
+            config_instance = config_module.config
+            if hasattr(config_instance, attr_name):
+                setattr(config_instance, attr_name, value)
+        else:
+            # Old format: Replace the function with a lambda that returns the new value
+            # Map to old function names
+            old_func_map = {
+                "base_url": "api_base_url",
+                "bearer_token": "get_bearer_token",
+                "user_key": "get_user_key",
+                "pass_key": "get_pass_key",
+            }
+            func_name = old_func_map.get(key)
+            if func_name and hasattr(config_module, func_name):
+                setattr(config_module, func_name, lambda: value)
 
     def _handle_debug(self, arg: str | None) -> None:
         """Handle /debug command.
