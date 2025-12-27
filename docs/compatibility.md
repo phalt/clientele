@@ -14,7 +14,7 @@ This testing happens automatically:
 
 ### Current results
 
-As of our latest run, we successfully generate clients for 93.86% of schemas in the OpenAPI directory:
+As of our latest run, we successfully generate clients for 95.39% of schemas in the OpenAPI directory:
 
 ```sh
 
@@ -22,23 +22,23 @@ As of our latest run, we successfully generate clients for 93.86% of schemas in 
 SUMMARY
 ================================================================================
 Total schemas found: 4138
-Successful: 1879
-Skipped (version incompatible): 2136
-Failed: 123
-Success rate: 93.86% (1879/2002 testable schemas)
+Successful: 1884
+Skipped (version incompatible): 2163
+Failed: 91
+Success rate: 95.39% (1884/1975 testable schemas)
 
-123 schemas failed to generate clients:
-  - APIs/adyen.com/BalancePlatformConfigurationNotification-v1/1/openapi.yaml
-  - APIs/adyen.com/BalancePlatformService/2/openapi.yaml
-  - APIs/adyen.com/LegalEntityService/3/openapi.yaml
-  - APIs/adyen.com/ManagementService/1/openapi.yaml
-  - APIs/adyen.com/ManagementService-v3/3/openapi.yaml
+91 schemas failed to generate clients:
   - APIs/akeneo.com/1.0.0/swagger.yaml
   - APIs/apicurio.local/registry/1.3.2.Final/openapi.yaml
   - APIs/apidapp.com/2019-02-14T164701Z/openapi.yaml
   - APIs/apideck.com/file-storage/10.0.0/openapi.yaml
   - APIs/atlassian.com/jira/1001.0.0-SNAPSHOT/openapi.yaml
-  ... and 113 more
+  - APIs/azure.com/cognitiveservices-LUIS-Authoring/2.0/swagger.yaml
+  - APIs/azure.com/cognitiveservices-LUIS-Authoring/3.0-preview/swagger.yaml
+  - APIs/azure.com/cognitiveservices-LUIS-Programmatic/v2.0/swagger.yaml
+  - APIs/billingo.hu/3.0.7/openapi.yaml
+  - APIs/bunq.com/1.0/openapi.yaml
+  ... and 81 more
   ```
 
 ### Running Compatibility Tests
