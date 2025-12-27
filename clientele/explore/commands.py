@@ -32,6 +32,35 @@ class CommandHandler:
         self.introspector = introspector
         self.session_config = session_config
         self.console = console or Console()
+        self._temp_config_instance = None  # Store temporary config instance
+
+    def _get_config_instance(self, config_module):
+        """Get or create a config instance from the config module.
+        
+        This handles three cases:
+        1. Module has a singleton 'config' instance (functional clients)
+        2. Module has a 'Config' class but no singleton (class-based clients)
+        3. Old function-based config (backward compatibility)
+        
+        Args:
+            config_module: The loaded config module
+            
+        Returns:
+            The config instance if available, None otherwise
+        """
+        # Case 1: Module has singleton config instance
+        if hasattr(config_module, "config"):
+            return config_module.config
+        
+        # Case 2: Module has Config class but no singleton - create temporary instance
+        if hasattr(config_module, "Config"):
+            # Reuse the same temporary instance across calls
+            if self._temp_config_instance is None:
+                self._temp_config_instance = config_module.Config()
+            return self._temp_config_instance
+        
+        # Case 3: Old function-based config (return None, will be handled separately)
+        return None
 
     def handle_command(self, command: str) -> bool:
         """Handle a special command.
@@ -301,13 +330,8 @@ class CommandHandler:
         table.add_column("Value", style="white")
         table.add_column("Source", style="yellow")
 
-        # Check if this is the new Pydantic Config class or old function-based config
-        has_config_instance = hasattr(config_module, "config")
-        
-        # If no singleton instance but has Config class, create a temporary instance for exploration
-        if not has_config_instance and hasattr(config_module, "Config"):
-            config_module.config = config_module.Config()
-            has_config_instance = True
+        # Get config instance (if available)
+        config_instance = self._get_config_instance(config_module)
         
         # Map of display names to attribute/function names
         config_attrs = {
@@ -325,8 +349,7 @@ class CommandHandler:
                     source = "runtime"
                 else:
                     # Try new Pydantic Config class format first
-                    if has_config_instance:
-                        config_instance = config_module.config
+                    if config_instance is not None:
                         if hasattr(config_instance, attr_name):
                             value = getattr(config_instance, attr_name)
                             source = "config.py"
@@ -368,9 +391,8 @@ class CommandHandler:
                 table.add_row(display_name, f"[red]Error: {e}[/red]", "error")
 
         # Add additional headers
-        if has_config_instance:
+        if config_instance is not None:
             # New format: config.additional_headers (dict attribute)
-            config_instance = config_module.config
             if hasattr(config_instance, "additional_headers"):
                 headers = config_instance.additional_headers
                 if headers:
@@ -451,17 +473,11 @@ class CommandHandler:
         if not attr_name:
             return
 
-        # Check if this is the new Pydantic Config class or old function-based config
-        if hasattr(config_module, "config"):
-            # New format: Update the config instance attribute
-            config_instance = config_module.config
-            if hasattr(config_instance, attr_name):
-                setattr(config_instance, attr_name, value)
-        elif hasattr(config_module, "Config"):
-            # Config class exists but no singleton instance - create one if needed
-            if not hasattr(config_module, "config"):
-                config_module.config = config_module.Config()
-            config_instance = config_module.config
+        # Get or create config instance using the helper method
+        config_instance = self._get_config_instance(config_module)
+        
+        if config_instance is not None:
+            # New Pydantic Config format: Update the instance attribute
             if hasattr(config_instance, attr_name):
                 setattr(config_instance, attr_name, value)
         else:
@@ -475,7 +491,8 @@ class CommandHandler:
             }
             func_name = old_func_map.get(key)
             if func_name and hasattr(config_module, func_name):
-                setattr(config_module, func_name, lambda: value)
+                # Capture value at definition time to avoid lambda closure issue
+                setattr(config_module, func_name, lambda v=value: v)
 
     def _handle_debug(self, arg: str | None) -> None:
         """Handle /debug command.
