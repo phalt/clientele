@@ -4,14 +4,16 @@ This directory contains the tooling and templates needed to publish clientele on
 
 > **📖 New to Homebrew publishing?** See [HOMEBREW_SETUP.md](HOMEBREW_SETUP.md) for a complete step-by-step setup guide.
 
+> **✨ Recent Fix**: The formula generator now automatically detects all dependencies from `pyproject.toml` and uses binary wheels to avoid Rust/maturin build errors. No manual dependency management needed!
+
 ## Overview
 
 Homebrew is a popular package manager for macOS and Linux. Publishing clientele on Homebrew makes it accessible to a wider audience without requiring Python knowledge.
 
 ## Files
 
-- `clientele.rb.template` - Template for the Homebrew formula with placeholders
-- `generate_formula.py` - Python script to generate the formula with correct versions and checksums
+- `clientele.rb.template` - (Deprecated) Template for the Homebrew formula - now generated programmatically
+- `generate_formula.py` - Python script to auto-generate the formula with all dependencies
 - `clientele.rb` - Generated Homebrew formula (created by running the script)
 
 ## Quick Start
@@ -29,9 +31,11 @@ make brew-formula
 
 This will:
 1. Read the current version from `pyproject.toml`
-2. Fetch package information from PyPI
-3. Download and verify checksums for all dependencies
-4. Generate `homebrew/clientele.rb` from the template
+2. Fetch the package from PyPI  
+3. Auto-detect all dependencies from `pyproject.toml`
+4. Recursively resolve all transitive dependencies from PyPI
+5. Calculate SHA256 checksums for all packages
+6. Generate `homebrew/clientele.rb` with all resources
 
 ### Verify the Formula (Optional)
 
@@ -143,34 +147,56 @@ When you release a new version:
 
 ### Dependencies Missing
 
-If the generated formula has unreplaced variables (like `{{SOME_PACKAGE_VERSION}}`):
+The formula generator automatically detects all dependencies from `pyproject.toml` and resolves their transitive dependencies from PyPI. No manual configuration needed!
 
-1. Check if the dependency is actually needed
-2. Update `generate_formula.py` to include it in the `all_packages` list
-3. Verify the package name on PyPI (it might be different)
+If a dependency is missing:
+
+1. Check if it's listed in `pyproject.toml`
+2. Verify the package exists on PyPI
+3. Re-run `make brew-formula` to regenerate
 
 ### Formula Audit Fails
 
 Run `make brew-verify` to see specific issues. Common problems:
 
-- Incorrect SHA256 checksums
-- Invalid URLs
-- Missing dependencies
-- Ruby syntax errors
+- Incorrect SHA256 checksums (regenerate with `make brew-formula`)
+- Invalid URLs (check package is on PyPI)
+- Missing dependencies (ensure all are in `pyproject.toml`)
+- Ruby syntax errors (review the generated formula)
 
 ### Installation Test Fails
 
-- Ensure all dependencies are included in the formula
+- Ensure all dependencies are included in `pyproject.toml`
 - Check that the entry point is correct (`clientele = "clientele.cli:cli_group"`)
 - Verify the package installs correctly from PyPI
+- For Rust/C extension build errors, ensure binary wheels are used (they are by default)
 
 ## Formula Structure
 
-The formula uses Homebrew's `virtualenv_install_with_resources` helper, which:
+The formula uses a custom install method with binary wheels:
 
-1. Creates an isolated Python virtual environment
-2. Installs the main package and all its dependencies
-3. Links the CLI command to `/usr/local/bin/clientele`
+1. Creates an isolated Python 3.12 virtual environment
+2. Installs all dependencies using pre-built binary wheels from PyPI
+3. This avoids build issues with Rust packages (pydantic-core, rpds-py, ruff)
+4. Links the CLI command to the Homebrew bin directory
+
+**Key Feature**: Binary wheels are used by default to avoid the need for Rust toolchain, maturin, or other build dependencies. This makes installation much faster and more reliable.
+
+## How Dependencies Are Managed
+
+The `generate_formula.py` script automatically:
+
+1. **Reads** `pyproject.toml` to get all direct dependencies
+2. **Resolves** transitive dependencies by querying PyPI metadata recursively
+3. **Deduplicates** packages (handles both `package-name` and `package_name` variants)
+4. **Fetches** SHA256 checksums for all packages from PyPI
+5. **Generates** the complete Ruby formula with all resources
+
+This means:
+- ✅ No manual dependency list maintenance
+- ✅ Always up-to-date with `pyproject.toml`
+- ✅ Automatic handling of new dependencies
+- ✅ No risk of missing transitive dependencies
 
 ## Best Practices
 
