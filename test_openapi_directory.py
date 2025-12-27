@@ -9,13 +9,11 @@ This script:
 """
 
 import argparse
-import json
 import pathlib
 import shutil
 import subprocess
 import sys
 import tempfile
-import yaml
 from typing import List, Tuple
 
 from cicerone import parse as cicerone_parse
@@ -62,16 +60,17 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
     try:
         # Read the file content and parse it manually to allow normalization
         import json
+
         import yaml
-        
+
         content = schema_path.read_text()
-        
+
         # Parse to dict based on file extension
         if schema_path.suffix.lower() in [".yaml", ".yml"]:
             spec_dict = yaml.safe_load(content)
         else:
             spec_dict = json.loads(content)
-        
+
         # Check if this is a Swagger 2.x file
         if "swagger" in spec_dict:
             swagger_version = str(spec_dict["swagger"])
@@ -81,26 +80,26 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
                     return "skipped", f"Swagger {swagger_version} (not supported, clientele requires OpenAPI 3.x)", None
             except (IndexError, ValueError):
                 pass  # If we can't parse version, continue with OpenAPI check
-        
+
         # Check OpenAPI version
         openapi_version = spec_dict.get("openapi", "")
         version_parts = str(openapi_version).split(".")
         if not version_parts or not version_parts[0]:
             return "failed", f"Invalid OpenAPI version format: {openapi_version}", None
-        
+
         try:
             major = int(version_parts[0])
         except (ValueError, TypeError):
             return "failed", f"Invalid OpenAPI version format: {openapi_version}", None
-        
+
         # Clientele requires OpenAPI 3.x
         if major < 3:
             return "skipped", f"OpenAPI {openapi_version} (clientele requires 3.x)", None
-        
+
         # Normalize OpenAPI 3.1 specs for compatibility with cicerone
         # This must happen BEFORE parsing with cicerone
         normalized_spec_dict = normalize_openapi_31_spec(spec_dict)
-        
+
         # Now parse with cicerone
         spec = cicerone_parse.parse_spec_from_dict(normalized_spec_dict)
 

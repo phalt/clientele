@@ -16,14 +16,18 @@ def test_snake_case_prop_with_only_special_chars():
 
 
 def test_snake_case_prop_with_digit_start():
-    """Test snake_case_prop handles identifiers starting with digit (line 57).
-
-    Note: The function adds underscore prefix on line 57, but then strips it on
-    line 66, so the result doesn't have the underscore. This test still covers line 57.
+    """Test snake_case_prop handles identifiers starting with digit.
+    
+    The function correctly adds underscore prefix for digit-starting identifiers
+    and preserves it to ensure valid Python identifier syntax.
     """
     result = utils.snake_case_prop("123test")
-    # Due to lstrip on line 66, the underscore is removed
-    assert result == "123test"
+    # Underscore prefix is preserved for valid Python identifier
+    assert result == "_123test"
+    
+    # Also test with underscores and other characters
+    result2 = utils.snake_case_prop("1_property")
+    assert result2 == "_1_property"
 
 
 def test_snake_case_prop_with_only_digits():

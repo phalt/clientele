@@ -41,7 +41,7 @@ class Client:
         return http.handle_response(self.complex_model_request_complex_model_request_get, response)
 
     def header_request_header_request_get(
-        self, headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders]
+        self, headers: typing.Optional[schemas.HeaderRequestHeaderRequestGetHeaders] = None
     ) -> schemas.HTTPValidationError | schemas.HeadersResponse:
         """Header Request"""
         headers_dict: dict | None = headers.model_dump(by_alias=True, exclude_unset=True) if headers else None

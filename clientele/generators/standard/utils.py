@@ -53,7 +53,7 @@ def snake_case_prop(input_str: str) -> str:
     # Handle empty or digit-starting identifiers
     if not result:
         return "EMPTY"
-    
+
     # Track if we need to prepend underscore for digit-starting identifier
     prepend_underscore = result[0].isdigit()
     if prepend_underscore:
