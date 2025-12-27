@@ -112,51 +112,6 @@ def get_dependencies_from_pyproject() -> list[str]:
     return dependencies
 
 
-def get_all_dependencies(package_name: str, version: str) -> set[str]:
-    """Get all transitive dependencies for a package using pip."""
-    import subprocess
-    import tempfile
-    import re
-
-    print(f"Resolving dependencies for {package_name}=={version}...")
-    
-    # Create a temporary requirements file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
-        f.write(f"{package_name}=={version}\n")
-        req_file = f.name
-    
-    try:
-        # Use pip to resolve dependencies
-        result = subprocess.run(
-            ['pip', 'download', '--no-binary', ':all:', '--dest', '/tmp/pip-deps', 
-             '--requirement', req_file, '--quiet'],
-            capture_output=True,
-            text=True
-        )
-        
-        # Parse downloaded packages
-        # Alternative: use pip list after install --dry-run
-        result2 = subprocess.run(
-            ['pip', 'index', 'versions', package_name],
-            capture_output=True,
-            text=True
-        )
-        
-        # Better approach: download and inspect metadata
-        result3 = subprocess.run(
-            ['pip', 'download', '--no-deps', '--dest', '/tmp', f'{package_name}=={version}'],
-            capture_output=True,
-            text=True,
-            cwd='/tmp'
-        )
-        
-    finally:
-        Path(req_file).unlink(missing_ok=True)
-    
-    # For now, return empty set - we'll use PyPI API instead
-    return set()
-
-
 def normalize_dependency_name(name: str) -> str:
     """Normalize dependency name for deduplication (PyPI canonical form)."""
     # Per PEP 503, package names should be normalized:
