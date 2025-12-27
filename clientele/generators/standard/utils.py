@@ -53,7 +53,10 @@ def snake_case_prop(input_str: str) -> str:
     # Handle empty or digit-starting identifiers
     if not result:
         return "EMPTY"
-    if result[0].isdigit():
+
+    # Track if we need to prepend underscore for digit-starting identifier
+    prepend_underscore = result[0].isdigit()
+    if prepend_underscore:
         result = f"_{result}"
 
     # Avoid Python reserved words
@@ -63,7 +66,10 @@ def snake_case_prop(input_str: str) -> str:
     # Convert to snake_case unless already uppercase or no letters
     has_letters = any(c.isalpha() for c in result)
     if has_letters and not result.isupper():
-        result = "".join(["_" + i.lower() if i.isupper() else i for i in result]).lstrip("_")
+        result = "".join(["_" + i.lower() if i.isupper() else i for i in result])
+        # Only strip leading underscores if we didn't intentionally add one for digit-starting identifier
+        if not prepend_underscore:
+            result = result.lstrip("_")
 
     return result
 

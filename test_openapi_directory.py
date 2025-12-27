@@ -16,8 +16,7 @@ import sys
 import tempfile
 from typing import List, Tuple
 
-from cicerone import parse as cicerone_parse
-
+from clientele.cli import _load_openapi_spec
 from clientele.generators.standard.generator import StandardGenerator
 
 
@@ -53,21 +52,27 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
     """Test generating a client for a single schema file.
 
     Returns:
-        Tuple of (status: str, error_message: str, exception: Exception | None)
+        Tuple of (status: str, error_message: str, exception: Exception | None]
         where status is one of: "success", "skipped", "failed"
     """
     try:
-        # Parse the spec first
-        spec = cicerone_parse.parse_spec_from_file(schema_path)
+        # First, check if this is a Swagger 2.x file before attempting to load
+        # Cicerone cannot parse Swagger 2.x specs properly
+        import json
 
-        # Basic validation - ensure we got a spec with some content
-        if spec is None:
-            return "failed", "Parsed spec is None", None
+        import yaml
 
-        # Check if this is a Swagger 2.x file (even if cicerone auto-converts it)
-        # Cicerone preserves the original format in spec.raw
-        if "swagger" in spec.raw:
-            swagger_version = str(spec.raw["swagger"])
+        content = schema_path.read_text()
+
+        # Parse to dict based on file extension
+        if schema_path.suffix.lower() in [".yaml", ".yml"]:
+            spec_dict = yaml.safe_load(content)
+        else:
+            spec_dict = json.loads(content)
+
+        # Check if this is a Swagger 2.x file
+        if "swagger" in spec_dict:
+            swagger_version = str(spec_dict["swagger"])
             # Check if it's Swagger 2.x (2.0, 2.1, etc.)
             try:
                 if swagger_version.split(".")[0] == "2":
@@ -75,7 +80,14 @@ def test_schema_file(schema_path: pathlib.Path) -> Tuple[str, str, Exception | N
             except (IndexError, ValueError):
                 pass  # If we can't parse version, continue with OpenAPI check
 
-        # Check OpenAPI version from parsed spec
+        # Now use centralized loading function that handles OpenAPI 3.1 normalization
+        spec = _load_openapi_spec(file=str(schema_path))
+
+        # Basic validation - ensure we got a spec with some content
+        if spec is None:
+            return "failed", "Parsed spec is None", None
+
+        # Check version from parsed spec
         version_parts = str(spec.version).split(".")
         if not version_parts or not version_parts[0]:
             return "failed", f"Invalid OpenAPI version format: {spec.version}", None
