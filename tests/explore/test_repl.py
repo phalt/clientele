@@ -196,3 +196,23 @@ def test_execute_operation_handles_general_error(repl):
     with patch.object(repl, "_parse_operation", side_effect=Exception("Test error")):
         # Just ensure it doesn't raise an exception
         repl._execute_operation("test_op()")
+
+
+def test_inspect_schema_by_name(repl):
+    """Test that typing a schema name shows schema details."""
+    with patch.object(repl.command_handler, "_show_schema_detail") as mock_show_schema:
+        # Type just a schema name without parentheses
+        repl._execute_operation("SimpleResponse")
+
+        # Should call _show_schema_detail with the schema name
+        mock_show_schema.assert_called_once_with("SimpleResponse")
+
+
+def test_inspect_nonexistent_schema_falls_through(repl):
+    """Test that typing a non-schema name doesn't trigger schema inspection."""
+    with patch.object(repl.command_handler, "_show_schema_detail") as mock_show_schema:
+        # Type something that's not a schema
+        repl._execute_operation("NotASchema")
+
+        # Should not call _show_schema_detail
+        mock_show_schema.assert_not_called()
