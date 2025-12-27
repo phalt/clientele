@@ -5,7 +5,6 @@ This guide explains how to enable users to install clientele via Homebrew (`brew
 ## Current Status
 
 ✅ **All tooling is ready!** The repository already includes:
-- Formula template (`homebrew/clientele.rb.template`)
 - Automatic formula generator (`homebrew/generate_formula.py`)
 - Makefile commands for easy workflow
 - Comprehensive documentation
