@@ -306,6 +306,11 @@ class CommandHandler:
         # Check if this is the new Pydantic Config class or old function-based config
         has_config_instance = hasattr(config_module, "config")
         
+        # If no singleton instance but has Config class, create a temporary instance for exploration
+        if not has_config_instance and hasattr(config_module, "Config"):
+            config_module.config = config_module.Config()
+            has_config_instance = True
+        
         # Map of display names to attribute/function names
         config_attrs = {
             "base_url": "api_base_url",
@@ -451,6 +456,13 @@ class CommandHandler:
         # Check if this is the new Pydantic Config class or old function-based config
         if hasattr(config_module, "config"):
             # New format: Update the config instance attribute
+            config_instance = config_module.config
+            if hasattr(config_instance, attr_name):
+                setattr(config_instance, attr_name, value)
+        elif hasattr(config_module, "Config"):
+            # Config class exists but no singleton instance - create one if needed
+            if not hasattr(config_module, "config"):
+                config_module.config = config_module.Config()
             config_instance = config_module.config
             if hasattr(config_instance, attr_name):
                 setattr(config_instance, attr_name, value)
