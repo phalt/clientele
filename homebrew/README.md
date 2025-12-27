@@ -2,7 +2,7 @@
 
 This directory contains the tooling and templates needed to publish clientele on Homebrew (brew.sh).
 
-> **📖 New to Homebrew publishing?** See [../HOMEBREW_SETUP.md](../HOMEBREW_SETUP.md) for a complete step-by-step setup guide.
+> **📖 New to Homebrew publishing?** See [HOMEBREW_SETUP.md](HOMEBREW_SETUP.md) for a complete step-by-step setup guide.
 
 ## Overview
 

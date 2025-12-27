@@ -78,7 +78,7 @@ make brew-test-local    # Test installation locally
 
 - **Step-by-step guide:** See [HOMEBREW_SETUP.md](HOMEBREW_SETUP.md)
 - **Technical details:** See [HOMEBREW_PUBLISHING.md](HOMEBREW_PUBLISHING.md)
-- **Tooling docs:** See [homebrew/README.md](homebrew/README.md)
+- **Tooling docs:** See [README.md](README.md)
 
 ## 🚀 TL;DR
 
