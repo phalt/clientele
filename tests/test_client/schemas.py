@@ -79,10 +79,6 @@ class OptionalQueryParametersResponse(pydantic.BaseModel):
 
 
 class SimpleResponse(pydantic.BaseModel):
-    """A simple response model with a status field.
-
-    This is used for basic API responses that only need to return a status.
-    """
     status: str
 
 

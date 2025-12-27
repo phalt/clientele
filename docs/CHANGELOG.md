@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- **Improved**: Schema inspection in explore REPL - typing a schema name without parentheses now displays the schema's docstring and fields instead of the verbose inherited Pydantic BaseModel documentation.
+
 ## 1.0.1
 
 - Correct package installation dependencies.
