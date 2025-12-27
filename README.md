@@ -30,7 +30,7 @@ Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP 
 - **Minimal footprint** - the generated code is readable, debuggable Python with only two dependencies.
 - **Regeneration-friendly** - update your API, regenerate, review the git diff, ship it!
 - **API REPL** - a dedicated REPL for exploring and testing the client.
-- **Deterministic**: No exepensive LLMs, no hallucinations - same input always produces same output.
+- **Deterministic**: No expensive LLMs, no hallucinations - same input always produces same output.
 
 ### When to Use Clientele
 
