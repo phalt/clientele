@@ -242,7 +242,6 @@ PaymentMethod = typing.Optional[typing.Union[CreditCard, BankTransfer, PayPal]]
 Clientele generates code compatible with your Python version:
 
 - **Python 3.10+**: Uses modern union syntax (`str | int`) for inline types
-- **Python 3.9 and below**: Uses `typing.Union[str, int]` for inline types
 - **Forward references**: Always uses `typing.Union` (e.g., `typing.Union["Cat", "Dog"]`) because the `|` operator doesn't work with string literals
 
 The generated code automatically adapts to your target Python version for maximum compatibility.

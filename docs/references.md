@@ -1,8 +1,6 @@
 # 🔗 References in OpenAPI
 
-Clientele fully supports OpenAPI's `$ref` mechanism for reusing schema definitions across your API specification.
-
-This page explains how references work and what Clientele does when generating clients with them.
+Clientele fully supports OpenAPI's `$ref` mechanism for reusing schema definitions across your API specification. This page explains how references work and what Clientele does when generating clients with them.
 
 ## What are `$ref`s?
 
@@ -91,7 +89,7 @@ Generates:
 
 ```python
 class UserList(pydantic.BaseModel):
-    users: list["User"]
+    users: list[User]
 ```
 
 ### 3. Enum references
@@ -241,10 +239,10 @@ class User(pydantic.BaseModel):
     name: str
 
 class Comment(pydantic.BaseModel):
-    author: "User"
+    author: User
 
 class Post(pydantic.BaseModel):
-    comments: list["Comment"]
+    comments: list[Comment]
 ```
 
 ## Working with generated code
@@ -266,29 +264,6 @@ reveal_type(response.user)  # Revealed type is "User"
 # IDE auto-completion works too
 response.user.name  # ← Your IDE suggests 'id' and 'name'
 ```
-
-## Why forward references?
-
-You might notice that Clientele sometimes uses forward references (strings) for schema types:
-
-```python
-user: "User"  # ← String, not direct reference
-```
-
-This is intentional and solves a common problem in Python: circular dependencies.
-
-When schemas reference each other, Python needs to know about both classes before they're used. Forward references let us define all the schemas in a single file without worrying about the order.
-
-Pydantic automatically resolves these forward references at runtime by calling `model_rebuild()` at the end of the schemas file:
-
-```python
-# At the end of schemas.py
-subclasses: list[typing.Type[pydantic.BaseModel]] = get_subclasses_from_same_file()
-for c in subclasses:
-    c.model_rebuild()  # ← Resolves all forward references
-```
-
-This happens automatically - you don't need to do anything special to use the generated schemas.
 
 ## Real-world example
 
@@ -342,17 +317,12 @@ class UserRole(str, enum.Enum):
 class User(pydantic.BaseModel):
     id: int
     name: str
-    role: "UserRole"
+    role: UserRule
 
 class TeamResponse(pydantic.BaseModel):
     name: str
-    members: list["User"]
-    owner: "User"
-
-# Forward references resolved automatically
-subclasses = get_subclasses_from_same_file()
-for c in subclasses:
-    c.model_rebuild()
+    members: list[User]
+    owner: User
 ```
 
 ### Usage
@@ -396,5 +366,3 @@ Clientele handles all forms of `$ref` in OpenAPI schemas:
 | Response reference | `responses.400.$ref` | ✅ | Schema generated |
 | Parameter reference | `parameters.$ref` | ✅ | Included in functions |
 | allOf composition | `allOf[n].$ref` | ✅ | Merged into one schema |
-
-You don't need to do anything special to handle references in your OpenAPI schema - Clientele handles them automatically and generates clean, DRY code.
