@@ -69,7 +69,7 @@ Clientele is designed for **OpenAPI 3.0.x** schemas and supports most standard-c
 
 ### Partial Support
 
-- **OpenAPI 3.1.x** - Many OpenAPI 3.1 schemas work, but some advanced 3.1-specific features may not be fully supported yet. Test your schema with `clientele validate` to check compatibility.
+- **OpenAPI 3.1.x** - Many OpenAPI 3.1 schemas work, but some advanced 3.1-specific features may not be fully supported yet.
 
 ### Not Supported
 
@@ -174,15 +174,13 @@ Despite a well-defined [specification](https://www.openapis.org/), we've discove
 
 **What this means for you:**
 
-- If `clientele validate` reports errors, the schema may not be spec-compliant
-- Some schema generators have bugs or take liberties with the spec
-- We can't guarantee 100% compatibility with every OpenAPI schema
+- Some schema generators sometimes have bugs or take liberties with the spec
+- We can't guarantee 100% compatibility with every OpenAPI schema outside the core frameworks we test
 
 **Recommendation:**
 
-- Always run `clientele validate` on your schema first
 - Report issues with specific schemas to help us improve
-- For FastAPI, DRF, and Django Ninja, compatibility is excellent
+- For FastAPI, DRF, and Django Ninja, compatibility is guarenteed
 
 ### OpenAPI 3.1 Caveats
 
@@ -193,39 +191,18 @@ OpenAPI 3.1 aligned with JSON Schema 2020-12, introducing changes:
 - Schema validation is stricter
 
 **Current state:**
-- Many OpenAPI 3.1 schemas work fine
+
+- Nearly all OpenAPI 3.1 schemas work fine
 - Some 3.1-specific features may not be fully supported
 - We primarily target OpenAPI 3.0.x for guaranteed compatibility
-
-## Validation
-
-Use `clientele validate` to check if your schema will work:
-
-```sh
-clientele validate -u http://localhost:8000/openapi.json
-```
-
-or
-
-```sh
-clientele validate -f path/to/openapi.json
-```
-
-Clientele uses [openapi-core](https://openapi-core.readthedocs.io/en/latest/) to validate schemas against the OpenAPI specification.
-
-!!! note
-
-    Some OpenAPI schema generators do not fully conform to the [specification](https://spec.openapis.org/oas/v3.1.0). Validation helps catch these issues early.
 
 ## When Things Don't Work
 
 If you encounter a schema that doesn't work with Clientele:
 
-1. **Run validation**: `clientele validate -f your-schema.json` to see specific errors
-2. **Check the version**: Ensure it's OpenAPI 3.0.x (not 2.0 or unusual 3.1 features)
-3. **Try generation anyway**: Sometimes validation is overly strict
-4. **Report issues**: Open a GitHub issue with your schema (or a minimal example)
-5. **Manual fixes**: For minor issues, you can edit the generated code
+1. **Check the version**: Ensure it's OpenAPI 3.0.x (not 2.0 or unusual 3.1 features)
+2. **Try generation anyway**: Sometimes validation is overly strict
+3. **Report issues**: Open a GitHub issue with your schema (or a minimal example)
 
 ## Best Practices for Compatibility
 

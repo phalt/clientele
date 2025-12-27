@@ -7,6 +7,7 @@ Both function-based and class-based clients support extensive configuration opti
 All generated clients support the following configuration options:
 
 ### Authentication
+
 - `api_base_url`: Base URL for the API (default: `"http://localhost"`)
 - `user_key`: Username for HTTP Basic authentication (default: `"user"`)
 - `pass_key`: Password for HTTP Basic authentication (default: `"password"`)
@@ -18,14 +19,17 @@ All generated clients support the following configuration options:
     For clients with HTTP Basic authentication, if both `user_key` and `pass_key` are empty or `None`, authentication will be disabled. This allows you to optionally disable authentication when needed.
 
 ### HTTP Behavior
+
 - `timeout`: Request timeout in seconds (default: `5.0`)
 - `follow_redirects`: Whether to automatically follow HTTP redirects (default: `False`)
 - `max_redirects`: Maximum number of redirects to follow (default: `20`)
 
 ### Security
+
 - `verify_ssl`: Whether to verify SSL certificates (default: `True`)
 
 ### Performance
+
 - `http2`: Whether to enable HTTP/2 support (default: `False`)
 - `limits`: Connection pool limits via `httpx.Limits` (default: `None`)
 - `transport`: Custom transport via `httpx.HTTPTransport` or `httpx.AsyncHTTPTransport` (default: `None`)
@@ -139,6 +143,7 @@ export MY_APP_TIMEOUT=30.0
 ```
 
 This is particularly useful when:
+
 - You have multiple API clients in the same application
 - You want to avoid naming conflicts with other environment variables
 - Your organization has specific naming conventions for environment variables
