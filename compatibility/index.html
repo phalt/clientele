@@ -844,15 +844,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Validation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#when-things-dont-work" class="md-nav__link">
     <span class="md-ellipsis">
       When Things Don't Work
@@ -1290,15 +1281,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Validation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#when-things-dont-work" class="md-nav__link">
     <span class="md-ellipsis">
       When Things Don't Work
@@ -1379,6 +1361,7 @@
 <li><strong>Continuous monitoring</strong>: Test results are tracked to catch regressions</li>
 </ul>
 <h3 id="current-results">Current results</h3>
+<p><img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json" /></p>
 <p>As of our latest run, we successfully generate clients for 93.86% of schemas in the OpenAPI directory:</p>
 <div class="highlight"><pre><span></span><code><span class="o">================================================================================</span>
 <span class="nv">SUMMARY</span>
@@ -1428,7 +1411,7 @@ python3<span class="w"> </span>test_openapi_directory.py<span class="w"> </span>
 </ul>
 <h3 id="partial-support">Partial Support</h3>
 <ul>
-<li><strong>OpenAPI 3.1.x</strong> - Many OpenAPI 3.1 schemas work, but some advanced 3.1-specific features may not be fully supported yet. Test your schema with <code>clientele validate</code> to check compatibility.</li>
+<li><strong>OpenAPI 3.1.x</strong> - Many OpenAPI 3.1 schemas work, but some advanced 3.1-specific features may not be fully supported yet.</li>
 </ul>
 <h3 id="not-supported">Not Supported</h3>
 <ul>
@@ -1509,15 +1492,13 @@ python3<span class="w"> </span>test_openapi_directory.py<span class="w"> </span>
 <p>Despite a well-defined <a href="https://www.openapis.org/">specification</a>, we've discovered many tools generate non-standard OpenAPI schemas.</p>
 <p><strong>What this means for you:</strong></p>
 <ul>
-<li>If <code>clientele validate</code> reports errors, the schema may not be spec-compliant</li>
-<li>Some schema generators have bugs or take liberties with the spec</li>
-<li>We can't guarantee 100% compatibility with every OpenAPI schema</li>
+<li>Some schema generators sometimes have bugs or take liberties with the spec</li>
+<li>We can't guarantee 100% compatibility with every OpenAPI schema outside the core frameworks we test</li>
 </ul>
 <p><strong>Recommendation:</strong></p>
 <ul>
-<li>Always run <code>clientele validate</code> on your schema first</li>
 <li>Report issues with specific schemas to help us improve</li>
-<li>For FastAPI, DRF, and Django Ninja, compatibility is excellent</li>
+<li>For FastAPI, DRF, and Django Ninja, compatibility is guarenteed</li>
 </ul>
 <h3 id="openapi-31-caveats">OpenAPI 3.1 Caveats</h3>
 <p>OpenAPI 3.1 aligned with JSON Schema 2020-12, introducing changes:</p>
@@ -1526,30 +1507,18 @@ python3<span class="w"> </span>test_openapi_directory.py<span class="w"> </span>
 <li>Some keywords changed semantics</li>
 <li>Schema validation is stricter</li>
 </ul>
-<p><strong>Current state:</strong>
-- Many OpenAPI 3.1 schemas work fine
-- Some 3.1-specific features may not be fully supported
-- We primarily target OpenAPI 3.0.x for guaranteed compatibility</p>
-<h2 id="validation">Validation</h2>
-<p>Use <code>clientele validate</code> to check if your schema will work:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>validate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json
-</code></pre></div>
-<p>or</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>validate<span class="w"> </span>-f<span class="w"> </span>path/to/openapi.json
-</code></pre></div>
-<p>Clientele uses <a href="https://openapi-core.readthedocs.io/en/latest/">openapi-core</a> to validate schemas against the OpenAPI specification.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Some OpenAPI schema generators do not fully conform to the <a href="https://spec.openapis.org/oas/v3.1.0">specification</a>. Validation helps catch these issues early.</p>
-</div>
+<p><strong>Current state:</strong></p>
+<ul>
+<li>Nearly all OpenAPI 3.1 schemas work fine</li>
+<li>Some 3.1-specific features may not be fully supported</li>
+<li>We primarily target OpenAPI 3.0.x for guaranteed compatibility</li>
+</ul>
 <h2 id="when-things-dont-work">When Things Don't Work</h2>
 <p>If you encounter a schema that doesn't work with Clientele:</p>
 <ol>
-<li><strong>Run validation</strong>: <code>clientele validate -f your-schema.json</code> to see specific errors</li>
 <li><strong>Check the version</strong>: Ensure it's OpenAPI 3.0.x (not 2.0 or unusual 3.1 features)</li>
 <li><strong>Try generation anyway</strong>: Sometimes validation is overly strict</li>
 <li><strong>Report issues</strong>: Open a GitHub issue with your schema (or a minimal example)</li>
-<li><strong>Manual fixes</strong>: For minor issues, you can edit the generated code</li>
 </ol>
 <h2 id="best-practices-for-compatibility">Best Practices for Compatibility</h2>
 <h3 id="for-api-developers">For API Developers</h3>

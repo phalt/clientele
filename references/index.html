@@ -788,15 +788,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-forward-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      Why forward references?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#real-world-example" class="md-nav__link">
     <span class="md-ellipsis">
       Real-world example
@@ -1086,15 +1077,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-forward-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      Why forward references?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#real-world-example" class="md-nav__link">
     <span class="md-ellipsis">
       Real-world example
@@ -1165,8 +1147,7 @@
 
 
 <h1 id="references-in-openapi">🔗 References in OpenAPI</h1>
-<p>Clientele fully supports OpenAPI's <code>$ref</code> mechanism for reusing schema definitions across your API specification.</p>
-<p>This page explains how references work and what Clientele does when generating clients with them.</p>
+<p>Clientele fully supports OpenAPI's <code>$ref</code> mechanism for reusing schema definitions across your API specification. This page explains how references work and what Clientele does when generating clients with them.</p>
 <h2 id="what-are-refs">What are <code>$ref</code>s?</h2>
 <p>In OpenAPI, <code>$ref</code> (short for "reference") lets you define a schema, parameter, or response once and reuse it throughout your specification.</p>
 <p>Here's a simple example:</p>
@@ -1231,7 +1212,7 @@
 </code></pre></div>
 <p>Generates:</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">UserList</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">users</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">]</span>
+    <span class="n">users</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">User</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="3-enum-references">3. Enum references</h3>
 <p>References to enum schemas work just as you'd expect:</p>
@@ -1348,10 +1329,10 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Comment</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">author</span><span class="p">:</span> <span class="s2">&quot;User&quot;</span>
+    <span class="n">author</span><span class="p">:</span> <span class="n">User</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Post</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">comments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;Comment&quot;</span><span class="p">]</span>
+    <span class="n">comments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Comment</span><span class="p">]</span>
 </code></pre></div>
 <h2 id="working-with-generated-code">Working with generated code</h2>
 <p>The generated code using references works seamlessly at runtime:</p>
@@ -1369,19 +1350,6 @@
 <span class="c1"># IDE auto-completion works too</span>
 <span class="n">response</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span>  <span class="c1"># ← Your IDE suggests &#39;id&#39; and &#39;name&#39;</span>
 </code></pre></div>
-<h2 id="why-forward-references">Why forward references?</h2>
-<p>You might notice that Clientele sometimes uses forward references (strings) for schema types:</p>
-<div class="highlight"><pre><span></span><code><span class="n">user</span><span class="p">:</span> <span class="s2">&quot;User&quot;</span>  <span class="c1"># ← String, not direct reference</span>
-</code></pre></div>
-<p>This is intentional and solves a common problem in Python: circular dependencies.</p>
-<p>When schemas reference each other, Python needs to know about both classes before they're used. Forward references let us define all the schemas in a single file without worrying about the order.</p>
-<p>Pydantic automatically resolves these forward references at runtime by calling <code>model_rebuild()</code> at the end of the schemas file:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># At the end of schemas.py</span>
-<span class="n">subclasses</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">typing</span><span class="o">.</span><span class="n">Type</span><span class="p">[</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">]]</span> <span class="o">=</span> <span class="n">get_subclasses_from_same_file</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>  <span class="c1"># ← Resolves all forward references</span>
-</code></pre></div>
-<p>This happens automatically - you don't need to do anything special to use the generated schemas.</p>
 <h2 id="real-world-example">Real-world example</h2>
 <p>Here's a complete example showing multiple reference types working together:</p>
 <h3 id="openapi-schema">OpenAPI Schema</h3>
@@ -1427,17 +1395,12 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">role</span><span class="p">:</span> <span class="s2">&quot;UserRole&quot;</span>
+    <span class="n">role</span><span class="p">:</span> <span class="n">UserRule</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">TeamResponse</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">members</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="s2">&quot;User&quot;</span><span class="p">]</span>
-    <span class="n">owner</span><span class="p">:</span> <span class="s2">&quot;User&quot;</span>
-
-<span class="c1"># Forward references resolved automatically</span>
-<span class="n">subclasses</span> <span class="o">=</span> <span class="n">get_subclasses_from_same_file</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">subclasses</span><span class="p">:</span>
-    <span class="n">c</span><span class="o">.</span><span class="n">model_rebuild</span><span class="p">()</span>
+    <span class="n">members</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">User</span><span class="p">]</span>
+    <span class="n">owner</span><span class="p">:</span> <span class="n">User</span>
 </code></pre></div>
 <h3 id="usage">Usage</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
@@ -1515,7 +1478,6 @@
 </tr>
 </tbody>
 </table>
-<p>You don't need to do anything special to handle references in your OpenAPI schema - Clientele handles them automatically and generates clean, DRY code.</p>
 
 
 

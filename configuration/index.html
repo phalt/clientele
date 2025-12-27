@@ -1408,10 +1408,12 @@ VERIFY_SSL=false
 <span class="nb">export</span><span class="w"> </span><span class="nv">MY_APP_BEARER_TOKEN</span><span class="o">=</span><span class="s2">&quot;your-secret-token&quot;</span>
 <span class="nb">export</span><span class="w"> </span><span class="nv">MY_APP_TIMEOUT</span><span class="o">=</span><span class="m">30</span>.0
 </code></pre></div>
-<p>This is particularly useful when:
-- You have multiple API clients in the same application
-- You want to avoid naming conflicts with other environment variables
-- Your organization has specific naming conventions for environment variables</p>
+<p>This is particularly useful when:</p>
+<ul>
+<li>You have multiple API clients in the same application</li>
+<li>You want to avoid naming conflicts with other environment variables</li>
+<li>Your organization has specific naming conventions for environment variables</li>
+</ul>
 <h2 id="class-based-client-configuration">Class-Based Client Configuration</h2>
 <p>Class-based clients use the same <code>Config</code> class with the same pydantic-settings support. Pass configuration options when creating the client:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>

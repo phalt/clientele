@@ -1400,7 +1400,6 @@
 <p>Clientele generates code compatible with your Python version:</p>
 <ul>
 <li><strong>Python 3.10+</strong>: Uses modern union syntax (<code>str | int</code>) for inline types</li>
-<li><strong>Python 3.9 and below</strong>: Uses <code>typing.Union[str, int]</code> for inline types</li>
 <li><strong>Forward references</strong>: Always uses <code>typing.Union</code> (e.g., <code>typing.Union["Cat", "Dog"]</code>) because the <code>|</code> operator doesn't work with string literals</li>
 </ul>
 <p>The generated code automatically adapts to your target Python version for maximum compatibility.</p>
