@@ -27,9 +27,6 @@ The productivity boost has been immense and has helped me to realise the goals a
 - Correctly handle reserved python keywords for schema model properties (i.e. `type`, `next` etc).
 - **New**: Extended httpx configuration options in generated clients - timeout, follow_redirects, verify_ssl, http2, and max_redirects are now configurable.
 - Removed the `validate` command from the CLI.
-
-## 0.11.0
-
 - Replaced `openapi-core` dependency with `cicerone==0.3.0` for OpenAPI schema parsing and introspection. This change provides faster, more minimal, and fully typed OpenAPI schema handling.
 - **New**: Support for OpenAPI `deprecated` field - operations marked as deprecated will include deprecation warnings in generated docstrings.
 - **New**: Support for OpenAPI `description` field - operation descriptions are now included in generated function docstrings for better documentation.
