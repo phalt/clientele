@@ -324,6 +324,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-uv-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using UV (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-homebrew-macoslinux" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Homebrew (macOS/Linux)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-pip" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using pip
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       Quick Start
@@ -1040,6 +1082,48 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-uv-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using UV (Recommended)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-homebrew-macoslinux" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Homebrew (macOS/Linux)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-pip" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using pip
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       Quick Start
@@ -1219,7 +1303,7 @@
 <li><strong>Tiny output</strong> - the generated code is readable, debuggable Python with only two dependencies.</li>
 <li><strong>Regeneration-friendly</strong> - update your API, regenerate, review the git diff, then ship it!</li>
 <li><strong>API REPL</strong> - a dedicated REPL for exploring and testing the client.</li>
-<li><strong>Deterministic</strong>: No exepensive LLMs, no hallucinations - same input always produces same output.</li>
+<li><strong>Deterministic</strong>: No expensive LLMs, no hallucinations - same input always produces same output.</li>
 </ul>
 <h3 id="when-to-use-clientele">When to Use Clientele</h3>
 <h4 id="consumer">Consumer</h4>
@@ -1235,10 +1319,19 @@
 <li>And you want to offer a client library in Python</li>
 <li>And you want developers to love using the client</li>
 </ul>
+<h2 id="installation">Installation</h2>
+<p>Clientele can be installed in several ways:</p>
+<h3 id="using-uv-recommended">Using UV (Recommended)</h3>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>clientele
+</code></pre></div>
+<h3 id="using-homebrew-macoslinux">Using Homebrew (macOS/Linux)</h3>
+<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>phalt/clientele/clientele
+</code></pre></div>
+<h3 id="using-pip">Using pip</h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>clientele
+</code></pre></div>
 <h2 id="quick-start">Quick Start</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Best installed as a tool</span>
-uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>clientele
-<span class="c1"># Generate a client from the PokeAPI OpenAPI schema</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate a client from the PokeAPI OpenAPI schema</span>
 clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml<span class="w"> </span>-o<span class="w"> </span>pokeapi_client/
 <span class="c1"># Load the REPL to start testing with the generated code immediately</span>
 clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>pokeapi_client/
@@ -1303,7 +1396,7 @@ clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w
 clientele<span class="w"> </span>explore<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
 
 ═══════════════════════════════════════════════════════════
-<span class="w">  </span>Clientele<span class="w"> </span>Interactive<span class="w"> </span>API<span class="w"> </span>Explorer<span class="w"> </span>v1.0.0
+<span class="w">  </span>Clientele<span class="w"> </span>Interactive<span class="w"> </span>API<span class="w"> </span>Explorer<span class="w"> </span>v1.0.1
 ═══════════════════════════════════════════════════════════
 
 Type<span class="w"> </span>/help<span class="w"> </span>or<span class="w"> </span>?<span class="w"> </span><span class="k">for</span><span class="w"> </span>commands,<span class="w"> </span>/exit<span class="w"> </span>or<span class="w"> </span>Ctrl+D<span class="w"> </span>to<span class="w"> </span>quit
