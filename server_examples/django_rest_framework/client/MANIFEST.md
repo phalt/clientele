@@ -16,7 +16,7 @@ uv tool install clientele
 
 API VERSION: 1.0.0
 OPENAPI VERSION: 3.0.3
-CLIENTELE VERSION: 1.0.0
+CLIENTELE VERSION: 1.0.1
 
 Regenerate using this command:
 

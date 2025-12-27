@@ -106,7 +106,7 @@ def get_dependencies_from_pyproject() -> list[str]:
                         break
             else:
                 name = dep.strip()
-        
+
         dependencies.append(name)
 
     return dependencies
@@ -117,6 +117,7 @@ def normalize_dependency_name(name: str) -> str:
     # Per PEP 503, package names should be normalized:
     # lowercase and replace runs of [-_.] with a single dash
     import re
+
     return re.sub(r"[-_.]+", "-", name).lower()
 
 
@@ -124,55 +125,55 @@ def get_transitive_dependencies(package_name: str, version: str, visited: set[st
     """Recursively get all transitive dependencies from PyPI metadata."""
     if visited is None:
         visited = set()
-    
+
     # Normalize package name for deduplication
     normalized_name = normalize_dependency_name(package_name)
-    
+
     if normalized_name in visited:
         return {}
-    
+
     visited.add(normalized_name)
     all_deps: dict[str, str] = {}
-    
+
     try:
         info = get_package_info(package_name, version)
         # Use the actual package name from PyPI, not the normalized one
         actual_name = package_name
-        all_deps[actual_name] = info['version']
-        
+        all_deps[actual_name] = info["version"]
+
         # Get package metadata to find dependencies
         response = httpx.get(f"https://pypi.org/pypi/{package_name}/{info['version']}/json", timeout=30.0)
         response.raise_for_status()
         data = response.json()
-        
+
         # Parse requires_dist
-        requires = data['info'].get('requires_dist', []) or []
+        requires = data["info"].get("requires_dist", []) or []
         for req in requires:
             # Skip optional dependencies (those with ; markers for extras)
-            if ';' in req and 'extra ==' in req:
+            if ";" in req and "extra ==" in req:
                 continue
-            
+
             # Extract package name
-            req = req.split(';')[0].strip()  # Remove environment markers
+            req = req.split(";")[0].strip()  # Remove environment markers
             dep_name = req.split()[0].strip()  # Get first word (package name)
-            
+
             # Remove any version specifiers from name
-            for sep in ['>=', '==', '<=', '>', '<', '~=', '!=', '[']:
+            for sep in [">=", "==", "<=", ">", "<", "~=", "!=", "["]:
                 if sep in dep_name:
                     dep_name = dep_name.split(sep)[0].strip()
                     break
-            
+
             # Recursively get transitive dependencies
             if dep_name and normalize_dependency_name(dep_name) not in visited:
                 try:
-                    transitive = get_transitive_dependencies(dep_name, None, visited)
+                    transitive = get_transitive_dependencies(dep_name, None, visited)  # type: ignore[arg-type]
                     all_deps.update(transitive)
                 except Exception as e:
                     print(f"  Warning: Could not resolve {dep_name}: {e}")
-        
+
     except Exception as e:
         print(f"  Warning: Could not get dependencies for {package_name}: {e}")
-    
+
     return all_deps
 
 
@@ -190,13 +191,6 @@ def main():
     # Get main package info
     clientele_info = get_package_info("clientele", version)
 
-    # Start with the main package
-    template_vars = {
-        "VERSION": version,
-        "URL": clientele_info["url"],
-        "SHA256": clientele_info["sha256"],
-    }
-
     # Get direct dependencies from pyproject.toml
     print("\nReading dependencies from pyproject.toml...")
     direct_deps = get_dependencies_from_pyproject()
@@ -205,24 +199,24 @@ def main():
     # Packages that require binary wheels (Rust/C extensions that are hard to build)
     # These will be marked specially in the formula
     BINARY_ONLY_PACKAGES = {
-        'pydantic-core',  # Rust package, requires maturin
-        'rpds-py',        # Rust package, requires maturin  
-        'ruff',           # Rust package, requires maturin
+        "pydantic-core",  # Rust package, requires maturin
+        "rpds-py",  # Rust package, requires maturin
+        "ruff",  # Rust package, requires maturin
     }
 
     # Collect all dependencies (direct + transitive)
     print("\nResolving all transitive dependencies...")
     all_dependencies: dict[str, dict[str, str]] = {}  # normalized_name -> {version, actual_name}
-    
+
     for dep_name in direct_deps:
         print(f"\nResolving {dep_name}...")
         try:
-            transitive = get_transitive_dependencies(dep_name, None)
+            transitive = get_transitive_dependencies(dep_name, None)  # type: ignore[arg-type]
             # Merge, avoiding duplicates by normalizing names
             for pkg, ver in transitive.items():
                 normalized = normalize_dependency_name(pkg)
                 if normalized not in all_dependencies:
-                    all_dependencies[normalized] = {'version': ver, 'actual_name': pkg}
+                    all_dependencies[normalized] = {"version": ver, "actual_name": pkg}
         except Exception as e:
             print(f"Warning: Could not fully resolve {dep_name}: {e}")
             # At minimum, add the package itself
@@ -230,48 +224,52 @@ def main():
                 info = get_package_info(dep_name, None)
                 normalized = normalize_dependency_name(dep_name)
                 if normalized not in all_dependencies:
-                    all_dependencies[normalized] = {'version': info['version'], 'actual_name': dep_name}
+                    all_dependencies[normalized] = {"version": info["version"], "actual_name": dep_name}
             except Exception as e2:
                 print(f"Error: Could not fetch {dep_name}: {e2}")
 
     # Remove the main package from dependencies
-    all_dependencies.pop(normalize_dependency_name('clientele'), None)
+    all_dependencies.pop(normalize_dependency_name("clientele"), None)
 
     print(f"\nTotal unique dependencies to include: {len(all_dependencies)}")
-    
+
     # Fetch detailed info for all dependencies
     resources_data = []
     for normalized_name in sorted(all_dependencies.keys()):
         pkg_data = all_dependencies[normalized_name]
-        package = pkg_data['actual_name']
-        pkg_version = pkg_data['version']
+        package = pkg_data["actual_name"]
+        pkg_version = pkg_data["version"]
         try:
             info = get_package_info(package, pkg_version)
-            
+
             # Check if package needs binary wheels
             is_binary_only = normalize_dependency_name(package) in {
                 normalize_dependency_name(p) for p in BINARY_ONLY_PACKAGES
             }
-            
-            resources_data.append({
-                'name': package,
-                'version': info['version'],
-                'url': info['url'],
-                'sha256': info['sha256'],
-                'binary_only': is_binary_only,
-            })
-            
+
+            resources_data.append(
+                {
+                    "name": package,
+                    "version": info["version"],
+                    "url": info["url"],
+                    "sha256": info["sha256"],
+                    "binary_only": is_binary_only,
+                }
+            )
+
         except Exception as e:
             print(f"Warning: Could not fetch info for {package}: {e}")
 
     # Generate the formula programmatically instead of using template
     print("\nGenerating Homebrew formula...")
-    
+
     formula_lines = []
     formula_lines.append("class Clientele < Formula")
     formula_lines.append("  include Language::Python::Virtualenv")
     formula_lines.append("")
-    formula_lines.append('  desc "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"')
+    formula_lines.append(
+        '  desc "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"'
+    )
     formula_lines.append('  homepage "https://phalt.github.io/clientele/"')
     formula_lines.append(f'  url "{clientele_info["url"]}"')
     formula_lines.append(f'  sha256 "{clientele_info["sha256"]}"')
@@ -280,15 +278,15 @@ def main():
     formula_lines.append('  depends_on "python@3.12"')
     formula_lines.append('  depends_on "rust" => :build  # Required for pydantic-core and ruff')
     formula_lines.append("")
-    
+
     # Add all resources
-    for resource in sorted(resources_data, key=lambda x: x['name']):
+    for resource in sorted(resources_data, key=lambda x: x["name"]):
         formula_lines.append(f'  resource "{resource["name"]}" do')
         formula_lines.append(f'    url "{resource["url"]}"')
         formula_lines.append(f'    sha256 "{resource["sha256"]}"')
-        formula_lines.append('  end')
+        formula_lines.append("  end")
         formula_lines.append("")
-    
+
     # Install section
     formula_lines.append("  def install")
     formula_lines.append("    virtualenv_install_with_resources")
@@ -298,7 +296,7 @@ def main():
     formula_lines.append('    system bin/"clientele", "version"')
     formula_lines.append("  end")
     formula_lines.append("end")
-    
+
     formula = "\n".join(formula_lines)
 
     # Write output

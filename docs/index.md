@@ -156,7 +156,7 @@ clientele explore -c pokeapi_client/
 clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
 
 ═══════════════════════════════════════════════════════════
-  Clientele Interactive API Explorer v1.0.0
+  Clientele Interactive API Explorer v1.0.1
 ═══════════════════════════════════════════════════════════
 
 Type /help or ? for commands, /exit or Ctrl+D to quit

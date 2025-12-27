@@ -30,5 +30,5 @@ Once installed, you can run `clientele version` to make sure you have the latest
 
 ```sh
 > clientele version
-clientele 1.0.0
+clientele 1.0.1
 ```
