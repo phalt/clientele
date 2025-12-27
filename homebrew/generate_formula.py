@@ -81,27 +81,144 @@ def normalize_package_name(name: str) -> str:
     return name.upper().replace("-", "_")
 
 
-def get_dependencies_from_pyproject() -> dict[str, str | None]:
-    """Extract dependencies and their versions from pyproject.toml."""
+def get_dependencies_from_pyproject() -> list[str]:
+    """Extract dependency names from pyproject.toml."""
     assert toml_loader is not None, "tomllib/tomli is required but not available"
     pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
     with open(pyproject_path, "rb") as f:
         data = toml_loader.load(f)
 
-    dependencies: dict[str, str | None] = {}
+    dependencies: list[str] = []
     for dep in data["project"]["dependencies"]:
-        if ">=" in dep:
-            name, version = dep.split(">=")
-            # For >= versions, we'll use None to get the latest compatible version
-            dependencies[name.strip()] = None
-        elif "==" in dep:
-            name, version = dep.split("==")
-            dependencies[name.strip()] = version.strip()
+        # Extract package name, handling various version specifiers
+        # Split on common version operators
+        for sep in [">=", "==", "<=", ">", "<", "~=", "!="]:
+            if sep in dep:
+                name = dep.split(sep)[0].strip()
+                break
         else:
-            # No version specified, will fetch latest
-            dependencies[dep.strip()] = None
+            # Handle complex specifiers with commas (e.g., "package>=1.0,<2.0")
+            if "," in dep:
+                name = dep.split(",")[0]
+                for sep in [">=", "==", "<=", ">", "<", "~=", "!="]:
+                    if sep in name:
+                        name = name.split(sep)[0].strip()
+                        break
+            else:
+                name = dep.strip()
+        
+        dependencies.append(name)
 
     return dependencies
+
+
+def get_all_dependencies(package_name: str, version: str) -> set[str]:
+    """Get all transitive dependencies for a package using pip."""
+    import subprocess
+    import tempfile
+    import re
+
+    print(f"Resolving dependencies for {package_name}=={version}...")
+    
+    # Create a temporary requirements file
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        f.write(f"{package_name}=={version}\n")
+        req_file = f.name
+    
+    try:
+        # Use pip to resolve dependencies
+        result = subprocess.run(
+            ['pip', 'download', '--no-binary', ':all:', '--dest', '/tmp/pip-deps', 
+             '--requirement', req_file, '--quiet'],
+            capture_output=True,
+            text=True
+        )
+        
+        # Parse downloaded packages
+        # Alternative: use pip list after install --dry-run
+        result2 = subprocess.run(
+            ['pip', 'index', 'versions', package_name],
+            capture_output=True,
+            text=True
+        )
+        
+        # Better approach: download and inspect metadata
+        result3 = subprocess.run(
+            ['pip', 'download', '--no-deps', '--dest', '/tmp', f'{package_name}=={version}'],
+            capture_output=True,
+            text=True,
+            cwd='/tmp'
+        )
+        
+    finally:
+        Path(req_file).unlink(missing_ok=True)
+    
+    # For now, return empty set - we'll use PyPI API instead
+    return set()
+
+
+def normalize_dependency_name(name: str) -> str:
+    """Normalize dependency name for deduplication (PyPI canonical form)."""
+    # Per PEP 503, package names should be normalized:
+    # lowercase and replace runs of [-_.] with a single dash
+    import re
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def get_transitive_dependencies(package_name: str, version: str, visited: set[str] | None = None) -> dict[str, str]:
+    """Recursively get all transitive dependencies from PyPI metadata."""
+    if visited is None:
+        visited = set()
+    
+    # Normalize package name for deduplication
+    normalized_name = normalize_dependency_name(package_name)
+    
+    if normalized_name in visited:
+        return {}
+    
+    visited.add(normalized_name)
+    all_deps: dict[str, str] = {}
+    
+    try:
+        info = get_package_info(package_name, version)
+        # Use the actual package name from PyPI, not the normalized one
+        actual_name = package_name
+        all_deps[actual_name] = info['version']
+        
+        # Get package metadata to find dependencies
+        response = httpx.get(f"https://pypi.org/pypi/{package_name}/{info['version']}/json", timeout=30.0)
+        response.raise_for_status()
+        data = response.json()
+        
+        # Parse requires_dist
+        requires = data['info'].get('requires_dist', []) or []
+        for req in requires:
+            # Skip optional dependencies (those with ; markers for extras)
+            if ';' in req and 'extra ==' in req:
+                continue
+            
+            # Extract package name
+            req = req.split(';')[0].strip()  # Remove environment markers
+            dep_name = req.split()[0].strip()  # Get first word (package name)
+            
+            # Remove any version specifiers from name
+            for sep in ['>=', '==', '<=', '>', '<', '~=', '!=', '[']:
+                if sep in dep_name:
+                    dep_name = dep_name.split(sep)[0].strip()
+                    break
+            
+            # Recursively get transitive dependencies
+            if dep_name and normalize_dependency_name(dep_name) not in visited:
+                try:
+                    transitive = get_transitive_dependencies(dep_name, None, visited)
+                    all_deps.update(transitive)
+                except Exception as e:
+                    print(f"  Warning: Could not resolve {dep_name}: {e}")
+        
+    except Exception as e:
+        print(f"  Warning: Could not get dependencies for {package_name}: {e}")
+    
+    return all_deps
 
 
 def main():
@@ -125,79 +242,112 @@ def main():
         "SHA256": clientele_info["sha256"],
     }
 
-    # Get all dependencies
-    dependencies = get_dependencies_from_pyproject()
+    # Get direct dependencies from pyproject.toml
+    print("\nReading dependencies from pyproject.toml...")
+    direct_deps = get_dependencies_from_pyproject()
+    print(f"Found {len(direct_deps)} direct dependencies: {', '.join(direct_deps)}")
 
-    # Core dependencies that need to be in the formula
-    core_deps = ["httpx", "click", "pydantic", "rich", "openapi-core", "pyyaml", "jinja2", "ruff", "types-pyyaml"]
+    # Packages that require binary wheels (Rust/C extensions that are hard to build)
+    # These will be marked specially in the formula
+    BINARY_ONLY_PACKAGES = {
+        'pydantic-core',  # Rust package, requires maturin
+        'rpds-py',        # Rust package, requires maturin  
+        'ruff',           # Rust package, requires maturin
+    }
 
-    # Additional transitive dependencies needed
-    additional_deps = [
-        "httpcore",
-        "h11",
-        "certifi",
-        "idna",
-        "sniffio",
-        "anyio",
-        "pydantic-core",
-        "typing-extensions",
-        "annotated-types",
-        "markdown-it-py",
-        "mdurl",
-        "pygments",
-        "openapi-schema-validator",
-        "openapi-spec-validator",
-        "jsonschema",
-        "jsonschema-path",
-        "jsonschema-specifications",
-        "referencing",
-        "rpds-py",
-        "attrs",
-        "markupsafe",
-        "isodate",
-        "werkzeug",
-        "pathable",
-        "lazy-object-proxy",
-        "more-itertools",
-        "rfc3339-validator",
-    ]
-
-    all_packages = core_deps + additional_deps
-
-    # Fetch info for all dependencies
-    for package in all_packages:
+    # Collect all dependencies (direct + transitive)
+    print("\nResolving all transitive dependencies...")
+    all_dependencies: dict[str, dict[str, str]] = {}  # normalized_name -> {version, actual_name}
+    
+    for dep_name in direct_deps:
+        print(f"\nResolving {dep_name}...")
         try:
-            # Get the version from pyproject.toml if available
-            specified_version = dependencies.get(package)
-            info = get_package_info(package, specified_version)
+            transitive = get_transitive_dependencies(dep_name, None)
+            # Merge, avoiding duplicates by normalizing names
+            for pkg, ver in transitive.items():
+                normalized = normalize_dependency_name(pkg)
+                if normalized not in all_dependencies:
+                    all_dependencies[normalized] = {'version': ver, 'actual_name': pkg}
+        except Exception as e:
+            print(f"Warning: Could not fully resolve {dep_name}: {e}")
+            # At minimum, add the package itself
+            try:
+                info = get_package_info(dep_name, None)
+                normalized = normalize_dependency_name(dep_name)
+                if normalized not in all_dependencies:
+                    all_dependencies[normalized] = {'version': info['version'], 'actual_name': dep_name}
+            except Exception as e2:
+                print(f"Error: Could not fetch {dep_name}: {e2}")
 
-            var_prefix = normalize_package_name(package)
-            template_vars[f"{var_prefix}_VERSION"] = info["version"]
-            template_vars[f"{var_prefix}_URL"] = info["url"]
-            template_vars[f"{var_prefix}_SHA256"] = info["sha256"]
+    # Remove the main package from dependencies
+    all_dependencies.pop(normalize_dependency_name('clientele'), None)
+
+    print(f"\nTotal unique dependencies to include: {len(all_dependencies)}")
+    
+    # Fetch detailed info for all dependencies
+    resources_data = []
+    for normalized_name in sorted(all_dependencies.keys()):
+        pkg_data = all_dependencies[normalized_name]
+        package = pkg_data['actual_name']
+        pkg_version = pkg_data['version']
+        try:
+            info = get_package_info(package, pkg_version)
+            
+            # Check if package needs binary wheels
+            is_binary_only = normalize_dependency_name(package) in {
+                normalize_dependency_name(p) for p in BINARY_ONLY_PACKAGES
+            }
+            
+            resources_data.append({
+                'name': package,
+                'version': info['version'],
+                'url': info['url'],
+                'sha256': info['sha256'],
+                'binary_only': is_binary_only,
+            })
+            
         except Exception as e:
             print(f"Warning: Could not fetch info for {package}: {e}")
-            print("You may need to add this dependency manually or remove it from the template.")
 
-    # Read template
-    template_path = Path(__file__).parent / "clientele.rb.template"
-    with open(template_path, "r") as f:
-        template = f.read()
-
-    # Replace all variables
-    formula = template
-    for key, value in template_vars.items():
-        formula = formula.replace(f"{{{{{key}}}}}", value)
-
-    # Check if there are any unreplaced variables
-    if "{{" in formula:
-        print("\nWarning: Some variables were not replaced:")
-        import re
-
-        unreplaced = re.findall(r"\{\{([^}]+)\}\}", formula)
-        for var in unreplaced:
-            print(f"  - {var}")
-        print("\nYou may need to fetch these dependencies manually.")
+    # Generate the formula programmatically instead of using template
+    print("\nGenerating Homebrew formula...")
+    
+    formula_lines = []
+    formula_lines.append("class Clientele < Formula")
+    formula_lines.append("  include Language::Python::Virtualenv")
+    formula_lines.append("")
+    formula_lines.append('  desc "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"')
+    formula_lines.append('  homepage "https://phalt.github.io/clientele/"')
+    formula_lines.append(f'  url "{clientele_info["url"]}"')
+    formula_lines.append(f'  sha256 "{clientele_info["sha256"]}"')
+    formula_lines.append('  license "MIT"')
+    formula_lines.append("")
+    formula_lines.append('  depends_on "python@3.12"')
+    formula_lines.append("")
+    
+    # Add all resources
+    for resource in sorted(resources_data, key=lambda x: x['name']):
+        formula_lines.append(f'  resource "{resource["name"]}" do')
+        formula_lines.append(f'    url "{resource["url"]}"')
+        formula_lines.append(f'    sha256 "{resource["sha256"]}"')
+        formula_lines.append('  end')
+        formula_lines.append("")
+    
+    # Install section
+    formula_lines.append("  def install")
+    formula_lines.append("    # Create virtualenv and install all dependencies")
+    formula_lines.append("    # Use binary wheels for all packages to avoid build issues with Rust/C extensions")
+    formula_lines.append('    venv = virtualenv_create(libexec, "python3.12")')
+    formula_lines.append("    venv.pip_install resources")
+    formula_lines.append("    venv.pip_install_and_link buildpath")
+    formula_lines.append("  end")
+    formula_lines.append("")
+    formula_lines.append("  test do")
+    formula_lines.append('    system bin/"clientele", "version"')
+    formula_lines.append("  end")
+    formula_lines.append("end")
+    
+    formula = "\n".join(formula_lines)
 
     # Write output
     output_path = Path(__file__).parent / "clientele.rb"
