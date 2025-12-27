@@ -290,11 +290,14 @@ def main():
     
     # Install section
     formula_lines.append("  def install")
-    formula_lines.append("    # Create virtualenv and install all dependencies")
-    formula_lines.append("    # Use binary wheels for all packages to avoid build issues with Rust/C extensions")
+    formula_lines.append("    # Create virtualenv")
     formula_lines.append('    venv = virtualenv_create(libexec, "python3.12")')
-    formula_lines.append("    venv.pip_install resources")
-    formula_lines.append("    venv.pip_install_and_link buildpath")
+    formula_lines.append("")
+    formula_lines.append("    # Install dependencies using binary wheels where available")
+    formula_lines.append("    # Homebrew's venv.pip_install forces --no-binary :all: which breaks Rust packages")
+    formula_lines.append("    # Use system pip directly without --no-binary to allow binary wheels")
+    formula_lines.append('    system libexec/"bin/pip", "install", *resources.map(&:cached_download)')
+    formula_lines.append('    venv.pip_install_and_link buildpath')
     formula_lines.append("  end")
     formula_lines.append("")
     formula_lines.append("  test do")
