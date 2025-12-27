@@ -1,6 +1,10 @@
 # ⚜️ Clientele
 
 <div style="text-align: center;">
+    <a href="https://github.com/phalt/clientele/releases/tag/1.0.0"><h2>🎉 1.0.0 released! 🎉</h2></a>
+</div>
+
+<div style="text-align: center;">
     <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
 </div>
 
@@ -18,6 +22,7 @@ It is designed and tested to work perfectly with the most popular Python API fra
 - **[FastAPI](https://fastapi.tiangolo.com/)**
 - **[Django REST Framework](https://www.django-rest-framework.org/)** via **[drf-spectacular](https://github.com/tfranzel/drf-spectacular)**
 - **[Django Ninja](https://django-ninja.dev/)**
+
 
 ## What Clientele Does
 
