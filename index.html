@@ -1202,21 +1202,22 @@
 <img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele" />
 <img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json" /></p>
 <p>Clientele generates fully-typed, idiomatic python HTTP API clients from OpenAPI 3.0+ schemas.</p>
-<p>It is designed and tested to work seamlessly with:</p>
+<p>It is designed and tested to work perfectly with the most popular Python API frameworks:</p>
 <ul>
-<li><strong><a href="https://fastapi.tiangolo.com/">FastAPI</a></strong>.</li>
-<li><strong><a href="https://www.django-rest-framework.org/">Django REST Framework</a></strong> via <strong><a href="https://github.com/tfranzel/drf-spectacular">drf-spectacular</a></strong>.</li>
-<li><strong><a href="https://django-ninja.dev/">Django Ninja</a></strong>.</li>
+<li><strong><a href="https://fastapi.tiangolo.com/">FastAPI</a></strong></li>
+<li><strong><a href="https://www.django-rest-framework.org/">Django REST Framework</a></strong> via <strong><a href="https://github.com/tfranzel/drf-spectacular">drf-spectacular</a></strong></li>
+<li><strong><a href="https://django-ninja.dev/">Django Ninja</a></strong></li>
 </ul>
 <h2 id="what-clientele-does">What Clientele Does</h2>
 <p>Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP client with:</p>
 <ul>
+<li><strong>Developer first approach</strong> designed for a loveable developer experience.</li>
 <li><strong>Pydantic models</strong> for request and response validation.</li>
 <li><strong>Fully-typed function signatures</strong> for IDE autocomplete and type checking.</li>
-<li><strong>Async support</strong> through httpx if you need it.</li>
-<li><strong>Your preferences</strong> - class-based or functional, you can choose.</li>
-<li><strong>Minimal footprint</strong> - the generated code is readable, debuggable Python with only two dependencies.</li>
-<li><strong>Regeneration-friendly</strong> - update your API, regenerate, review the git diff, ship it!</li>
+<li><strong>Async support</strong> if you want a concurrent client.</li>
+<li><strong>Multiple formats</strong> - class-based or functional, you can choose.</li>
+<li><strong>Tiny output</strong> - the generated code is readable, debuggable Python with only two dependencies.</li>
+<li><strong>Regeneration-friendly</strong> - update your API, regenerate, review the git diff, then ship it!</li>
 <li><strong>API REPL</strong> - a dedicated REPL for exploring and testing the client.</li>
 <li><strong>Deterministic</strong>: No exepensive LLMs, no hallucinations - same input always produces same output.</li>
 </ul>
@@ -1224,15 +1225,15 @@
 <h4 id="consumer">Consumer</h4>
 <ul>
 <li>You want to use an HTTP API that has an OpenAPI schema</li>
-<li>And you want to consume that API from another Python service</li>
-<li>And you need type safety and validation without manual schema maintenance</li>
+<li>And you want to consume that API from a Python application</li>
+<li>And you want type safety and validation without manual schema maintenance</li>
 <li>And you want code that is readable, maintainable, and extendable to suit your project</li>
 </ul>
 <h4 id="publisher">Publisher</h4>
 <ul>
 <li>You have an HTTP API that has an OpenAPI schema</li>
 <li>And you want to offer a client library in Python</li>
-<li>And you don't want the overhead of maintaining it</li>
+<li>And you want developers to love using the client</li>
 </ul>
 <h2 id="quick-start">Quick Start</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Best installed as a tool</span>
@@ -1326,7 +1327,7 @@ Press<span class="w"> </span>TAB<span class="w"> </span><span class="k">for</spa
 <p>Any framework or tool that generates standards-compliant OpenAPI schemas should work with Clientele.</p>
 <h3 id="verified-compatibility">Verified Compatibility</h3>
 <p>We test Clientele against 2000+ real-world OpenAPI schemas from the <a href="https://github.com/APIs-guru/openapi-directory">APIs.guru OpenAPI Directory</a> through a CI cron job.</p>
-<p>As of our latest run, we successfully generate clients for <strong>93.86%</strong> of schemas in the directory.</p>
+<p>As of our latest run, we successfully generate clients for <strong>95.39%</strong> of schemas in the directory.</p>
 <p><img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json" /></p>
 <p>Additionally we have specifically built and tested Clientele to support:</p>
 <ul>
@@ -1350,8 +1351,7 @@ Press<span class="w"> </span>TAB<span class="w"> </span><span class="k">for</spa
 <li><strong>Formatting</strong>: Automatically formats generated code with <a href="https://docs.astral.sh/ruff/">Ruff</a>.</li>
 </ul>
 <h2 id="getting-started">Getting Started</h2>
-<p>👉 See our <a href="https://phalt.github.io/clientele/framework-fastapi/">framework-specific guides</a> for FastAPI, Django REST Framework, and Django Ninja</p>
-<p>👉 Read the <a href="https://phalt.github.io/clientele/">full documentation</a> for advanced usage</p>
+<p>👉 See our <a href="https://phalt.github.io/clientele/framework-fastapi/">framework-specific guides</a> for FastAPI, Django REST Framework, and Django Ninja.</p>
 
 
 
