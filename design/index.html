@@ -751,18 +751,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#openapi-code-generators" class="md-nav__link">
+  <a href="#a-brief-history-of-http-apis" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenAPI code generators
+      A brief history of HTTP APIs
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-landscape-in-2023" class="md-nav__link">
+  <a href="#openapi-client-generators" class="md-nav__link">
     <span class="md-ellipsis">
-      The landscape in 2023
+      OpenAPI client generators
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2023-and-the-start-of-clientele" class="md-nav__link">
+    <span class="md-ellipsis">
+      2023 and the start of Clientele
     </span>
   </a>
   
@@ -800,6 +809,15 @@
   <a href="#easy-to-understand" class="md-nav__link">
     <span class="md-ellipsis">
       Easy to understand
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supporting-python-api-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supporting Python API Frameworks
     </span>
   </a>
   
@@ -876,18 +894,27 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#openapi-code-generators" class="md-nav__link">
+  <a href="#a-brief-history-of-http-apis" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenAPI code generators
+      A brief history of HTTP APIs
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-landscape-in-2023" class="md-nav__link">
+  <a href="#openapi-client-generators" class="md-nav__link">
     <span class="md-ellipsis">
-      The landscape in 2023
+      OpenAPI client generators
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2023-and-the-start-of-clientele" class="md-nav__link">
+    <span class="md-ellipsis">
+      2023 and the start of Clientele
     </span>
   </a>
   
@@ -930,6 +957,15 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#supporting-python-api-frameworks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supporting Python API Frameworks
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -955,26 +991,32 @@
 
 
 <h1 id="design">🎨 Design</h1>
-<h2 id="openapi-code-generators">OpenAPI code generators</h2>
-<p>Every few years we check the HTTP API landscape to see what has changed, and what new tooling is available. A part of this research is seeing how far <a href="https://www.openapis.org/">OpenAPI client generators</a> have come.  </p>
-<p>In the early years of OpenAPI, the "last mile" (i.e. - generating, and using, a client library) had a pretty poor experience:</p>
+<h2 id="a-brief-history-of-http-apis">A brief history of HTTP APIs</h2>
+<p>Hello, I am <a href="https://paulwrites.software">Paul Hallett</a> - a lead software engineer who has spent over 10 years fascinated by and building HTTP APIs for both massive and small tech companies.</p>
+<p>When I started building my first hobby project - <a href="https://pokeapi.co">PokeAPI</a> - I had one issue I wanted to solve: show how important good API design is by building a "pure" example. PokeAPI was a huge success, and still is, with over 1 billion API requests a month, it is one of the most popular free HTTP APIs on the web.</p>
+<p>Around this time <a href="https://swagger.io/">Swagger</a> was being introduced. Slowly over time adoption built up. This was also around the same time the SaaS and "API product" boom happened - companies like Twilio, Stripe, and Sendgrid were the coolest startups in tech and their product was pure HTTP APIs. A lot of them offered Swagger schemas for their APIs.</p>
+<p>In 2015 Swagger was renamed to OpenAPI. Two years later the 3.0 version of finalised, with version 3.1 coming along in 2021.</p>
+<h2 id="openapi-client-generators">OpenAPI client generators</h2>
+<p>Every few years I check the HTTP API landscape to see what has changed, and what new tooling is available.</p>
+<p>A big part of this research is seeing how far <a href="https://www.openapis.org/">OpenAPI client generators</a> have come.  </p>
+<p>Despite the heavy adoption of OpenAPI <em>schema</em> generators, the "last mile" (i.e. - generating, and using, a client library) still has a experience nowhere near the maturity as the schema generator landscape. The great thing about schema generators these days is they are seemlessly blended in - most API frameworks, especially in the Python landscape, generate schemas as standard.</p>
+<p>But my experience with most <em>client</em> generators always falls into one of these buckets:</p>
 <ul>
 <li>
-<p>The generated code was difficult to read, leading to problems when debugging the code. It was often not idiomatic to the language.</p>
+<p>The generated code is difficult to read, meaning I don't fully trust it, and often leads to problems when trying to debug the code. Nearly all of the time the code is not idiomatic to Python.</p>
 </li>
 <li>
-<p>It was often bloated and repetitive, making changes tedious to support your specific project.</p>
+<p>The generated code is often repetitive and very large, meaning it is tedious to support.</p>
 </li>
 <li>
-<p>Also, you had to install a lot of things like Java to generate the code.</p>
-</li>
-<li>
-<p>And finally, some API services still weren't publishing an OpenAPI schema. Or, the schema they published was different from the standard, so would not work with code generators.</p>
+<p>You have to install a lot of extra tooling just to get started.</p>
 </li>
 </ul>
-<p>This experience wasn't ideal, and was often such an impedance that it put us off using them. We would prefer instead to take a template of our own choosing, refined from years of working with HTTP APIs, and adapt it to whatever new API we were consuming.</p>
-<h2 id="the-landscape-in-2023">The landscape in 2023</h2>
-<p>In the early part of 2023, we had to build an integration with a new HTTP API. So, like we did in the past, we used it as an opportunity to asses the landscape of OpenAPI client generators.</p>
+<p>This experience isn't ideal, and is often such an impedance that it just isn't worth it. I would always prefer instead to take a template of my own choosing, refined from years of working with HTTP APIs, and adapt it to whatever new API I was consuming. And this isn't just my own personal opinion - in every place I have worked I have seen this - developers never using a client generator and instead opting to just roll with a custom built client.</p>
+<p>Just as the Python community made a great experience for <em>schema</em> generators, surely we could make one for <em>client</em> generators?</p>
+<h2 id="2023-and-the-start-of-clientele">2023 and the start of Clientele</h2>
+<p>In the early part of 2023, I had to build an integration with a new HTTP API.</p>
+<p>So, like I did in the past, I used it as an opportunity to asses the landscape of OpenAPI client generators.</p>
 <p>And this was our summary at the time of writing:</p>
 <ul>
 <li>
@@ -984,33 +1026,41 @@
 <p>There are a lot of options for generating clients. They all meet the need of "generating a python client using the schema". But, almost universally, they have a poor developer experience.</p>
 </li>
 </ul>
-<p>After evaluating many python client generators, we opted to use <strong>none</strong> of them and hand craft the API client ourselves. We used the OpenAPI schema as a source to develop the input and output objects.  Then we wrote a small functional abstraction over the paths.</p>
-<p>Looking back over our organised, pythonic, minimal client integration, we had an idea:</p>
-<p>If this is the type of client we would like a generator to produce; how hard could it be to work backwards and build one?</p>
+<p>After evaluating many python client generators, I opted to use <strong>none</strong> of them and instead hand craft the API client myself. I used the OpenAPI schema as a source to develop the input and output objects. Then I wrote a small functional abstraction over the paths.</p>
+<p>Looking back over my organised, pythonic, minimal client integration, I had an idea:</p>
+<blockquote>
+<p>If this is the type of client I would like a client generator to produce; how hard could it be to work backwards and generate this layout?</p>
+</blockquote>
+<p>The schema became my input. The client I had just made became my output. I had all the parts I needed to start a project.</p>
 <p>This was the start of Clientele.</p>
 <h2 id="clientele">Clientele</h2>
-<p>As python developers ourselves, we know what makes good, readable, idiomatic python.</p>
-<p>We also feel like we have a grasp on the best tools to be using in our python projects.</p>
-<p>By starting with a client library that we <em>like</em> to use, and working backwards, we were able to build a client generator that produced something that python developers actually wanted.</p>
-<p>But what is it exactly that we aimed to do with Clientele, why is this the OpenAPI Python client that you should use?</p>
+<p>As a python developer I know what makes good, readable, idiomatic python.</p>
+<p>I also feel like I have a pretty good grasp on the best tools to be using in our python projects as I'm involved in the community and constantly trying out new stuff.</p>
+<p>By starting with a client library that I like to use, and working backwards, I was able to build a client generator that produced something that I felt that python developers actually wanted.</p>
+<p>But why is <em>this</em> the OpenAPI Python client that I think everyone should use?</p>
 <h3 id="strongly-typed-inputs-and-outputs">Strongly-typed inputs and outputs</h3>
 <p>OpenAPI prides itself on being able to describe the input and output objects in its schema.</p>
 <p>This means you can build strongly-typed interfaces to the API. This helps to solve some common niggles when using an API - such as casting a value to a string when it should be an integer.</p>
-<p>With Clientele, we opted to use <a href="https://docs.pydantic.dev/latest/">Pydantic</a> to build the models from the OpenAPI schema.</p>
-<p>Pydantic doesn't only describe the shape of an object, it also validates the attributes. If an API sends back the wrong attributes at runtime, Pydantic will error and provide a detailed description of what went wrong.</p>
+<p>With Clientele, I opted to use <a href="https://docs.pydantic.dev/latest/">Pydantic</a> to build the models from the OpenAPI schema.</p>
+<p>Pydantic doesn't only describe the shape of an object, it also validates the attributes. If an API sends back the wrong attributes at runtime, Pydantic will error and provide a detailed description of what went wrong. It's also super fast.</p>
 <h3 id="idiomatic-python">Idiomatic Python</h3>
-<p>A lot of the client generators we tested produced a lot of poor code.</p>
-<p>It was clear in a few cases that the client generator was built without understanding or knowledge of good <a href="https://realpython.com/lessons/zen-of-python/">Python conventions</a>.</p>
-<p>We also discovered more than one client generator that would work by reading a file at runtime. This is cool engineering, but it's impractical to use. When you develop with these clients, the available functions and objects don't exist and you can't use an IDE's autocomplete feature.</p>
-<p>Clientele set out to be as pythonic as possible. We use modern tools, idiomatic conventions, and provide some helpful bonuses like <a href="https://github.com/psf/black/">Black</a> auto-formatting.</p>
+<p>A lot of the client generators I tested produced a lot of obtuse and hard to read code.</p>
+<p>It was clear in a few cases that the client generator was built without understanding or knowledge of good <a href="https://realpython.com/lessons/zen-of-python/">Python conventions</a>. Usually these client generators offered output in hundreds of programming languages, so they didn't dedicate any time to making the developer experience great in any of them.</p>
+<p>I also discovered more than one client generator that would work by reading a file at runtime. This is cool engineering, but it is impractical to use. When you develop with these clients, the available functions and objects don't exist until the code is running, and you can't use an IDE's autocomplete feature.</p>
+<p>Clientele sets out to be as pythonic as possible. </p>
+<p>It uses modern tools, idiomatic conventions, and provide some helpful bonuses like <a href="https://github.com/astral-sh/ruff">Ruff</a> auto-formatting.</p>
 <h3 id="easy-to-understand">Easy to understand</h3>
 <p>Eventually a developer will need to do some debugging, and sometimes they'll need to do it in the generated client code.</p>
 <p>A lot of the other client generators make obscure or obtuse code that is hard to pick apart and debug.</p>
-<p>Now, there's a suggestion that developers shouldn't <em>have to</em> look at this, and that's fair. But the reality doesn't match that expectation. Personally, we like to know what generated code is doing. We want to trust that it will work, and that we can adapt around it if needed. An interesting quirk of any code generator is you can't always inspect the source when evaluating whether to use it. Any other tool - you'd just go to GitHub and have a read around, but you can't with code generators.</p>
+<p>Now, there's a suggestion that developers <em>shouldn't have to</em> look at this, and that's fair. </p>
+<p>But the reality doesn't match that expectation. Personally, I like to know what generated code is doing. I want to trust that it will work, and that I can adapt around it if needed. An interesting quirk of any code generator is you can't always inspect the source when evaluating whether to use it. Any other tool - you'd just go to GitHub and have a read around, but you can't with code generators.</p>
 <p>So the code that is generated needs to be easy to understand.</p>
 <p>Clientele doesn't do any tricks, or magic, or anything complex. The generated code has documentation and is designed to be readable. It is only a small layer on top of already well established tools, such as <a href="https://github.com/encode/httpx">HTTPX</a>.</p>
-<p>In fact, we have some generated clients in our <a href="https://github.com/phalt/clientele/tree/main/tests">project repository</a> so you can see what it looks like. We even have example <a href="https://github.com/phalt/clientele/blob/main/tests/test_generated_client.py">tests</a> for you to learn how to integrate with it.</p>
-<p>It is that way because we know you will need to inspect it in the future. We want you to know that this is a sane and sensible tool.</p>
+<p>In fact, I have some generated clients in our <a href="https://github.com/phalt/clientele/tree/main/tests">project repository</a> so you can see what it looks like. We even have example <a href="https://github.com/phalt/clientele/blob/main/tests/test_generated_client.py">tests</a> for you to learn how to integrate with it.</p>
+<p>It is that way because I know you will need to inspect it in the future. I want you to know that this is a sane and sensible tool.</p>
+<h3 id="supporting-python-api-frameworks">Supporting Python API Frameworks</h3>
+<p>The python ecosystem for API frameworks is very rich and mature. I love the options we have to build APIs with. I wanted to focus on supporting this ecosystem specifically because of how much I love the tooling, but also because it means I can focus on doing one thing great: client generation that specifically supports Python API frameworks.</p>
+<p>You'll see in the project documentation that we explain how to use common API frameworks like FastAPI, Django REST Framework and Django-ninja, and the project even has <a href="https://github.com/phalt/clientele/tree/main/server_examples">client and server examples</a> to help demonstrate and prove it's usefulness.</p>
 
 
 

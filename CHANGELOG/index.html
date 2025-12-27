@@ -778,6 +778,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1.0.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#major-new-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Major new features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clientele-code-generation-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clientele code generation improvements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1078,6 +1102,30 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1.0.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#major-new-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Major new features
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clientele-code-generation-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clientele code generation improvements
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1350,37 +1398,26 @@
 
 <h1 id="change-log">Change log</h1>
 <h2 id="100">1.0.0</h2>
+<p>Version 1.0.0 represents 12 months of work, planning, testing and using clientele with real APIs. It has major new features and some breaking changes. I recommend completely deleting your previous clients and rebuilding to ensure a smooth rollout.</p>
+<p>For most of this year I've been constrained by a lack of time to build the features I have planned. With the assistance of supervised agents I have been able to build out most of what I needed, and then spent time correcting and improving the agent's code to be functionally correct.</p>
+<p>The productivity boost has been immense and has helped me to realise the goals and ambitions I have for this project.</p>
+<h3 id="major-new-features">Major new features</h3>
 <ul>
-<li>🆕 <strong>Explorer CLI</strong>: Use <code>clientele explore</code> to explore and discover APIs interactively without writing any code.</li>
-<li>Explore from existing clients: <code>clientele explore -c my_client/</code> (or <code>--client</code>)</li>
-<li>Explore directly from schema files: <code>clientele explore -f openapi.json</code></li>
-<li>Explore from remote schemas: <code>clientele explore -u https://api.example.com/openapi.json</code></li>
-<li>Supports both standard (function-based) and class-based generated clients</li>
-<li>Works with sync and async clients</li>
-<li>Automatic request validation and beautiful error formatting</li>
-<li>
+<li>🆕 <strong>Explorer CLI</strong>: Use <code>clientele explore</code> to use a REPL and discover APIs interactively, even without writing any code.</li>
+<li>⚙️ <strong>Rebuilt configuration</strong>: <code>config.py</code> has been re-engineered to use <a href="https://docs.pydantic.dev/latest/concepts/pydantic_settings/">pydantic settings</a>.</li>
+<li>📜 <strong>Rebuilt parser</strong> - parsing OpenAPI schema into python objects is now handled entirely by <a href="https://github.com/phalt/cicerone">Cicerone</a>, our own OpenAPI parser that was built to meet our unique needs.</li>
+<li>Clientele now specifically offers 100% support for all major Python API frameworks: FastAPI, Django REST Framework, and Django-Ninja.</li>
+<li>Clientele is now tested and proven to generate clients for 2000+ openapi schemas as part of our CI. It runs weekly and we use it to ensure broad capability with all OpenAPI services.</li>
+</ul>
+<h3 id="clientele-code-generation-improvements">Clientele code generation improvements</h3>
 <ul>
-<li>See the <a href="https://phalt.github.io/clientele/usage/#explore">documentation</a> for complete usage guide</li>
-</ul>
-</li>
-<li><strong>CLI Features</strong>:<ul>
-<li>Tab autocomplete for operation names and parameters with type hints</li>
-<li>Execute operations with Python-like syntax: <code>pokemon_list(limit=10)</code></li>
-<li>Syntax-highlighted JSON responses with timing information</li>
-<li>Command history (persistent in <code>~/.clientele_history</code>)</li>
-<li>Slash commands: <code>/list</code> (show all operations), <code>/schemas</code> (inspect schemas), <code>/config</code> (view/set config), <code>/debug on/off</code> (toggle debug), <code>/help</code> (show help), <code>/exit</code> (quit)</li>
-</ul>
-</li>
-<li><strong>Fixed</strong>: Explorer CLI now correctly accepts dictionary arguments for parameters expecting Pydantic models (e.g., <code>create_user(data={"name": "test", "email": "foo@test.com"})</code>). Previously, this would fail with <code>AttributeError: 'dict' object has no attribute 'model_dump'</code>.</li>
-<li><strong>Clientele code generation improvements</strong>:</li>
-<li>Fixed parameter ordering (required parameters before optional ones)</li>
+<li>Fixed function parameter ordering (required parameters before optional ones).</li>
 <li>Nullable fields properly handled (OpenAPI 3.0 <code>nullable: true</code> and OpenAPI 3.1 array type notation)</li>
 <li><strong>Fixed</strong>: Array responses without a <code>title</code> field now correctly generate type aliases instead of wrapper classes with a <code>test</code> property.</li>
 <li><strong>Fixed</strong>: Responses with no content (e.g., 204 No Content) are now properly included in the status code map with <code>None</code> as the response type.</li>
-<li>Correctly handle reserved python keywords for schema model properties (i.e. <code>type</code>, <code>next</code> etc)</li>
-<li>⚠️ <strong>BREAKING</strong> ⚠️: <code>config.py</code> re-engineered to use <a href="https://docs.pydantic.dev/latest/concepts/pydantic_settings/">pydantic settings</a>. Pleas delete your <code>config.py</code> file and regenerate to update.</li>
+<li>Correctly handle reserved python keywords for schema model properties (i.e. <code>type</code>, <code>next</code> etc).</li>
 <li><strong>New</strong>: Extended httpx configuration options in generated clients - timeout, follow_redirects, verify_ssl, http2, and max_redirects are now configurable.</li>
-<li>Removed the <code>validate</code> command from the CLI</li>
+<li>Removed the <code>validate</code> command from the CLI.</li>
 </ul>
 <h2 id="0110">0.11.0</h2>
 <ul>
