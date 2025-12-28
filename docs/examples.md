@@ -1,6 +1,8 @@
 # 🗺️ Tour of a Generated Client
 
-When you generate a client with Clientele, it creates several files that work together to provide a complete HTTP API client. This guide explains each file's purpose and which ones you'll interact with as a developer.
+When you generate a client with Clientele, it creates several files that work together to provide a complete HTTP API client. 
+
+This guide explains each file's purpose and which ones you'll interact with as a developer.
 
 ## What gets generated?
 
@@ -52,7 +54,9 @@ This file is particularly useful when you need to regenerate the client after AP
 
 **Purpose:** API endpoint functions or class
 
-This is the main file you'll import and use. It contains a function (or method if using `generate-class`) for each API endpoint.
+This is the main file you'll import and use. 
+
+It contains a function (or method if using `generate-class`) for each API endpoint.
 
 **Should you edit it?** No, this file is regenerated each time. Your usage code should import from it, not modify it.
 
@@ -138,7 +142,7 @@ These schemas provide:
 
 - **Type safety:** Your IDE can autocomplete fields and catch type errors
 - **Validation:** Pydantic validates data at runtime
-- **Serialization:** Easy conversion to/from JSON
+- **Serialisation:** Easy conversion to/from JSON
 
 **Usage example:**
 
@@ -163,7 +167,7 @@ assert isinstance(user, schemas.User)
 
 The `config.py` file contains a `Config` class that manages all client settings like API URL, authentication, timeouts, and HTTP behavior.
 
-**Should you edit it?** Yes! This is the one file that **won't** be overwritten when you regenerate. Customize it to suit your needs.
+**Should you edit it?** Yes! This is the one file that **won't** be overwritten when you regenerate. Customise it to suit your needs.
 
 **Example:**
 
@@ -197,7 +201,7 @@ For detailed configuration options and examples, see the [Configuration Guide](c
 
 This file contains the low-level HTTP logic: making requests with `httpx`, handling responses, parsing errors, and managing the response-to-schema mapping.
 
-**Should you edit it?** No. This file is regenerated each time and is **not intended to be read by developers**. It's implementation detail.
+**Should you edit it?** No. This file is regenerated each time and is **not intended to be used by developers**. You are welcome to read it and understand how it works. There isn't any magic.
 
 **What's inside:**
 
@@ -205,9 +209,9 @@ This file contains the low-level HTTP logic: making requests with `httpx`, handl
 - `handle_response()` for converting HTTP responses to Pydantic models
 - `APIException` class for unexpected response codes
 - Response code mapping for each endpoint
-- HTTP client initialization with your config settings
+- HTTP client initialisation with your config settings
 
-**You only interact with this file indirectly** when handling API exceptions. See the [Exception Handling](exceptions.md) guide for details.
+**You only need to interact with this file indirectly** when handling API exceptions. See the [Exception Handling](exceptions.md) guide for details.
 
 ## Summary
 
