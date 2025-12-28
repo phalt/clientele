@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://phalt.github.io/clientele/examples/">
+        <link rel="canonical" href="https://phalt.github.io/clientele/authentication/">
       
       
-        <link rel="prev" href="../exceptions/">
+        <link rel="prev" href="../configuration/">
       
       
-        <link rel="next" href="../testing/">
+        <link rel="next" href="../exceptions/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Generated Client Tour - ⚜️ Clientele</title>
+        <title>Authentication - ⚜️ Clientele</title>
       
     
     
@@ -72,7 +72,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#tour-of-a-generated-client" class="md-skip">
+        <a href="#authentication" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +108,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Generated Client Tour
+              Authentication
             
           </span>
         </div>
@@ -515,10 +515,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Authentication
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -529,6 +551,146 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#supported-authentication-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Authentication Types
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Authentication Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bearer-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bearer Token
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-basic-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTP Basic Authentication
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Headers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Authentication Methods
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-specific-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment-Specific Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment-Specific Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-based-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Class-Based Clients
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-based-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Function-Based Clients
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      Debugging Authentication
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      See Also
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -561,32 +723,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    Generated Client Tour
-    
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
         
   
   
@@ -597,89 +737,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#what-gets-generated" class="md-nav__link">
-    <span class="md-ellipsis">
-      What gets generated?
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#manifestmd" class="md-nav__link">
-    <span class="md-ellipsis">
-      MANIFEST.md
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#clientpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      client.py
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#schemaspy" class="md-nav__link">
-    <span class="md-ellipsis">
-      schemas.py
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configpy" class="md-nav__link">
-    <span class="md-ellipsis">
-      config.py
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#httppy" class="md-nav__link">
-    <span class="md-ellipsis">
-      http.py
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -925,63 +982,120 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-gets-generated" class="md-nav__link">
+  <a href="#supported-authentication-types" class="md-nav__link">
     <span class="md-ellipsis">
-      What gets generated?
+      Supported Authentication Types
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Supported Authentication Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bearer-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bearer Token
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-basic-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTP Basic Authentication
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      Custom Headers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#multiple-authentication-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      Multiple Authentication Methods
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#manifestmd" class="md-nav__link">
+  <a href="#environment-specific-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      MANIFEST.md
+      Environment-Specific Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment-Specific Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#development" class="md-nav__link">
+    <span class="md-ellipsis">
+      Development
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#class-based-clients" class="md-nav__link">
+    <span class="md-ellipsis">
+      Class-Based Clients
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#clientpy" class="md-nav__link">
+  <a href="#function-based-clients" class="md-nav__link">
     <span class="md-ellipsis">
-      client.py
+      Function-Based Clients
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#schemaspy" class="md-nav__link">
+  <a href="#debugging-authentication" class="md-nav__link">
     <span class="md-ellipsis">
-      schemas.py
+      Debugging Authentication
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#configpy" class="md-nav__link">
+  <a href="#see-also" class="md-nav__link">
     <span class="md-ellipsis">
-      config.py
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#httppy" class="md-nav__link">
-    <span class="md-ellipsis">
-      http.py
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      Summary
+      See Also
     </span>
   </a>
   
@@ -1006,221 +1120,137 @@
   
 
 
-<h1 id="tour-of-a-generated-client">🗺️ Tour of a Generated Client</h1>
-<p>When you generate a client with Clientele, it creates several files that work together to provide a complete HTTP API client. </p>
-<p>This guide explains each file's purpose and which ones you'll interact with as a developer.</p>
-<h2 id="what-gets-generated">What gets generated?</h2>
-<p>Running <code>clientele generate</code> creates this file structure:</p>
-<div class="highlight"><pre><span></span><code>my_client/
-<span class="w">    </span>MANIFEST.md
-<span class="w">    </span>client.py
-<span class="w">    </span>config.py
-<span class="w">    </span>http.py
-<span class="w">    </span>schemas.py
+<h1 id="authentication">Authentication</h1>
+<p>Clientele supports multiple authentication methods through the client configuration.</p>
+<h2 id="supported-authentication-types">Supported Authentication Types</h2>
+<h3 id="bearer-token">Bearer Token</h3>
+<p>Bearer token authentication adds an <code>Authorization</code> header with a token to all requests.</p>
+<p><strong>Configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+<span class="c1"># Via code</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">bearer_token</span><span class="o">=</span><span class="s2">&quot;your-secret-token&quot;</span><span class="p">)</span>
+
+<span class="c1"># Via environment variable</span>
+<span class="n">export</span> <span class="n">BEARER_TOKEN</span><span class="o">=</span><span class="s2">&quot;your-secret-token&quot;</span>
 </code></pre></div>
-<p>Let's explore each file.</p>
-<h2 id="manifestmd">MANIFEST.md</h2>
-<p><strong>Purpose:</strong> Metadata and regeneration tracking</p>
-<p>The <code>MANIFEST.md</code> file contains metadata about your generated client:</p>
-<ul>
-<li>The Clientele version used to generate it</li>
-<li>The OpenAPI version of the source schema</li>
-<li>The API version</li>
-<li>The exact command to regenerate the client</li>
-</ul>
-<p><strong>Should you edit it?</strong> No, this file is regenerated each time.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="gh"># Manifest</span>
-
-Generated with https://github.com/phalt/clientele
-
-API VERSION: 1.0.0
-OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 1.1.0
-
-Regenerate using this command:
-
-clientele generate -f openapi.json -o my_client/ --regen t
+<p><strong>What happens under the hood:</strong></p>
+<p>Clientele sets the <code>Authorization</code> header on every request:</p>
+<div class="highlight"><pre><span></span><code>Authorization: Bearer your-secret-token
 </code></pre></div>
-<p>This file is particularly useful when you need to regenerate the client after API changes. See <a href="../usage/#regenerating">Regenerating</a> for details.</p>
-<h2 id="clientpy">client.py</h2>
-<p><strong>Purpose:</strong> API endpoint functions or class</p>
-<p>This is the main file you'll import and use. </p>
-<p>It contains a function (or method if using <code>generate-class</code>) for each API endpoint.</p>
-<p><strong>Should you edit it?</strong> No, this file is regenerated each time. Your usage code should import from it, not modify it.</p>
-<p><strong>Function-based client example:</strong></p>
-<div class="highlight"><span class="filename">my_client/client.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">http</span><span class="p">,</span> <span class="n">schemas</span>
+<h3 id="http-basic-authentication">HTTP Basic Authentication</h3>
+<p>Basic authentication uses a username and password.</p>
+<p><strong>Configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
 
-
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">User</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get user by ID&quot;&quot;&quot;</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">get_user</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateUserRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">User</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a new user&quot;&quot;&quot;</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="s2">&quot;/users&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span>
-    <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="n">create_user</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>Class-based client example:</strong></p>
-<div class="highlight"><span class="filename">my_client/client.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span><span class="p">,</span> <span class="n">http</span><span class="p">,</span> <span class="n">schemas</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;API Client for making requests&quot;&quot;&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span> <span class="o">=</span> <span class="n">http</span><span class="o">.</span><span class="n">HTTPClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">schemas</span><span class="o">.</span><span class="n">User</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get user by ID&quot;&quot;&quot;</span>
-        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_http_client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;/users/</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">http</span><span class="o">.</span><span class="n">handle_response</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_user</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
-</code></pre></div>
-<p>Each function/method is fully typed and includes:</p>
-<ul>
-<li>Type hints for all parameters</li>
-<li>Return type annotations with all possible response types</li>
-<li>The endpoint's description as a docstring</li>
-</ul>
-<p>See the <a href="../usage/">Usage</a> guide for more on function-based vs class-based clients.</p>
-<h2 id="schemaspy">schemas.py</h2>
-<p><strong>Purpose:</strong> Pydantic models for requests and responses</p>
-<p>The <code>schemas.py</code> file contains Pydantic models for all request bodies, response bodies, and enums defined in your OpenAPI schema.</p>
-<p><strong>Should you edit it?</strong> No, this file is regenerated each time. You use these schemas in your code but don't modify them.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight"><span class="filename">my_client/schemas.py</span><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">CreateUserRequest</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">password</span><span class="p">:</span> <span class="nb">str</span>
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">UserRole</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Enum</span><span class="p">):</span>
-    <span class="n">ADMIN</span> <span class="o">=</span> <span class="s2">&quot;ADMIN&quot;</span>
-    <span class="n">USER</span> <span class="o">=</span> <span class="s2">&quot;USER&quot;</span>
-    <span class="n">GUEST</span> <span class="o">=</span> <span class="s2">&quot;GUEST&quot;</span>
-</code></pre></div>
-<p>These schemas provide:</p>
-<ul>
-<li><strong>Type safety:</strong> Your IDE can autocomplete fields and catch type errors</li>
-<li><strong>Validation:</strong> Pydantic validates data at runtime</li>
-<li><strong>Serialisation:</strong> Easy conversion to/from JSON</li>
-</ul>
-<p><strong>Usage example:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
-
-<span class="c1"># Create request data with validation</span>
-<span class="n">user_data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateUserRequest</span><span class="p">(</span>
-    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span>
-    <span class="n">email</span><span class="o">=</span><span class="s2">&quot;alice@example.com&quot;</span><span class="p">,</span>
-    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;secret123&quot;</span>
+<span class="c1"># Via code</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
+    <span class="n">user_key</span><span class="o">=</span><span class="s2">&quot;username&quot;</span><span class="p">,</span>
+    <span class="n">pass_key</span><span class="o">=</span><span class="s2">&quot;password&quot;</span>
 <span class="p">)</span>
 
-<span class="c1"># Get a validated response</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">user_data</span><span class="p">)</span>
-<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">User</span><span class="p">)</span>
+<span class="c1"># Via environment variables</span>
+<span class="n">export</span> <span class="n">USER_KEY</span><span class="o">=</span><span class="s2">&quot;username&quot;</span>
+<span class="n">export</span> <span class="n">PASS_KEY</span><span class="o">=</span><span class="s2">&quot;password&quot;</span>
 </code></pre></div>
-<h2 id="configpy">config.py</h2>
-<p><strong>Purpose:</strong> Client configuration and settings</p>
-<p>The <code>config.py</code> file contains a <code>Config</code> class that manages all client settings like API URL, authentication, timeouts, and HTTP behavior.</p>
-<p><strong>Should you edit it?</strong> Yes! This is the one file that <strong>won't</strong> be overwritten when you regenerate. Customise it to suit your needs.</p>
-<p><strong>Example:</strong></p>
-<div class="highlight"><span class="filename">my_client/config.py</span><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseSettings</span><span class="p">,</span> <span class="n">SettingsConfigDict</span>
+<p><strong>What happens under the hood:</strong></p>
+<p>Clientele encodes the credentials and sets the <code>Authorization</code> header:</p>
+<div class="highlight"><pre><span></span><code>Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+</code></pre></div>
+<p><strong>Optional authentication:</strong></p>
+<p>If both <code>user_key</code> and <code>pass_key</code> are empty or <code>None</code>, authentication is disabled:</p>
+<div class="highlight"><pre><span></span><code><span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span><span class="n">user_key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">pass_key</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># No auth</span>
+</code></pre></div>
+<h3 id="custom-headers">Custom Headers</h3>
+<p>For APIs that use custom authentication headers (like API keys), use <code>additional_headers</code>:</p>
+<p><strong>Configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
 
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
+    <span class="n">additional_headers</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;X-API-Key&quot;</span><span class="p">:</span> <span class="s2">&quot;your-api-key&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;X-Client-ID&quot;</span><span class="p">:</span> <span class="s2">&quot;your-client-id&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
 
+<span class="c1"># Via environment (requires custom config.py setup)</span>
+<span class="n">export</span> <span class="n">ADDITIONAL_HEADERS</span><span class="o">=</span><span class="s1">&#39;{&quot;X-API-Key&quot;: &quot;your-api-key&quot;}&#39;</span>
+</code></pre></div>
+<p><strong>What happens under the hood:</strong></p>
+<p>These headers are added to every request alongside any authentication headers.</p>
+<h2 id="multiple-authentication-methods">Multiple Authentication Methods</h2>
+<p>Some APIs support multiple authentication methods. Configure all applicable options:</p>
+<div class="highlight"><pre><span></span><code><span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
+    <span class="n">bearer_token</span><span class="o">=</span><span class="s2">&quot;fallback-token&quot;</span><span class="p">,</span>
+    <span class="n">additional_headers</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;X-API-Key&quot;</span><span class="p">:</span> <span class="s2">&quot;preferred-key&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Both headers will be sent with each request.</p>
+<h2 id="environment-specific-configuration">Environment-Specific Configuration</h2>
+<h3 id="development">Development</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># config.py</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
-    <span class="n">model_config</span> <span class="o">=</span> <span class="n">SettingsConfigDict</span><span class="p">(</span>
-        <span class="n">env_file</span><span class="o">=</span><span class="s2">&quot;.env&quot;</span><span class="p">,</span>
-        <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="n">api_base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;http://localhost&quot;</span>
-    <span class="n">bearer_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;token&quot;</span>
-    <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span>
-    <span class="n">verify_ssl</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="c1"># ... more settings</span>
-
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+    <span class="n">api_base_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:8000&quot;</span>
+    <span class="n">bearer_token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;dev-token-12345&quot;</span>
 </code></pre></div>
-<p>The <code>Config</code> class uses <a href="https://docs.pydantic.dev/latest/concepts/pydantic_settings/">pydantic-settings</a> to load values from environment variables or <code>.env</code> files.</p>
-<p>For detailed configuration options and examples, see the <a href="../configuration/">Configuration Guide</a>.</p>
-<h2 id="httppy">http.py</h2>
-<p><strong>Purpose:</strong> HTTP client implementation and response handling</p>
-<p>This file contains the low-level HTTP logic: making requests with <code>httpx</code>, handling responses, parsing errors, and managing the response-to-schema mapping.</p>
-<p><strong>Should you edit it?</strong> No. This file is regenerated each time and is <strong>not intended to be used by developers</strong>. You are welcome to read it and understand how it works. There isn't any magic.</p>
-<p><strong>What's inside:</strong></p>
+<h3 id="production">Production</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># .env file</span>
+<span class="nv">API_BASE_URL</span><span class="o">=</span>https://api.production.com
+<span class="nv">BEARER_TOKEN</span><span class="o">=</span>prod-***-secret-token-***
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Code stays the same</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>  <span class="c1"># Loads from environment</span>
+</code></pre></div>
+<h2 id="class-based-clients">Class-Based Clients</h2>
+<p>For class-based clients, pass the configured object when creating the client:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+<span class="c1"># Custom config</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
+    <span class="n">api_base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
+    <span class="n">bearer_token</span><span class="o">=</span><span class="s2">&quot;secret-token&quot;</span>
+<span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="function-based-clients">Function-Based Clients</h2>
+<p>For function-based clients, update the singleton config:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+<span class="c1"># Update the global config</span>
+<span class="n">config</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">Config</span><span class="p">(</span>
+    <span class="n">api_base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
+    <span class="n">bearer_token</span><span class="o">=</span><span class="s2">&quot;secret-token&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># All function calls now use this config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="debugging-authentication">Debugging Authentication</h2>
+<p>If you're getting authentication errors:</p>
+<ol>
+<li><strong>Check the headers</strong> being sent:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">http</span>
+
+<span class="c1"># The headers are stored in http.client_headers</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">client_headers</span><span class="p">)</span>
+</code></pre></div>
+<ol>
+<li><strong>Verify the token format</strong> matches what the API expects</li>
+<li><strong>Test manually</strong> with curl to confirm the authentication works:</li>
+</ol>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer your-token&quot;</span><span class="w"> </span>https://api.example.com/endpoint
+</code></pre></div>
+<h2 id="see-also">See Also</h2>
 <ul>
-<li><code>get()</code>, <code>post()</code>, <code>put()</code>, <code>delete()</code>, <code>patch()</code> functions for making HTTP requests</li>
-<li><code>handle_response()</code> for converting HTTP responses to Pydantic models</li>
-<li><code>APIException</code> class for unexpected response codes</li>
-<li>Response code mapping for each endpoint</li>
-<li>HTTP client initialisation with your config settings</li>
-</ul>
-<p><strong>You only need to interact with this file indirectly</strong> when handling API exceptions. See the <a href="../exceptions/">Exception Handling</a> guide for details.</p>
-<h2 id="summary">Summary</h2>
-<p>Here's a quick reference of what to do with each file:</p>
-<table>
-<thead>
-<tr>
-<th>File</th>
-<th>Purpose</th>
-<th>Edit?</th>
-<th>Import?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>MANIFEST.md</code></td>
-<td>Metadata and regeneration info</td>
-<td>❌ No</td>
-<td>❌ No</td>
-</tr>
-<tr>
-<td><code>client.py</code></td>
-<td>API functions/class</td>
-<td>❌ No</td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td><code>schemas.py</code></td>
-<td>Pydantic models</td>
-<td>❌ No</td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td><code>config.py</code></td>
-<td>Configuration</td>
-<td>✅ Yes</td>
-<td>✅ Yes</td>
-</tr>
-<tr>
-<td><code>http.py</code></td>
-<td>HTTP implementation</td>
-<td>❌ No</td>
-<td>⚠️ Rarely</td>
-</tr>
-</tbody>
-</table>
-<p>For more information:</p>
-<ul>
-<li><a href="../usage/">Usage &amp; CLI</a> - How to generate clients</li>
-<li><a href="../configuration/">Configuration</a> - Configure the client</li>
-<li><a href="../authentication/">Authentication</a> - Set up authentication</li>
-<li><a href="../exceptions/">Exception Handling</a> - Handle API exceptions</li>
-<li><a href="../testing/">Testing</a> - Write tests for your client</li>
+<li><a href="../configuration/">Configuration Guide</a> - Full list of configuration options</li>
+<li><a href="../exceptions/">Exception Handling</a> - Handle authentication errors</li>
 </ul>
 
 
