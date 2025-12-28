@@ -15,9 +15,10 @@ def _print_dependency_instructions(console):
     console.log("[cyan]# For requirements.txt:")
     console.log("httpx")
     console.log("pydantic")
+    console.log("pydantic-settings")
     console.log("respx  # For testing\n")
     console.log("[cyan]# For pyproject.toml:")
-    console.log('dependencies = ["httpx", "pydantic"]')
+    console.log('dependencies = ["httpx", "pydantic", "pydantic-settings"]')
     console.log("\\[dependency-groups]")
     console.log('dev = ["respx"]')
 
