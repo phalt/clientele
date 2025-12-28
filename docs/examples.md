@@ -9,7 +9,6 @@ Running `clientele generate` creates this file structure:
 ```sh
 my_client/
     MANIFEST.md
-    __init__.py
     client.py
     config.py
     http.py
@@ -208,25 +207,7 @@ This file contains the low-level HTTP logic: making requests with `httpx`, handl
 - Response code mapping for each endpoint
 - HTTP client initialization with your config settings
 
-**You only interact with this file indirectly:**
-
-```py
-from my_client import http
-
-# Catch unexpected response codes
-try:
-    response = client.get_user(user_id=999)
-except http.APIException as e:
-    print(f"Unexpected status: {e.response.status_code}")
-```
-
-## __init__.py
-
-**Purpose:** Package initialization
-
-This file is typically empty. It marks the directory as a Python package so you can import from it.
-
-**Should you edit it?** No, and there's usually no need to.
+**You only interact with this file indirectly** when handling API exceptions. See the [Exception Handling](exceptions.md) guide for details.
 
 ## Summary
 
@@ -239,17 +220,11 @@ Here's a quick reference of what to do with each file:
 | `schemas.py` | Pydantic models | ❌ No | ✅ Yes |
 | `config.py` | Configuration | ✅ Yes | ✅ Yes |
 | `http.py` | HTTP implementation | ❌ No | ⚠️ Rarely |
-| `__init__.py` | Package marker | ❌ No | ❌ No |
-
-**Typical workflow:**
-
-1. Generate the client: `clientele generate -u <schema-url> -o my_client/`
-2. Configure in `config.py` or via environment variables
-3. Import and use: `from my_client import client, schemas`
-4. When the API changes, regenerate with `--regen t`
 
 For more information:
 
 - [Usage & CLI](usage.md) - How to generate clients
 - [Configuration](configuration.md) - Configure the client
+- [Authentication](authentication.md) - Set up authentication
+- [Exception Handling](exceptions.md) - Handle API exceptions
 - [Testing](testing.md) - Write tests for your client
