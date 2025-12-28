@@ -163,14 +163,6 @@ from my_client import client
 response = client.get_user(user_id=123)
 ```
 
-## Security Best Practices
-
-1. **Never hardcode secrets** in your code - use environment variables or a secrets manager
-2. **Use `.env` files** for local development (and add them to `.gitignore`)
-3. **Rotate tokens regularly** in production environments
-4. **Use HTTPS** (`verify_ssl=True`) in production to protect tokens in transit
-5. **Store tokens securely** using tools like AWS Secrets Manager, HashiCorp Vault, or similar
-
 ## Debugging Authentication
 
 If you're getting authentication errors:
