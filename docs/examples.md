@@ -1,172 +1,255 @@
-# 🪄 Client example
+# 🗺️ Tour of a Generated Client
 
-Let's build an API Client using clientele.
+When you generate a client with Clientele, it creates several files that work together to provide a complete HTTP API client. This guide explains each file's purpose and which ones you'll interact with as a developer.
 
-Our [GitHub](https://github.com/phalt/clientele/tree/main/example_openapi_specs) has a bunch of schemas that are proven to work with clientele, so let's use one of those!
+## What gets generated?
 
-## Generate the client
-
-In your project's root directory:
-
-```sh
-clientele generate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/
-```
-
-!!! note
-
-    The example above uses one of our test schemas, and will work if you copy/paste it!
-
-The `-u` parameter expects a URL, you can provide a path to a file with `-f` instead if you download the file.
-
-The `-o` parameter is the output directory of the generated client.
-
-Run it now and you will see this output:
+Running `clientele generate` creates this file structure:
 
 ```sh
 my_client/
+    MANIFEST.md
     __init__.py
     client.py
     config.py
     http.py
-    MANIFEST
     schemas.py
 ```
 
-Let's go over each file and talk about what it does.
+Let's explore each file.
 
-## Client
+## MANIFEST.md
 
-### GET functions
+**Purpose:** Metadata and regeneration tracking
 
-The `client.py` file provides all the API functions from the OpenAPI schema. Functions are a combination of the path and the HTTP method for those paths. So, a path with two HTTP methods will be turned into two python functions.
+The `MANIFEST.md` file contains metadata about your generated client:
 
-```py title="my_client/client.py" linenums="1"
+- The Clientele version used to generate it
+- The OpenAPI version of the source schema
+- The API version
+- The exact command to regenerate the client
+
+**Should you edit it?** No, this file is regenerated each time.
+
+**Example:**
+
+```markdown
+# Manifest
+
+Generated with https://github.com/phalt/clientele
+
+API VERSION: 1.0.0
+OPENAPI VERSION: 3.0.2
+CLIENTELE VERSION: 1.1.0
+
+Regenerate using this command:
+
+clientele generate -f openapi.json -o my_client/ --regen t
+```
+
+This file is particularly useful when you need to regenerate the client after API changes. See [Regenerating](usage.md#regenerating) for details.
+
+## client.py
+
+**Purpose:** API endpoint functions or class
+
+This is the main file you'll import and use. It contains a function (or method if using `generate-class`) for each API endpoint.
+
+**Should you edit it?** No, this file is regenerated each time. Your usage code should import from it, not modify it.
+
+**Function-based client example:**
+
+```py title="my_client/client.py"
 from my_client import http, schemas
 
 
-def simple_request_simple_request_get() -> schemas.SimpleResponse:
-    """Simple Request"""
+def get_user(user_id: int) -> schemas.User:
+    """Get user by ID"""
+    response = http.get(url=f"/users/{user_id}")
+    return http.handle_response(get_user, response)
 
-    response = http.get(url="/simple-request")
-    return http.handle_response(simple_request_simple_request_get, response)
 
-...
+def create_user(data: schemas.CreateUserRequest) -> schemas.User:
+    """Create a new user"""
+    response = http.post(url="/users", data=data.model_dump())
+    return http.handle_response(create_user, response)
 ```
 
-We can see one of the functions here, `simple_request_simple_request_get`, is for a straight-forward HTTP GET request without any input arguments, and it returns a schema object.
+**Class-based client example:**
 
-Here is how you might use it:
+```py title="my_client/client.py"
+from my_client import config, http, schemas
 
-```py
-from my_client import client
 
-client.simple_request_simple_request_get()
->>> SimpleResponse(name='Hello, clientele')
+class Client:
+    """API Client for making requests"""
+    
+    def __init__(self, config: config.Config | None = None):
+        self.config = config or config.Config()
+        self._http_client = http.HTTPClient(self.config)
+    
+    def get_user(self, user_id: int) -> schemas.User:
+        """Get user by ID"""
+        response = self._http_client.get(url=f"/users/{user_id}")
+        return http.handle_response(self.get_user, response)
 ```
 
-### POST and PUT functions
+Each function/method is fully typed and includes:
 
-Here's a more complex example for an HTTP POST method. It requires an input property called `data` that is an instance of a schema, and returns one of many potential responses. If the endpoint has URL or query parameters, they'll appear as input arguments to the function alongside the `data` argument.
+- Type hints for all parameters
+- Return type annotations with all possible response types
+- The endpoint's description as a docstring
 
-```py
-def request_data_request_data_post(
-    data: schemas.RequestDataRequest
-) -> schemas.RequestDataResponse | schemas.HTTPValidationError:
-    """Request Data"""
+See the [Usage](usage.md) guide for more on using functional vs class-based clients.
 
-    response = http.post(url="/request-data", data=data.model_dump())
-    return http.handle_response(request_data_request_data_post, response)
-```
+## schemas.py
 
-Here is how you might use it:
+**Purpose:** Pydantic models for requests and responses
 
-```py
-from my_client import client, schemas
+The `schemas.py` file contains Pydantic models for all request bodies, response bodies, and enums defined in your OpenAPI schema.
 
-data = schemas.RequestDataRequest(my_input="Hello, world")
-response = client.request_data_request_data_post(data=data)
->>> RequestDataResponse(your_input='Hello, world')
-```
+**Should you edit it?** No, this file is regenerated each time. You use these schemas in your code but don't modify them.
 
-Clientele also supports the major HTTP methods PUT and DELETE in the same way.
+**Example:**
 
-### URL and Query parameters
-
-If your endpoint takes [path parameters](https://learn.openapis.org/specification/parameters.html#parameter-location) (aka URL parameters) then clientele will turn them into parameters in the function:
-
-```py
-from my_client import client
-
-client.parameter_request_simple_request(your_input="gibberish")
->>> ParameterResponse(your_input='gibberish')
-```
-
-Query parameters will also be generated the same way. See [this example](https://github.com/phalt/clientele/blob/0.4.4/tests/test_client/client.py#L71) for a function that takes a required query parameter.
-
-Note that, optional parameters that are not passed will be omitted when the URL is generated by Clientele.
-
-### Handling responses
-
-Because we're using Pydantic to manage the input data, we get a strongly-typed response object.
-This works beautifully with the new [structural pattern matching](https://peps.python.org/pep-0636/) feature in Python 3.10 and up:
-
-```py
-
-response = client.request_data_request_data_post(data=data)
-
-# Handle responses elegantly
-match response:
-    case schemas.RequestDataResponse():
-        # Handle valid response
-        ...
-    case schemas.ValidationError():
-        # Handle validation error
-        ...
-```
-
-### API Exceptions
-
-Clientele keeps a mapping of the paths and their potential response codes. When it gets a response code that fits into the map, it generates the Pydantic object associated with it.
-
-If the HTTP response code is unexpected, it won't match a return type. In this case, the function will raise an `http.APIException`.
-
-```py
-from my_client import client, http
-try:
-    good_response = my_client.get_my_thing()
-except http.APIException as e:
-    # The API got a response code we didn't expect
-    print(e.response.status_code)
-```
-
-The `response` object is attached to this exception class for debugging.
-
-## Schemas
-
-The `schemas.py` file has all the possible schemas - request, response, and even Enums - for the API. These are taken from OpenAPI's schema objects and turned into Python classes. They all subclass from Pydantic's `BaseModel`.
-
-Here are a few examples:
-
-```py title="my_client/schemas.py" linenums="1"
+```py title="my_client/schemas.py"
 import pydantic
 from enum import Enum
 
 
-class ParameterResponse(pydantic.BaseModel):
-    your_input: str
+class User(pydantic.BaseModel):
+    id: int
+    username: str
+    email: str
 
-class RequestDataRequest(pydantic.BaseModel):
-    my_input: str
 
-class RequestDataResponse(pydantic.BaseModel):
-    my_input: str
+class CreateUserRequest(pydantic.BaseModel):
+    username: str
+    email: str
+    password: str
 
-# Enums subclass str so they serialize to JSON nicely
-class ExampleEnum(str, Enum):
-    ONE = "ONE"
-    TWO = "TWO"
+
+class UserRole(str, Enum):
+    ADMIN = "ADMIN"
+    USER = "USER"
+    GUEST = "GUEST"
 ```
 
-## Configuration
+These schemas provide:
 
-See [configuration](configuration.md).
+- **Type safety:** Your IDE can autocomplete fields and catch type errors
+- **Validation:** Pydantic validates data at runtime
+- **Serialization:** Easy conversion to/from JSON
+
+**Usage example:**
+
+```py
+from my_client import client, schemas
+
+# Create request data with validation
+user_data = schemas.CreateUserRequest(
+    username="alice",
+    email="alice@example.com",
+    password="secret123"
+)
+
+# Get a validated response
+user = client.create_user(data=user_data)
+assert isinstance(user, schemas.User)
+```
+
+## config.py
+
+**Purpose:** Client configuration and settings
+
+The `config.py` file contains a `Config` class that manages all client settings like API URL, authentication, timeouts, and HTTP behavior.
+
+**Should you edit it?** Yes! This is the one file that **won't** be overwritten when you regenerate. Customize it to suit your needs.
+
+**Example:**
+
+```py title="my_client/config.py"
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Config(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=False,
+    )
+    
+    api_base_url: str = "http://localhost"
+    bearer_token: str = "token"
+    timeout: float = 5.0
+    verify_ssl: bool = True
+    # ... more settings
+
+
+config = Config()
+```
+
+The `Config` class uses [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) to load values from environment variables or `.env` files.
+
+For detailed configuration options and examples, see the [Configuration Guide](configuration.md).
+
+## http.py
+
+**Purpose:** HTTP client implementation and response handling
+
+This file contains the low-level HTTP logic: making requests with `httpx`, handling responses, parsing errors, and managing the response-to-schema mapping.
+
+**Should you edit it?** No. This file is regenerated each time and is **not intended to be read by developers**. It's implementation detail.
+
+**What's inside:**
+
+- `get()`, `post()`, `put()`, `delete()`, `patch()` functions for making HTTP requests
+- `handle_response()` for converting HTTP responses to Pydantic models
+- `APIException` class for unexpected response codes
+- Response code mapping for each endpoint
+- HTTP client initialization with your config settings
+
+**You only interact with this file indirectly:**
+
+```py
+from my_client import http
+
+# Catch unexpected response codes
+try:
+    response = client.get_user(user_id=999)
+except http.APIException as e:
+    print(f"Unexpected status: {e.response.status_code}")
+```
+
+## __init__.py
+
+**Purpose:** Package initialization
+
+This file is typically empty. It marks the directory as a Python package so you can import from it.
+
+**Should you edit it?** No, and there's usually no need to.
+
+## Summary
+
+Here's a quick reference of what to do with each file:
+
+| File | Purpose | Edit? | Import? |
+|------|---------|-------|---------|
+| `MANIFEST.md` | Metadata and regeneration info | ❌ No | ❌ No |
+| `client.py` | API functions/class | ❌ No | ✅ Yes |
+| `schemas.py` | Pydantic models | ❌ No | ✅ Yes |
+| `config.py` | Configuration | ✅ Yes | ✅ Yes |
+| `http.py` | HTTP implementation | ❌ No | ⚠️ Rarely |
+| `__init__.py` | Package marker | ❌ No | ❌ No |
+
+**Typical workflow:**
+
+1. Generate the client: `clientele generate -u <schema-url> -o my_client/`
+2. Configure in `config.py` or via environment variables
+3. Import and use: `from my_client import client, schemas`
+4. When the API changes, regenerate with `--regen t`
+
+For more information:
+
+- [Usage & CLI](usage.md) - How to generate clients
+- [Configuration](configuration.md) - Configure the client
+- [Testing](testing.md) - Write tests for your client
