@@ -297,6 +297,6 @@ Clientele specifically focuses on calling an API and doesn't handle callbacks or
 ## Next Steps
 
 - [Learn about regeneration workflow](usage.md#regenerating)
-- [Configure authentication](examples.md#authentication)
+- [Configure authentication](configuration.md#authentication)
 - [Set up testing with respx](testing.md)
 - [Understand client structure](examples.md)
