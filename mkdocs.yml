@@ -18,6 +18,8 @@ nav:
     - Django Ninja: framework-django-ninja.md
   - Documentation:
     - Configuration: configuration.md
+    - Authentication: authentication.md
+    - Exception Handling: exceptions.md
     - Generated Client Tour: examples.md
     - Testing: testing.md
     - Explorer Mode: explore.md
