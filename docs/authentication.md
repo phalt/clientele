@@ -4,7 +4,7 @@ Clientele supports multiple authentication methods through the client configurat
 
 ## Supported Authentication Types
 
-### Bearer Token (Most Common)
+### Bearer Token
 
 Bearer token authentication adds an `Authorization` header with a token to all requests.
 
