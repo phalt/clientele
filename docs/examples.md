@@ -100,7 +100,7 @@ Each function/method is fully typed and includes:
 - Return type annotations with all possible response types
 - The endpoint's description as a docstring
 
-See the [Usage](usage.md) guide for more on using functional vs class-based clients.
+See the [Usage](usage.md) guide for more on function-based vs class-based clients.
 
 ## schemas.py
 
