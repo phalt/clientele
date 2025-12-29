@@ -324,48 +324,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-uv-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using UV (Recommended)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-homebrew-macoslinux" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using Homebrew (macOS/Linux)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-pip" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using pip
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       Quick Start
@@ -1128,48 +1086,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#using-uv-recommended" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using UV (Recommended)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-homebrew-macoslinux" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using Homebrew (macOS/Linux)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-pip" class="md-nav__link">
-    <span class="md-ellipsis">
-      Using pip
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       Quick Start
@@ -1322,10 +1238,6 @@
 
 <h1 id="clientele">⚜️ Clientele</h1>
 <div style="text-align: center;">
-    <a href="https://github.com/phalt/clientele/releases/tag/1.0.0"><h2>🎉 1.0.0 released! 🎉</h2></a>
-</div>
-
-<div style="text-align: center;">
     <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
 </div>
 
@@ -1369,22 +1281,11 @@
 <li>And you want to offer a client library in Python</li>
 <li>And you want developers to love using the client</li>
 </ul>
-<h2 id="installation">Installation</h2>
-<p>Clientele can be installed in several ways:</p>
-<h3 id="using-uv-recommended">Using UV (Recommended)</h3>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>clientele
-</code></pre></div>
-<h3 id="using-homebrew-macoslinux">Using Homebrew (macOS/Linux)</h3>
-<div class="highlight"><pre><span></span><code>brew<span class="w"> </span>install<span class="w"> </span>phalt/clientele/clientele
-</code></pre></div>
-<h3 id="using-pip">Using pip</h3>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>clientele
-</code></pre></div>
 <h2 id="quick-start">Quick Start</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># Generate a client from the PokeAPI OpenAPI schema</span>
-clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml<span class="w"> </span>-o<span class="w"> </span>pokeapi_client/
+uvx<span class="w"> </span>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml<span class="w"> </span>-o<span class="w"> </span>pokeapi_client/
 <span class="c1"># Load the REPL to start testing with the generated code immediately</span>
-clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>pokeapi_client/
+uvx<span class="w"> </span>clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>pokeapi_client/
 </code></pre></div>
 <p><img alt="generate_gif" src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif" /></p>
 <h2 id="the-generated-code">The generated code</h2>
