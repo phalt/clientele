@@ -456,15 +456,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#explore" class="md-nav__link">
     <span class="md-ellipsis">
       explore
@@ -479,66 +470,6 @@
       version
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#regenerating" class="md-nav__link">
-    <span class="md-ellipsis">
-      Regenerating
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Regenerating">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#understanding-regeneration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Understanding Regeneration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-manifestmd-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      The MANIFEST.md File
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#regeneration-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Regeneration Workflow
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#handling-breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Handling Breaking Changes
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-with-cicd" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with CI/CD
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -723,6 +654,29 @@
   
   <span class="md-ellipsis">
     Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../regeneration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Regeneration
     
   </span>
   
@@ -1135,15 +1089,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Configuration
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#explore" class="md-nav__link">
     <span class="md-ellipsis">
       explore
@@ -1158,66 +1103,6 @@
       version
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#regenerating" class="md-nav__link">
-    <span class="md-ellipsis">
-      Regenerating
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Regenerating">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#understanding-regeneration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Understanding Regeneration
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#the-manifestmd-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      The MANIFEST.md File
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#regeneration-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Regeneration Workflow
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#handling-breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Handling Breaking Changes
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#integration-with-cicd" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with CI/CD
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1294,8 +1179,6 @@
 <li>You want to subclass and extend the client behavior.</li>
 <li>You need dynamic configuration or multiple clients with different settings.</li>
 </ul>
-<h2 id="configuration">Configuration</h2>
-<p>See the <a href="../configuration/">Configuration Guide</a>.</p>
 <h2 id="explore"><code>explore</code></h2>
 <p>Run the explorer mode. See <a href="../explore/">explore</a>.</p>
 <h2 id="version"><code>version</code></h2>
@@ -1305,114 +1188,6 @@
 Clientele 1.1.0
 ```
 </code></pre></div>
-<h2 id="regenerating">Regenerating</h2>
-<p>At times you may wish to regenerate the client. </p>
-<p>This could be because the API has updated or you just want to use a newer version of Clientele.</p>
-<p>To force a regeneration you must pass the <code>--regen</code> or <code>-r</code> argument, for example:</p>
-<div class="highlight"><pre><span></span><code>```sh
-clientele generate -f example_openapi_specs/best.json -o my_client/  --regen t
-```
-</code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You can copy and paste the command from the <code>MANIFEST.md</code> file in your previously-generated client for a quick and easy regeneration.</p>
-</div>
-<h3 id="understanding-regeneration">Understanding Regeneration</h3>
-<p>When you regenerate a client with <code>--regen t</code>, Clientele follows these rules:</p>
-<p><strong>Files that WILL be overwritten:</strong></p>
-<ul>
-<li><code>client.py</code> - Your API client functions/class</li>
-<li><code>schemas.py</code> - Pydantic models for request/response data</li>
-<li><code>http.py</code> - HTTP handling logic</li>
-<li><code>__init__.py</code> - Package initialization</li>
-<li><code>MANIFEST.md</code> - Metadata about the generated client</li>
-</ul>
-<p><strong>Files that will NOT be overwritten:</strong></p>
-<ul>
-<li><code>config.py</code> - Your custom configuration (API URL, auth tokens, headers)</li>
-</ul>
-<p>This design ensures your customizations in <code>config.py</code> are preserved while keeping the client code in sync with the latest API schema.</p>
-<h3 id="the-manifestmd-file">The MANIFEST.md File</h3>
-<p>Every generated client includes a <code>MANIFEST.md</code> file that records:</p>
-<ul>
-<li>The exact command used to generate the client</li>
-<li>The OpenAPI version of the source schema</li>
-<li>The Clientele version used</li>
-<li>Generation timestamp</li>
-</ul>
-<p>Example <code>MANIFEST.md</code>:</p>
-<div class="highlight"><pre><span></span><code># Manifest
-
-Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
-Install with pipx:
-
-```sh
-pipx install clientele
-```
-
-API VERSION: 0.1.0
-OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 1.1.0
-
-Regenerate using this command:
-
-```sh
-clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
-```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```
-</code></pre></div>
-<h3 id="regeneration-workflow">Regeneration Workflow</h3>
-<p>Here's the recommended workflow for keeping your client in sync:</p>
-<ol>
-<li><strong>API Updated</strong>: Your API has new endpoints or changed schemas</li>
-<li><strong>Regenerate</strong>: Run <code>clientele generate</code> with <code>--regen t</code>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen<span class="w"> </span>t
-</code></pre></div></li>
-<li><strong>Review Changes</strong>: Use git to see what changed
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>diff<span class="w"> </span>my_client/
-</code></pre></div></li>
-<li><strong>Inspect</strong> the changes.</li>
-<li><strong>Test</strong>: Run your test suite to catch breaking changes
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/
-</code></pre></div></li>
-<li><strong>Commit</strong>: Add the changes to git
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>my_client/
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Regenerate client for API v2.1&quot;</span>
-</code></pre></div></li>
-</ol>
-<h3 id="handling-breaking-changes">Handling Breaking Changes</h3>
-<p>When the API introduces breaking changes, regeneration will reflect them:</p>
-<ul>
-<li><strong>Removed endpoints</strong> → Functions deleted from <code>client.py</code></li>
-<li><strong>Renamed fields</strong> → Schema properties change</li>
-<li><strong>New required fields</strong> → Function signatures updated</li>
-<li><strong>Changed response types</strong> → Schema unions modified</li>
-</ul>
-<p>You should have tests to catch these issues.</p>
-<p>If you need to support multiple API versions, consider generating separate clients for each version sing version-specific directories (e.g., <code>my_client_v1/</code>, <code>my_client_v2/</code>).</p>
-<h3 id="integration-with-cicd">Integration with CI/CD</h3>
-<p>You can automate regeneration in CI/CD:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Example GitHub Actions workflow</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regenerate API client</span>
-<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">clientele generate \</span>
-<span class="w">      </span><span class="no">-u http://api:8000/openapi.json \</span>
-<span class="w">      </span><span class="no">-o clients/my_api/ \</span>
-<span class="w">      </span><span class="no">--regen t</span>
-
-<span class="w">    </span><span class="no"># Check if client changed</span>
-<span class="w">    </span><span class="no">if ! git diff --quiet clients/my_api/; then</span>
-<span class="w">      </span><span class="no">echo &quot;API client changed - review required&quot;</span>
-<span class="w">      </span><span class="no">git diff clients/my_api/</span>
-<span class="w">      </span><span class="no">exit 1</span>
-<span class="w">    </span><span class="no">fi</span>
-</code></pre></div>
-<p>This keeps your client in sync with the API schema.</p>
 
 
 
