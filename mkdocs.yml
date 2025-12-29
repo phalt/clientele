@@ -18,6 +18,7 @@ nav:
     - Django Ninja: framework-django-ninja.md
   - Documentation:
     - Configuration: configuration.md
+    - Regeneration: regeneration.md
     - Authentication: authentication.md
     - Exception Handling: exceptions.md
     - Generated Client Tour: examples.md

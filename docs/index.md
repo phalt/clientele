@@ -1,10 +1,6 @@
 # ⚜️ Clientele
 
 <div style="text-align: center;">
-    <a href="https://github.com/phalt/clientele/releases/tag/1.0.0"><h2>🎉 1.0.0 released! 🎉</h2></a>
-</div>
-
-<div style="text-align: center;">
     <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
 </div>
 
@@ -22,7 +18,6 @@ It is designed and tested to work perfectly with the most popular Python API fra
 - **[FastAPI](https://fastapi.tiangolo.com/)**
 - **[Django REST Framework](https://www.django-rest-framework.org/)** via **[drf-spectacular](https://github.com/tfranzel/drf-spectacular)**
 - **[Django Ninja](https://django-ninja.dev/)**
-
 
 ## What Clientele Does
 
@@ -53,35 +48,13 @@ Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP 
 - And you want to offer a client library in Python
 - And you want developers to love using the client
 
-## Installation
-
-Clientele can be installed in several ways:
-
-### Using UV (Recommended)
-
-```sh
-uv tool install clientele
-```
-
-### Using Homebrew (macOS/Linux)
-
-```sh
-brew install phalt/clientele/clientele
-```
-
-### Using pip
-
-```sh
-pip install clientele
-```
-
 ## Quick Start
 
 ```sh
 # Generate a client from the PokeAPI OpenAPI schema
-clientele generate -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml -o pokeapi_client/
+uvx clientele generate -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml -o pokeapi_client/
 # Load the REPL to start testing with the generated code immediately
-clientele explore -c pokeapi_client/
+uvx clientele explore -c pokeapi_client/
 ```
 
 ![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
