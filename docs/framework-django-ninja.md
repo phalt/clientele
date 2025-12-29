@@ -521,6 +521,6 @@ Generate separate clients for each version if needed.
 ## Next Steps
 
 - [Django Ninja documentation](https://django-ninja.dev/)
-- [Learn about regeneration workflow](usage.md#regenerating)
+- [Learn about regeneration workflow](regeneration.md)
 - [Set up testing with respx](testing.md)
 - [Understand client structure](examples.md)

@@ -437,6 +437,6 @@ def create_user(request):
 ## Next Steps
 
 - [drf-spectacular documentation](https://drf-spectacular.readthedocs.io/)
-- [Learn about regeneration workflow](usage.md#regenerating)
+- [Learn about regeneration workflow](regeneration.md)
 - [Set up testing with respx](testing.md)
 - [Understand client structure](examples.md)

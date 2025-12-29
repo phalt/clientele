@@ -48,7 +48,7 @@ Regenerate using this command:
 clientele generate -f openapi.json -o my_client/ --regen t
 ```
 
-This file is particularly useful when you need to regenerate the client after API changes. See [Regenerating](usage.md#regenerating) for details.
+This file is particularly useful when you need to regenerate the client after API changes. See [Regenerating](regeneration.md) for details.
 
 ## client.py
 
