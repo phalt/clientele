@@ -90,6 +90,8 @@ class CommandHandler:
                 self._show_schema_detail(arg)
             else:
                 self._list_schemas()
+        elif cmd == "/operation":
+            self._show_operation_detail(arg)
         elif cmd == "/config":
             self._handle_config(arg)
         elif cmd == "/debug":
@@ -138,6 +140,7 @@ class CommandHandler:
 
 [bold]Special Commands:[/bold]
   [cyan]/list[/cyan], [cyan]/operations[/cyan]  - List all available operations
+  [cyan]/operation <name>[/cyan]  - Inspect an operation
   [cyan]/schemas[/cyan]              - List all available schemas
   [cyan]/schemas <name>[/cyan]       - Show details for a specific schema
   [cyan]/config[/cyan]               - Show current configuration
@@ -146,17 +149,6 @@ class CommandHandler:
   [cyan]/debug off[/cyan]            - Disable request/response logging
   [cyan]/help[/cyan]                  - Show this help message
   [cyan]/exit[/cyan], [cyan]/quit[/cyan]         - Exit the REPL
-
-[bold]Examples:[/bold]
-  [cyan]get_users()[/cyan]                           - Execute operation without parameters
-  [cyan]get_user(user_id="123")[/cyan]               - Execute with parameters
-  [cyan]create_user(data={"name": "John"})[/cyan]   - Pass complex data
-  [cyan]UserResponse[/cyan]                          - Inspect a schema
-  [cyan]/schemas[/cyan]                              - List all schemas
-  [cyan]/schemas User[/cyan]                         - Show User schema details
-  [cyan]/config[/cyan]                               - Show current config
-  [cyan]/config set base_url https://api.example.com[/cyan] - Set base URL
-  [cyan]/debug on[/cyan]                             - Enable debug mode
 
 [bold]Tips:[/bold]
   • Press TAB to see available completions
@@ -197,6 +189,44 @@ class CommandHandler:
         self.console.print(table)
         self.console.print(f"\n[dim]Total: {len(schemas)} schemas[/dim]")
         self.console.print("[dim]Use [cyan].schemas <name>[/cyan] to see details[/dim]")
+
+    def _show_operation_detail(self, operation_name: str | None) -> None:
+        """Show detailed information about a specific operation.
+
+        Args:
+            operation_name: Name of the operation to inspect
+        """
+        if not operation_name:
+            self.console.print("[red]Please provide an operation name[/red]")
+            self.console.print("[dim]Usage: /operation <operation_name>[/dim]")
+            return
+
+        operation_info = self.introspector.operations.get(operation_name)
+
+        if not operation_info:
+            self.console.print(f"[red]Operation not found: {operation_name}[/red]")
+            self.console.print("[dim]Use [cyan]/list[/cyan] to see all available operations[/dim]")
+            return
+
+        # Create title with operation name
+        title = f"[bold cyan]{operation_info.name}[/bold cyan]"
+
+        # Build operation details
+        details = []
+
+        if operation_info.docstring:
+            details.append(f"[bold]Description:[/bold]\n{operation_info.docstring}\n")
+
+        if operation_info.parameters:
+            details.append("\n[bold]Parameters:[/bold]")
+
+            for parameter_name, parameter_data in operation_info.parameters.items():
+                details.append(f"{parameter_name} : [cyan]{parameter_data}[/cyan]")
+        if operation_info.return_type:
+            details.append(f"\n[bold]Return type:[/bold] [cyan]{operation_info.return_type}[/cyan]")
+
+        # Print the panel with operation details
+        self.console.print(Panel("\n".join(details), title=title, border_style="cyan"))
 
     def _show_schema_detail(self, schema_name: str) -> None:
         """Show detailed information about a specific schema.
