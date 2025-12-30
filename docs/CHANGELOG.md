@@ -1,5 +1,9 @@
 # Change log
 
+## 1.2.0
+
+- Print operation information in explorer by typing the name of the operation without parenthesis. Prints information such as the docstring, return type, and input arguments.
+
 ## 1.1.0
 
 - Schema inspection in explore REPL has been improved. Typing a schema name without parentheses now displays the schema's docstring and fields instead of the verbose inherited Pydantic BaseModel documentation.
