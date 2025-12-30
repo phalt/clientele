@@ -102,6 +102,24 @@ def test_handle_schemas_command_with_arg(handler):
     assert result is False
 
 
+def test_handle_operation_command_without_arg(handler):
+    """Test /operation command without argument."""
+    result = handler.handle_command("/operation")
+    assert result is False
+
+
+def test_handle_operation_command_with_valid_name(handler):
+    """Test /operation command with valid operation name."""
+    result = handler.handle_command("/operation simple_request_simple_request_get")
+    assert result is False
+
+
+def test_handle_operation_command_with_nonexistent_name(handler):
+    """Test /operation command with non-existent operation name."""
+    result = handler.handle_command("/operation nonexistent_operation")
+    assert result is False
+
+
 def test_handle_config_command_without_arg(handler):
     """Test /config command without argument."""
     result = handler.handle_command("/config")
@@ -330,6 +348,22 @@ def test_schemas_command_with_argument_whitespace(handler):
     """Test /schemas command with argument and whitespace."""
     result = handler.handle_command("/schemas  SimpleResponse  ")
     assert result is False
+
+
+def test_show_operation_detail_valid_operation(handler):
+    """Test showing details for a valid operation."""
+    # Just ensure it doesn't raise an exception
+    handler._show_operation_detail("simple_request_simple_request_get")
+
+
+def test_show_operation_detail_no_operation_name(handler):
+    """Test showing operation details without providing a name."""
+    handler._show_operation_detail(None)
+
+
+def test_show_operation_detail_nonexistent_operation(handler):
+    """Test showing details for non-existent operation."""
+    handler._show_operation_detail("nonexistent_operation")
 
 
 def test_pydantic_config_handling(introspector, session_config):
