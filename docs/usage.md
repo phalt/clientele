@@ -93,5 +93,5 @@ Print the current version of Clientele:
 
     ```sh
     > clientele version
-    Clientele 1.1.0
+    Clientele 1.2.0
     ```
