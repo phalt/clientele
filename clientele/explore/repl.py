@@ -116,6 +116,10 @@ Press [bold]TAB[/bold] for autocomplete
                 # Display schema information
                 self.command_handler._show_schema_detail(text)
                 return
+            if self.introspector.operations.get(text):
+                # Display operation information
+                self.command_handler._show_operation_detail(text)
+                return
 
         try:
             # Parse the operation call
