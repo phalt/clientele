@@ -24,9 +24,9 @@ class Config(BaseModel):
     verify: bool | str = True
     http2: bool = False
     limits: httpx.Limits | None = None
-    proxies: Any = None  # httpx._types.ProxyTypes
+    proxies: httpx.Proxy | None = None
     transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
-    cookies: Any = None  # httpx._types.CookieTypes
+    cookies: httpx.Cookies | None = None
 
     def httpx_client_options(self) -> dict[str, Any]:
         """Create a dictionary of options suitable for ``httpx.Client``."""
