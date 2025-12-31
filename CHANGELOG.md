@@ -1,5 +1,13 @@
 # Change log
 
+## Unreleased
+
+- Add a decorator-based synchronous runtime client with configurable `Config` support and Pydantic-driven response parsing.
+- Document the decorator client and provide comprehensive mocked tests for GET and POST usage.
+- Extend the decorator client to support PUT, PATCH, and DELETE with matching documentation and tests.
+- Introduce optional `Routes` helpers for class-based decorator usage while preserving functional behavior.
+- Expand the decorator client to support both sync and async handlers (functional and class-based) with matching documentation and tests.
+
 ## 1.2.0
 
 - Print operation information in explorer by typing the name of the operation without parenthesis. Prints information such as the docstring, return type, and input arguments.
