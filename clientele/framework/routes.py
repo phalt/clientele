@@ -4,6 +4,8 @@ import inspect
 from functools import wraps
 from typing import Any, Callable, TypeVar, cast
 
+from pydantic import BaseModel
+
 from .client import Client, _build_request_context
 
 _F = TypeVar("_F", bound=Callable[..., Any])
@@ -19,24 +21,24 @@ class Routes:
     def __init__(self, *, client_attribute: str = "_client") -> None:
         self.client_attribute = client_attribute
 
-    def get(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("GET", path)
+    def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("GET", path, response_map=response_map)
 
-    def post(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("POST", path)
+    def post(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("POST", path, response_map=response_map)
 
-    def put(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("PUT", path)
+    def put(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("PUT", path, response_map=response_map)
 
-    def patch(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("PATCH", path)
+    def patch(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("PATCH", path, response_map=response_map)
 
-    def delete(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("DELETE", path)
+    def delete(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("DELETE", path, response_map=response_map)
 
-    def _create_decorator(self, method: str, path: str) -> Callable[[_F], _F]:
+    def _create_decorator(self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
-            context = _build_request_context(method, path, func)
+            context = _build_request_context(method, path, func, response_map=response_map)
 
             if inspect.iscoroutinefunction(func):
 
