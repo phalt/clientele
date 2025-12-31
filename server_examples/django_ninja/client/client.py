@@ -7,7 +7,7 @@ client = clientele.Client(config=config.Config())
 
 
 @client.get("/api/users")
-def list_users(result: schemas.Response) -> schemas.Response:
+def list_users(*, result: schemas.Response) -> schemas.Response:
     """List Users
 
     List all users.
@@ -16,7 +16,7 @@ def list_users(result: schemas.Response) -> schemas.Response:
 
 
 @client.post("/api/users")
-def create_user(data: schemas.UserIn, result: schemas.UserOut) -> schemas.UserOut:
+def create_user(*, data: schemas.UserIn, result: schemas.UserOut) -> schemas.UserOut:
     """Create User
 
     Create a new user.
@@ -25,7 +25,7 @@ def create_user(data: schemas.UserIn, result: schemas.UserOut) -> schemas.UserOu
 
 
 @client.get("/api/users/{user_id}")
-def get_user(user_id: int, result: schemas.UserOut) -> schemas.UserOut:
+def get_user(user_id: int, query: dict | None = None, *, result: schemas.UserOut) -> schemas.UserOut:
     """Get User
 
         Get a specific user by ID.

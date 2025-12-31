@@ -7,7 +7,7 @@ client = clientele.Client(config=config.Config())
 
 
 @client.get("/users")
-def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
+def list_users(*, result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
     """Get Users
 
     List all users.
@@ -17,7 +17,7 @@ def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
 
 @client.post("/users", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
 def create_user(
-    data: schemas.CreateUserRequest, result: schemas.HTTPValidationError | schemas.UserResponse
+    *, data: schemas.CreateUserRequest, result: schemas.HTTPValidationError | schemas.UserResponse
 ) -> schemas.HTTPValidationError | schemas.UserResponse:
     """Create User
 
@@ -28,7 +28,7 @@ def create_user(
 
 @client.get("/users/{user_id}", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
 def get_user(
-    user_id: int, result: schemas.HTTPValidationError | schemas.UserResponse
+    user_id: int, query: dict | None = None, *, result: schemas.HTTPValidationError | schemas.UserResponse
 ) -> schemas.HTTPValidationError | schemas.UserResponse:
     """Get User
 

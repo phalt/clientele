@@ -64,6 +64,10 @@ class ParametersResponse(pydantic.BaseModel):
                 required_args.append(f"{k}: {v}")
         return ", ".join(required_args) if required_args else ""
 
+    def has_query_args(self) -> bool:
+        """Check if there are any query parameters."""
+        return len(self.query_args) > 0
+
 
 class BaseClientsGenerator:
     """
