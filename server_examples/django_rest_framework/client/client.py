@@ -1,35 +1,36 @@
 from __future__ import annotations
 
-import typing  # noqa
+import clientele
+from server_examples.django_rest_framework import config, schemas
 
-from server_examples.django_rest_framework.client import http, schemas  # noqa
-
-
-def list_users() -> schemas.ListUsers200Response:
-    response = http.get(url="/api/users/")
-    return http.handle_response(list_users, response)
+client = clientele.Client(config=config.Config())
 
 
-def create_user(data: schemas.UserRequest) -> schemas.User:
-    response = http.post(url="/api/users/", data=data.model_dump())
-    return http.handle_response(create_user, response)
+@client.get("/api/users/")
+def list_users(result: schemas.ListUsers200Response) -> schemas.ListUsers200Response:
+    return result
 
 
-def get_user(id: int) -> schemas.User:
-    response = http.get(url=f"/api/users/{id}/")
-    return http.handle_response(get_user, response)
+@client.post("/api/users/")
+def create_user(data: schemas.UserRequest, result: schemas.User) -> schemas.User:
+    return result
 
 
-def users_update(id: int, data: schemas.User) -> schemas.User:
-    response = http.put(url=f"/api/users/{id}/", data=data.model_dump())
-    return http.handle_response(users_update, response)
+@client.get("/api/users/{id}/")
+def get_user(id: int, result: schemas.User) -> schemas.User:
+    return result
 
 
-def users_partial_update(id: int, data: schemas.PatchedUser) -> schemas.User:
-    response = http.patch(url=f"/api/users/{id}/", data=data.model_dump())
-    return http.handle_response(users_partial_update, response)
+@client.put("/api/users/{id}/")
+def users_update(id: int, data: schemas.User, result: schemas.User) -> schemas.User:
+    return result
 
 
-def users_destroy(id: int) -> None:
-    response = http.delete(url=f"/api/users/{id}/")
-    return http.handle_response(users_destroy, response)
+@client.patch("/api/users/{id}/")
+def users_partial_update(id: int, data: schemas.PatchedUser, result: schemas.User) -> schemas.User:
+    return result
+
+
+@client.delete("/api/users/{id}/")
+def users_destroy(id: int, result: None) -> None:
+    return result

@@ -1,37 +1,35 @@
 from __future__ import annotations
 
-import typing  # noqa
+import clientele
+from server_examples.django_ninja import config, schemas
 
-from server_examples.django_ninja.client import http, schemas  # noqa
+client = clientele.Client(config=config.Config())
 
 
-def list_users() -> schemas.Response:
+@client.get("/api/users")
+def list_users(result: schemas.Response) -> schemas.Response:
     """List Users
 
     List all users.
     """
-
-    response = http.get(url="/api/users")
-    return http.handle_response(list_users, response)
+    return result
 
 
-def create_user(data: schemas.UserIn) -> schemas.UserOut:
+@client.post("/api/users")
+def create_user(data: schemas.UserIn, result: schemas.UserOut) -> schemas.UserOut:
     """Create User
 
     Create a new user.
     """
-
-    response = http.post(url="/api/users", data=data.model_dump())
-    return http.handle_response(create_user, response)
+    return result
 
 
-def get_user(user_id: int, include_posts: typing.Optional[bool] = None) -> schemas.UserOut:
+@client.get("/api/users/{user_id}")
+def get_user(user_id: int, result: schemas.UserOut) -> schemas.UserOut:
     """Get User
 
         Get a specific user by ID.
 
     The include_posts parameter is for demonstration purposes.
     """
-
-    response = http.get(url=f"/api/users/{user_id}?include_posts={include_posts}")
-    return http.handle_response(get_user, response)
+    return result
