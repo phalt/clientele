@@ -59,7 +59,7 @@ class FrameworkGenerator(generators.Generator):
             ("schemas.py", "schemas_py.jinja2", writer.write_to_schemas),
         )
 
-    def generate_templates_files(self):
+    def generate_templates_files(self) -> None:
         new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
 
