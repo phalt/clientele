@@ -1,0 +1,44 @@
+"""
+This file will never be updated on subsequent clientele runs.
+Use it as a space to store configuration and constants.
+"""
+
+import httpx
+
+from clientele import BaseConfig
+
+
+class Config(BaseConfig):
+    """
+    Configuration object for your API client.
+
+    Values can be set via:
+    1. Environment variables (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
+    2. Direct instantiation with keyword arguments
+    3. .env file (if python-dotenv is installed)
+
+    Example:
+        # From environment variables
+        export API_BASE_URL="https://api.example.com"
+        export BEARER_TOKEN="my-secret-token"
+        config = Config()
+
+        # Direct instantiation
+        config = Config(
+            api_base_url="https://api.example.com",
+            bearer_token="my-token",
+            timeout=10.0
+        )
+    """
+
+    base_url: str = "{{ base_url }}"
+    headers: dict = {}
+    timeout: float = 5.0
+    follow_redirects: bool = False
+    verify_ssl: bool = True
+    http2: bool = False
+    max_redirects: int = 20
+    limits: httpx.Limits | None = None
+    transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
+    transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
+    cookies: httpx.Cookies | None = None
