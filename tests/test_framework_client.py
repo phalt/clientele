@@ -554,11 +554,26 @@ def test_response_map_invalid_status_code_raises_error() -> None:
         @client.get(
             "/users/{user_id}",
             response_map={
-                999: SuccessResponse,  # Invalid status code
+                999: SuccessResponse,  # Invalid status code (outside 100-599 range)
             },
         )
         def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
             return result
+
+
+def test_response_map_custom_status_code_works() -> None:
+    """Test that custom status codes within valid range (100-599) work."""
+    client = Client(base_url=BASE_URL)
+
+    # Should not raise - 599 is a valid HTTP status code even if not in the enum
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            599: SuccessResponse,  # Valid but not in enum
+        },
+    )
+    def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+        return result
 
 
 def test_response_map_non_pydantic_model_raises_error() -> None:
