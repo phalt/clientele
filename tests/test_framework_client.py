@@ -615,6 +615,8 @@ def test_response_map_custom_status_code_works() -> None:
 
 def test_response_map_non_pydantic_model_raises_error() -> None:
     """Test that non-Pydantic model in response_map raises ValueError."""
+    from typing import cast
+
     client = Client(base_url=BASE_URL)
 
     class NotAModel:
@@ -624,9 +626,7 @@ def test_response_map_non_pydantic_model_raises_error() -> None:
 
         @client.get(
             "/users/{user_id}",
-            response_map={
-                200: NotAModel,  # type: ignore
-            },
+            response_map=cast(dict[int, type[BaseModel]], {200: NotAModel}),
         )
         def get_user(user_id: int, result: NotAModel) -> NotAModel:  # type: ignore
             return result
