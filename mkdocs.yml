@@ -16,6 +16,7 @@ nav:
     - FastAPI: framework-fastapi.md
     - Django REST Framework: framework-drf.md
     - Django Ninja: framework-django-ninja.md
+    - Decorator Client: framework-decorator-client.md
   - Documentation:
     - Configuration: configuration.md
     - Regeneration: regeneration.md

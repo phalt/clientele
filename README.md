@@ -192,6 +192,31 @@ These examples match the code shown in our framework-specific documentation and 
 - **Testing**: Designed for easy testing thanks to [respx](https://lundberg.github.io/respx/).
 - **Formatting**: Automatically formats generated code with [Ruff](https://docs.astral.sh/ruff/).
 
+## Decorator-based runtime client
+
+If you want a lightweight, framework-style way to write outgoing HTTP calls without generating any code, use the decorator client:
+
+```python
+from clientele import Client, Config
+from pydantic import BaseModel
+
+config = Config(base_url="https://api.example.com", headers={"Authorization": "Bearer <token>"})
+client = Client(config=config)
+
+class User(BaseModel):
+    id: int
+    name: str
+
+@client.get("/users/{user_id}")
+def get_user(user_id: int, result: User):
+    return result
+
+user = get_user(1)
+```
+
+The request runs when you call `get_user`, Pydantic validation is inferred from your return type, and the parsed response is injected into the function via the `result` argument. Prefer per-instance configuration? Use the optional `Routes` helper to decorate class methods with a `_client` attribute; the [decorator client guide](https://phalt.github.io/clientele/framework-decorator-client/) covers both functional and class-based patterns plus POST/PUT/PATCH/DELETE examples.
+The same `Client` instance can wrap synchronous or `async` handlers—no separate async class required.
+
 ## Getting Started
 
 👉 See our [framework-specific guides](https://phalt.github.io/clientele/framework-fastapi/) for FastAPI, Django REST Framework, and Django Ninja
