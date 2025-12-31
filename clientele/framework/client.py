@@ -118,10 +118,11 @@ def _validate_response_map(
     for status_code, model_class in response_map.items():
         if model_class not in return_types:
             missing_model = model_class.__name__
+            func_name = getattr(func, "__name__", "<function>")
             raise ValueError(
                 f"Response model '{missing_model}' for status code {status_code} "
                 f"is not in the function's return type annotation. "
-                f"Please add '{missing_model}' to the return type of '{func.__name__}'."
+                f"Please add '{missing_model}' to the return type of '{func_name}'."
             )
 
 
