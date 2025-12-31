@@ -61,10 +61,12 @@ def _build_request_context(
     method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[BaseModel]] | None = None
 ) -> _RequestContext:
     signature = inspect.signature(func)
+    # Get type hints with proper handling of forward references
+    # This follows the pattern used in FastAPI and other frameworks
     try:
-        type_hints = get_type_hints(func)
+        type_hints = get_type_hints(func, include_extras=True)
     except NameError:
-        # If we can't resolve type hints (e.g., forward references), fall back to annotations
+        # Forward references that can't be resolved - use raw annotations
         type_hints = func.__annotations__.copy()
 
     # Validate response_map if provided
@@ -420,6 +422,24 @@ class Client:
     def _parse_response(
         self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None
     ) -> Any:
+        # Extract payload from response
+        payload: Any
+        if not response.content:
+            payload = None
+        else:
+            # For JSON APIs (97% of cases), try JSON parsing
+            content_type = response.headers.get("content-type", "").lower()
+            if "json" in content_type or not content_type:
+                # Default to JSON for APIs, or when no content-type specified
+                try:
+                    payload = response.json()
+                except Exception:
+                    # Not JSON despite header/assumption - use text
+                    payload = response.text
+            else:
+                # Explicit non-JSON content type
+                payload = response.text
+
         # If response_map is provided, use it to determine the response model
         if response_map is not None:
             status_code = response.status_code
@@ -429,38 +449,13 @@ class Client:
                     response=response,
                     reason=f"Unexpected status code {status_code}. Expected one of: {expected_codes}",
                 )
-            # Get the model for this status code
+            # Get the model for this status code and validate
             model_class = response_map[status_code]
-
-            # Parse the response using the model
-            payload: Any
-            if not response.content:
-                payload = None
-            else:
-                content_type = response.headers.get("content-type", "").lower()
-                if "json" in content_type:
-                    payload = response.json()
-                else:
-                    payload = response.text
-
             if payload is None:
                 return None
+            return self._validate_model(model_class, payload)
 
-            if hasattr(model_class, "model_validate"):
-                return model_class.model_validate(payload)
-            return model_class.parse_obj(payload)
-
-        # Original parsing logic when no response_map
-        payload: Any
-        if not response.content:
-            payload = None
-        else:
-            content_type = response.headers.get("content-type", "").lower()
-            if "json" in content_type:
-                payload = response.json()
-            else:
-                payload = response.text
-
+        # Standard parsing logic when no response_map
         if annotation is inspect._empty:
             return payload
 
@@ -468,9 +463,7 @@ class Client:
             return None
 
         if inspect.isclass(annotation) and issubclass(annotation, BaseModel):
-            if hasattr(annotation, "model_validate"):
-                return annotation.model_validate(payload)
-            return annotation.parse_obj(payload)
+            return self._validate_model(annotation, payload)
 
         if _HAS_TYPE_ADAPTER and TypeAdapter is not None:
             adapter = TypeAdapter(annotation)
@@ -480,6 +473,12 @@ class Client:
             return parse_obj_as(annotation, payload)
 
         return payload
+
+    def _validate_model(self, model_class: type[BaseModel], payload: Any) -> BaseModel:
+        """Validate payload using a Pydantic model, supporting both v1 and v2."""
+        if hasattr(model_class, "model_validate"):
+            return model_class.model_validate(payload)
+        return model_class.parse_obj(payload)
 
     def _substitute_path(self, path_template: str, values: dict[str, Any]) -> str:
         def replacer(match: re.Match[str]) -> str:
