@@ -364,7 +364,6 @@ class ValidationErrorResponse(BaseModel):
 @pytest.mark.respx(base_url=BASE_URL)
 def test_response_map_basic_sync(respx_mock: MockRouter) -> None:
     """Test basic response_map functionality with sync function."""
-    from clientele import APIException
 
     client = Client(base_url=BASE_URL)
 
@@ -391,13 +390,10 @@ def test_response_map_basic_sync(respx_mock: MockRouter) -> None:
 @pytest.mark.respx(base_url=BASE_URL)
 def test_response_map_error_status_sync(respx_mock: MockRouter) -> None:
     """Test response_map with error status code (sync)."""
-    from clientele import APIException
 
     client = Client(base_url=BASE_URL)
 
-    respx_mock.get("/users/999").mock(
-        return_value=httpx.Response(404, json={"error": "User not found", "code": 404})
-    )
+    respx_mock.get("/users/999").mock(return_value=httpx.Response(404, json={"error": "User not found", "code": 404}))
 
     @client.get(
         "/users/{user_id}",
@@ -449,9 +445,7 @@ def test_response_map_multiple_status_codes_sync(respx_mock: MockRouter) -> None
     """Test response_map with multiple status codes (sync)."""
     client = Client(base_url=BASE_URL)
 
-    respx_mock.post("/users").mock(
-        return_value=httpx.Response(201, json={"id": 1, "name": "Bob", "status": "success"})
-    )
+    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 1, "name": "Bob", "status": "success"}))
 
     @client.post(
         "/users",
@@ -504,9 +498,7 @@ async def test_response_map_error_status_async(respx_mock: MockRouter) -> None:
     """Test response_map with error status code (async)."""
     client = Client(base_url=BASE_URL)
 
-    respx_mock.get("/users/999").mock(
-        return_value=httpx.Response(404, json={"error": "User not found", "code": 404})
-    )
+    respx_mock.get("/users/999").mock(return_value=httpx.Response(404, json={"error": "User not found", "code": 404}))
 
     @client.get(
         "/users/{user_id}",
