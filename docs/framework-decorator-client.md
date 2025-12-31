@@ -215,6 +215,36 @@ delete_user(1, query={"hard": "false"})
     - Collections and other annotated types use `TypeAdapter` (Pydantic v2) or `parse_obj_as` (Pydantic v1).
     - If no return annotation is present, the raw payload is returned without validation.
 
+## Persistent connections with context managers
+
+The `Client` supports context managers for managing persistent HTTP connections. This is useful when you need to make multiple requests and want to reuse the underlying connection pool:
+
+```python
+from clientele import Client
+
+# Synchronous context manager
+with Client(base_url="https://api.example.com") as client:
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User) -> User:
+        return result
+    
+    # Reuses the same connection pool
+    user1 = get_user(1)
+    user2 = get_user(2)
+
+# Asynchronous context manager
+async with Client(base_url="https://api.example.com") as client:
+    @client.get("/users/{user_id}")
+    async def get_user(user_id: int, result: User) -> User:
+        return result
+    
+    # Reuses the same async connection pool
+    user1 = await get_user(1)
+    user2 = await get_user(2)
+```
+
+When using the client outside of a context manager, each request creates and closes its own connection. Using a context manager can improve performance for multiple requests.
+
 ## When to use the decorator client
 
 - You want to hand-author a few calls without generating a full client.

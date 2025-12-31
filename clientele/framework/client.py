@@ -17,12 +17,17 @@ try:  # pragma: no cover - conditional import
 
     _HAS_TYPE_ADAPTER = True
 except ImportError:  # pragma: no cover - fallback for Pydantic v1
+    # TypeAdapter is used for validating complex types like List[Model], Optional[Model], etc.
+    # It's available in Pydantic v2 and provides better type handling than parse_obj_as.
+    # For Pydantic v1, we fall back to parse_obj_as which has similar functionality.
     TypeAdapter = None  # type: ignore[assignment, misc]
     _HAS_TYPE_ADAPTER = False
 
 try:  # pragma: no cover - conditional import
     from pydantic.tools import parse_obj_as
 except Exception:  # pragma: no cover - fallback for Pydantic v2 only environments
+    # parse_obj_as is the Pydantic v1 equivalent of TypeAdapter.
+    # In Pydantic v2-only environments, this import will fail and we use TypeAdapter instead.
     parse_obj_as = None  # type: ignore[assignment]
 
 
