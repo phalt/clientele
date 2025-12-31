@@ -36,7 +36,9 @@ class Routes:
     def delete(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("DELETE", path, response_map=response_map)
 
-    def _create_decorator(self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+    def _create_decorator(
+        self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None
+    ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
             context = _build_request_context(method, path, func, response_map=response_map)
 
