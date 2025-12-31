@@ -215,6 +215,114 @@ delete_user(1, query={"hard": "false"})
     - Collections and other annotated types use `TypeAdapter` (Pydantic v2) or `parse_obj_as` (Pydantic v1).
     - If no return annotation is present, the raw payload is returned without validation.
 
+## Handling multiple response types with `response_map`
+
+Real APIs often return different response models based on the HTTP status code. The `response_map` parameter allows you to map status codes to specific Pydantic models, enabling proper type handling for success and error responses.
+
+```python
+from pydantic import BaseModel
+from clientele import Client, APIException
+
+client = Client(base_url="https://api.example.com")
+
+class User(BaseModel):
+    id: int
+    name: str
+
+class NotFoundError(BaseModel):
+    error: str
+    code: int
+
+class ValidationError(BaseModel):
+    errors: list[str]
+
+@client.get(
+    "/users/{user_id}",
+    response_map={
+        200: User,
+        404: NotFoundError,
+    }
+)
+def get_user(user_id: int, result: User | NotFoundError) -> User | NotFoundError:
+    return result
+
+# Returns User for 200 responses
+user = get_user(1)
+if isinstance(user, User):
+    print(f"Found user: {user.name}")
+elif isinstance(user, NotFoundError):
+    print(f"Error: {user.error}")
+
+# For unexpected status codes, APIException is raised
+try:
+    get_user(999)  # If server returns 500
+except APIException as e:
+    print(f"Unexpected status: {e.response.status_code}")
+    print(f"Reason: {e.reason}")
+```
+
+### `response_map` requirements
+
+1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele` for reference, or any standard HTTP status code (100-511).
+2. **Values must be Pydantic models**: Each value must be a `BaseModel` subclass.
+3. **Return type must include all models**: The function's return type annotation must be a Union containing all the Pydantic models used in `response_map`.
+4. **Unexpected status codes raise `APIException`**: If the server returns a status code not in the `response_map`, an `APIException` is raised with details about the unexpected status.
+
+### Multi-status example with POST
+
+```python
+@client.post(
+    "/users",
+    response_map={
+        201: User,
+        400: ValidationError,
+        422: ValidationError,
+    }
+)
+def create_user(
+    data: dict, result: User | ValidationError
+) -> User | ValidationError:
+    return result
+
+# Handle different responses
+response = create_user(data={"name": "Alice"})
+if isinstance(response, User):
+    print(f"Created user {response.id}")
+elif isinstance(response, ValidationError):
+    print(f"Validation failed: {response.errors}")
+```
+
+### Works with Routes too
+
+The `response_map` parameter works seamlessly with the `Routes` decorator for class-based APIs:
+
+```python
+from clientele import Client, Routes
+
+routes = Routes()
+
+class UsersAPI:
+    def __init__(self, base_url: str):
+        self._client = Client(base_url=base_url)
+    
+    @routes.get(
+        "/users/{user_id}",
+        response_map={
+            200: User,
+            404: NotFoundError,
+        }
+    )
+    def get_user(self, user_id: int, result: User | NotFoundError) -> User | NotFoundError:
+        return result
+
+api = UsersAPI("https://api.example.com")
+user = api.get_user(1)
+```
+
+### OpenAPI compatibility
+
+The `response_map` feature is designed to work well with OpenAPI schemas. When generating clients from OpenAPI specifications, similar response mapping is used automatically. This decorator-based approach gives you the same flexibility when hand-authoring API clients.
+
 ## When to use the decorator client
 
 - You want to hand-author a few calls without generating a full client.
