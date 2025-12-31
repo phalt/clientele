@@ -1,5 +1,5 @@
 from __future__ import annotations
 
-from clientele.framework import APIException, Client, Config, Routes, codes
+from clientele.framework import APIException, BaseConfig, Client, Routes, codes, get_default_config
 
-__all__ = ["APIException", "Client", "Config", "Routes", "codes"]
+__all__ = ["APIException", "Client", "BaseConfig", "Routes", "codes", "get_default_config"]

@@ -1,4 +1,4 @@
-"""HTTP status codes and reason phrases.
+"""HTTP status codes and reasons.
 
 Inspired by httpx._status_codes.py.
 """

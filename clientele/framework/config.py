@@ -3,26 +3,49 @@ from __future__ import annotations
 from typing import Any
 
 import httpx
-from pydantic import BaseModel, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Config(BaseModel):
+class BaseConfig(BaseSettings):
     """
-    Runtime configuration for the decorator-based ``Client``.
+    Runtime configuration for clientele clients.
 
-    Parameters mirror the options exposed by generated clients so users can
-    keep a single mental model for connection settings.
+    httpx configuration options can be found at https://www.python-httpx.org/
+
+    Values can be set via:
+    1. Environment variables (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
+    2. Direct instantiation with keyword arguments
+    3. .env file (if python-dotenv is installed)
+
+    Example:
+        # From environment variables
+        export API_BASE_URL="https://api.example.com"
+        export BEARER_TOKEN="my-secret-token"
+        config = Config()
+
+        # Direct instantiation
+        config = Config(
+            api_base_url="https://api.example.com",
+            bearer_token="my-token",
+            timeout=10.0
+        )
     """
 
-    model_config = {"arbitrary_types_allowed": True}
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore",
+    )
 
     base_url: str = "http://localhost"
     headers: dict[str, str] = Field(default_factory=dict)
     timeout: float | None = 5.0
     follow_redirects: bool = False
-    auth: httpx.Auth | tuple[str, str] | None = None
     verify: bool | str = True
     http2: bool = False
+    auth: httpx.Auth | tuple[str, str] | None = None
     limits: httpx.Limits | None = None
     proxies: httpx.Proxy | None = None
     transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
@@ -51,19 +74,24 @@ class Config(BaseModel):
         return options
 
 
-def get_default_config() -> Config:
+def get_default_config(base_url: str) -> BaseConfig:
     """
     Create a default configuration instance.
 
-    Returns a Config with sensible defaults suitable for most use cases.
+    Returns a BaseConfig with sensible defaults suitable for most use cases.
     Users can override specific values by passing keyword arguments to Client
     or by providing their own Config instance.
     """
-    return Config(
-        base_url="http://localhost",
+    return BaseConfig(
+        base_url=base_url,
         headers={},
         timeout=5.0,
         follow_redirects=False,
+        auth=None,
         verify=True,
         http2=False,
+        limits=None,
+        proxies=None,
+        transport=None,
+        cookies=None,
     )

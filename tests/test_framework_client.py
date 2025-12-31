@@ -7,7 +7,7 @@ import pytest
 from pydantic import BaseModel
 from respx import MockRouter
 
-from clientele import Client, Config, Routes
+from clientele import BaseConfig, Client, Routes
 
 BASE_URL = "https://api.example.com"
 
@@ -55,7 +55,7 @@ def test_get_validates_response_and_builds_query(respx_mock: MockRouter) -> None
 
 @pytest.mark.respx(base_url=BASE_URL)
 def test_get_respects_query_override_and_list_validation(respx_mock: MockRouter) -> None:
-    client = Client(config=Config(base_url=BASE_URL, headers={"Authorization": "Bearer token"}))
+    client = Client(config=BaseConfig(base_url=BASE_URL, headers={"Authorization": "Bearer token"}))
 
     respx_mock.get("/users").mock(
         return_value=httpx.Response(200, json=[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}])
@@ -218,7 +218,7 @@ def test_routes_enable_per_instance_clients() -> None:
 
     class API:
         def __init__(self, base_url: str) -> None:
-            self._client = Client(base_url=base_url)
+            self.client = Client(base_url=base_url)
 
         @routes.get("/users/{user_id}")
         def get_user(self, user_id: int, result: User) -> User:
@@ -312,7 +312,7 @@ async def test_routes_support_async_methods() -> None:
 
     class API:
         def __init__(self, base_url: str) -> None:
-            self._client = Client(base_url=base_url)
+            self.client = Client(base_url=base_url)
 
         @routes.get("/users/{user_id}")
         async def get_user(self, user_id: int, result: User) -> User:
@@ -672,7 +672,7 @@ def test_routes_response_map_sync(respx_mock: MockRouter) -> None:
 
     class API:
         def __init__(self, base_url: str) -> None:
-            self._client = Client(base_url=base_url)
+            self.client = Client(base_url=base_url)
 
         @routes.get(
             "/users/{user_id}",
@@ -703,7 +703,7 @@ async def test_routes_response_map_async(respx_mock: MockRouter) -> None:
 
     class API:
         def __init__(self, base_url: str) -> None:
-            self._client = Client(base_url=base_url)
+            self.client = Client(base_url=base_url)
 
         @routes.get(
             "/users/{user_id}",

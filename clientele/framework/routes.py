@@ -6,7 +6,7 @@ from typing import Any, Callable, TypeVar, cast
 
 from pydantic import BaseModel
 
-from .client import Client, _build_request_context
+from clientele.framework import client as framework_client
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 
@@ -15,10 +15,10 @@ class Routes:
     """Decorator provider for class-based APIs (Pattern A).
 
     Decorators capture route metadata at import time and delegate execution to a
-    ``Client`` stored on the instance (default attribute name: ``_client``).
+    ``Client`` stored on the instance (default attribute name: ``client``).
     """
 
-    def __init__(self, *, client_attribute: str = "_client") -> None:
+    def __init__(self, *, client_attribute: str = "client") -> None:
         self.client_attribute = client_attribute
 
     def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
@@ -40,7 +40,7 @@ class Routes:
         self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None
     ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
-            context = _build_request_context(method, path, func, response_map=response_map)
+            context = framework_client.build_request_context(method, path, func, response_map=response_map)
 
             if inspect.iscoroutinefunction(func):
 
@@ -60,7 +60,7 @@ class Routes:
 
         return decorator
 
-    def _resolve_client(self, args: tuple[Any, ...]) -> Client:
+    def _resolve_client(self, args: tuple[Any, ...]) -> framework_client.Client:
         if not args:
             raise TypeError("Routes-decorated methods must be called with an instance as the first argument")
 
@@ -71,7 +71,7 @@ class Routes:
                 f"Expected '{self.client_attribute}' on {instance!r} to execute the request. "
                 "Assign a Client in __init__."
             )
-        if not isinstance(client, Client):
+        if not isinstance(client, framework_client.Client):
             raise TypeError(
                 f"Attribute '{self.client_attribute}' must be a Client instance; got {type(client)!r} instead"
             )

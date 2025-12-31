@@ -38,7 +38,7 @@ clean:  ## Clear any cache files and test files
 	rm -rf .coverage
 
 test:  ## Run tests
-	uv run pytest -vvv --cov=clientele --cov-report=term-missing --cov-report=html --cov-config=pyproject.toml
+	uv run pytest -vvv -x --cov=clientele --cov-report=term-missing --cov-report=html --cov-config=pyproject.toml
 
 shell:  ## Run an ipython shell
 	uv run ipython

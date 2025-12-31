@@ -8,6 +8,10 @@ and nullable schema constructs with proper Python typing.
 import sys
 from contextlib import contextmanager
 
+import httpx
+import pytest
+from respx import MockRouter
+
 from clientele.generators.classbase.generator import ClassbaseGenerator
 from clientele.generators.standard.generator import StandardGenerator
 from tests.generators.integration_utils import get_spec_path, load_spec
@@ -482,23 +486,22 @@ class TestNoContentResponses:
         # Verify the function signature uses the type alias
         assert "def list_users_list_users_get() -> schemas.ResponseListUsers:" in client_content
 
-    def test_array_response_handle_response_runtime(self):
+    @pytest.mark.respx(base_url="http://localhost:8000")
+    def test_array_response_handle_response_runtime(self, respx_mock: MockRouter):
         """Test that handle_response works correctly with array type aliases at runtime."""
-        from unittest.mock import Mock
-
         # Use the already generated server_examples/fastapi/client
-        from server_examples.fastapi.client import client, http
+        from server_examples.fastapi.client import client
 
         # Create a mock response with array data
-        mock_response = Mock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = [
+        return_value = [
             {"id": 1, "name": "Alice", "email": "alice@example.com"},
             {"id": 2, "name": "Bob", "email": "bob@example.com"},
         ]
 
+        respx_mock.get("/users").mock(return_value=httpx.Response(200, json=return_value))
+
         # Call handle_response with the list_users function
-        result = http.handle_response(client.list_users, mock_response)
+        result = client.list_users()
 
         # Verify the result is a list of UserResponse objects
         assert isinstance(result, list)

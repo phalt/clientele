@@ -11,9 +11,9 @@ from urllib.parse import quote
 import httpx
 from pydantic import BaseModel
 
-from .config import Config
-from .exceptions import APIException
-from .http_status import codes
+from clientele.framework import config as framework_config
+from clientele.framework import exceptions as framework_exceptions
+from clientele.framework import http_status
 
 try:  # pragma: no cover - conditional import
     from pydantic import TypeAdapter
@@ -42,9 +42,9 @@ class _RequestContext(BaseModel):
     """
     Captures metadata about a decorated HTTP method.
 
-    Stores the HTTP method, path template, original function, signature, and
-    type hints to enable request preparation and execution without re-parsing
-    function metadata on every call.
+    Stores the HTTP method, path template, original function, signature,
+    type hints, and response map to enable request preparation and execution
+    without re-parsing function metadata on every call.
     """
 
     model_config = {"arbitrary_types_allowed": True}
@@ -57,7 +57,7 @@ class _RequestContext(BaseModel):
     response_map: dict[int, type[BaseModel]] | None = None
 
 
-def _build_request_context(
+def build_request_context(
     method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[BaseModel]] | None = None
 ) -> _RequestContext:
     signature = inspect.signature(func)
@@ -92,7 +92,7 @@ def _validate_response_map(
     """
     # Validate all keys are valid HTTP status codes
     for status_code in response_map.keys():
-        if not codes.is_valid_status_code(status_code):
+        if not http_status.codes.is_valid_status_code(status_code):
             raise ValueError(f"Invalid status code {status_code} in response_map")
 
     # Validate all values are Pydantic BaseModel subclasses
@@ -141,55 +141,62 @@ class _PreparedCall(BaseModel):
     call_arguments: dict[str, Any]
     url_path: str
     query_params: dict[str, Any] | None
-    data_payload: Any
+    data_payload: dict[str, Any] | None
     headers_override: dict[str, str] | None
     return_annotation: Any
 
 
 class Client:
-    """A decorator-driven HTTP client for sync and async requests.
+    """Clientele is a Python framework for building HTTP API clients.
 
     Supports common HTTP verbs (GET, POST, PUT, PATCH, DELETE) and works with
-    both synchronous and ``async`` decorated callables without separate
-    classes. Decorated functions must have a real body; the wrapper executes
-    the HTTP request before calling the function and injects the parsed
-    response via a ``result`` argument when present.
+    both synchronous and ``async`` functions.
+
+    Functional example:
+
+    ```
+    import clientele
+    from my_api_client import config, schemas
+
+    client = clientele.Client(config=config.Config())
+
+    @client.get("/users")
+    def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
+        return result
+    ```
+
+    Class-based example:
+
+    ```
+    from clientele import Client, Routes
+    from my_api_client import config, schemas
+
+    routes = Routes()
+
+    class MyAPI:
+        def __init__(self, base_url: str):
+            self.client = Client(config=config.Config())
+
+        @routes.get("/users")
+        def list_users(self, result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
+            return result
+    ```
+
+    See https://phalt.github.io/clientele for full documentation.
     """
 
     def __init__(
         self,
         *,
-        config: Config | None = None,
+        config: framework_config.BaseConfig | None = None,
         base_url: str | None = None,
-        headers: dict[str, str] | None = None,
-        timeout: float | None = None,
-        follow_redirects: bool | None = None,
-        auth: httpx.Auth | tuple[str, str] | None = None,
-        verify: bool | str | None = None,
-        http2: bool | None = None,
-        limits: httpx.Limits | None = None,
-        proxies: httpx.Proxy | None = None,
-        transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None,
-        cookies: httpx.Cookies | None = None,
     ) -> None:
         if config is None:
             # Enforce base_url when no config is provided
             if base_url is None:
                 raise ValueError("Either 'config' or 'base_url' must be provided")
 
-            config = Config(
-                base_url=base_url,
-                headers=headers or {},
-                timeout=timeout if timeout is not None else 5.0,
-                follow_redirects=follow_redirects if follow_redirects is not None else False,
-                auth=auth,
-                verify=True if verify is None else verify,
-                http2=http2 or False,
-                limits=limits,
-                proxies=proxies,
-                transport=transport,
-                cookies=cookies,
-            )
+            config = framework_config.get_default_config(base_url=base_url)
         self.config = config
 
     def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
@@ -211,7 +218,7 @@ class Client:
         self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None
     ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
-            context = _build_request_context(method, path, func, response_map=response_map)
+            context = build_request_context(method, path, func, response_map=response_map)
 
             if inspect.iscoroutinefunction(func):
 
@@ -279,8 +286,9 @@ class Client:
             query_params = {k: v for k, v in request_arguments.items() if k != "data"}
             query_params.update(extra_kwargs)
 
-        data_payload: Any = None
+        data_payload: dict[str, Any] | None = None
         if context.method in {"POST", "PUT", "PATCH", "DELETE"}:
+            # Fetch 'data' payload for methods that support a body
             data_param = context.signature.parameters.get("data")
             data_annotation = context.type_hints.get("data", data_param.annotation if data_param else inspect._empty)
             data_payload = self._prepare_body(call_arguments, data_param, data_annotation)
@@ -333,7 +341,7 @@ class Client:
 
     def _prepare_body(
         self, call_arguments: dict[str, Any], data_param: inspect.Parameter | None, data_annotation: Any
-    ) -> Any:
+    ) -> dict[str, Any] | None:
         if data_param is None:
             return None
 
@@ -366,7 +374,7 @@ class Client:
         method: str,
         url: str,
         query_params: dict[str, Any] | None,
-        data_payload: Any,
+        data_payload: dict[str, Any] | None,
         headers_override: dict[str, str] | None,
         response_map: dict[int, type[BaseModel]] | None = None,
     ) -> httpx.Response:
@@ -390,7 +398,7 @@ class Client:
         method: str,
         url: str,
         query_params: dict[str, Any] | None,
-        data_payload: Any,
+        data_payload: dict[str, Any] | None,
         headers_override: dict[str, str] | None,
         response_map: dict[int, type[BaseModel]] | None = None,
     ) -> httpx.Response:
@@ -446,7 +454,7 @@ class Client:
             status_code = response.status_code
             if status_code not in response_map:
                 expected_codes = ", ".join(map(str, response_map.keys()))
-                raise APIException(
+                raise framework_exceptions.APIException(
                     response=response,
                     reason=f"Unexpected status code {status_code}. Expected one of: {expected_codes}",
                 )
