@@ -343,3 +343,342 @@ async def test_routes_support_async_methods() -> None:
 
         assert created == User(id=10, name="Uno")
         assert json.loads(router_one.calls[-1].request.content) == {"name": "Uno"}
+
+
+# Test models for response_map feature
+class SuccessResponse(BaseModel):
+    id: int
+    name: str
+    status: str = "success"
+
+
+class ErrorResponse(BaseModel):
+    error: str
+    code: int
+
+
+class ValidationErrorResponse(BaseModel):
+    errors: list[str]
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_response_map_basic_sync(respx_mock: MockRouter) -> None:
+    """Test basic response_map functionality with sync function."""
+    from clientele import APIException
+
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/1").mock(
+        return_value=httpx.Response(200, json={"id": 1, "name": "Alice", "status": "success"})
+    )
+
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            200: SuccessResponse,
+            404: ErrorResponse,
+        },
+    )
+    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
+
+    user = get_user(1)
+    assert isinstance(user, SuccessResponse)
+    assert user.id == 1
+    assert user.name == "Alice"
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_response_map_error_status_sync(respx_mock: MockRouter) -> None:
+    """Test response_map with error status code (sync)."""
+    from clientele import APIException
+
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/999").mock(
+        return_value=httpx.Response(404, json={"error": "User not found", "code": 404})
+    )
+
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            200: SuccessResponse,
+            404: ErrorResponse,
+        },
+    )
+    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
+
+    user = get_user(999)
+    assert isinstance(user, ErrorResponse)
+    assert user.error == "User not found"
+    assert user.code == 404
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_response_map_unexpected_status_raises_exception_sync(respx_mock: MockRouter) -> None:
+    """Test that unexpected status code raises APIException (sync)."""
+    from clientele import APIException
+
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/1").mock(
+        return_value=httpx.Response(500, json={"error": "Internal server error", "code": 500})
+    )
+
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            200: SuccessResponse,
+            404: ErrorResponse,
+        },
+    )
+    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
+
+    with pytest.raises(APIException) as exc_info:
+        get_user(1)
+
+    assert exc_info.value.response.status_code == 500
+    assert "Unexpected status code 500" in exc_info.value.reason
+    assert "200, 404" in exc_info.value.reason
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_response_map_multiple_status_codes_sync(respx_mock: MockRouter) -> None:
+    """Test response_map with multiple status codes (sync)."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.post("/users").mock(
+        return_value=httpx.Response(201, json={"id": 1, "name": "Bob", "status": "success"})
+    )
+
+    @client.post(
+        "/users",
+        response_map={
+            201: SuccessResponse,
+            400: ErrorResponse,
+            422: ValidationErrorResponse,
+        },
+    )
+    def create_user(
+        data: dict, result: SuccessResponse | ErrorResponse | ValidationErrorResponse
+    ) -> SuccessResponse | ErrorResponse | ValidationErrorResponse:
+        return result
+
+    # Test 201 response
+    user = create_user(data={"name": "Bob"})
+    assert isinstance(user, SuccessResponse)
+    assert user.id == 1
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_response_map_basic_async(respx_mock: MockRouter) -> None:
+    """Test basic response_map functionality with async function."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/2").mock(
+        return_value=httpx.Response(200, json={"id": 2, "name": "Charlie", "status": "success"})
+    )
+
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            200: SuccessResponse,
+            404: ErrorResponse,
+        },
+    )
+    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
+
+    user = await get_user(2)
+    assert isinstance(user, SuccessResponse)
+    assert user.id == 2
+    assert user.name == "Charlie"
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_response_map_error_status_async(respx_mock: MockRouter) -> None:
+    """Test response_map with error status code (async)."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/999").mock(
+        return_value=httpx.Response(404, json={"error": "User not found", "code": 404})
+    )
+
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            200: SuccessResponse,
+            404: ErrorResponse,
+        },
+    )
+    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
+
+    user = await get_user(999)
+    assert isinstance(user, ErrorResponse)
+    assert user.error == "User not found"
+    assert user.code == 404
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_response_map_unexpected_status_raises_exception_async(respx_mock: MockRouter) -> None:
+    """Test that unexpected status code raises APIException (async)."""
+    from clientele import APIException
+
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/1").mock(
+        return_value=httpx.Response(500, json={"error": "Internal server error", "code": 500})
+    )
+
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            200: SuccessResponse,
+            404: ErrorResponse,
+        },
+    )
+    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
+
+    with pytest.raises(APIException) as exc_info:
+        await get_user(1)
+
+    assert exc_info.value.response.status_code == 500
+    assert "Unexpected status code 500" in exc_info.value.reason
+
+
+def test_response_map_invalid_status_code_raises_error() -> None:
+    """Test that invalid status code in response_map raises ValueError."""
+    client = Client(base_url=BASE_URL)
+
+    with pytest.raises(ValueError, match="Invalid status code 999"):
+
+        @client.get(
+            "/users/{user_id}",
+            response_map={
+                999: SuccessResponse,  # Invalid status code
+            },
+        )
+        def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+            return result
+
+
+def test_response_map_non_pydantic_model_raises_error() -> None:
+    """Test that non-Pydantic model in response_map raises ValueError."""
+    client = Client(base_url=BASE_URL)
+
+    class NotAModel:
+        pass
+
+    with pytest.raises(ValueError, match="must be a Pydantic BaseModel subclass"):
+
+        @client.get(
+            "/users/{user_id}",
+            response_map={
+                200: NotAModel,  # type: ignore
+            },
+        )
+        def get_user(user_id: int, result: NotAModel) -> NotAModel:  # type: ignore
+            return result
+
+
+def test_response_map_missing_return_type_raises_error() -> None:
+    """Test that missing model in return type raises ValueError."""
+    client = Client(base_url=BASE_URL)
+
+    with pytest.raises(ValueError, match="Response model 'ErrorResponse' for status code 404"):
+
+        @client.get(
+            "/users/{user_id}",
+            response_map={
+                200: SuccessResponse,
+                404: ErrorResponse,
+            },
+        )
+        def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:  # Missing ErrorResponse
+            return result
+
+
+def test_response_map_no_return_annotation_raises_error() -> None:
+    """Test that function without return annotation raises ValueError."""
+    client = Client(base_url=BASE_URL)
+
+    with pytest.raises(ValueError, match="must have a return type annotation"):
+
+        @client.get(
+            "/users/{user_id}",
+            response_map={
+                200: SuccessResponse,
+            },
+        )
+        def get_user(user_id: int, result: SuccessResponse):  # No return annotation
+            return result
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_routes_response_map_sync(respx_mock: MockRouter) -> None:
+    """Test response_map with Routes (sync)."""
+    routes = Routes()
+
+    class API:
+        def __init__(self, base_url: str) -> None:
+            self._client = Client(base_url=base_url)
+
+        @routes.get(
+            "/users/{user_id}",
+            response_map={
+                200: SuccessResponse,
+                404: ErrorResponse,
+            },
+        )
+        def get_user(self, user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+            return result
+
+    api = API(BASE_URL)
+
+    respx_mock.get("/users/1").mock(
+        return_value=httpx.Response(200, json={"id": 1, "name": "Dave", "status": "success"})
+    )
+
+    user = api.get_user(1)
+    assert isinstance(user, SuccessResponse)
+    assert user.name == "Dave"
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_routes_response_map_async(respx_mock: MockRouter) -> None:
+    """Test response_map with Routes (async)."""
+    routes = Routes()
+
+    class API:
+        def __init__(self, base_url: str) -> None:
+            self._client = Client(base_url=base_url)
+
+        @routes.get(
+            "/users/{user_id}",
+            response_map={
+                200: SuccessResponse,
+                404: ErrorResponse,
+            },
+        )
+        async def get_user(
+            self, user_id: int, result: SuccessResponse | ErrorResponse
+        ) -> SuccessResponse | ErrorResponse:
+            return result
+
+    api = API(BASE_URL)
+
+    respx_mock.get("/users/2").mock(
+        return_value=httpx.Response(200, json={"id": 2, "name": "Eve", "status": "success"})
+    )
+
+    user = await api.get_user(2)
+    assert isinstance(user, SuccessResponse)
+    assert user.name == "Eve"
