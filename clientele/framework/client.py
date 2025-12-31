@@ -61,7 +61,11 @@ def _build_request_context(
     method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[BaseModel]] | None = None
 ) -> _RequestContext:
     signature = inspect.signature(func)
-    type_hints = get_type_hints(func)
+    try:
+        type_hints = get_type_hints(func)
+    except NameError:
+        # If we can't resolve type hints (e.g., forward references), fall back to annotations
+        type_hints = func.__annotations__.copy()
     
     # Validate response_map if provided
     if response_map is not None:
@@ -296,6 +300,7 @@ class Client:
             query_params=prepared.query_params,
             data_payload=prepared.data_payload,
             headers_override=prepared.headers_override,
+            response_map=context.response_map,
         )
         result = self._finalize_call(prepared, response)
         if inspect.isawaitable(result):
@@ -312,6 +317,7 @@ class Client:
             query_params=prepared.query_params,
             data_payload=prepared.data_payload,
             headers_override=prepared.headers_override,
+            response_map=context.response_map,
         )
         result = self._finalize_call(prepared, response)
         if inspect.isawaitable(result):
@@ -355,6 +361,7 @@ class Client:
         query_params: dict[str, Any] | None,
         data_payload: Any,
         headers_override: dict[str, str] | None,
+        response_map: dict[int, type[BaseModel]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -364,7 +371,10 @@ class Client:
                 request_kwargs["json"] = data_payload
 
             response = client.request(method, url, **request_kwargs)
-            response.raise_for_status()
+            # Only raise for status if we don't have a response_map
+            # If we have a response_map, we want to handle error responses
+            if response_map is None:
+                response.raise_for_status()
             return response
 
     async def _send_request_async(
@@ -375,6 +385,7 @@ class Client:
         query_params: dict[str, Any] | None,
         data_payload: Any,
         headers_override: dict[str, str] | None,
+        response_map: dict[int, type[BaseModel]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -384,7 +395,10 @@ class Client:
                 request_kwargs["json"] = data_payload
 
             response = await client.request(method, url, **request_kwargs)
-            response.raise_for_status()
+            # Only raise for status if we don't have a response_map
+            # If we have a response_map, we want to handle error responses
+            if response_map is None:
+                response.raise_for_status()
             return response
 
     def _finalize_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
