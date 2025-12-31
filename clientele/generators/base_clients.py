@@ -56,6 +56,14 @@ class ParametersResponse(pydantic.BaseModel):
                 optional_args.append(f"{k}: {v} = None")
         return ", ".join(optional_args) if optional_args else ""
 
+    def get_required_path_args_as_string(self) -> str:
+        """Get only required path parameters (for framework generator)."""
+        required_args = []
+        for k, v in self.path_args.items():
+            if not v.startswith("typing.Optional["):
+                required_args.append(f"{k}: {v}")
+        return ", ".join(required_args) if required_args else ""
+
 
 class BaseClientsGenerator:
     """

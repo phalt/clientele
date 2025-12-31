@@ -21,7 +21,7 @@ CLIENTELE VERSION: 1.2.0
 Regenerate using this command:
 
 ```sh
-clientele generate -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/  --regen t
+clientele generate -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client  --regen t
 ```
 
 Explore this API interactively:
