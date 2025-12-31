@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import inspect
 from functools import wraps
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, TypeVar, cast
 
 from .client import Client, _build_request_context
 
@@ -19,23 +19,23 @@ class Routes:
     def __init__(self, *, client_attribute: str = "_client") -> None:
         self.client_attribute = client_attribute
 
-    def get(self, path: str) -> Callable[[Callable[..., Any]], _F]:
+    def get(self, path: str) -> Callable[[_F], _F]:
         return self._create_decorator("GET", path)
 
-    def post(self, path: str) -> Callable[[Callable[..., Any]], _F]:
+    def post(self, path: str) -> Callable[[_F], _F]:
         return self._create_decorator("POST", path)
 
-    def put(self, path: str) -> Callable[[Callable[..., Any]], _F]:
+    def put(self, path: str) -> Callable[[_F], _F]:
         return self._create_decorator("PUT", path)
 
-    def patch(self, path: str) -> Callable[[Callable[..., Any]], _F]:
+    def patch(self, path: str) -> Callable[[_F], _F]:
         return self._create_decorator("PATCH", path)
 
-    def delete(self, path: str) -> Callable[[Callable[..., Any]], _F]:
+    def delete(self, path: str) -> Callable[[_F], _F]:
         return self._create_decorator("DELETE", path)
 
-    def _create_decorator(self, method: str, path: str) -> Callable[[Callable[..., Any]], _F]:
-        def decorator(func: Callable[..., Any]) -> _F:
+    def _create_decorator(self, method: str, path: str) -> Callable[[_F], _F]:
+        def decorator(func: _F) -> _F:
             context = _build_request_context(method, path, func)
 
             if inspect.iscoroutinefunction(func):
@@ -45,14 +45,14 @@ class Routes:
                     client = self._resolve_client(args)
                     return await client._execute_async(context, args, kwargs)
 
-                return async_wrapper  # type: ignore[return-value]
+                return cast(_F, async_wrapper)
 
             @wraps(func)
             def wrapper(*args: Any, **kwargs: Any) -> Any:
                 client = self._resolve_client(args)
                 return client._execute_sync(context, args, kwargs)
 
-            return wrapper  # type: ignore[return-value]
+            return cast(_F, wrapper)
 
         return decorator
 
