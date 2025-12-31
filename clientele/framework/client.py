@@ -3,7 +3,7 @@ from __future__ import annotations
 import inspect
 import re
 from functools import wraps
-from typing import Any, Callable, TypeVar, get_type_hints
+from typing import Any, Callable, TypeVar, cast, get_type_hints
 from urllib.parse import quote
 
 import httpx
@@ -145,8 +145,8 @@ class Client:
     def delete(self, path: str) -> Callable[[_F], _F]:
         return self._create_decorator("DELETE", path)
 
-    def _create_decorator(self, method: str, path: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-        def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
+    def _create_decorator(self, method: str, path: str) -> Callable[[_F], _F]:
+        def decorator(func: _F) -> _F:
             context = _build_request_context(method, path, func)
 
             if inspect.iscoroutinefunction(func):
@@ -155,13 +155,13 @@ class Client:
                 async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
                     return await self._execute_async(context, args, kwargs)
 
-                return async_wrapper
+                return cast(_F, async_wrapper)
 
             @wraps(func)
             def wrapper(*args: Any, **kwargs: Any) -> Any:
                 return self._execute_sync(context, args, kwargs)
 
-            return wrapper
+            return cast(_F, wrapper)
 
         return decorator
 
