@@ -49,12 +49,8 @@ class codes(IntEnum):
 
     @classmethod
     def is_valid_status_code(cls, value: int) -> bool:
-        """Returns True if the value is a valid HTTP status code."""
-        try:
-            codes(value)
-            return True
-        except ValueError:
-            return False
+        """Returns True if the value is a valid HTTP status code (100-599)."""
+        return 100 <= value <= 599
 
     # informational
     CONTINUE = 100, "Continue"

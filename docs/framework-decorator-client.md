@@ -263,7 +263,7 @@ except APIException as e:
 
 ### `response_map` requirements
 
-1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele` for reference, or any standard HTTP status code (100-511).
+1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele` for reference, or any standard HTTP status code (100-599).
 2. **Values must be Pydantic models**: Each value must be a `BaseModel` subclass.
 3. **Return type must include all models**: The function's return type annotation must be a Union containing all the Pydantic models used in `response_map`.
 4. **Unexpected status codes raise `APIException`**: If the server returns a status code not in the `response_map`, an `APIException` is raised with details about the unexpected status.
