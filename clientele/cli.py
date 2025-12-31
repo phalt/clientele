@@ -212,7 +212,6 @@ def generate_framework(url, file, output, asyncio, regen):
         _print_dependency_instructions(console)
 
 
-
 @click.command()
 @click.option("-c", "--client", help="Path to generated client directory", required=False)
 @click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)

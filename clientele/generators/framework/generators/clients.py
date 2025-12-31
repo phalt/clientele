@@ -1,4 +1,3 @@
-import collections
 import typing
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
@@ -59,23 +58,23 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         Returns a string representation of the response_map dict or None.
         """
         status_codes = self.http_placeholder.function_and_status_codes_bundle.get(func_name, {})
-        
+
         # If there's only one response code, we don't need response_map
         if len(status_codes) <= 1:
             return None
-        
+
         # Filter out None responses (no content responses)
         valid_responses = {code: schema for code, schema in status_codes.items() if schema != "None"}
-        
+
         if len(valid_responses) <= 1:
             return None
-        
+
         # Build response_map dict with schemas. prefix
         response_map_parts = []
         for status_code, schema_name in sorted(valid_responses.items()):
             # Add schemas. prefix to match the response types
             response_map_parts.append(f"{status_code}: schemas.{schema_name}")
-        
+
         return "{" + ", ".join(response_map_parts) + "}"
 
     def generate_function(
@@ -87,11 +86,12 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         summary: typing.Optional[str],
     ) -> None:
         """Override to add response_map to template context and fix URL handling for framework."""
-        from clientele.generators.standard import utils
         from rich import console as rich_console
 
+        from clientele.generators.standard import utils
+
         console = rich_console.Console()
-        
+
         func_name = utils.get_func_name(operation, url)
 
         # Handle missing responses (OpenAPI spec violation, but handle gracefully)
@@ -109,7 +109,7 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         # Replace path parameters in URL with sanitized names but DON'T add query args
         # In the framework, query args are passed as function parameters, not in the URL
         api_url = utils.replace_path_parameters(url, function_arguments.param_name_map)
-        
+
         if method in ["post", "put", "patch"] and not operation.get("requestBody"):
             data_class_name = "None"
         elif method in ["post", "put", "patch"]:
@@ -125,10 +125,10 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
             )
         else:
             header_class_name = None
-        
+
         # Get response_map for framework decorator
         response_map = self.get_response_map(func_name)
-        
+
         content = template.render(
             asyncio=self.asyncio,
             func_name=func_name,
