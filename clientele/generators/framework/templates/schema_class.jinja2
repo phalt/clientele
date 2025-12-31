@@ -1,0 +1,4 @@
+
+
+class {{class_name}}({{"str, enum.Enum" if enum else "pydantic.BaseModel"}}):
+{{properties if properties else "    pass"}}
