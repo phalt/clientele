@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import inspect
 import re
-from contextlib import asynccontextmanager, contextmanager
 from functools import wraps
-from typing import Any, Callable, Iterable, TypeVar, get_type_hints
+from typing import Any, Callable, TypeVar, get_type_hints
 from urllib.parse import quote
 
 import httpx
@@ -107,9 +106,9 @@ class Client:
         verify: bool | str | None = None,
         http2: bool | None = None,
         limits: httpx.Limits | None = None,
-        proxies: Any = None,
+        proxies: httpx.Proxy | None = None,
         transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None,
-        cookies: Any = None,
+        cookies: httpx.Cookies | None = None,
     ) -> None:
         if config is None:
             # Enforce base_url when no config is provided
@@ -130,48 +129,6 @@ class Client:
                 cookies=cookies,
             )
         self.config = config
-        self._client: httpx.Client | None = None
-        self._async_client: httpx.AsyncClient | None = None
-
-    def __enter__(self) -> "Client":
-        self.open()
-        return self
-
-    def __exit__(self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: Any) -> None:
-        self.close()
-
-    async def __aenter__(self) -> "Client":
-        await self.aopen()
-        return self
-
-    async def __aexit__(self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: Any) -> None:
-        await self.aclose()
-
-    def open(self) -> None:
-        """Instantiate a persistent ``httpx.Client``."""
-
-        if self._client is None:
-            self._client = self._build_client()
-
-    async def aopen(self) -> None:
-        """Instantiate a persistent ``httpx.AsyncClient``."""
-
-        if self._async_client is None:
-            self._async_client = self._build_async_client()
-
-    def close(self) -> None:
-        """Close the persistent client if it exists."""
-
-        if self._client is not None:
-            self._client.close()
-            self._client = None
-
-    async def aclose(self) -> None:
-        """Close the persistent async client if it exists."""
-
-        if self._async_client is not None:
-            await self._async_client.aclose()
-            self._async_client = None
 
     def get(self, path: str) -> Callable[[_F], _F]:
         return self._create_decorator("GET", path)
@@ -213,34 +170,6 @@ class Client:
 
     def _build_async_client(self) -> httpx.AsyncClient:
         return httpx.AsyncClient(**self.config.httpx_client_options())
-
-    @contextmanager
-    def _get_client(self) -> Iterable[httpx.Client]:
-        """
-        Get or create a synchronous HTTP client.
-
-        Yields the persistent client if available, otherwise creates and
-        manages a temporary client for the duration of the request.
-        """
-        if self._client is not None:
-            yield self._client
-        else:
-            with self._build_client() as client:
-                yield client
-
-    @asynccontextmanager
-    async def _get_async_client(self) -> Iterable[httpx.AsyncClient]:
-        """
-        Get or create an asynchronous HTTP client.
-
-        Yields the persistent async client if available, otherwise creates
-        and manages a temporary client for the duration of the request.
-        """
-        if self._async_client is not None:
-            yield self._async_client
-        else:
-            async with self._build_async_client() as client:
-                yield client
 
     def _prepare_call(self, context: _RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> _PreparedCall:
         """
@@ -376,7 +305,7 @@ class Client:
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
-        with self._get_client() as client:
+        with self._build_client() as client:
             request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
             if data_payload is not None:
                 request_kwargs["json"] = data_payload
@@ -396,7 +325,7 @@ class Client:
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
-        async with self._get_async_client() as client:
+        async with self._build_async_client() as client:
             request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
             if data_payload is not None:
                 request_kwargs["json"] = data_payload
