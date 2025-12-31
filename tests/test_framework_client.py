@@ -361,6 +361,43 @@ class ValidationErrorResponse(BaseModel):
     errors: list[str]
 
 
+# Type alias for testing
+ResponseUnion = SuccessResponse | ErrorResponse
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_response_map_with_type_alias_union(respx_mock: MockRouter) -> None:
+    """Test response_map with a union type alias."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/1").mock(
+        return_value=httpx.Response(200, json={"id": 1, "name": "Alice", "status": "success"})
+    )
+    respx_mock.get("/users/999").mock(return_value=httpx.Response(404, json={"error": "Not found", "code": 404}))
+
+    @client.get(
+        "/users/{user_id}",
+        response_map={
+            200: SuccessResponse,
+            404: ErrorResponse,
+        },
+    )
+    def get_user(user_id: int, result: ResponseUnion) -> ResponseUnion:
+        return result
+
+    # Test 200 response
+    user = get_user(1)
+    assert isinstance(user, SuccessResponse)
+    assert user.id == 1
+    assert user.name == "Alice"
+
+    # Test 404 response
+    error = get_user(999)
+    assert isinstance(error, ErrorResponse)
+    assert error.error == "Not found"
+    assert error.code == 404
+
+
 @pytest.mark.respx(base_url=BASE_URL)
 def test_response_map_basic_sync(respx_mock: MockRouter) -> None:
     """Test basic response_map functionality with sync function."""
