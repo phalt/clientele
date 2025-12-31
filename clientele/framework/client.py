@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import inspect
 import re
+import types
+import typing
 from functools import wraps
 from typing import Any, Callable, TypeVar, cast, get_type_hints
 from urllib.parse import quote
@@ -10,6 +12,8 @@ import httpx
 from pydantic import BaseModel
 
 from .config import Config
+from .exceptions import APIException
+from .http_status import codes
 
 try:  # pragma: no cover - conditional import
     from pydantic import TypeAdapter
@@ -50,18 +54,67 @@ class _RequestContext(BaseModel):
     func: Callable[..., Any]
     signature: inspect.Signature
     type_hints: dict[str, Any]
+    response_map: dict[int, type[BaseModel]] | None = None
 
 
-def _build_request_context(method: str, path: str, func: Callable[..., Any]) -> _RequestContext:
+def _build_request_context(
+    method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[BaseModel]] | None = None
+) -> _RequestContext:
     signature = inspect.signature(func)
     type_hints = get_type_hints(func)
+    
+    # Validate response_map if provided
+    if response_map is not None:
+        _validate_response_map(response_map, func, type_hints)
+    
     return _RequestContext(
         method=method,
         path_template=path,
         func=func,
         signature=signature,
         type_hints=type_hints,
+        response_map=response_map,
     )
+
+
+def _validate_response_map(response_map: dict[int, type[BaseModel]], func: Callable[..., Any], type_hints: dict[str, Any]) -> None:
+    """
+    Validates that response_map contains valid status codes and Pydantic models,
+    and that all response models are in the function's return type annotation.
+    """
+    # Validate all keys are valid HTTP status codes
+    for status_code in response_map.keys():
+        if not codes.is_valid_status_code(status_code):
+            raise ValueError(f"Invalid status code {status_code} in response_map")
+    
+    # Validate all values are Pydantic BaseModel subclasses
+    for status_code, model_class in response_map.items():
+        if not (inspect.isclass(model_class) and issubclass(model_class, BaseModel)):
+            raise ValueError(f"response_map value for status code {status_code} must be a Pydantic BaseModel subclass")
+    
+    # Get the return annotation
+    return_annotation = type_hints.get("return", func.__annotations__.get("return", inspect._empty))
+    
+    if return_annotation is inspect._empty:
+        raise ValueError("Function decorated with response_map must have a return type annotation")
+    
+    # Extract all types from the return annotation (handle Union types)
+    return_types: list[Any] = []
+    origin = typing.get_origin(return_annotation)
+    if origin in [typing.Union, types.UnionType]:
+        return_types = list(typing.get_args(return_annotation))
+    else:
+        return_types = [return_annotation]
+    
+    # Check that all response_map models are in the return types
+    for status_code, model_class in response_map.items():
+        if model_class not in return_types:
+            missing_model = model_class.__name__
+            raise ValueError(
+                f"Response model '{missing_model}' for status code {status_code} "
+                f"is not in the function's return type annotation. "
+                f"Please add '{missing_model}' to the return type of '{func.__name__}'."
+            )
 
 
 class _PreparedCall(BaseModel):
@@ -130,24 +183,24 @@ class Client:
             )
         self.config = config
 
-    def get(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("GET", path)
+    def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("GET", path, response_map=response_map)
 
-    def post(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("POST", path)
+    def post(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("POST", path, response_map=response_map)
 
-    def put(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("PUT", path)
+    def put(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("PUT", path, response_map=response_map)
 
-    def patch(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("PATCH", path)
+    def patch(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("PATCH", path, response_map=response_map)
 
-    def delete(self, path: str) -> Callable[[_F], _F]:
-        return self._create_decorator("DELETE", path)
+    def delete(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+        return self._create_decorator("DELETE", path, response_map=response_map)
 
-    def _create_decorator(self, method: str, path: str) -> Callable[[_F], _F]:
+    def _create_decorator(self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
-            context = _build_request_context(method, path, func)
+            context = _build_request_context(method, path, func, response_map=response_map)
 
             if inspect.iscoroutinefunction(func):
 
@@ -335,7 +388,7 @@ class Client:
             return response
 
     def _finalize_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
-        parsed_result = self._parse_response(response, prepared.return_annotation)
+        parsed_result = self._parse_response(response, prepared.return_annotation, prepared.context.response_map)
 
         # Update call_arguments with injected values
         if "result" in prepared.context.signature.parameters:
@@ -346,7 +399,37 @@ class Client:
         # Call the function with all arguments including injected ones
         return prepared.context.func(**prepared.call_arguments)
 
-    def _parse_response(self, response: httpx.Response, annotation: Any) -> Any:
+    def _parse_response(self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None) -> Any:
+        # If response_map is provided, use it to determine the response model
+        if response_map is not None:
+            status_code = response.status_code
+            if status_code not in response_map:
+                raise APIException(
+                    response=response,
+                    reason=f"Unexpected status code {status_code}. Expected one of: {', '.join(map(str, response_map.keys()))}"
+                )
+            # Get the model for this status code
+            model_class = response_map[status_code]
+            
+            # Parse the response using the model
+            payload: Any
+            if not response.content:
+                payload = None
+            else:
+                content_type = response.headers.get("content-type", "").lower()
+                if "json" in content_type:
+                    payload = response.json()
+                else:
+                    payload = response.text
+            
+            if payload is None:
+                return None
+                
+            if hasattr(model_class, "model_validate"):
+                return model_class.model_validate(payload)
+            return model_class.parse_obj(payload)
+        
+        # Original parsing logic when no response_map
         payload: Any
         if not response.content:
             payload = None
