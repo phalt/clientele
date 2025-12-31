@@ -427,14 +427,14 @@ class Client:
         if not response.content:
             payload = None
         else:
-            # For JSON APIs (97% of cases), try JSON parsing
+            # Default to JSON for API responses
             content_type = response.headers.get("content-type", "").lower()
             if "json" in content_type or not content_type:
-                # Default to JSON for APIs, or when no content-type specified
+                # JSON content or no content-type specified - assume JSON
                 try:
                     payload = response.json()
-                except Exception:
-                    # Not JSON despite header/assumption - use text
+                except (ValueError, TypeError):
+                    # Not valid JSON - fallback to text
                     payload = response.text
             else:
                 # Explicit non-JSON content type
