@@ -3,7 +3,6 @@ from __future__ import annotations
 import inspect
 import re
 from contextlib import asynccontextmanager, contextmanager
-from dataclasses import dataclass
 from functools import wraps
 from typing import Any, Callable, Iterable, TypeVar, get_type_hints
 from urllib.parse import quote
@@ -18,21 +17,30 @@ try:  # pragma: no cover - conditional import
 
     _HAS_TYPE_ADAPTER = True
 except ImportError:  # pragma: no cover - fallback for Pydantic v1
-    TypeAdapter = None  # type: ignore
+    TypeAdapter = None  # type: ignore[assignment, misc]
     _HAS_TYPE_ADAPTER = False
 
 try:  # pragma: no cover - conditional import
     from pydantic.tools import parse_obj_as
 except Exception:  # pragma: no cover - fallback for Pydantic v2 only environments
-    parse_obj_as = None  # type: ignore
+    parse_obj_as = None  # type: ignore[assignment]
 
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
 
 
-@dataclass
-class _RequestContext:
+class _RequestContext(BaseModel):
+    """
+    Captures metadata about a decorated HTTP method.
+
+    Stores the HTTP method, path template, original function, signature, and
+    type hints to enable request preparation and execution without re-parsing
+    function metadata on every call.
+    """
+
+    model_config = {"arbitrary_types_allowed": True}
+
     method: str
     path_template: str
     func: Callable[..., Any]
@@ -52,8 +60,16 @@ def _build_request_context(method: str, path: str, func: Callable[..., Any]) -> 
     )
 
 
-@dataclass
-class _PreparedCall:
+class _PreparedCall(BaseModel):
+    """
+    Encapsulates all data needed to execute an HTTP request.
+
+    Contains parsed arguments, URL path, query parameters, request body,
+    headers, and return type annotation for response parsing.
+    """
+
+    model_config = {"arbitrary_types_allowed": True}
+
     context: _RequestContext
     bound_arguments: inspect.BoundArguments
     call_arguments: dict[str, Any]
@@ -86,13 +102,17 @@ class Client:
         verify: bool | str | None = None,
         http2: bool | None = None,
         limits: httpx.Limits | None = None,
-        proxies: httpx._types.ProxiesTypes | None = None,
+        proxies: Any = None,
         transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None,
-        cookies: httpx._types.CookieTypes | None = None,
+        cookies: Any = None,
     ) -> None:
         if config is None:
+            # Enforce base_url when no config is provided
+            if base_url is None:
+                raise ValueError("Either 'config' or 'base_url' must be provided")
+
             config = Config(
-                base_url=base_url or "http://localhost",
+                base_url=base_url,
                 headers=headers or {},
                 timeout=timeout if timeout is not None else 5.0,
                 follow_redirects=follow_redirects if follow_redirects is not None else False,
@@ -112,14 +132,14 @@ class Client:
         self.open()
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:  # type: ignore[override]
+    def __exit__(self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: Any) -> None:
         self.close()
 
     async def __aenter__(self) -> "Client":
         await self.aopen()
         return self
 
-    async def __aexit__(self, exc_type, exc, tb) -> None:  # type: ignore[override]
+    async def __aexit__(self, exc_type: type[BaseException] | None, exc: BaseException | None, tb: Any) -> None:
         await self.aclose()
 
     def open(self) -> None:
@@ -191,6 +211,12 @@ class Client:
 
     @contextmanager
     def _get_client(self) -> Iterable[httpx.Client]:
+        """
+        Get or create a synchronous HTTP client.
+
+        Yields the persistent client if available, otherwise creates and
+        manages a temporary client for the duration of the request.
+        """
         if self._client is not None:
             yield self._client
         else:
@@ -199,6 +225,12 @@ class Client:
 
     @asynccontextmanager
     async def _get_async_client(self) -> Iterable[httpx.AsyncClient]:
+        """
+        Get or create an asynchronous HTTP client.
+
+        Yields the persistent async client if available, otherwise creates
+        and manages a temporary client for the duration of the request.
+        """
         if self._async_client is not None:
             yield self._async_client
         else:
@@ -206,8 +238,17 @@ class Client:
                 yield client
 
     def _prepare_call(self, context: _RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> _PreparedCall:
+        """
+        Parse function arguments into an HTTP request specification.
+
+        Binds arguments to the function signature, extracts path parameters,
+        query parameters, request body, and headers. Returns a _PreparedCall
+        with all necessary data for executing the HTTP request.
+        """
         kwargs_copy = dict(kwargs)
-        reserved_kwargs = {name: kwargs_copy.pop(name) for name in ("headers", "query") if name in kwargs_copy}
+        # Extract reserved keywords that control request behavior
+        query_override = kwargs_copy.pop("query", None) if "query" not in context.signature.parameters else None
+        headers_override = kwargs_copy.pop("headers", None) if "headers" not in context.signature.parameters else None
 
         recognized_kwargs = {k: v for k, v in kwargs_copy.items() if k in context.signature.parameters}
         extra_kwargs = {k: v for k, v in kwargs_copy.items() if k not in context.signature.parameters}
@@ -215,16 +256,12 @@ class Client:
         bound_arguments = context.signature.bind_partial(*args, **recognized_kwargs)
         bound_arguments.apply_defaults()
         call_arguments = bound_arguments.arguments
-        call_arguments.update(reserved_kwargs)
-        call_arguments.update(extra_kwargs)
+        # Note: extra_kwargs are NOT added to call_arguments - they're for query params only
 
         request_arguments = dict(call_arguments)
         request_arguments.pop("self", None)
         request_arguments.pop("result", None)
         request_arguments.pop("response", None)
-
-        query_override = request_arguments.pop("query", None)
-        headers_override = request_arguments.pop("headers", None)
 
         path_params: dict[str, Any] = {}
         for name in _PATH_PARAM_PATTERN.findall(context.path_template):
@@ -232,11 +269,17 @@ class Client:
                 raise ValueError(f"Missing path parameter '{name}' for path '{context.path_template}'")
             path_params[name] = request_arguments.pop(name)
 
-        query_params = (
-            query_override
-            if query_override is not None
-            else {k: v for k, v in request_arguments.items() if k != "data"}
-        )
+        # Build query params
+        # If query was explicitly passed and not in signature, use it as override
+        if query_override is not None:
+            query_params = query_override
+        # If query is in the signature, use its value from request_arguments
+        elif "query" in request_arguments:
+            query_params = request_arguments.pop("query")
+        # Otherwise, use remaining arguments plus extra kwargs
+        else:
+            query_params = {k: v for k, v in request_arguments.items() if k != "data"}
+            query_params.update(extra_kwargs)
 
         data_payload: Any = None
         if context.method in {"POST", "PUT", "PATCH", "DELETE"}:
@@ -360,12 +403,14 @@ class Client:
     def _finalize_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
         parsed_result = self._parse_response(response, prepared.return_annotation)
 
+        # Update call_arguments with injected values
         if "result" in prepared.context.signature.parameters:
             prepared.call_arguments["result"] = parsed_result
         if "response" in prepared.context.signature.parameters:
             prepared.call_arguments["response"] = response
 
-        return prepared.context.func(*prepared.bound_arguments.args, **prepared.bound_arguments.kwargs)
+        # Call the function with all arguments including injected ones
+        return prepared.context.func(**prepared.call_arguments)
 
     def _parse_response(self, response: httpx.Response, annotation: Any) -> Any:
         payload: Any
@@ -389,8 +434,8 @@ class Client:
                 return annotation.model_validate(payload)
             return annotation.parse_obj(payload)
 
-        if _HAS_TYPE_ADAPTER:
-            adapter = TypeAdapter(annotation)  # type: ignore[arg-type]
+        if _HAS_TYPE_ADAPTER and TypeAdapter is not None:
+            adapter = TypeAdapter(annotation)
             return adapter.validate_python(payload)
 
         if parse_obj_as is not None:
