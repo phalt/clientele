@@ -4,8 +4,8 @@ from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele.generators import cicerone_compat, schema_utils
-from clientele.generators.standard import utils
 from clientele.generators.framework import writer
+from clientele.generators.standard import utils
 
 console = rich_console.Console()
 
