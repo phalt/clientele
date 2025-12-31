@@ -14,7 +14,7 @@ class FrameworkHTTPPlaceholder:
     for response_map generation.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.function_and_status_codes_bundle: dict[str, dict[str, str]] = {}
 
     def add_status_codes_to_bundle(self, func_name: str, status_code_map: dict[str, str]) -> None:
