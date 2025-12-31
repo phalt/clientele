@@ -66,11 +66,11 @@ def _build_request_context(
     except NameError:
         # If we can't resolve type hints (e.g., forward references), fall back to annotations
         type_hints = func.__annotations__.copy()
-    
+
     # Validate response_map if provided
     if response_map is not None:
         _validate_response_map(response_map, func, type_hints)
-    
+
     return _RequestContext(
         method=method,
         path_template=path,
@@ -81,7 +81,9 @@ def _build_request_context(
     )
 
 
-def _validate_response_map(response_map: dict[int, type[BaseModel]], func: Callable[..., Any], type_hints: dict[str, Any]) -> None:
+def _validate_response_map(
+    response_map: dict[int, type[BaseModel]], func: Callable[..., Any], type_hints: dict[str, Any]
+) -> None:
     """
     Validates that response_map contains valid status codes and Pydantic models,
     and that all response models are in the function's return type annotation.
@@ -90,18 +92,18 @@ def _validate_response_map(response_map: dict[int, type[BaseModel]], func: Calla
     for status_code in response_map.keys():
         if not codes.is_valid_status_code(status_code):
             raise ValueError(f"Invalid status code {status_code} in response_map")
-    
+
     # Validate all values are Pydantic BaseModel subclasses
     for status_code, model_class in response_map.items():
         if not (inspect.isclass(model_class) and issubclass(model_class, BaseModel)):
             raise ValueError(f"response_map value for status code {status_code} must be a Pydantic BaseModel subclass")
-    
+
     # Get the return annotation
     return_annotation = type_hints.get("return", func.__annotations__.get("return", inspect._empty))
-    
+
     if return_annotation is inspect._empty:
         raise ValueError("Function decorated with response_map must have a return type annotation")
-    
+
     # Extract all types from the return annotation (handle Union types)
     return_types: list[Any] = []
     origin = typing.get_origin(return_annotation)
@@ -109,7 +111,7 @@ def _validate_response_map(response_map: dict[int, type[BaseModel]], func: Calla
         return_types = list(typing.get_args(return_annotation))
     else:
         return_types = [return_annotation]
-    
+
     # Check that all response_map models are in the return types
     for status_code, model_class in response_map.items():
         if model_class not in return_types:
@@ -202,7 +204,9 @@ class Client:
     def delete(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("DELETE", path, response_map=response_map)
 
-    def _create_decorator(self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+    def _create_decorator(
+        self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None
+    ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
             context = _build_request_context(method, path, func, response_map=response_map)
 
@@ -413,18 +417,21 @@ class Client:
         # Call the function with all arguments including injected ones
         return prepared.context.func(**prepared.call_arguments)
 
-    def _parse_response(self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None) -> Any:
+    def _parse_response(
+        self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None
+    ) -> Any:
         # If response_map is provided, use it to determine the response model
         if response_map is not None:
             status_code = response.status_code
             if status_code not in response_map:
+                expected_codes = ", ".join(map(str, response_map.keys()))
                 raise APIException(
                     response=response,
-                    reason=f"Unexpected status code {status_code}. Expected one of: {', '.join(map(str, response_map.keys()))}"
+                    reason=f"Unexpected status code {status_code}. Expected one of: {expected_codes}",
                 )
             # Get the model for this status code
             model_class = response_map[status_code]
-            
+
             # Parse the response using the model
             payload: Any
             if not response.content:
@@ -435,14 +442,14 @@ class Client:
                     payload = response.json()
                 else:
                     payload = response.text
-            
+
             if payload is None:
                 return None
-                
+
             if hasattr(model_class, "model_validate"):
                 return model_class.model_validate(payload)
             return model_class.parse_obj(payload)
-        
+
         # Original parsing logic when no response_map
         payload: Any
         if not response.content:
