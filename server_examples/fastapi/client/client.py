@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import clientele
-from server_examples.fastapi import config, schemas
+from server_examples.fastapi.client import config, schemas
 
 client = clientele.Client(config=config.Config())
 

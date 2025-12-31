@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import clientele
-from server_examples.django_rest_framework import config, schemas
+from server_examples.django_rest_framework.client import config, schemas
 
 client = clientele.Client(config=config.Config())
 
