@@ -49,6 +49,8 @@ class Routes:
                     client = self._resolve_client(args)
                     return await client._execute_async(context, args, kwargs)
 
+                # Preserve the original signature for IDE support
+                async_wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
                 return cast(_F, async_wrapper)
 
             @wraps(func)
@@ -56,6 +58,8 @@ class Routes:
                 client = self._resolve_client(args)
                 return client._execute_sync(context, args, kwargs)
 
+            # Preserve the original signature for IDE support
+            wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
             return cast(_F, wrapper)
 
         return decorator
