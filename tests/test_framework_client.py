@@ -7,7 +7,7 @@ import pytest
 from pydantic import BaseModel
 from respx import MockRouter
 
-from clientele import BaseConfig, Client, Routes
+from clientele.framework import APIException, BaseConfig, Client
 
 # type: ignore[return] - Decorated functions have empty bodies by design
 # The decorator replaces them with callable wrappers that return values
@@ -42,8 +42,8 @@ def test_get_validates_response_and_builds_query(respx_mock: MockRouter) -> None
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, include_details: bool = True) -> User:  # type: ignore[return]
-        ...
+    def get_user(user_id: int, result: User, include_details: bool = True) -> User:
+        return result
 
     user = get_user(1)
 
@@ -62,8 +62,8 @@ def test_get_respects_query_override_and_list_validation(respx_mock: MockRouter)
     )
 
     @client.get("/users")
-    def list_users(query: dict[str, str]) -> list[User]:  # type: ignore[return]
-        ...
+    def list_users(query: dict[str, str], result: list[User]) -> list[User]:  # type: ignore[return]
+        return result
 
     users = list_users(query={"search": "dev"})
 
@@ -80,8 +80,8 @@ def test_post_accepts_model_instance_and_dict(respx_mock: MockRouter) -> None:
     respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
 
     @client.post("/users")
-    def create_user(data: CreateUserRequest) -> User:  # type: ignore[return]
-        ...
+    def create_user(data: CreateUserRequest, result: User) -> User:  # type: ignore[return]
+        return result
 
     user = create_user(data=CreateUserRequest(name="Charlie"))
     assert user.id == 10
@@ -100,8 +100,8 @@ def test_post_leftover_kwargs_become_query_params(respx_mock: MockRouter) -> Non
     respx_mock.post("/users/active").mock(return_value=httpx.Response(200, json={"id": 5, "name": "Eve"}))
 
     @client.post("/users/{state}")
-    def promote_user(state: str, data: CreateUserRequest) -> User:  # type: ignore[return]
-        ...
+    def promote_user(state: str, data: CreateUserRequest, result: User) -> User:
+        return result
 
     promote_user("active", data={"name": "Eve"}, notify=True)
 
@@ -118,12 +118,12 @@ def test_non_json_and_empty_response_handling(respx_mock: MockRouter) -> None:
     respx_mock.get("/version").mock(return_value=httpx.Response(200, text="1.0"))
 
     @client.get("/ping")
-    def ping() -> None:  # type: ignore[return]
-        ...
+    def ping(result: None) -> None:
+        return result
 
     @client.get("/version")
-    def version() -> str:  # type: ignore[return]
-        ...
+    def version(result: str) -> str:
+        return result
 
     assert ping() is None
     assert version() == "1.0"
@@ -145,8 +145,10 @@ def test_path_and_query_params_combined(respx_mock: MockRouter) -> None:
     )
 
     @client.get("/request-data/{path_parameter}")
-    def fetch_request_data(path_parameter: str) -> RequestDataAndParameterResponse:  # type: ignore[return]
-        ...
+    def fetch_request_data(
+        path_parameter: str, result: RequestDataAndParameterResponse
+    ) -> RequestDataAndParameterResponse:
+        return result
 
     response = fetch_request_data("some-id", query={"your_query": "hello"})
 
@@ -163,8 +165,8 @@ def test_put_serializes_model_and_merges_headers(respx_mock: MockRouter) -> None
     respx_mock.put("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Updated"}))
 
     @client.put("/users/{user_id}")
-    def update_user(user_id: int, data: UpdateUserRequest) -> User:  # type: ignore[return]
-        ...
+    def update_user(user_id: int, data: UpdateUserRequest, result: User) -> User:
+        return result
 
     updated = update_user(2, data=UpdateUserRequest(name="Updated"), headers={"X-Trace": "abc"})
 
@@ -181,8 +183,8 @@ def test_patch_validates_dict_body(respx_mock: MockRouter) -> None:
     respx_mock.patch("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Partial"}))
 
     @client.patch("/users/{user_id}")
-    def patch_user(user_id: int, data: UpdateUserRequest) -> User:  # type: ignore[return]
-        ...
+    def patch_user(user_id: int, data: UpdateUserRequest, result: User) -> User:
+        return result
 
     patched = patch_user(3, data={"name": "Partial"})
 
@@ -199,70 +201,14 @@ def test_delete_supports_query_and_response_injection(respx_mock: MockRouter) ->
     respx_mock.delete("/users/4").mock(return_value=httpx.Response(204))
 
     @client.delete("/users/{user_id}")
-    def delete_user(user_id: int, query: dict[str, str] | None = None) -> None:  # type: ignore[return]
-        ...
+    def delete_user(user_id: int, result: None, query: dict[str, str] | None = None) -> None:
+        return result
 
     delete_user(4, query={"hard": "false"})
 
     call = respx_mock.calls[0]
     assert call.request.url.path == "/users/4"
     assert call.request.url.params.get("hard") == "false"
-
-
-def test_routes_enable_per_instance_clients() -> None:
-    routes = Routes()
-
-    class API:
-        def __init__(self, base_url: str) -> None:
-            self.client = Client(base_url=base_url)
-
-        @routes.get("/users/{user_id}")
-        def get_user(self, user_id: int) -> User:  # type: ignore[return]
-            ...
-
-        @routes.post("/users")
-        def create_user(self, data: CreateUserRequest) -> User:  # type: ignore[return]
-            ...
-
-    api_one = API("https://one.example")
-    api_two = API("https://two.example")
-
-    router_one = MockRouter(base_url="https://one.example")
-    router_two = MockRouter(base_url="https://two.example")
-
-    with router_one, router_two:
-        router_one.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "One"}))
-        router_two.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Two"}))
-
-        assert router_one.calls == [] and router_two.calls == []
-
-        one_user = api_one.get_user(1)
-        two_user = api_two.get_user(1)
-
-        assert one_user.name == "One"
-        assert two_user.name == "Two"
-        assert router_one.calls[0].request.url.host == "one.example"
-        assert router_two.calls[0].request.url.host == "two.example"
-
-        router_one.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Uno"}))
-        created = api_one.create_user(data={"name": "Uno"})
-
-        assert created == User(id=10, name="Uno")
-        assert json.loads(router_one.calls[-1].request.content) == {"name": "Uno"}
-
-
-def test_routes_require_client_attribute() -> None:
-    routes = Routes()
-
-    class API:
-        @routes.get("/ping")
-        def ping(self) -> str:  # type: ignore[return]
-            ...
-
-    api = API()
-
-    with pytest.raises(AttributeError):
-        api.ping()
 
 
 @pytest.mark.asyncio
@@ -273,8 +219,8 @@ async def test_async_get_validates_response(respx_mock: MockRouter) -> None:
     respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Async"}))
 
     @client.get("/users/{user_id}")
-    async def get_user(user_id: int) -> User:  # type: ignore[return]
-        ...
+    async def get_user(user_id: int, result: User) -> User:
+        return result
 
     user = await get_user(2)
 
@@ -291,8 +237,8 @@ async def test_async_post_validates_body_and_query(respx_mock: MockRouter) -> No
     respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 9, "name": "Zoe"}))
 
     @client.post("/users")
-    async def create_user(data: CreateUserRequest) -> User:  # type: ignore[return]
-        ...
+    async def create_user(data: CreateUserRequest, result: User) -> User:
+        return result
 
     created = await create_user(data={"name": "Zoe"}, query={"lang": "en"})
 
@@ -300,45 +246,6 @@ async def test_async_post_validates_body_and_query(respx_mock: MockRouter) -> No
     call = respx_mock.calls[0]
     assert call.request.url.params["lang"] == "en"
     assert json.loads(call.request.content) == {"name": "Zoe"}
-
-
-@pytest.mark.asyncio
-async def test_routes_support_async_methods() -> None:
-    routes = Routes()
-
-    class API:
-        def __init__(self, base_url: str) -> None:
-            self.client = Client(base_url=base_url)
-
-        @routes.get("/users/{user_id}")
-        async def get_user(self, user_id: int) -> User:  # type: ignore[return]
-            ...
-
-        @routes.post("/users")
-        async def create_user(self, data: CreateUserRequest) -> User:  # type: ignore[return]
-            ...
-
-    api_one = API("https://async-one.example")
-    api_two = API("https://async-two.example")
-
-    router_one = MockRouter(base_url="https://async-one.example")
-    router_two = MockRouter(base_url="https://async-two.example")
-
-    with router_one, router_two:
-        router_one.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "One"}))
-        router_two.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Two"}))
-
-        one_user = await api_one.get_user(1)
-        two_user = await api_two.get_user(1)
-
-        assert one_user.name == "One"
-        assert two_user.name == "Two"
-
-        router_one.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Uno"}))
-        created = await api_one.create_user(data={"name": "Uno"})
-
-        assert created == User(id=10, name="Uno")
-        assert json.loads(router_one.calls[-1].request.content) == {"name": "Uno"}
 
 
 # Test models for response_map feature
@@ -378,8 +285,8 @@ def test_response_map_with_type_alias_union(respx_mock: MockRouter) -> None:
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int) -> ResponseUnion:  # type: ignore[return]
-        ...
+    def get_user(user_id: int, result: ResponseUnion) -> ResponseUnion:
+        return result
 
     # Test 200 response
     user = get_user(1)
@@ -411,8 +318,8 @@ def test_response_map_basic_sync(respx_mock: MockRouter) -> None:
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int) -> SuccessResponse | ErrorResponse:  # type: ignore[return]
-        ...
+    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
 
     user = get_user(1)
     assert isinstance(user, SuccessResponse)
@@ -435,8 +342,8 @@ def test_response_map_error_status_sync(respx_mock: MockRouter) -> None:
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int) -> SuccessResponse | ErrorResponse:  # type: ignore[return]
-        ...
+    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
 
     user = get_user(999)
     assert isinstance(user, ErrorResponse)
@@ -447,7 +354,6 @@ def test_response_map_error_status_sync(respx_mock: MockRouter) -> None:
 @pytest.mark.respx(base_url=BASE_URL)
 def test_response_map_unexpected_status_raises_exception_sync(respx_mock: MockRouter) -> None:
     """Test that unexpected status code raises APIException (sync)."""
-    from clientele import APIException
 
     client = Client(base_url=BASE_URL)
 
@@ -462,8 +368,8 @@ def test_response_map_unexpected_status_raises_exception_sync(respx_mock: MockRo
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int) -> SuccessResponse | ErrorResponse:  # type: ignore[return]
-        ...
+    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
 
     with pytest.raises(APIException) as exc_info:
         get_user(1)
@@ -488,8 +394,10 @@ def test_response_map_multiple_status_codes_sync(respx_mock: MockRouter) -> None
             422: ValidationErrorResponse,
         },
     )
-    def create_user(data: dict) -> SuccessResponse | ErrorResponse | ValidationErrorResponse:  # type: ignore[return]
-        ...
+    def create_user(
+        data: dict, result: SuccessResponse | ErrorResponse | ValidationErrorResponse
+    ) -> SuccessResponse | ErrorResponse | ValidationErrorResponse:  # type: ignore[return]
+        return result
 
     # Test 201 response
     user = create_user(data={"name": "Bob"})
@@ -514,8 +422,8 @@ async def test_response_map_basic_async(respx_mock: MockRouter) -> None:
             404: ErrorResponse,
         },
     )
-    async def get_user(user_id: int) -> SuccessResponse | ErrorResponse:  # type: ignore[return]
-        ...
+    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
 
     user = await get_user(2)
     assert isinstance(user, SuccessResponse)
@@ -538,8 +446,8 @@ async def test_response_map_error_status_async(respx_mock: MockRouter) -> None:
             404: ErrorResponse,
         },
     )
-    async def get_user(user_id: int) -> SuccessResponse | ErrorResponse:  # type: ignore[return]
-        ...
+    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
 
     user = await get_user(999)
     assert isinstance(user, ErrorResponse)
@@ -551,7 +459,6 @@ async def test_response_map_error_status_async(respx_mock: MockRouter) -> None:
 @pytest.mark.respx(base_url=BASE_URL)
 async def test_response_map_unexpected_status_raises_exception_async(respx_mock: MockRouter) -> None:
     """Test that unexpected status code raises APIException (async)."""
-    from clientele import APIException
 
     client = Client(base_url=BASE_URL)
 
@@ -566,8 +473,8 @@ async def test_response_map_unexpected_status_raises_exception_async(respx_mock:
             404: ErrorResponse,
         },
     )
-    async def get_user(user_id: int) -> SuccessResponse | ErrorResponse:  # type: ignore[return]
-        ...
+    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+        return result
 
     with pytest.raises(APIException) as exc_info:
         await get_user(1)
@@ -588,8 +495,8 @@ def test_response_map_invalid_status_code_raises_error() -> None:
                 999: SuccessResponse,  # Invalid status code (outside 100-599 range)
             },
         )
-        def get_user(user_id: int) -> SuccessResponse:  # type: ignore[return]
-            ...
+        def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+            return result
 
 
 def test_response_map_custom_status_code_works() -> None:
@@ -603,8 +510,8 @@ def test_response_map_custom_status_code_works() -> None:
             599: SuccessResponse,  # Valid but not in enum
         },
     )
-    def get_user(user_id: int) -> SuccessResponse:  # type: ignore[return]
-        ...
+    def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+        return result
 
 
 def test_response_map_non_pydantic_model_raises_error() -> None:
@@ -622,8 +529,8 @@ def test_response_map_non_pydantic_model_raises_error() -> None:
             "/users/{user_id}",
             response_map=cast(dict[int, type[BaseModel]], {200: NotAModel}),
         )
-        def get_user(user_id: int) -> NotAModel:  # type: ignore
-            ...
+        def get_user(user_id: int, result: NotAModel) -> NotAModel:
+            return result
 
 
 def test_response_map_missing_return_type_raises_error() -> None:
@@ -639,8 +546,8 @@ def test_response_map_missing_return_type_raises_error() -> None:
                 404: ErrorResponse,
             },
         )
-        def get_user(user_id: int) -> SuccessResponse:  # type: ignore[return]  # Missing ErrorResponse
-            ...
+        def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+            return result
 
 
 def test_response_map_no_return_annotation_raises_error() -> None:
@@ -656,69 +563,7 @@ def test_response_map_no_return_annotation_raises_error() -> None:
             },
         )
         def get_user(user_id: int, result: SuccessResponse):  # type: ignore[return]  # No return annotation
-            ...
-
-
-@pytest.mark.respx(base_url=BASE_URL)
-def test_routes_response_map_sync(respx_mock: MockRouter) -> None:
-    """Test response_map with Routes (sync)."""
-    routes = Routes()
-
-    class API:
-        def __init__(self, base_url: str) -> None:
-            self.client = Client(base_url=base_url)
-
-        @routes.get(
-            "/users/{user_id}",
-            response_map={
-                200: SuccessResponse,
-                404: ErrorResponse,
-            },
-        )
-        def get_user(self, user_id: int) -> SuccessResponse | ErrorResponse:  # type: ignore[return]
-            ...
-
-    api = API(BASE_URL)
-
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(200, json={"id": 1, "name": "Dave", "status": "success"})
-    )
-
-    user = api.get_user(1)
-    assert isinstance(user, SuccessResponse)
-    assert user.name == "Dave"
-
-
-@pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_routes_response_map_async(respx_mock: MockRouter) -> None:
-    """Test response_map with Routes (async)."""
-    routes = Routes()
-
-    class API:
-        def __init__(self, base_url: str) -> None:
-            self.client = Client(base_url=base_url)
-
-        @routes.get(
-            "/users/{user_id}",
-            response_map={
-                200: SuccessResponse,
-                404: ErrorResponse,
-            },
-        )
-        async def get_user(
-            self, user_id: int, result: SuccessResponse | ErrorResponse
-        ) -> SuccessResponse | ErrorResponse: ...  # type: ignore[return]
-
-    api = API(BASE_URL)
-
-    respx_mock.get("/users/2").mock(
-        return_value=httpx.Response(200, json={"id": 2, "name": "Eve", "status": "success"})
-    )
-
-    user = await api.get_user(2)
-    assert isinstance(user, SuccessResponse)
-    assert user.name == "Eve"
+            return result
 
 
 def test_signature_preservation_for_ide_support() -> None:
@@ -728,14 +573,14 @@ def test_signature_preservation_for_ide_support() -> None:
     client = Client(base_url=BASE_URL)
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, expand: bool = False) -> User:  # type: ignore[return]
+    def get_user(user_id: int, result: User, expand: bool = False) -> User:  # type: ignore[return]
         """Get a user by ID."""
-        ...
+        return result
 
     # Check that the signature is preserved
     sig = inspect.signature(get_user)
     params = list(sig.parameters.keys())
-    assert params == ["user_id", "expand"], f"Expected ['user_id', 'expand'], got {params}"
+    assert params == ["user_id", "result", "expand"], f"Expected ['user_id', 'result', 'expand'], got {params}"
 
     # Check parameter details - annotations might be strings due to forward refs
     user_id_param = sig.parameters["user_id"]
@@ -757,39 +602,14 @@ def test_signature_preservation_for_ide_support() -> None:
     assert get_user.__name__ == "get_user"
 
 
-def test_empty_body_validation_prevents_non_declarative_functions() -> None:
-    """Test that functions with non-empty bodies are rejected."""
-    client = Client(base_url=BASE_URL)
-
-    # Should raise ValueError for function with implementation
-    with pytest.raises(ValueError) as exc_info:
-
-        @client.get("/users")
-        def bad_function() -> list[User]:  # type: ignore[return]
-            return []
-
-    assert "must have an empty body" in str(exc_info.value)
-    assert "declarative" in str(exc_info.value)
-
-    # Should also reject functions with other statements
-    with pytest.raises(ValueError) as exc_info:
-
-        @client.get("/users")
-        def bad_function2() -> list[User]:  # type: ignore[return]
-            x = 1  # noqa: F841
-            return []
-
-    assert "must have an empty body" in str(exc_info.value)
-
-
 def test_function_with_docstring_and_ellipsis_is_valid() -> None:
     """Test that functions with docstrings and ellipsis are accepted."""
     client = Client(base_url=BASE_URL)
 
     @client.get("/users")
-    def documented_function() -> list[User]:  # type: ignore[return]
+    def documented_function(result: list[User]) -> list[User]:
         """This function has a docstring."""
-        ...
+        return result
 
     # Should not raise any errors
     assert documented_function.__doc__ == "This function has a docstring."
@@ -802,13 +622,13 @@ def test_async_signature_preservation() -> None:
     client = Client(base_url=BASE_URL)
 
     @client.get("/users/{user_id}")
-    async def get_user_async(user_id: int, include_details: bool = True) -> User:  # type: ignore[return]
+    async def get_user_async(user_id: int, result: User, include_details: bool = True) -> User:
         """Get a user asynchronously."""
-        ...
+        return result
 
     sig = inspect.signature(get_user_async)
     params = list(sig.parameters.keys())
-    assert params == ["user_id", "include_details"]
+    assert params == ["user_id", "result", "include_details"]
 
     # Check that it's still recognized as async
     assert inspect.iscoroutinefunction(get_user_async)

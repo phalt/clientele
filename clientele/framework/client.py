@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 import inspect
 import re
 import types
@@ -39,81 +38,6 @@ _F = TypeVar("_F", bound=Callable[..., Any])
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
 
 
-def _validate_empty_function_body(func: Callable[..., Any]) -> None:
-    """
-    Validates that a function has an empty body (only ... or pass, optionally with a docstring).
-
-    Raises ValueError if the function body contains any actual logic.
-    """
-    func_name = getattr(func, "__name__", "<function>")
-    try:
-        source = inspect.getsource(func)
-        # Use textwrap.dedent to handle indentation properly
-        import textwrap
-
-        source = textwrap.dedent(source)
-
-        tree = ast.parse(source)
-        func_def = tree.body[0]
-
-        if not isinstance(func_def, ast.FunctionDef) and not isinstance(func_def, ast.AsyncFunctionDef):
-            raise ValueError(f"Function {func_name} could not be parsed")
-
-        body = func_def.body
-
-        # Empty body is invalid in Python, so we expect at least one statement
-        if not body:
-            raise ValueError(f"Function {func_name} has an invalid empty body")
-
-        # Check if first statement is a docstring
-        start_idx = 0
-        if (
-            len(body) > 0
-            and isinstance(body[0], ast.Expr)
-            and isinstance(body[0].value, ast.Constant)
-            and isinstance(body[0].value.value, str)
-        ):
-            # First statement is a docstring, skip it
-            start_idx = 1
-
-        # After the optional docstring, we should have exactly one statement that is ... or pass
-        remaining_body = body[start_idx:]
-
-        if len(remaining_body) == 0:
-            # Only a docstring, no body - invalid
-            raise ValueError(
-                f"Endpoint function '{func_name}' must have an empty body (...) after the docstring. "
-                f"Endpoint functions are declarative - they should not contain implementation logic."
-            )
-
-        if len(remaining_body) > 1:
-            # More than one statement after docstring
-            raise ValueError(
-                f"Endpoint function '{func_name}' must have an empty body (... or pass). "
-                f"Endpoint functions are declarative - they should not contain implementation logic. "
-                f"Found {len(remaining_body)} statements in the body."
-            )
-
-        stmt = remaining_body[0]
-
-        # Valid empty bodies: ... (Ellipsis) or pass
-        is_ellipsis = isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Constant) and stmt.value.value is ...
-        is_pass = isinstance(stmt, ast.Pass)
-
-        if not is_ellipsis and not is_pass:
-            raise ValueError(
-                f"Endpoint function '{func_name}' must have an empty body (... or pass). "
-                f"Endpoint functions are declarative - they should not contain implementation logic. "
-                f"The function body contains: {ast.unparse(stmt)}"
-            )
-
-    except (OSError, TypeError, IndentationError, SyntaxError):
-        # Cannot get source code (e.g., built-in functions, dynamically created)
-        # or cannot parse it properly (e.g., issues with decorators)
-        # This is acceptable - we'll skip validation in these cases
-        pass
-
-
 class _RequestContext(BaseModel):
     """
     Captures metadata about a decorated HTTP method.
@@ -136,9 +60,6 @@ class _RequestContext(BaseModel):
 def build_request_context(
     method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[BaseModel]] | None = None
 ) -> _RequestContext:
-    # Validate that the function body is empty (only ... or pass)
-    _validate_empty_function_body(func)
-
     signature = inspect.signature(func)
     # Get type hints with proper handling of forward references
     # This follows the pattern used in FastAPI and other frameworks
@@ -237,7 +158,7 @@ class Client:
     import clientele
     from my_api_client import config, schemas
 
-    client = clientele.Client(config=config.Config())
+    client = clientele.framework.Client(config=config.Config())
 
     @client.get("/users")
     def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
@@ -417,7 +338,7 @@ class Client:
             headers_override=prepared.headers_override,
             response_map=context.response_map,
         )
-        result = self._finalize_call(prepared, response)
+        result = self._finalise_call(prepared, response)
         if inspect.isawaitable(result):
             raise TypeError(
                 "Synchronous handlers cannot return awaitable results; declare the function as async instead"
@@ -434,7 +355,7 @@ class Client:
             headers_override=prepared.headers_override,
             response_map=context.response_map,
         )
-        result = self._finalize_call(prepared, response)
+        result = self._finalise_call(prepared, response)
         if inspect.isawaitable(result):
             return await result
         return result
@@ -516,10 +437,17 @@ class Client:
                 response.raise_for_status()
             return response
 
-    def _finalize_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
-        # Parse the response and return it directly
-        # The original function is never called - it's just a declaration
-        return self._parse_response(response, prepared.return_annotation, prepared.context.response_map)
+    def _finalise_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
+        parsed_result = self._parse_response(response, prepared.return_annotation, prepared.context.response_map)
+
+        # Update call_arguments with injected values from prased_result and response
+        if "result" in prepared.context.signature.parameters:
+            prepared.call_arguments["result"] = parsed_result
+        if "response" in prepared.context.signature.parameters:
+            prepared.call_arguments["response"] = response
+
+        # Call the function with all arguments including injected ones
+        return prepared.context.func(**prepared.call_arguments)
 
     def _parse_response(
         self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None

@@ -194,7 +194,7 @@ def generate_class(url, file, output, asyncio, regen):
 @click.option("-r", "--regen", help="Regenerate client", required=False)
 def generate_framework(url, file, output, asyncio, regen):
     """
-    Generate a framework-based decorator client from an OpenAPI schema
+    Generate an experimental framework-based decorator client from an OpenAPI schema.
     """
     from rich.console import Console
 
@@ -208,7 +208,7 @@ def generate_framework(url, file, output, asyncio, regen):
     generator = FrameworkGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
         generator.generate()
-        console.log("\n[green]⚜️ Framework-based client generated! ⚜️ \n")
+        console.log("\n[green]⚜️ client generated! ⚜️ \n")
         _print_dependency_instructions(console)
 
 

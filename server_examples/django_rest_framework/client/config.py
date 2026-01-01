@@ -5,10 +5,10 @@ Use it as a space to store configuration and constants.
 
 import httpx
 
-from clientele import BaseConfig
+from clientele import framework as clientele_framework
 
 
-class Config(BaseConfig):
+class Config(clientele_framework.BaseConfig):
     """
     Configuration object for your API client.
 

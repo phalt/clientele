@@ -1,6 +1,7 @@
 # ⚜️ Clientele
 
 <div style="text-align: center;">
+    TODO: repalce this image with a new one
     <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
 </div>
 
@@ -11,7 +12,11 @@
 ![PyPI - License](https://img.shields.io/pypi/l/clientele)
 ![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
 
-Clientele generates fully-typed, idiomatic python HTTP API clients from OpenAPI 3.0+ schemas.
+Clientele is a Python API Client toolkit that provides:
+
+1. An OpenAPI client generator that produces a modern, fully typed, async or sync, client or functional API client with minimal code and an amazing developer experience.
+2. An API REPL for fast testing and debugging of OpenAPI services.
+3. An experimental API Client framework that aims to make building API clients as fun as building API services with FastAPI.
 
 It is designed and tested to work perfectly with the most popular Python API frameworks:
 
@@ -197,10 +202,10 @@ These examples match the code shown in our framework-specific documentation and 
 If you want a lightweight, framework-style way to write outgoing HTTP calls without generating any code, use the decorator client:
 
 ```python
-from clientele import Client, Config
+from clientele.framework import Client, Config
 from pydantic import BaseModel
 
-config = Config(base_url="https://api.example.com", headers={"Authorization": "Bearer <token>"})
+config = Config(base_url="https://api.example.com")
 client = Client(config=config)
 
 class User(BaseModel):
@@ -208,37 +213,16 @@ class User(BaseModel):
     name: str
 
 @client.get("/users/{user_id}")
-def get_user(user_id: int) -> User:
-    ...
+def get_user(user_id: int, result: User) -> User:
+    return result
 
 user = get_user(1)
 ```
 
 The decorator transforms your function into an HTTP client that executes when called. The function body should be empty (`...` or `pass`) - it's purely declarative. The decorator replaces it with a callable that performs the HTTP request and returns the parsed response directly.
 
-### Non-decorator alternative
 
-For code generation or when decorators aren't suitable, use the `endpoint` module:
-
-```python
-from clientele import endpoint
-
-# Create endpoint
-get_user = endpoint.get("/users/{user_id}")
-
-# Attach signature for IDE support (optional)
-@get_user.signature
-def _(user_id: int) -> User:
-    ...
-
-# Bind to client
-get_user = get_user.bind(client)
-
-# Call like normal function
-user = get_user(1)
-```
-
-Both patterns support all HTTP methods, path/query parameters, request bodies, response maps, and async. Prefer per-instance configuration? Use the optional `Routes` helper to decorate class methods with a `_client` attribute; the [decorator client guide](https://phalt.github.io/clientele/framework-decorator-client/) covers both functional and class-based patterns plus POST/PUT/PATCH/DELETE examples.
+See [experimental framwork client](https://phalt.github.io/clientele/framework-decorator-client/) for more information.
 
 ## Getting Started
 

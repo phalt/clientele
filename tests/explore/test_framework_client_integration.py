@@ -23,7 +23,7 @@ def framework_client_dir():
 
         # Create config.py
         config_content = """
-from clientele import BaseConfig
+from clientele.framework import BaseConfig
 
 class Config(BaseConfig):
     base_url: str = "http://localhost:8000"
@@ -54,7 +54,7 @@ from __future__ import annotations
 import clientele
 from test_client import config, schemas
 
-client = clientele.Client(config=config.Config())
+client = clientele.framework.Client(config=config.Config())
 
 @client.get("/users")
 def list_users() -> list[schemas.User]:  # type: ignore[return]
