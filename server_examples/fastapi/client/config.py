@@ -40,5 +40,4 @@ class Config(BaseConfig):
     max_redirects: int = 20
     limits: httpx.Limits | None = None
     transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
-    transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
     cookies: httpx.Cookies | None = None
