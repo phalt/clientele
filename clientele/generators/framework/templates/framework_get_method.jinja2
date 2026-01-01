@@ -6,7 +6,7 @@
 {% else %}
 @client.{{method}}("{{api_url}}")
 {% endif %}
-{{asyncio and "async " or ""}}def {{func_name}}({{function_arguments.get_required_path_args_as_string()}}{% if function_arguments.get_required_path_args_as_string() and function_arguments.has_query_args() %}, {% endif %}{% if function_arguments.has_query_args() %}query: dict | None = None{% endif %}{% if function_arguments.get_required_path_args_as_string() or function_arguments.has_query_args() %}, {% endif %}*, result: {{response_types}}) -> {{response_types}}:
+{{asyncio and "async " or ""}}def {{func_name}}({% if function_arguments.get_path_args_as_string() %}{{function_arguments.get_path_args_as_string()}}{% endif %}) -> {{response_types}}:  # type: ignore[return]
     {% if summary or description or deprecated %}"""{% if summary %}{{summary}}{% endif %}{% if description %}
 
     {{description}}{% endif %}{% if deprecated %}
@@ -14,4 +14,4 @@
     .. deprecated::
         This operation is deprecated and may be removed in a future version.{% endif %}
     """{% endif %}
-    return result
+    ...

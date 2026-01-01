@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import typing
+
 import clientele
 {% if client_project_directory_path %}from {{client_project_directory_path}}.client import config, schemas
 {% else %}from . import config, schemas
