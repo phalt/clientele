@@ -4,8 +4,6 @@ import typing
 
 import clientele
 
-from . import config, schemas
-
 client = clientele.Client(config=config.Config())
 
 
