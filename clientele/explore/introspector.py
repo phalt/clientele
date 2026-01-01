@@ -287,14 +287,16 @@ class ClientIntrospector:
                 # Check if this is a _RequestContext (has method and path_template attributes)
                 if hasattr(cell_contents, "__dict__"):
                     cell_dict = getattr(cell_contents, "__dict__", {})
+                    # _RequestContext has both 'method' and 'path_template' attributes
                     if "method" in cell_dict and "path_template" in cell_dict:
                         # This looks like a _RequestContext
                         method = cell_dict.get("method")
                         if isinstance(method, str):
                             return method.upper()
 
-        except Exception:
+        except (AttributeError, TypeError, KeyError):
             # If anything goes wrong during extraction, fail silently
+            # This is expected for non-framework clients
             pass
 
         return None
