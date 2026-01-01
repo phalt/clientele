@@ -278,11 +278,18 @@ class ClientIntrospector:
         """
         try:
             # Check if the function has a closure (decorators create closures)
-            if not hasattr(func, "__closure__") or not func.__closure__:
+            if not hasattr(func, "__closure__"):
                 return None
 
+            closure = func.__closure__
+            if closure is None:
+                return None
+
+            # Type narrowing: closure is guaranteed to be a tuple of cells at this point
+            closure = typing.cast(tuple, closure)
+
             # Look through closure cells for _RequestContext
-            for cell in func.__closure__:
+            for cell in closure:
                 cell_contents = cell.cell_contents
                 # Check if this is a _RequestContext (has method and path_template attributes)
                 if hasattr(cell_contents, "__dict__"):
