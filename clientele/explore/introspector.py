@@ -200,8 +200,8 @@ class ClientIntrospector:
             # Get docstring
             docstring = inspect.getdoc(func)
 
-            # Try to determine HTTP method from function name or docstring
-            http_method = self._guess_http_method(name, docstring)
+            # Try to determine HTTP method from function decorator, name, or docstring
+            http_method = self._guess_http_method(name, docstring, func)
 
             return OperationInfo(
                 name=name,
@@ -216,16 +216,23 @@ class ClientIntrospector:
             # If analysis fails, skip this operation
             return None
 
-    def _guess_http_method(self, name: str, docstring: str | None) -> str:
+    def _guess_http_method(self, name: str, docstring: str | None, func: typing.Callable | None = None) -> str:
         """Guess the HTTP method from the operation name or docstring.
 
         Args:
             name: Operation name
             docstring: Operation docstring
+            func: The function to inspect (for framework decorator extraction)
 
         Returns:
             HTTP method string (GET, POST, PUT, PATCH, DELETE, or UNKNOWN)
         """
+        # First try to extract from framework decorator closure (for new framework-based clients)
+        if func is not None:
+            method = self._extract_method_from_framework_decorator(func)
+            if method:
+                return method
+
         name_lower = name.lower()
 
         # Check function name for HTTP method hints
@@ -255,6 +262,42 @@ class ClientIntrospector:
                 return "DELETE"
 
         return "UNKNOWN"
+
+    def _extract_method_from_framework_decorator(self, func: typing.Callable) -> str | None:
+        """Extract HTTP method from framework decorator closure.
+
+        For framework-based clients using @client.get(), @client.post(), etc.,
+        the decorator stores a _RequestContext object in the closure that contains
+        the HTTP method.
+
+        Args:
+            func: The decorated function
+
+        Returns:
+            HTTP method string (GET, POST, etc.) or None if not found
+        """
+        try:
+            # Check if the function has a closure (decorators create closures)
+            if not hasattr(func, "__closure__") or not func.__closure__:
+                return None
+
+            # Look through closure cells for _RequestContext
+            for cell in func.__closure__:
+                cell_contents = cell.cell_contents
+                # Check if this is a _RequestContext (has method and path_template attributes)
+                if hasattr(cell_contents, "__dict__"):
+                    cell_dict = getattr(cell_contents, "__dict__", {})
+                    if "method" in cell_dict and "path_template" in cell_dict:
+                        # This looks like a _RequestContext
+                        method = cell_dict.get("method")
+                        if isinstance(method, str):
+                            return method.upper()
+
+        except Exception:
+            # If anything goes wrong during extraction, fail silently
+            pass
+
+        return None
 
     def get_all_schemas(self) -> dict[str, typing.Any]:
         """Get all Pydantic schemas from the schemas module.
