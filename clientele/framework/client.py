@@ -353,9 +353,14 @@ class Client:
 
         path_params: dict[str, Any] = {}
         for name in _PATH_PARAM_PATTERN.findall(context.path_template):
-            if name not in request_arguments:
+            # Check request_arguments first, then fall back to extra_kwargs
+            if name in request_arguments:
+                path_params[name] = request_arguments.pop(name)
+            elif name in extra_kwargs:
+                # For endpoints without explicit signatures, path params come from extra_kwargs
+                path_params[name] = extra_kwargs.pop(name)
+            else:
                 raise ValueError(f"Missing path parameter '{name}' for path '{context.path_template}'")
-            path_params[name] = request_arguments.pop(name)
 
         # Build query params
         # If query was explicitly passed and not in signature, use it as override
@@ -374,7 +379,19 @@ class Client:
             # Fetch 'data' payload for methods that support a body
             data_param = context.signature.parameters.get("data")
             data_annotation = context.type_hints.get("data", data_param.annotation if data_param else inspect._empty)
-            data_payload = self._prepare_body(call_arguments, data_param, data_annotation)
+
+            # Check if data is in call_arguments or extra_kwargs (for endpoints without explicit signatures)
+            if "data" in call_arguments:
+                data_payload = self._prepare_body(call_arguments, data_param, data_annotation)
+            elif "data" in extra_kwargs:
+                # For endpoints without explicit signatures, data comes from extra_kwargs
+                temp_args = {"data": extra_kwargs.pop("data")}
+                # Create a minimal data parameter if none exists
+                if data_param is None:
+                    data_param = inspect.Parameter("data", inspect.Parameter.KEYWORD_ONLY)
+                data_payload = self._prepare_body(temp_args, data_param, data_annotation)
+            else:
+                data_payload = self._prepare_body(call_arguments, data_param, data_annotation)
 
         url_path = self._substitute_path(context.path_template, path_params)
         return_annotation = context.type_hints.get("return", context.signature.return_annotation)
