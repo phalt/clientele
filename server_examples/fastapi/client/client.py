@@ -12,7 +12,7 @@ def list_users(*, result: schemas.ResponseListUsers) -> schemas.ResponseListUser
 
     List all users.
     """
-    return result
+    ...
 
 
 @client.post("/users", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
@@ -23,7 +23,7 @@ def create_user(
 
     Create a new user.
     """
-    return result
+    ...
 
 
 @client.get("/users/{user_id}", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
@@ -36,4 +36,4 @@ def get_user(
 
     The include_posts parameter is for demonstration purposes.
     """
-    return result
+    ...
