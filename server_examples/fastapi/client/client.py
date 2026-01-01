@@ -3,8 +3,7 @@ from __future__ import annotations
 import typing
 
 import clientele
-
-from . import config, schemas
+from server_examples.fastapi.client import config, schemas
 
 client = clientele.Client(config=config.Config())
 

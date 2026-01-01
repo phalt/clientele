@@ -21,7 +21,7 @@ CLIENTELE VERSION: 1.2.0
 Regenerate using this command:
 
 ```sh
-clientele generate -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client  --regen t
+clientele generate -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/  --regen t
 ```
 
 Explore this API interactively:
