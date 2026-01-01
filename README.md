@@ -208,13 +208,13 @@ class User(BaseModel):
     name: str
 
 @client.get("/users/{user_id}")
-def get_user(user_id: int, result: User):
-    return result
+def get_user(user_id: int) -> User:
+    ...
 
 user = get_user(1)
 ```
 
-The request runs when you call `get_user`, Pydantic validation is inferred from your return type, and the parsed response is injected into the function via the `result` argument. Prefer per-instance configuration? Use the optional `Routes` helper to decorate class methods with a `_client` attribute; the [decorator client guide](https://phalt.github.io/clientele/framework-decorator-client/) covers both functional and class-based patterns plus POST/PUT/PATCH/DELETE examples.
+The decorator transforms your function into an HTTP client that executes when called. The function body should be empty (`...` or `pass`) - it's purely declarative. The decorator replaces it with a callable that performs the HTTP request and returns the parsed response directly. Prefer per-instance configuration? Use the optional `Routes` helper to decorate class methods with a `_client` attribute; the [decorator client guide](https://phalt.github.io/clientele/framework-decorator-client/) covers both functional and class-based patterns plus POST/PUT/PATCH/DELETE examples.
 The same `Client` instance can wrap synchronous or `async` handlers—no separate async class required.
 
 ## Getting Started
