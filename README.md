@@ -214,8 +214,31 @@ def get_user(user_id: int) -> User:
 user = get_user(1)
 ```
 
-The decorator transforms your function into an HTTP client that executes when called. The function body should be empty (`...` or `pass`) - it's purely declarative. The decorator replaces it with a callable that performs the HTTP request and returns the parsed response directly. Prefer per-instance configuration? Use the optional `Routes` helper to decorate class methods with a `_client` attribute; the [decorator client guide](https://phalt.github.io/clientele/framework-decorator-client/) covers both functional and class-based patterns plus POST/PUT/PATCH/DELETE examples.
-The same `Client` instance can wrap synchronous or `async` handlers—no separate async class required.
+The decorator transforms your function into an HTTP client that executes when called. The function body should be empty (`...` or `pass`) - it's purely declarative. The decorator replaces it with a callable that performs the HTTP request and returns the parsed response directly.
+
+### Non-decorator alternative
+
+For code generation or when decorators aren't suitable, use the `endpoint` module:
+
+```python
+from clientele import endpoint
+
+# Create endpoint
+get_user = endpoint.get("/users/{user_id}")
+
+# Attach signature for IDE support (optional)
+@get_user.signature
+def _(user_id: int) -> User:
+    ...
+
+# Bind to client
+get_user = get_user.bind(client)
+
+# Call like normal function
+user = get_user(1)
+```
+
+Both patterns support all HTTP methods, path/query parameters, request bodies, response maps, and async. Prefer per-instance configuration? Use the optional `Routes` helper to decorate class methods with a `_client` attribute; the [decorator client guide](https://phalt.github.io/clientele/framework-decorator-client/) covers both functional and class-based patterns plus POST/PUT/PATCH/DELETE examples.
 
 ## Getting Started
 
