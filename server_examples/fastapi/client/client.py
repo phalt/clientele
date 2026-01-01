@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import typing
+
 import clientele
-from server_examples.fastapi.client import config, schemas
+
+from . import config, schemas
 
 client = clientele.Client(config=config.Config())
 
@@ -16,9 +19,7 @@ def list_users(*, result: schemas.ResponseListUsers) -> schemas.ResponseListUser
 
 
 @client.post("/users", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
-def create_user(
-    *, data: schemas.CreateUserRequest, result: schemas.HTTPValidationError | schemas.UserResponse
-) -> schemas.HTTPValidationError | schemas.UserResponse:
+def create_user(data: schemas.CreateUserRequest) -> schemas.HTTPValidationError | schemas.UserResponse:  # type: ignore[return]
     """Create User
 
     Create a new user.
@@ -28,8 +29,8 @@ def create_user(
 
 @client.get("/users/{user_id}", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
 def get_user(
-    user_id: int, query: dict | None = None, *, result: schemas.HTTPValidationError | schemas.UserResponse
-) -> schemas.HTTPValidationError | schemas.UserResponse:
+    user_id: int, include_posts: typing.Optional[bool] = None
+) -> schemas.HTTPValidationError | schemas.UserResponse:  # type: ignore[return]
     """Get User
 
         Get a specific user by ID.
