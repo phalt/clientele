@@ -3,6 +3,7 @@ from __future__ import annotations
 import typing
 
 import clientele
+from server_examples.django_ninja.client import config, schemas
 
 client = clientele.Client(config=config.Config())
 

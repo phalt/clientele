@@ -9,7 +9,7 @@ client = clientele.Client(config=config.Config())
 
 
 @client.get("/users")
-def list_users(*, result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
+def list_users() -> schemas.ResponseListUsers:  # type: ignore[return]
     """Get Users
 
     List all users.
