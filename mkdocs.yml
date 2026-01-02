@@ -26,25 +26,29 @@ nav:
   - Home: index.md
   - Getting Started:
     - Install: install.md
-    - Usage & CLI: usage.md
-  - Framework Guides:
-    - FastAPI: framework-fastapi.md
-    - Django REST Framework: framework-drf.md
-    - Django Ninja: framework-django-ninja.md
-    - Decorator Client: framework-decorator-client.md
-  - Documentation:
-    - Configuration: configuration.md
+  - Clientele framework guide:
+    - Overview: framework-overview.md
+    - Configuration: framework-configuration.md
+  - OpenAPI client scaffolder:
+    - Usage & CLI: openapi-cli.md
     - Regeneration: regeneration.md
+    - Configuration: openapi-configuration.md
+    - Generated Client Tour: examples.md
+    - Compatibility & Limitations: compatibility.md
+    - References in OpenAPI: references.md
+  - API Server Integrations:
+    - FastAPI: server-fastapi.md
+    - Django REST Framework: server-drf.md
+    - Django Ninja: server-django-ninja.md
+  - API Explorer:
+    - Overview: explore.md
+  - Other documentation:
     - Authentication: authentication.md
     - Exception Handling: exceptions.md
-    - Generated Client Tour: examples.md
     - Testing: testing.md
-    - Explorer Mode: explore.md
-    - Compatibility & Limitations: compatibility.md
     - Complex Schemas: complex_schemas.md
-    - References in OpenAPI: references.md
   - About:
-    - Design Philosophy: design.md
+    - Background: design.md
     - Change Log: CHANGELOG.md
 
 markdown_extensions:

@@ -92,7 +92,7 @@ Clientele works with any tool that generates standard OpenAPI 3.0+ schemas. We a
 - **Async support**: Full support for both sync and async clients
 - **Authentication**: Bearer tokens, Basic auth, OAuth2 flows
 
-**Learn more**: [Using Clientele with FastAPI](framework-fastapi.md)
+**Learn more**: [Using Clientele with FastAPI](server-fastapi.md)
 
 #### ✅ Django REST Framework + drf-spectacular
 
@@ -107,7 +107,7 @@ Clientele works with any tool that generates standard OpenAPI 3.0+ schemas. We a
 
 We've tested Clientele with numerous DRF APIs - see [this GitHub issue](https://github.com/phalt/clientele/issues/23) for specific schemas we've validated.
 
-**Learn more**: [Using Clientele with Django REST Framework](framework-drf.md)
+**Learn more**: [Using Clientele with Django REST Framework](server-drf.md)
 
 #### ✅ Django Ninja
 
@@ -120,7 +120,7 @@ We've tested Clientele with numerous DRF APIs - see [this GitHub issue](https://
 - **Schemas**: Already uses Pydantic, no conversion needed
 - **Async support**: Supports both sync and async views
 
-**Learn more**: [Using Clientele with Django Ninja](framework-django-ninja.md)
+**Learn more**: [Using Clientele with Django Ninja](server-django-ninja.md)
 
 ### Other Tested APIs
 

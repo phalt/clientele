@@ -185,5 +185,5 @@ curl -H "Authorization: Bearer your-token" https://api.example.com/endpoint
 
 ## See Also
 
-- [Configuration Guide](configuration.md) - Full list of configuration options
+- [OpenAPI Configuration Guide](openapi-configuration.md) - Full list of configuration options for OpenAPI clients
 - [Exception Handling](exceptions.md) - Handle authentication errors
