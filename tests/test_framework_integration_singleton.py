@@ -1,8 +1,9 @@
 """
-Integration test to demonstrate connection pooling with generated framework client.
+Integration test to demonstrate connection pooling with framework client pattern.
 
-This test simulates how a generated client would use the framework with singleton
-httpx clients for connection pooling.
+These tests simulate how auto-generated framework clients work, where a single Client
+instance (created at module level) is shared across multiple decorated API functions.
+The singleton httpx clients enable connection pooling across all API calls.
 """
 
 from __future__ import annotations
@@ -48,7 +49,8 @@ def test_generated_client_singleton_reuses_connections(respx_mock: MockRouter) -
     respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Bob"}))
     respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 3, "name": "Charlie"}))
 
-    # This is how the generated client.py creates the client (singleton)
+    # This simulates how auto-generated client code creates the client (singleton pattern)
+    # The generated code has: client = clientele_framework.Client(config=config.Config())
     client = clientele_framework.Client(base_url=BASE_URL)
 
     # Store reference to verify singleton behavior
