@@ -135,11 +135,8 @@ def test_executor_can_call_framework_operations(framework_client_dir):
     mock_response.headers = {"content-type": "application/json"}
     mock_response.content = b'[{"id": 1, "name": "Alice", "email": "alice@example.com"}]'
 
-    with patch("httpx.Client") as mock_client_class:
-        mock_client_instance = MagicMock()
-        mock_client_class.return_value.__enter__.return_value = mock_client_instance
-        mock_client_instance.request.return_value = mock_response
-
+    # Patch the request method on the singleton httpx.Client instance
+    with patch.object(introspector.client_module.client._sync_client, "request", return_value=mock_response):
         # Execute the operation
         result = executor.execute("list_users", {})
 
@@ -182,11 +179,8 @@ def test_executor_converts_dict_to_pydantic_model(framework_client_dir):
     mock_response.headers = {"content-type": "application/json"}
     mock_response.content = b'{"id": 3, "name": "Charlie", "email": "charlie@test.com"}'
 
-    with patch("httpx.Client") as mock_client_class:
-        mock_client_instance = MagicMock()
-        mock_client_class.return_value.__enter__.return_value = mock_client_instance
-        mock_client_instance.request.return_value = mock_response
-
+    # Patch the request method on the singleton httpx.Client instance
+    with patch.object(introspector.client_module.client._sync_client, "request", return_value=mock_response):
         # Pass data as dict - should be converted to CreateUserRequest
         result = executor.execute("create_user", {"data": {"name": "Charlie", "email": "charlie@test.com"}})
 
@@ -211,11 +205,8 @@ def test_framework_client_with_debug_mode(framework_client_dir):
     mock_response.headers = {"content-type": "application/json"}
     mock_response.content = b"[]"
 
-    with patch("httpx.Client") as mock_client_class:
-        mock_client_instance = MagicMock()
-        mock_client_class.return_value.__enter__.return_value = mock_client_instance
-        mock_client_instance.request.return_value = mock_response
-
+    # Patch the request method on the singleton httpx.Client instance
+    with patch.object(introspector.client_module.client._sync_client, "request", return_value=mock_response):
         result = executor.execute("list_users", {})
 
         assert result.success is True
