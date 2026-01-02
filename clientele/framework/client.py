@@ -205,7 +205,7 @@ class Client:
         httpx_client: httpx.Client | None = None,
         httpx_async_client: httpx.AsyncClient | None = None,
     ) -> None:
-        if config and httpx_client or httpx_async_client:
+        if config and (httpx_client or httpx_async_client):
             raise ValueError("Cannot provide both 'config' and custom httpx clients")
         if config is None:
             # Enforce base_url when no config is provided
