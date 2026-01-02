@@ -540,10 +540,9 @@ class CommandHandler:
             self.introspector.is_class_based
             and self.introspector.client_instance
             and hasattr(self.introspector.client_instance, "config")
+            and hasattr(self.introspector.client_instance.config, attr_name)
         ):
-            client_config = self.introspector.client_instance.config
-            if hasattr(client_config, attr_name):
-                setattr(client_config, attr_name, value)
+            setattr(self.introspector.client_instance.config, attr_name, value)
 
     def _handle_debug(self, arg: str | None) -> None:
         """Handle /debug command.

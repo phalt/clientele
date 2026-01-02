@@ -44,7 +44,6 @@ def test_class_client_path():
     return Path(__file__).parent.parent / "test_class_client"
 
 
-
 def test_handler_initialization(introspector, session_config):
     """Test CommandHandler initializes correctly."""
     handler = CommandHandler(introspector, session_config)
