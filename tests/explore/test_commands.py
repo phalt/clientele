@@ -38,6 +38,13 @@ def handler(introspector, session_config):
     return CommandHandler(introspector, session_config)
 
 
+@pytest.fixture
+def test_class_client_path():
+    """Path to the class-based test client."""
+    return Path(__file__).parent.parent / "test_class_client"
+
+
+
 def test_handler_initialization(introspector, session_config):
     """Test CommandHandler initializes correctly."""
     handler = CommandHandler(introspector, session_config)
@@ -406,13 +413,9 @@ def test_pydantic_config_handling(introspector, session_config):
     assert config_instance.bearer_token == "test_token_xyz"
 
 
-def test_class_based_client_config_handling():
+def test_class_based_client_config_handling(test_class_client_path):
     """Test that REPL config changes affect class-based client instances."""
-    from pathlib import Path
-
     # Use test_class_client which is a class-based client
-    test_class_client_path = Path(__file__).parent.parent / "test_class_client"
-    
     intro = ClientIntrospector(test_class_client_path)
     intro.load_client()
     intro.discover_operations()

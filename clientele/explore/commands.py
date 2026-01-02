@@ -535,11 +535,15 @@ class CommandHandler:
                 setattr(config_module, func_name, lambda v=value: v)
 
         # For class-based clients, also update the client instance's config
-        if self.introspector.is_class_based and self.introspector.client_instance:
-            if hasattr(self.introspector.client_instance, "config"):
-                client_config = self.introspector.client_instance.config
-                if hasattr(client_config, attr_name):
-                    setattr(client_config, attr_name, value)
+        # This ensures API calls use the updated configuration values
+        if (
+            self.introspector.is_class_based
+            and self.introspector.client_instance
+            and hasattr(self.introspector.client_instance, "config")
+        ):
+            client_config = self.introspector.client_instance.config
+            if hasattr(client_config, attr_name):
+                setattr(client_config, attr_name, value)
 
     def _handle_debug(self, arg: str | None) -> None:
         """Handle /debug command.
