@@ -479,6 +479,11 @@ class CommandHandler:
     def _apply_config_override(self, key: str, value: str) -> None:
         """Apply a config override to the loaded config module.
 
+        This method handles both functional and class-based clients:
+        - For functional clients: Updates the singleton config instance
+        - For class-based clients: Updates both the temp config instance AND
+          the client instance's config (so API calls use the new values)
+
         Args:
             key: Configuration key
             value: Configuration value
