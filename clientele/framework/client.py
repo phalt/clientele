@@ -147,7 +147,7 @@ class _PreparedCall(BaseModel):
 
 
 class Client:
-    """Clientele is a Python framework for building HTTP API clients.
+    """Clientele is a Python framework for building typed HTTP API clients.
 
     Supports common HTTP verbs (GET, POST, PUT, PATCH, DELETE) and works with
     both synchronous and ``async`` functions.
@@ -156,20 +156,13 @@ class Client:
         config: Optional BaseConfig instance for configuring the client.
         base_url: Optional base URL for the API. Required if config is not provided.
         httpx_client: Optional pre-configured httpx.Client instance. If not provided,
-            a new client will be created using the config. The client is reused
-            across all synchronous requests for connection pooling.
+            a new client will be created using the config values.
+            The client is reused across all synchronous requests for connection pooling.
         httpx_async_client: Optional pre-configured httpx.AsyncClient instance. If not
-            provided, a new async client will be created using the config. The client
-            is reused across all asynchronous requests for connection pooling.
+            provided, a new async client will be created using the config values.
+            The client is reused across all asynchronous requests for connection pooling.
 
-    Note:
-        The Client creates singleton httpx.Client and httpx.AsyncClient instances
-        during initialization to enable connection pooling and reuse. When the Client
-        is closed (via close() or aclose()), only clients created internally will be
-        closed. User-provided clients remain the caller's responsibility to manage.
-
-    Functional example:
-
+    Basic example:
     ```
     import clientele
     from my_api_client import config, schemas
@@ -181,30 +174,13 @@ class Client:
         return result
     ```
 
-    Class-based example:
-
-    ```
-    from clientele import Client, Routes
-    from my_api_client import config, schemas
-
-    routes = Routes()
-
-    class MyAPI:
-        def __init__(self, base_url: str):
-            self.client = Client(config=config.Config())
-
-        @routes.get("/users")
-        def list_users(self, result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
-            return result
-    ```
-
     Custom httpx client example:
 
     ```
     import httpx
     import clientele.framework
 
-    # Create a custom httpx client with specific settings
+    # Your custom httpx client with specific settings
     custom_client = httpx.Client(
         timeout=30.0,
         limits=httpx.Limits(max_connections=100)
@@ -214,6 +190,8 @@ class Client:
         base_url="https://api.example.com",
         httpx_client=custom_client
     )
+
+    ... use the client as normal ...
     ```
 
     See https://phalt.github.io/clientele for full documentation.
@@ -227,10 +205,12 @@ class Client:
         httpx_client: httpx.Client | None = None,
         httpx_async_client: httpx.AsyncClient | None = None,
     ) -> None:
+        if config and httpx_client or httpx_async_client:
+            raise ValueError("Cannot provide both 'config' and custom httpx clients")
         if config is None:
             # Enforce base_url when no config is provided
             if base_url is None:
-                raise ValueError("Either 'config' or 'base_url' must be provided")
+                raise ValueError("Cannot provide both 'config' and 'base_url'.")
 
             config = framework_config.get_default_config(base_url=base_url)
         self.config = config
@@ -238,19 +218,14 @@ class Client:
         # Create or use provided singleton clients for connection pooling
         self._sync_client = httpx_client or self._build_client()
         self._async_client = httpx_async_client or self._build_async_client()
-        # Track whether we own the clients (for cleanup)
-        self._owns_sync_client = httpx_client is None
-        self._owns_async_client = httpx_async_client is None
 
     def close(self) -> None:
-        """Close the synchronous HTTP client if owned by this instance."""
-        if self._owns_sync_client:
-            self._sync_client.close()
+        """Close the synchronous HTTP client."""
+        self._sync_client.close()
 
     async def aclose(self) -> None:
-        """Close the asynchronous HTTP client if owned by this instance."""
-        if self._owns_async_client:
-            await self._async_client.aclose()
+        """Close the asynchronous HTTP client."""
+        await self._async_client.aclose()
 
     def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("GET", path, response_map=response_map)
