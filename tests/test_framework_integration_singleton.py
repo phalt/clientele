@@ -110,26 +110,3 @@ def test_custom_httpx_client_with_generated_pattern(respx_mock: MockRouter) -> N
 
     # User is responsible for closing their custom client
     custom_client.close()
-
-
-@pytest.mark.respx(base_url=BASE_URL)
-def test_context_manager_pattern_with_generated_client(respx_mock: MockRouter) -> None:
-    """
-    Test that the generated client pattern works well with context managers
-    for automatic cleanup.
-    """
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
-
-    # User can use the client as a context manager
-    with clientele_framework.Client(base_url=BASE_URL) as client:
-
-        @client.get("/users/{user_id}")
-        def get_user(user_id: int, result: User) -> User:
-            return result
-
-        user = get_user(1)
-        assert user.id == 1
-        assert not client._sync_client.is_closed
-
-    # After the context, the client should be closed
-    assert client._sync_client.is_closed

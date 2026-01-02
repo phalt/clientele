@@ -165,9 +165,8 @@ class Client:
     Note:
         The Client creates singleton httpx.Client and httpx.AsyncClient instances
         during initialization to enable connection pooling and reuse. When the Client
-        is closed (via close(), aclose(), or context managers), only clients created
-        internally will be closed. User-provided clients remain the caller's
-        responsibility to manage.
+        is closed (via close() or aclose()), only clients created internally will be
+        closed. User-provided clients remain the caller's responsibility to manage.
 
     Functional example:
 
@@ -197,18 +196,6 @@ class Client:
         @routes.get("/users")
         def list_users(self, result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
             return result
-    ```
-
-    Context manager example:
-
-    ```
-    with clientele.framework.Client(base_url="https://api.example.com") as client:
-        @client.get("/users")
-        def list_users(result: list[User]) -> list[User]:
-            return result
-
-        users = list_users()
-    # Client is automatically closed when exiting the context
     ```
 
     Custom httpx client example:
@@ -264,22 +251,6 @@ class Client:
         """Close the asynchronous HTTP client if owned by this instance."""
         if self._owns_async_client:
             await self._async_client.aclose()
-
-    def __enter__(self) -> "Client":
-        """Support using Client as a context manager."""
-        return self
-
-    def __exit__(self, *args: Any) -> None:
-        """Close the sync client when exiting context."""
-        self.close()
-
-    async def __aenter__(self) -> "Client":
-        """Support using Client as an async context manager."""
-        return self
-
-    async def __aexit__(self, *args: Any) -> None:
-        """Close the async client when exiting async context."""
-        await self.aclose()
 
     def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("GET", path, response_map=response_map)
