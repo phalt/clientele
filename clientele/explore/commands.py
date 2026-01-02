@@ -529,6 +529,13 @@ class CommandHandler:
                 # Note: Captures value at definition time (v=value) to avoid late-binding closure issues
                 setattr(config_module, func_name, lambda v=value: v)
 
+        # For class-based clients, also update the client instance's config
+        if self.introspector.is_class_based and self.introspector.client_instance:
+            if hasattr(self.introspector.client_instance, "config"):
+                client_config = self.introspector.client_instance.config
+                if hasattr(client_config, attr_name):
+                    setattr(client_config, attr_name, value)
+
     def _handle_debug(self, arg: str | None) -> None:
         """Handle /debug command.
 

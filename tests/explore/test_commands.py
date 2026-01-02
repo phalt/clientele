@@ -404,3 +404,46 @@ def test_pydantic_config_handling(introspector, session_config):
     # Test other config values
     handler._set_config("bearer_token", "test_token_xyz")
     assert config_instance.bearer_token == "test_token_xyz"
+
+
+def test_class_based_client_config_handling():
+    """Test that REPL config changes affect class-based client instances."""
+    from pathlib import Path
+
+    # Use test_class_client which is a class-based client
+    test_class_client_path = Path(__file__).parent.parent / "test_class_client"
+    
+    intro = ClientIntrospector(test_class_client_path)
+    intro.load_client()
+    intro.discover_operations()
+    
+    # Verify it's class-based
+    assert intro.is_class_based is True
+    assert intro.client_instance is not None
+    
+    # Get initial config value from client instance
+    initial_base_url = intro.client_instance.config.api_base_url
+    assert initial_base_url == "http://localhost"
+    
+    # Create handler and set config
+    session_config = SessionConfig()
+    handler = CommandHandler(intro, session_config)
+    
+    # Set config via REPL
+    handler._set_config("base_url", "https://new-api.example.com")
+    
+    # Verify the config override was stored
+    assert session_config.config_overrides["base_url"] == "https://new-api.example.com"
+    
+    # Verify the client instance's config was updated
+    assert intro.client_instance.config.api_base_url == "https://new-api.example.com"
+    
+    # Test other config values
+    handler._set_config("bearer_token", "new_bearer_token_123")
+    assert intro.client_instance.config.bearer_token == "new_bearer_token_123"
+    
+    handler._set_config("user_key", "new_user")
+    assert intro.client_instance.config.user_key == "new_user"
+    
+    handler._set_config("pass_key", "new_password")
+    assert intro.client_instance.config.pass_key == "new_password"
