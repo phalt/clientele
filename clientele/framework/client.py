@@ -520,7 +520,7 @@ class Client:
     def _finalise_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
         parsed_result = self._parse_response(response, prepared.return_annotation, prepared.context.response_map)
 
-        # Update call_arguments with injected values from prased_result and response
+        # Update call_arguments with injected values from parsed_result and response
         if "result" in prepared.context.signature.parameters:
             prepared.call_arguments["result"] = parsed_result
         if "response" in prepared.context.signature.parameters:
