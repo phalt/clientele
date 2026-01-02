@@ -247,7 +247,7 @@ class Client:
 
             config = framework_config.get_default_config(base_url=base_url)
         self.config = config
-        
+
         # Create or use provided singleton clients for connection pooling
         self._sync_client = httpx_client or self._build_client()
         self._async_client = httpx_async_client or self._build_async_client()
