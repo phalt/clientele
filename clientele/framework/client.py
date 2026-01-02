@@ -152,6 +152,23 @@ class Client:
     Supports common HTTP verbs (GET, POST, PUT, PATCH, DELETE) and works with
     both synchronous and ``async`` functions.
 
+    Args:
+        config: Optional BaseConfig instance for configuring the client.
+        base_url: Optional base URL for the API. Required if config is not provided.
+        httpx_client: Optional pre-configured httpx.Client instance. If not provided,
+            a new client will be created using the config. The client is reused
+            across all synchronous requests for connection pooling.
+        httpx_async_client: Optional pre-configured httpx.AsyncClient instance. If not
+            provided, a new async client will be created using the config. The client
+            is reused across all asynchronous requests for connection pooling.
+
+    Note:
+        The Client creates singleton httpx.Client and httpx.AsyncClient instances
+        during initialization to enable connection pooling and reuse. When the Client
+        is closed (via close(), aclose(), or context managers), only clients created
+        internally will be closed. User-provided clients remain the caller's
+        responsibility to manage.
+
     Functional example:
 
     ```
@@ -182,6 +199,36 @@ class Client:
             return result
     ```
 
+    Context manager example:
+
+    ```
+    with clientele.framework.Client(base_url="https://api.example.com") as client:
+        @client.get("/users")
+        def list_users(result: list[User]) -> list[User]:
+            return result
+
+        users = list_users()
+    # Client is automatically closed when exiting the context
+    ```
+
+    Custom httpx client example:
+
+    ```
+    import httpx
+    import clientele.framework
+
+    # Create a custom httpx client with specific settings
+    custom_client = httpx.Client(
+        timeout=30.0,
+        limits=httpx.Limits(max_connections=100)
+    )
+
+    client = clientele.framework.Client(
+        base_url="https://api.example.com",
+        httpx_client=custom_client
+    )
+    ```
+
     See https://phalt.github.io/clientele for full documentation.
     """
 
@@ -190,6 +237,8 @@ class Client:
         *,
         config: framework_config.BaseConfig | None = None,
         base_url: str | None = None,
+        httpx_client: httpx.Client | None = None,
+        httpx_async_client: httpx.AsyncClient | None = None,
     ) -> None:
         if config is None:
             # Enforce base_url when no config is provided
@@ -198,6 +247,39 @@ class Client:
 
             config = framework_config.get_default_config(base_url=base_url)
         self.config = config
+        
+        # Create or use provided singleton clients for connection pooling
+        self._sync_client = httpx_client or self._build_client()
+        self._async_client = httpx_async_client or self._build_async_client()
+        # Track whether we own the clients (for cleanup)
+        self._owns_sync_client = httpx_client is None
+        self._owns_async_client = httpx_async_client is None
+
+    def close(self) -> None:
+        """Close the synchronous HTTP client if owned by this instance."""
+        if self._owns_sync_client:
+            self._sync_client.close()
+
+    async def aclose(self) -> None:
+        """Close the asynchronous HTTP client if owned by this instance."""
+        if self._owns_async_client:
+            await self._async_client.aclose()
+
+    def __enter__(self) -> "Client":
+        """Support using Client as a context manager."""
+        return self
+
+    def __exit__(self, *args: Any) -> None:
+        """Close the sync client when exiting context."""
+        self.close()
+
+    async def __aenter__(self) -> "Client":
+        """Support using Client as an async context manager."""
+        return self
+
+    async def __aexit__(self, *args: Any) -> None:
+        """Close the async client when exiting async context."""
+        await self.aclose()
 
     def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("GET", path, response_map=response_map)
@@ -401,17 +483,16 @@ class Client:
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
-        with self._build_client() as client:
-            request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
-            if data_payload is not None:
-                request_kwargs["json"] = data_payload
+        request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
+        if data_payload is not None:
+            request_kwargs["json"] = data_payload
 
-            response = client.request(method, url, **request_kwargs)
-            # Only raise for status if we don't have a response_map
-            # If we have a response_map, we want to handle error responses
-            if response_map is None:
-                response.raise_for_status()
-            return response
+        response = self._sync_client.request(method, url, **request_kwargs)
+        # Only raise for status if we don't have a response_map
+        # If we have a response_map, we want to handle error responses
+        if response_map is None:
+            response.raise_for_status()
+        return response
 
     async def _send_request_async(
         self,
@@ -425,17 +506,16 @@ class Client:
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
-        async with self._build_async_client() as client:
-            request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
-            if data_payload is not None:
-                request_kwargs["json"] = data_payload
+        request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
+        if data_payload is not None:
+            request_kwargs["json"] = data_payload
 
-            response = await client.request(method, url, **request_kwargs)
-            # Only raise for status if we don't have a response_map
-            # If we have a response_map, we want to handle error responses
-            if response_map is None:
-                response.raise_for_status()
-            return response
+        response = await self._async_client.request(method, url, **request_kwargs)
+        # Only raise for status if we don't have a response_map
+        # If we have a response_map, we want to handle error responses
+        if response_map is None:
+            response.raise_for_status()
+        return response
 
     def _finalise_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
         parsed_result = self._parse_response(response, prepared.return_annotation, prepared.context.response_map)
