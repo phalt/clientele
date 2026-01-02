@@ -7,7 +7,7 @@ import pytest
 from pydantic import BaseModel
 from respx import MockRouter
 
-from clientele.framework import BaseConfig, Client
+from clientele.framework import Client
 
 BASE_URL = "https://api.example.com"
 
@@ -110,13 +110,13 @@ async def test_can_provide_custom_httpx_async_client(respx_mock: MockRouter) -> 
 def test_close_method_closes_owned_sync_client() -> None:
     """Test that close() closes the sync client if owned by the Client."""
     client = Client(base_url=BASE_URL)
-    
+
     # Client should own the sync client
     assert client._owns_sync_client is True
-    
+
     # Close should work without errors
     client.close()
-    
+
     # After closing, the client should be closed
     assert client._sync_client.is_closed
 
@@ -125,13 +125,13 @@ def test_close_method_closes_owned_sync_client() -> None:
 async def test_aclose_method_closes_owned_async_client() -> None:
     """Test that aclose() closes the async client if owned by the Client."""
     client = Client(base_url=BASE_URL)
-    
+
     # Client should own the async client
     assert client._owns_async_client is True
-    
+
     # Close should work without errors
     await client.aclose()
-    
+
     # After closing, the async client should be closed
     assert client._async_client.is_closed
 
@@ -140,14 +140,14 @@ def test_close_does_not_close_custom_sync_client() -> None:
     """Test that close() does not close a custom httpx.Client provided by the user."""
     custom_httpx_client = httpx.Client(base_url=BASE_URL)
     client = Client(base_url=BASE_URL, httpx_client=custom_httpx_client)
-    
+
     # Client should not own the sync client
     assert client._owns_sync_client is False
-    
+
     # Close should not close the custom client
     client.close()
     assert not custom_httpx_client.is_closed
-    
+
     # Clean up the custom client
     custom_httpx_client.close()
 
@@ -157,14 +157,14 @@ async def test_aclose_does_not_close_custom_async_client() -> None:
     """Test that aclose() does not close a custom httpx.AsyncClient provided by the user."""
     custom_httpx_async_client = httpx.AsyncClient(base_url=BASE_URL)
     client = Client(base_url=BASE_URL, httpx_async_client=custom_httpx_async_client)
-    
+
     # Client should not own the async client
     assert client._owns_async_client is False
-    
+
     # Close should not close the custom async client
     await client.aclose()
     assert not custom_httpx_async_client.is_closed
-    
+
     # Clean up the custom async client
     await custom_httpx_async_client.aclose()
 
@@ -175,6 +175,7 @@ def test_context_manager_closes_client(respx_mock: MockRouter) -> None:
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
 
     with Client(base_url=BASE_URL) as client:
+
         @client.get("/users/{user_id}")
         def get_user(user_id: int, result: User) -> User:
             return result
@@ -194,6 +195,7 @@ async def test_async_context_manager_closes_client(respx_mock: MockRouter) -> No
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
 
     async with Client(base_url=BASE_URL) as client:
+
         @client.get("/users/{user_id}")
         async def get_user(user_id: int, result: User) -> User:
             return result
@@ -213,6 +215,7 @@ def test_context_manager_does_not_close_custom_client(respx_mock: MockRouter) ->
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
 
     with Client(base_url=BASE_URL, httpx_client=custom_httpx_client) as client:
+
         @client.get("/users/{user_id}")
         def get_user(user_id: int, result: User) -> User:
             return result
@@ -222,7 +225,7 @@ def test_context_manager_does_not_close_custom_client(respx_mock: MockRouter) ->
 
     # Custom client should not be closed
     assert not custom_httpx_client.is_closed
-    
+
     # Clean up
     custom_httpx_client.close()
 
@@ -235,6 +238,7 @@ async def test_async_context_manager_does_not_close_custom_client(respx_mock: Mo
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
 
     async with Client(base_url=BASE_URL, httpx_async_client=custom_httpx_async_client) as client:
+
         @client.get("/users/{user_id}")
         async def get_user(user_id: int, result: User) -> User:
             return result
@@ -244,6 +248,6 @@ async def test_async_context_manager_does_not_close_custom_client(respx_mock: Mo
 
     # Custom async client should not be closed
     assert not custom_httpx_async_client.is_closed
-    
+
     # Clean up
     await custom_httpx_async_client.aclose()
