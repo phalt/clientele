@@ -1,7 +1,6 @@
 # ⚜️ Clientele
 
 <div style="text-align: center;">
-    TODO: repalce this image with a new one
     <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
 </div>
 
