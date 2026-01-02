@@ -209,7 +209,6 @@ def generate_framework(url, file, output, asyncio, regen):
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ client generated! ⚜️ \n")
-        _print_dependency_instructions(console)
 
 
 @click.command()

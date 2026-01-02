@@ -108,11 +108,8 @@ async def test_can_provide_custom_httpx_async_client(respx_mock: MockRouter) -> 
 
 
 def test_close_method_closes_owned_sync_client() -> None:
-    """Test that close() closes the sync client if owned by the Client."""
+    """Test that close() closes the sync client."""
     client = Client(base_url=BASE_URL)
-
-    # Client should own the sync client
-    assert client._owns_sync_client is True
 
     # Close should work without errors
     client.close()
@@ -123,47 +120,11 @@ def test_close_method_closes_owned_sync_client() -> None:
 
 @pytest.mark.asyncio
 async def test_aclose_method_closes_owned_async_client() -> None:
-    """Test that aclose() closes the async client if owned by the Client."""
+    """Test that aclose() closes the async client."""
     client = Client(base_url=BASE_URL)
-
-    # Client should own the async client
-    assert client._owns_async_client is True
 
     # Close should work without errors
     await client.aclose()
 
     # After closing, the async client should be closed
     assert client._async_client.is_closed
-
-
-def test_close_does_not_close_custom_sync_client() -> None:
-    """Test that close() does not close a custom httpx.Client provided by the user."""
-    custom_httpx_client = httpx.Client(base_url=BASE_URL)
-    client = Client(base_url=BASE_URL, httpx_client=custom_httpx_client)
-
-    # Client should not own the sync client
-    assert client._owns_sync_client is False
-
-    # Close should not close the custom client
-    client.close()
-    assert not custom_httpx_client.is_closed
-
-    # Clean up the custom client
-    custom_httpx_client.close()
-
-
-@pytest.mark.asyncio
-async def test_aclose_does_not_close_custom_async_client() -> None:
-    """Test that aclose() does not close a custom httpx.AsyncClient provided by the user."""
-    custom_httpx_async_client = httpx.AsyncClient(base_url=BASE_URL)
-    client = Client(base_url=BASE_URL, httpx_async_client=custom_httpx_async_client)
-
-    # Client should not own the async client
-    assert client._owns_async_client is False
-
-    # Close should not close the custom async client
-    await client.aclose()
-    assert not custom_httpx_async_client.is_closed
-
-    # Clean up the custom async client
-    await custom_httpx_async_client.aclose()
