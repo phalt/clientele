@@ -71,7 +71,7 @@ class _RequestContext(BaseModel):
     func: Callable[..., Any]
     signature: inspect.Signature
     type_hints: dict[str, Any]
-    response_map: dict[int, type] | None = None
+    response_map: dict[int, type[Any]] | None = None
 
 
 def _validate_result_parameter(
@@ -103,7 +103,7 @@ def _validate_result_parameter(
 
 
 def build_request_context(
-    method: str, path: str, func: Callable[..., Any], response_map: dict[int, type] | None = None
+    method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[Any]] | None = None
 ) -> _RequestContext:
     signature = inspect.signature(func)
     # Get type hints with proper handling of forward references
@@ -131,7 +131,9 @@ def build_request_context(
     )
 
 
-def _validate_response_map(response_map: dict[int, type], func: Callable[..., Any], type_hints: dict[str, Any]) -> None:
+def _validate_response_map(
+    response_map: dict[int, type[Any]], func: Callable[..., Any], type_hints: dict[str, Any]
+) -> None:
     """
     Validates that response_map contains valid status codes and Pydantic models or TypedDicts,
     and that all response models are in the function's result parameter type annotation.
@@ -276,23 +278,23 @@ class Client:
         """Close the asynchronous HTTP client."""
         await self._async_client.aclose()
 
-    def get(self, path: str, *, response_map: dict[int, type] | None = None) -> Callable[[_F], _F]:
+    def get(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("GET", path, response_map=response_map)
 
-    def post(self, path: str, *, response_map: dict[int, type] | None = None) -> Callable[[_F], _F]:
+    def post(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("POST", path, response_map=response_map)
 
-    def put(self, path: str, *, response_map: dict[int, type] | None = None) -> Callable[[_F], _F]:
+    def put(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("PUT", path, response_map=response_map)
 
-    def patch(self, path: str, *, response_map: dict[int, type] | None = None) -> Callable[[_F], _F]:
+    def patch(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("PATCH", path, response_map=response_map)
 
-    def delete(self, path: str, *, response_map: dict[int, type] | None = None) -> Callable[[_F], _F]:
+    def delete(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("DELETE", path, response_map=response_map)
 
     def _create_decorator(
-        self, method: str, path: str, *, response_map: dict[int, type] | None = None
+        self, method: str, path: str, *, response_map: dict[int, type[Any]] | None = None
     ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
             context = build_request_context(method, path, func, response_map=response_map)
@@ -474,7 +476,7 @@ class Client:
         query_params: dict[str, Any] | None,
         data_payload: dict[str, Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type] | None = None,
+        response_map: dict[int, type[Any]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -497,7 +499,7 @@ class Client:
         query_params: dict[str, Any] | None,
         data_payload: dict[str, Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type] | None = None,
+        response_map: dict[int, type[Any]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -525,7 +527,7 @@ class Client:
         return prepared.context.func(**prepared.call_arguments)
 
     def _parse_response(
-        self, response: httpx.Response, annotation: Any, response_map: dict[int, type] | None = None
+        self, response: httpx.Response, annotation: Any, response_map: dict[int, type[Any]] | None = None
     ) -> Any:
         # Extract payload from response
         payload: Any
@@ -595,7 +597,7 @@ class Client:
             return model_class.model_validate(payload)
         return model_class.parse_obj(payload)
 
-    def _validate_typeddict(self, typeddict_class: type, payload: Any) -> dict[str, Any]:
+    def _validate_typeddict(self, typeddict_class: type[Any], payload: Any) -> dict[str, Any]:
         """
         Validate payload as a TypedDict.
 
