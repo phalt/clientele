@@ -134,11 +134,6 @@ def get_user_email(user_id: int, result: User) -> str:
 def create_event(data: EventIn, result: EventOut) -> tuple[EventOut, str]:
     log.info("Created event %s", result.id)
     return result, "success"
-
-# Return None explicitly or implicitly - defaults to returning result
-@client.get("/users/{user_id}")
-def get_user_auto(user_id: int, result: User) -> User:
-    pass  # Implicitly returns None, so the wrapper returns result
 ```
 
 ## Injected parameters

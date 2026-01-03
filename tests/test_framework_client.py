@@ -583,18 +583,6 @@ def test_return_value_independent_of_result_type() -> None:
     # This decorator should be allowed - return type is different from result type
 
 
-def test_function_returns_none_defaults_to_result() -> None:
-    """Test that when function returns None, the wrapper returns result."""
-    # This test will be added when we have a mocked response
-    pass
-
-
-def test_function_explicit_return_overrides_result() -> None:
-    """Test that explicit return value is used instead of result."""
-    # This test will be added when we have a mocked response
-    pass
-
-
 def test_signature_preservation_for_ide_support() -> None:
     """Test that decorated functions preserve their original signatures for IDE support."""
     import inspect
@@ -664,37 +652,6 @@ def test_async_signature_preservation() -> None:
 
 
 @pytest.mark.respx(base_url=BASE_URL)
-def test_function_returns_none_defaults_to_result_sync(respx_mock: MockRouter) -> None:
-    """Test that when function returns None, the wrapper returns the hydrated result."""
-    client = Client(base_url=BASE_URL)
-
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Alice"}))
-
-    @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
-        # Function returns None implicitly (no return statement)
-        pass
-
-    user = get_user(1)
-    assert user == User(id=1, name="Alice")
-
-
-@pytest.mark.respx(base_url=BASE_URL)
-def test_function_explicit_none_return_defaults_to_result(respx_mock: MockRouter) -> None:
-    """Test that explicit None return defaults to result."""
-    client = Client(base_url=BASE_URL)
-
-    respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Bob"}))
-
-    @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User | None:
-        return None
-
-    user = get_user(2)
-    assert user == User(id=2, name="Bob")
-
-
-@pytest.mark.respx(base_url=BASE_URL)
 def test_function_returns_derived_value(respx_mock: MockRouter) -> None:
     """Test that function can return a derived value different from result type."""
     client = Client(base_url=BASE_URL)
@@ -724,22 +681,6 @@ def test_function_returns_tuple_with_result(respx_mock: MockRouter) -> None:
     user, status = create_user(data=CreateUserRequest(name="Eve"))
     assert user == User(id=10, name="Eve")
     assert status == "created"
-
-
-@pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_async_function_returns_none_defaults_to_result(respx_mock: MockRouter) -> None:
-    """Test that async function returning None defaults to result."""
-    client = Client(base_url=BASE_URL)
-
-    respx_mock.get("/users/4").mock(return_value=httpx.Response(200, json={"id": 4, "name": "David"}))
-
-    @client.get("/users/{user_id}")
-    async def get_user(user_id: int, result: User) -> User:
-        pass  # Returns None implicitly
-
-    user = await get_user(4)
-    assert user == User(id=4, name="David")
 
 
 @pytest.mark.asyncio
