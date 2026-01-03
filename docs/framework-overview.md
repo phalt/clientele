@@ -140,7 +140,7 @@ def create_event(data: EventIn, result: EventOut) -> tuple[EventOut, str]:
 
 Clientele will inject the following parameters into your function once an http response is returned:
 
-- `result`: an instance of the type specified in the `result` parameter annotation. This parameter is **mandatory** and its type annotation determines how the response is parsed.
+- `result`: an instance of the type specified in the `result` parameter annotation. This parameter is **mandatory** and its type annotation determines how the response is parsed. Can be a Pydantic model or a TypedDict.
 - `response`: the `httpx.Response` - useful for logging, debugging etc. (optional)
 
 ## Response parsing rules
@@ -148,68 +148,13 @@ Clientele will inject the following parameters into your function once an http r
 - If the response has a JSON content type, the payload is decoded from JSON.
 - If the response type is not JSON then a `str` is returned.
 - Empty body responses return `None`.
-- The `result` parameter's type annotation drives response data validation with the `model_validate` method on pydantic models.
-
-## Using TypedDict for responses
-
-In addition to Pydantic models, you can use Python's `TypedDict` for the `result` parameter type annotation. This is useful when you want type hints without runtime validation overhead:
-
-```python
-from typing import TypedDict
-from clientele import framework
-
-client = framework.Client(base_url="https://api.example.com")
-
-class UserDict(TypedDict):
-    id: int
-    name: str
-    email: str
-
-@client.get("/users/{user_id}")
-def get_user(user_id: int, result: UserDict) -> UserDict:
-    return result
-
-user = get_user(42)
-# user is now a dict: {"id": 42, "name": "Alice", "email": "alice@example.com"}
-```
-
-**Key differences between TypedDict and Pydantic models:**
-
-- **TypedDict**: No runtime validation, just type hints. Returns a plain `dict`. Lightweight and fast.
-- **Pydantic models**: Full runtime validation and serialization. Returns a model instance. More robust.
-
-TypedDict is also supported in `response_map`:
-
-```python
-from typing import TypedDict
-from clientele.framework import Client
-
-client = Client(base_url="https://api.example.com")
-
-class UserDict(TypedDict):
-    id: int
-    name: str
-
-class ErrorDict(TypedDict):
-    message: str
-    code: str
-
-@client.get(
-    "/users/{user_id}",
-    response_map={
-        200: UserDict,
-        404: ErrorDict,
-    }
-)
-def get_user(user_id: int, result: UserDict | ErrorDict) -> UserDict | ErrorDict:
-    return result
-```
+- The `result` parameter's type annotation drives response data validation. Pydantic models use `model_validate` for runtime validation, while TypedDict provides type hints without runtime validation.
 
 ## Handling multiple response bodies and status codes
 
 Real APIs often return different response models based on the HTTP status code. This is also a common feature of OpenAPI schemas.
 
-The `response_map` parameter allows you to map status codes to specific Pydantic models, enabling proper type handling for success and error responses.
+The `response_map` parameter allows you to map status codes to specific Pydantic models or TypedDict classes, enabling proper type handling for success and error responses.
 
 ```python
 from pydantic import BaseModel
