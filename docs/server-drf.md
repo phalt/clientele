@@ -1,8 +1,8 @@
 # Using Clientele with Django REST Framework
 
-This guide shows you how to generate a Python client for a Django REST Framework (DRF) API using Clientele and **drf-spectacular**.
+This guide shows you how to scaffold a Python client for a Django REST Framework (DRF) API using Clientele and **drf-spectacular**.
 
-> **💡 Working Example**: See a real Django REST Framework application with code examples from this guide in [`server_examples/django-rest-framework/`](https://github.com/phalt/clientele/tree/main/server_examples/django-rest-framework)
+> **💡 Working Example**: See a real Django REST Framework application with code examples from this guide in [`server_examples/django_rest_framework/`](https://github.com/phalt/clientele/tree/main/server_examples/django_rest_framework)
 
 ## Prerequisites
 
@@ -76,57 +76,47 @@ For local development:
 http://localhost:8000/api/schema/
 ```
 
-### Download the Schema
+### Downloading the Schema
 
-**Option A: Use the URL directly**:
+You can either:
+
+**Option A: Use the URL directly** (if the API is accessible):
 
 ```sh
-clientele generate -u http://localhost:8000/api/schema/ -o my_client/
+clientele generate-framework -u http://localhost:8000/api/schema/ -o my_client/
 ```
 
-**Option B: Download the schema file**:
+**Option B: Download the schema file first**:
 
 ```sh
 curl http://localhost:8000/api/schema/ > openapi.json
-clientele generate -f openapi.json -o my_client/
+clientele generate-framework -f openapi.json -o my_client/
 ```
 
 **Option C: Generate schema file with Django management command**:
 
 ```sh
 python manage.py spectacular --file openapi.json
-clientele generate -f openapi.json -o my_client/
+clientele generate-framework -f openapi.json -o my_client/
 ```
 
-## Step 3: Generate the Client
-
-### Basic Generation
-
-Generate a function-based client:
+## Step 3: Scaffold the Client
 
 ```sh
-clientele generate -u http://localhost:8000/api/schema/ -o my_client/
-```
-
-### Class-Based Client
-
-For an object-oriented approach:
-
-```sh
-clientele generate-class -u http://localhost:8000/api/schema/ -o my_client/
+clientele generate-framework -u http://localhost:8000/api/schema/ -o my_client/
 ```
 
 ### Async Client
 
-Generate an async client (note: DRF itself is synchronous, but the client can be async):
+If you want an async client (note: DRF itself is synchronous, but the client can be async):
 
 ```sh
-clientele generate -u http://localhost:8000/api/schema/ -o my_client/ --asyncio t
+clientele generate-framework -u http://localhost:8000/api/schema/ -o my_client/ --asyncio t
 ```
 
-## Step 4: Use the Generated Client
+## Step 4: Use the scaffolded Client
 
-### Function-Based Client Example
+### Usage Example
 
 ```python
 from my_client import client, schemas
@@ -147,6 +137,20 @@ match response:
         print(f"User created: {response.username}")
     case schemas.ValidationError():
         print(f"Validation failed: {response.detail}")
+```
+
+### Async usage Example
+
+```python
+from my_async_client import client, schemas
+
+async def create_user():
+    user_data = schemas.UserRequest(
+        username="alice",
+        email="alice@example.com"
+    )
+    response = await client.create_user_api_users_post(data=user_data)
+    return response
 ```
 
 ## Improving operationId in DRF
@@ -200,64 +204,11 @@ def user_stats(request, user_id):
 
 ## Authentication
 
-### Token Authentication
-
-If your DRF API uses token authentication:
-
-```python
-# Django settings.py
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authtoken.models.TokenAuthentication',
-    ],
-}
-```
-
-Configure in the client's `config.py`:
-
-```python
-def get_bearer_token() -> str:
-    """
-    Provide your DRF auth token.
-    """
-    from os import environ
-    return environ.get("DRF_AUTH_TOKEN", "your-token-here")
-```
-
-### Session Authentication
-
-For session-based auth, you may need to handle cookie management manually in the client's `config.py` using additional headers.
-
-### JWT Authentication
-
-If using JWT (e.g., with djangorestframework-simplejwt):
-
-```python
-def get_bearer_token() -> str:
-    """
-    Provide your JWT access token.
-    """
-    from os import environ
-    return environ.get("JWT_ACCESS_TOKEN", "your-jwt-token")
-```
+See [framework authentication](framework-authentication.md).
 
 ## Regenerating the Client
 
-When your DRF API changes, regenerate the client:
-
-```sh
-clientele generate -u http://localhost:8000/api/schema/ -o my_client/ --regen t
-```
-
-### Recommended Workflow
-
-1. Update your DRF serializers/views
-2. Run migrations if needed
-3. Regenerate the schema: `python manage.py spectacular --file openapi.json`
-4. Regenerate the client: `clientele generate -f openapi.json -o my_client/ --regen t`
-5. Review changes: `git diff`
-6. Test the updated client
-7. Commit changes
+See [regeneration](openapi-regeneration.md).
 
 ## Serializers and Schemas
 
@@ -291,74 +242,14 @@ class User(pydantic.BaseModel):
 # The client returns properly typed responses
 response = client.get_user_api_users_id_get(id=123)
 # response is typed as schemas.User
-assert isinstance(response, schemas.User)
-print(response.username)  # Full IDE support
+print(response.username)
 ```
 
-## ViewSets and Routers
-
-DRF ViewSets with routers automatically generate appropriate endpoints:
-
-### DRF ViewSet
-
-```python
-from rest_framework import viewsets
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-```
-
-### Router Configuration
-
-```python
-from rest_framework.routers import DefaultRouter
-
-router = DefaultRouter()
-router.register(r'users', UserViewSet)
-```
-
-This generates endpoints like:
-
-- `GET /users/` → `client.list_users()`
-- `POST /users/` → `client.create_user(data=...)`
-- `GET /users/{id}/` → `client.get_user(id=...)`
-- `PUT /users/{id}/` → `client.update_user(id=..., data=...)`
-- `DELETE /users/{id}/` → `client.delete_user(id=...)`
-
-## Pagination
-
-DRF pagination is reflected in the schema and client:
-
-### DRF Pagination Setup
-
-```python
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
-}
-```
-
-### Generated Schema
-
-The response will include pagination fields:
-
-```python
-response = client.list_users_api_users_get(page=2)
-# Response has structure like:
-# {
-#   "count": 250,
-#   "next": "http://...",
-#   "previous": "http://...",
-#   "results": [...]
-# }
-```
-
-## Filtering and Query Parameters
+## Path and Query Parameters
 
 Query parameters are automatically converted to function arguments:
 
-### DRF View with Filtering
+**DRF View with Filtering**
 
 ```python
 class UserViewSet(viewsets.ModelViewSet):
@@ -367,7 +258,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filterset_fields = ['is_active', 'username']
 ```
 
-### Client Usage
+**Client Usage**
 
 ```python
 # Query parameters become function arguments
@@ -377,66 +268,43 @@ response = client.list_users_api_users_get(
 )
 ```
 
-## Known Limitations
+## Response Models
 
-### OpenAPI Version
+DRF's serializers become response models in the client:
 
-- **Supported**: drf-spectacular generates OpenAPI 3.0 schemas that work perfectly with Clientele
-- **Partial Support**: Some complex DRF features may need schema customization
-- **Not Supported**: DRF's older CoreAPI schema format is not supported - use drf-spectacular
+**DRF ViewSet**
 
-### Complex Serializers
+```python
+from rest_framework import serializers, viewsets
 
-- Most DRF serializer features work out of the box
-- Nested serializers are fully supported
-- SerializerMethodField may require manual schema hints with `@extend_schema_field`
+class User(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ['id', 'username', 'email']
 
-### File Uploads
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = UserModel.objects.all()
+    serializer_class = User
+```
 
-File upload endpoints may require manual customization in the generated client.
+**Generated Client Usage**
+
+```python
+response = client.get_user_api_users_id_get(id=123)
+# response is typed as schemas.User
+print(response.username)
+```
 
 ## Best Practices
 
 1. **Use `@extend_schema`** to provide clear operation IDs and response types
-2. **Document your serializers** - drf-spectacular uses docstrings in schema generation
-3. **Regenerate regularly** to keep client in sync with API changes
-4. **Use `extend_schema_field`** for SerializerMethodFields to ensure proper typing
-5. **Version your generated client** in git
-
-## Helpful drf-spectacular Features
-
-### Documenting Responses
-
-```python
-from drf_spectacular.utils import extend_schema, OpenApiResponse
-
-@extend_schema(
-    responses={
-        200: UserSerializer,
-        400: OpenApiResponse(description='Invalid request'),
-        404: OpenApiResponse(description='User not found'),
-    }
-)
-@api_view(['GET'])
-def get_user(request, user_id):
-    # ...
-```
-
-### Documenting Request Bodies
-
-```python
-@extend_schema(
-    request=UserSerializer,
-    responses={201: UserSerializer}
-)
-@api_view(['POST'])
-def create_user(request):
-    # ...
-```
+2. **Keep schemas in sync** by regenerating after API changes
+3. **Version your generated client** in git to track changes
+4. **Test thoroughly** after regenerating
+5. **Document your serializers** - drf-spectacular uses docstrings in schema generation
 
 ## Next Steps
 
-- [drf-spectacular documentation](https://drf-spectacular.readthedocs.io/)
 - [Learn about regeneration workflow](openapi-regeneration.md)
+- [Configure authentication](framework-authentication.md)
 - [Set up testing with respx](testing.md)
-- [Understand client structure](examples.md)
