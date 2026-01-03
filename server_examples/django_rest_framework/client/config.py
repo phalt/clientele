@@ -6,10 +6,10 @@ Use it as a space to store configuration and constants.
 import httpx
 from pydantic import Field
 
-from clientele import framework as clientele_framework
+from clientele import api as clientele_api
 
 
-class Config(clientele_framework.BaseConfig):
+class Config(clientele_api.BaseConfig):
     """
     Configuration object for your API client.
 
