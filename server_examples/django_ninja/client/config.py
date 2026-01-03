@@ -4,6 +4,7 @@ Use it as a space to store configuration and constants.
 """
 
 import httpx
+from pydantic import Field
 
 from clientele import framework as clientele_framework
 
@@ -31,13 +32,14 @@ class Config(clientele_framework.BaseConfig):
         )
     """
 
-    base_url: str = "http://localhost"
-    headers: dict = {}
-    timeout: float = 5.0
+    base_url: str = "http://localhost:8000"
+    headers: dict[str, str] = Field(default_factory=dict)
+    timeout: float | None = 5.0
     follow_redirects: bool = False
-    verify_ssl: bool = True
+    verify: bool | str = True
     http2: bool = False
-    max_redirects: int = 20
+    auth: httpx.Auth | tuple[str, str] | None = None
     limits: httpx.Limits | None = None
+    proxies: httpx.Proxy | None = None
     transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
     cookies: httpx.Cookies | None = None
