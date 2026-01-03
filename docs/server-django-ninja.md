@@ -194,6 +194,7 @@ Clientele converts these to Pydantic models in the client:
 
 ```python
 # In my_client/schemas.py
+import pydantic
 from datetime import datetime
 
 class UserIn(pydantic.BaseModel):

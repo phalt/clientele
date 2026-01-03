@@ -229,6 +229,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 ```python
 # In my_client/schemas.py
+import pydantic
+
 class User(pydantic.BaseModel):
     id: int
     username: str
