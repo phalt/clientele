@@ -150,6 +150,61 @@ Clientele will inject the following parameters into your function once an http r
 - Empty body responses return `None`.
 - The `result` parameter's type annotation drives response data validation with the `model_validate` method on pydantic models.
 
+## Using TypedDict for responses
+
+In addition to Pydantic models, you can use Python's `TypedDict` for the `result` parameter type annotation. This is useful when you want type hints without runtime validation overhead:
+
+```python
+from typing import TypedDict
+from clientele import framework
+
+client = framework.Client(base_url="https://api.example.com")
+
+class UserDict(TypedDict):
+    id: int
+    name: str
+    email: str
+
+@client.get("/users/{user_id}")
+def get_user(user_id: int, result: UserDict) -> UserDict:
+    return result
+
+user = get_user(42)
+# user is now a dict: {"id": 42, "name": "Alice", "email": "alice@example.com"}
+```
+
+**Key differences between TypedDict and Pydantic models:**
+
+- **TypedDict**: No runtime validation, just type hints. Returns a plain `dict`. Lightweight and fast.
+- **Pydantic models**: Full runtime validation and serialization. Returns a model instance. More robust.
+
+TypedDict is also supported in `response_map`:
+
+```python
+from typing import TypedDict
+from clientele.framework import Client
+
+client = Client(base_url="https://api.example.com")
+
+class UserDict(TypedDict):
+    id: int
+    name: str
+
+class ErrorDict(TypedDict):
+    message: str
+    code: str
+
+@client.get(
+    "/users/{user_id}",
+    response_map={
+        200: UserDict,
+        404: ErrorDict,
+    }
+)
+def get_user(user_id: int, result: UserDict | ErrorDict) -> UserDict | ErrorDict:
+    return result
+```
+
 ## Handling multiple response bodies and status codes
 
 Real APIs often return different response models based on the HTTP status code. This is also a common feature of OpenAPI schemas.
@@ -199,8 +254,8 @@ except APIException as e:
 ### `response_map` requirements
 
 1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele.framework` for reference, or any standard HTTP status code integers (100-599).
-2. **Values must be Pydantic models**: Each value must be a `BaseModel` subclass.
-3. **Result parameter type must include all models**: The `result` parameter's type annotation must be a Union containing all the Pydantic models used in `response_map`.
+2. **Values must be Pydantic models or TypedDict**: Each value must be a `BaseModel` subclass or a `TypedDict` class.
+3. **Result parameter type must include all models**: The `result` parameter's type annotation must be a Union containing all the Pydantic models or TypedDict classes used in `response_map`.
 4. **Unexpected status codes raise `APIException`**: If the server returns a status code not in the `response_map`, an `APIException` is raised with details about the unexpected status.
 5. **Precedence**: If `response_map` provides a model for the actual HTTP status code, that model is used. Otherwise, the `result` parameter annotation is used as the default for 2xx responses.
 
