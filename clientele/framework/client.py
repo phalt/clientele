@@ -44,7 +44,14 @@ def _is_pydantic_model(annotation: Any) -> bool:
 
 
 def _is_typeddict(annotation: Any) -> bool:
-    """Check if annotation is a TypedDict class."""
+    """
+    Check if annotation is a TypedDict class.
+    
+    This wrapper exists for:
+    1. Consistency with _is_pydantic_model helper
+    2. Future extensibility if TypedDict detection needs special handling
+    3. Centralized location for TypedDict checking logic
+    """
     return is_typeddict(annotation)
 
 
