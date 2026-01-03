@@ -1,56 +1,5 @@
 # Change log
 
-## Unreleased
-
-### Breaking Changes: Result-parameter-based hydration
-
-**This is a breaking change for Clientele framework users.**
-
-Response hydration is now driven exclusively by the type annotation of a mandatory `result` parameter, rather than the function's return type annotation.
-
-#### What changed:
-
-1. **Mandatory `result` parameter**: All decorated client functions MUST now declare a parameter named `result` with a type annotation. This annotation determines how the HTTP response body is parsed and validated.
-
-2. **Independent return values**: The function's return type annotation is now independent and optional. You can return:
-   - The injected `result` directly
-   - A derived value (e.g., `result.email` when result is a `User` object)
-   - Any other value or type
-
-3. **Validation at decorator time**: Missing or unannotated `result` parameters now raise a `TypeError` at import/decoration time with a clear error message.
-
-4. **`response_map` precedence**: When using `response_map`, all response models must be included in the `result` parameter's type annotation (not the return annotation).
-
-#### Migration guide:
-
-**Before:**
-```python
-@client.get("/users/{id}")
-def get_user(id: int) -> User:
-    ...  # result was optional
-```
-
-**After:**
-```python
-@client.get("/users/{id}")
-def get_user(id: int, result: User) -> User:
-    return result  # result is mandatory, must return explicitly
-```
-
-**New capability - derived returns:**
-```python
-@client.get("/users/{id}")
-def get_user_email(id: int, result: User) -> str:
-    return result.email  # Return type differs from result type
-```
-
-#### Rationale:
-
-This change makes response hydration explicit, injected, and independent of return values. It provides:
-- **Clearer intent**: The `result` parameter explicitly declares the API contract
-- **More flexibility**: Return whatever you need, not just the API response
-- **Stronger validation**: Errors caught at import time, not runtime
-
 ## 1.3.0
 
 ### Introducing **Clientele framework** - a different way to think about Python API Clients

@@ -4,14 +4,14 @@ Clientele framework is a decorator-driven http client that can create elegant AP
 
 It intentionally works similar to FastAPI route decorators, which has taught us that:
 
-- Functions are a popular unit for encapsulating endpoint behaviour
-- Decorators are popular for declaring the configuration for those endpoints
-- Types are amazing for documentation and validation
+- Functions are a popular unit for encapsulating endpoint behaviour.
+- Decorators are popular for declaring the configuration for those endpoints.
+- Types are amazing for documentation and validation.
 
 With Clientele we can follow these same rules but flip around who is sending and receiving data:
 
-- the decorator issues the http request with the validated payload
-- the decorator parses the http response and injects it into the function via the `result` parameter
+- the decorator issues an http request with the validated payload.
+- the decorator parses the http response and injects it into the function via the `result` parameter.
 - The function becomes the high-level abstraction for the endpoint and defines the typed input and typed output for the rest of your application.
 
 ## GET example
@@ -38,9 +38,9 @@ user = get_user(42)
 How it works:
 
 - Path parameters inside `{}` are filled from the function arguments (e.g. `user_id`).
-- Any remaining keyword arguments (like `include_details` above) become query parameters, but you can also provide a dict parameter `query={...}`.
+- Any remaining keyword arguments (like `include_details` above) become query parameters, but you can also provide a dict function parameter `query={...}` instead.
 - The **`result` parameter is mandatory** and its type annotation (`User`) drives response parsing.
-- Your function is injected with a `result` parameter - the response payload hydrated into your `result` parameter's type.
+- Your function is injected with the `result` parameter - this is the response payload hydrated into your `result` parameter's type.
 - The function's return value is independent - you can return the result directly, transform it, or return something completely different.
 
 ## POST example
