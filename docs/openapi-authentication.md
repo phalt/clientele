@@ -1,5 +1,9 @@
 # Authentication
 
+!!! warning
+
+    This is for the "barebones" style clients. Please see [framework authentication](framework-authentication.md) if you are using Clientele framework.
+
 Clientele supports multiple authentication methods through the client configuration.
 
 ## Supported Authentication Types

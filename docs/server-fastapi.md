@@ -1,6 +1,6 @@
 # Using Clientele with FastAPI
 
-This guide shows you how to generate a Python client for a FastAPI application using Clientele.
+This guide shows you how to scaffold a Python client for a FastAPI application using Clientele.
 
 > **💡 Working Example**: See a real FastAPI application with code examples from this guide in [`server_examples/fastapi/`](https://github.com/phalt/clientele/tree/main/server_examples/fastapi)
 
@@ -30,32 +30,20 @@ You can either:
 **Option A: Use the URL directly** (if the API is accessible):
 
 ```sh
-clientele generate -u http://localhost:8000/openapi.json -o my_client/
+clientele generate-framework -u http://localhost:8000/openapi.json -o my_client/
 ```
 
 **Option B: Download the schema file first**:
 
 ```sh
 curl http://localhost:8000/openapi.json > openapi.json
-clientele generate -f openapi.json -o my_client/
+clientele generate-framework -f openapi.json -o my_client/
 ```
 
-## Step 2: Generate the Client
-
-### Basic Generation
-
-Generate a function-based client (recommended for most use cases):
+## Step 2: Scaffold the Client
 
 ```sh
-clientele generate -u http://localhost:8000/openapi.json -o my_client/
-```
-
-### Class-Based Client
-
-If you prefer an object-oriented approach:
-
-```sh
-clientele generate-class -u http://localhost:8000/openapi.json -o my_client/
+clientele generate-framework -u http://localhost:8000/openapi.json -o my_client/
 ```
 
 ### Async Client
@@ -63,12 +51,12 @@ clientele generate-class -u http://localhost:8000/openapi.json -o my_client/
 If your FastAPI app uses async endpoints and you want an async client:
 
 ```sh
-clientele generate -u http://localhost:8000/openapi.json -o my_client/ --asyncio t
+clientele generate-framework -u http://localhost:8000/openapi.json -o my_client/ --asyncio t
 ```
 
-## Step 3: Use the Generated Client
+## Step 3: Use the scaffolded Client
 
-### Function-Based Client Example
+### Usage Example
 
 ```python
 from my_client import client, schemas
@@ -91,7 +79,7 @@ match response:
         print(f"Validation error: {response.detail}")
 ```
 
-### Async Client Example
+### Async usage Example
 
 ```python
 from my_async_client import client, schemas
@@ -143,83 +131,17 @@ This generates:
 
 ## Authentication
 
-### HTTP Bearer Authentication
-
-If your FastAPI app uses HTTP Bearer authentication:
-
-```python
-# FastAPI app
-from fastapi import Depends, FastAPI
-from fastapi.security import HTTPBearer
-
-security = HTTPBearer()
-
-@app.get("/protected")
-def protected_route(token: str = Depends(security)):
-    return {"message": "authenticated"}
-```
-
-Configure the client's `config.py`:
-
-```python
-def get_bearer_token() -> str:
-    """
-    Provide your authentication token here.
-    Does not require the "Bearer" prefix.
-    """
-    from os import environ
-    return environ.get("API_TOKEN", "your-token-here")
-```
-
-### HTTP Basic Authentication
-
-For HTTP Basic auth in FastAPI:
-
-```python
-# FastAPI app
-from fastapi import Depends
-from fastapi.security import HTTPBasic, HTTPBasicCredentials
-
-security = HTTPBasic()
-
-@app.get("/protected")
-def protected_route(credentials: HTTPBasicCredentials = Depends(security)):
-    return {"username": credentials.username}
-```
-
-Configure the client's `config.py`:
-
-```python
-def get_user_key() -> str:
-    return "your-username"
-
-def get_pass_key() -> str:
-    return "your-password"
-```
+See [framework authentication](framework-authentication.md).
 
 ## Regenerating the Client
 
-When you update your FastAPI endpoints, regenerate the client:
-
-```sh
-clientele generate -u http://localhost:8000/openapi.json -o my_client/ --regen t
-```
-
-The `--regen t` flag tells Clientele to regenerate the client. Your `config.py` will not be overwritten.
-
-### Workflow Integration
-
-1. Update your FastAPI endpoints
-2. Run `clientele generate` with `--regen t`
-3. Review the changes with `git diff`
-4. Run your tests to ensure everything still works
-5. Commit the updated client
+See [regeneration](openapi-regeneration.md).
 
 ## Path and Query Parameters
 
 FastAPI's path and query parameters are automatically converted to function arguments:
 
-### FastAPI Endpoint
+**FastAPI Endpoint**
 
 ```python
 @app.get("/users/{user_id}")
@@ -227,7 +149,7 @@ def get_user(user_id: int, include_posts: bool = False):
     return {"user_id": user_id, "include_posts": include_posts}
 ```
 
-### Generated Client Usage
+**Client Usage**
 
 ```python
 # Required path parameter, optional query parameter
@@ -241,7 +163,7 @@ response = client.get_user_users_user_id_get(
 
 FastAPI's response models become Pydantic schemas in the client:
 
-### FastAPI Endpoint
+**FastAPI Endpoint**
 
 ```python
 from pydantic import BaseModel
@@ -256,35 +178,13 @@ def get_user(user_id: int):
     return User(id=user_id, name="Alice", email="alice@example.com")
 ```
 
-### Generated Client Usage
+**Generated Client Usage**
 
 ```python
 response = client.get_user_users_user_id_get(user_id=123)
 # response is typed as schemas.User
 print(response.name)
 ```
-
-## Known Limitations
-
-### OpenAPI Version
-
-- **Supported**: FastAPI's default OpenAPI 3.0.x schemas work perfectly
-- **Partial Support**: Some OpenAPI 3.1 features may not be fully supported yet
-- **Not Supported**: OpenAPI 2.0 (Swagger) is not supported
-
-### Complex Schema Features
-
-- Most FastAPI/Pydantic features work out of the box
-- `oneOf`, `anyOf`, and `nullable` are fully supported
-- Some exotic schema combinations may require manual adjustment
-
-### File Uploads
-
-File upload endpoints may require manual customization of the generated client code.
-
-### Callbacks and Webhooks
-
-Clientele specifically focuses on calling an API and doesn't handle callbacks or webhooks - these are features usually seen in a web server.
 
 ## Best Practices
 
@@ -296,7 +196,6 @@ Clientele specifically focuses on calling an API and doesn't handle callbacks or
 
 ## Next Steps
 
-- [Learn about regeneration workflow](regeneration.md)
-- [Configure authentication](authentication.md)
+- [Learn about regeneration workflow](openapi-regeneration.md)
+- [Configure authentication](framework-authentication.md)
 - [Set up testing with respx](testing.md)
-- [Understand client structure](examples.md)

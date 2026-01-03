@@ -1,5 +1,9 @@
 # 🗺️ Tour of a Generated Client
 
+!!! warning
+
+    This is for the "barebones" style clients. Please see [framework overview](framework-overview.md) if you are using Clientele framework.
+
 When you generate a client with Clientele, it creates several files that work together to provide a complete HTTP API client. 
 
 This guide explains each file's purpose and which ones you'll interact with as a developer.
@@ -48,7 +52,7 @@ Regenerate using this command:
 clientele generate -f openapi.json -o my_client/ --regen t
 ```
 
-This file is particularly useful when you need to regenerate the client after API changes. See [Regenerating](regeneration.md) for details.
+This file is particularly useful when you need to regenerate the client after API changes. See [Regenerating](openapi-regeneration.md) for details.
 
 ## client.py
 
@@ -227,6 +231,6 @@ For more information:
 
 - [OpenAPI client scaffolder](openapi-cli.md) - How to generate clients
 - [OpenAPI Configuration](openapi-configuration.md) - Configure the client
-- [Authentication](authentication.md) - Set up authentication
+- [Authentication](openapi-authentication.md) - Set up authentication
 - [Exception Handling](exceptions.md) - Handle API exceptions
 - [Testing](testing.md) - Write tests for your client

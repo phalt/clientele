@@ -29,10 +29,13 @@ nav:
   - Clientele framework guide:
     - Overview: framework-overview.md
     - Configuration: framework-configuration.md
+    - Async Support: framework-async.md
+    - Authentication: framework-authentication.md
   - OpenAPI client scaffolder:
     - Usage & CLI: openapi-cli.md
-    - Regeneration: regeneration.md
-    - Configuration: openapi-configuration.md
+    - Regeneration: openapi-regeneration.md
+    - Barebones Configuration: openapi-configuration.md
+    - Barebones authentication: openapi-authentication.md
     - Generated Client Tour: examples.md
     - Compatibility & Limitations: compatibility.md
     - References in OpenAPI: references.md
@@ -43,10 +46,8 @@ nav:
   - API Explorer:
     - Overview: explore.md
   - Other documentation:
-    - Authentication: authentication.md
     - Exception Handling: exceptions.md
     - Testing: testing.md
-    - Complex Schemas: complex_schemas.md
   - About:
     - Background: design.md
     - Change Log: CHANGELOG.md

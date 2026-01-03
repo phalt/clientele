@@ -1,4 +1,8 @@
-# ⚙️ Client Configuration
+# ⚙️ Barebones Configuration
+
+!!! warning
+
+    This is for the "barebones" style clients. Please see [framework configuration](framework-configuration.md) if you are using Clientele framework.
 
 Both function-based and class-based clients support extensive configuration options to customize HTTP client behavior using [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/).
 

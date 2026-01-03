@@ -205,3 +205,7 @@ match response:
     case ValidationError():
         print(f"Validation failed: {response.errors}")
 ```
+
+## Connection persistence
+
+Clientele framework will generate a singleton instance for the async and sync http clients. When you import the module and issue multiple function calls it will use the same http connection.

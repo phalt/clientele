@@ -107,3 +107,7 @@ It is that way because I know you will need to inspect it in the future. I want 
 The python ecosystem for API frameworks is very rich and mature. I love the options we have to build APIs with. I wanted to focus on supporting this ecosystem specifically because of how much I love the tooling, but also because it means I can focus on doing one thing great: client generation that specifically supports Python API frameworks.
 
 You'll see in the project documentation that we explain how to use common API frameworks like FastAPI, Django REST Framework and Django-ninja, and the project even has [client and server examples](https://github.com/phalt/clientele/tree/main/server_examples) to help demonstrate and prove it's usefulness.
+
+## Clientele framework
+
+The best way to learn about the beginning of the clientele framework is to read [this blog post](https://paulwrites.software/articles/python-api-clients).

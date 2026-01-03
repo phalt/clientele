@@ -2,14 +2,25 @@
 
 <div style="text-align: center;">
     <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
-</div>
 
-[![Package version](https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version)](https://pypi.org/project/clientele)
-![Python versions](https://img.shields.io/badge/python-3.10+-blue)
-[![codecov](https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM)](https://codecov.io/github/phalt/clientele)
-[![PyPI Downloads](https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads)](https://pepy.tech/projects/clientele)
-![PyPI - License](https://img.shields.io/pypi/l/clientele)
-![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
+<p>
+    <a href="https://pypi.org/project/clientele">
+    <img alt="Package version" src="https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version">
+    </a>
+    <img alt="Python versions" src="https://img.shields.io/badge/python-3.10+-blue">
+    <img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele">
+    <a href="https://codecov.io/github/phalt/clientele">
+    <img alt="codecov" src="https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM">
+    </a>
+    <a href="https://pepy.tech/projects/clientele">
+    <img alt="PyPI Downloads" src="https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads">
+    </a>
+</p>
+<p>
+    <img alt="Works with" src="https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green">
+    <img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json">
+</p>
+</div>
 
 Clientele is a different way to think about Python API Clients.
 
@@ -18,11 +29,12 @@ Clientele is a different way to think about Python API Clients.
 Clientele lets your write API clients as easily as you would write API servers:
 
 ```python
-from clientele import framework
+# api.py
+from clientele import framework as clientele_framework
 from .my_config import Config
-from .my_models import BookResponse, CreateBookReponse, CreateBookRequest
+from .my_models import Book, CreateBookReponse, CreateBookRequest
 
-client = framework.Client(config=Config())
+client = clientele_framework.Client(config=Config())
 
 @client.post("/books")
 def create_user(
@@ -34,16 +46,23 @@ def create_user(
 
 # Mix sync and async functions in the same client
 @client.get("/book/{book_id}")
-async def get_book(book_id: int, result: BookResponse) -> BookResponse:
+async def get_book(book_id: int, result: Book) -> Book:
     return result
+
+
+# Return only what you need from the API
+@client.get("/book/{book_id}")
+def get_book_title(book_id: int, result: Book) -> str:
+    return result.title
 ```
 
-The developer experience using the client is elegant:
+The framework allows you to build elegant API integrations:
 
 ```python
-from my_clientele_client import client, schemas
+# service.py
+import api
 
-response = client.create_book(
+response = api.create_book(
     data=schemas.CreateBookRequest(title="My awesome book")
 )
 
@@ -54,7 +73,10 @@ match response:
         # handle errors
 
 # Handle async requests
-book_response = await client.get_book(book_id=123)
+book_response = await api.get_book(book_id=123)
+
+# Get the data you care about
+book_title = api.get_book_title(book_id=123)
 ```
 
 ## OpenAPI client generator
@@ -68,8 +90,8 @@ Clientele can scaffold an API client from an OpenAPI schema with:
 - **A tiny output** - clientele is readable, debuggable Python.
 - **Regeneration-friendly** - update your API, regenerate, review the git diff, then ship it!
 - **Configuration**: that's never overwritten on regeneration.
-- **Testing**: that is easy via [respx](https://lundberg.github.io/respx/).
-- **Formatted output**: via [Ruff](https://docs.astral.sh/ruff/).
+- **Testing** is easy peasy with [respx](https://lundberg.github.io/respx/).
+- **Formatted output** with [Ruff](https://docs.astral.sh/ruff/).
 
 ![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
 
@@ -97,17 +119,7 @@ uvx clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/maste
 - **Modify configuration** within the REPL as you're testing.
 - **Run debug mode** to see diagnostics and errors.
 
-## OpenAPI Compatibility
-
-Clientele can scaffold clients by traversing OpenAPI 3.0+ schemas.
-
-### Verified Compatibility
-
-We test Clientele against 2000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) through a CI cron job.
-
-As of our latest run, we successfully generate clients for **95.39%** of schemas in the directory.
-
-![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
+## Works with your favourite API frameworks
 
 We have specifically built and tested Clientele to be 100% compatible with OpenAPI schemas generated from:
 
@@ -115,18 +127,20 @@ We have specifically built and tested Clientele to be 100% compatible with OpenA
 - **Django REST Framework** via **drf-spectacular**
 - **Django Ninja**
 
-#### Server Examples
+We have working example servers in the [`server_examples/`](https://github.com/phalt/clientele/tree/main/server_examples) directory.
 
-We have working example servers in the [`server_examples/`](https://github.com/phalt/clientele/tree/main/server_examples) directory. Read more about each in our documentation:
+These examples match the code shown in our documentation and provide real, working servers you can run locally to test out Clientele.
 
-- **FastAPI** - See [`server_examples/fastapi/`](https://phalt.github.io/clientele/framework-fastapi/)
-- **Django REST Framework** - See [`server_examples/django-rest-framework/`](https://phalt.github.io/clientele/framework-drf/)
-- **Django Ninja** - See [`server_examples/django-ninja/`](https://phalt.github.io/clientele/framework-django-ninja/)
+## OpenAPI Compatibility
 
-These examples match the code shown in our framework-specific documentation and provide real, working servers you can run locally to test Clientele's client generation.
+Clientele is compatible with OpenAPI 3.0+ schemas.
+
+We test Clientele against 2000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) through a CI cron job.
+
+As of our latest run, we successfully generate clients for **95.39%** of schemas in the directory.
+
+![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
 
 ## Getting Started
 
-👉 See our [framework-specific guides](https://phalt.github.io/clientele/framework-fastapi/) for FastAPI, Django REST Framework, and Django Ninja
-
-👉 Read the [full documentation](https://phalt.github.io/clientele/) for advanced usage
+👉 Read the [full documentation](https://phalt.github.io/clientele/) for all documentation.
