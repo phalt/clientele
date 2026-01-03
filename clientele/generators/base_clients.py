@@ -72,7 +72,7 @@ class ParametersResponse(pydantic.BaseModel):
 class BaseClientsGenerator:
     """
     Base class for generating client code from OpenAPI specifications.
-    Provides common functionality for both standard and class-based client generators.
+    Provides common functionality for client generators.
     """
 
     method_template_map: dict[str, str]

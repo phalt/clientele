@@ -4,7 +4,12 @@ import json
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from clientele.generators.cicerone_compat import normalize_openapi_31_schema, normalize_openapi_31_spec
+from clientele.generators.classbase.generator import ClassbaseGenerator
+from clientele.generators.framework.generator import FrameworkGenerator
+from clientele.generators.standard.generator import StandardGenerator
 
 
 def test_normalize_openapi_31_schema_only_null_type():
@@ -172,9 +177,9 @@ def test_normalize_openapi_31_spec_non_dict_parameter():
 class TestGeneratorCoverage:
     """Tests for generator module coverage."""
 
-    def test_standard_generator_remove_existing_file(self):
-        """Test that standard generator removes existing files before regenerating."""
-        from clientele.generators.standard.generator import StandardGenerator
+    @pytest.mark.parametrize("generator_class", [StandardGenerator, ClassbaseGenerator, FrameworkGenerator])
+    def test_generator_removes_existing_file(self, generator_class):
+        """Test that generators removes existing files before regenerating."""
 
         openapi_spec = {
             "openapi": "3.0.0",
@@ -202,7 +207,7 @@ class TestGeneratorCoverage:
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
                 # Generate client once
-                generator = StandardGenerator(
+                generator = generator_class(
                     spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=spec_file
                 )
                 generator.generate()
@@ -215,7 +220,7 @@ class TestGeneratorCoverage:
                 test_file.write_text("# Old content")
 
                 # Generate again - should remove and recreate files (except config.py)
-                generator2 = StandardGenerator(
+                generator2 = generator_class(
                     spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=spec_file
                 )
                 generator2.generate()
@@ -227,64 +232,9 @@ class TestGeneratorCoverage:
             finally:
                 Path(spec_file).unlink()
 
-    def test_classbase_generator_remove_existing_file(self):
-        """Test that classbase generator removes existing files before regenerating."""
-        from clientele.generators.classbase.generator import ClassbaseGenerator
-
-        openapi_spec = {
-            "openapi": "3.0.0",
-            "info": {"title": "Test API", "version": "1.0.0"},
-            "paths": {
-                "/test": {
-                    "get": {
-                        "operationId": "test_get",
-                        "responses": {"200": {"description": "Success"}},
-                    }
-                }
-            },
-        }
-
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-            json.dump(openapi_spec, f)
-            spec_file = f.name
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            output_dir = Path(tmpdir) / "test_client"
-
-            try:
-                from cicerone import parse as cicerone_parse
-
-                spec = cicerone_parse.parse_spec_from_file(spec_file)
-
-                # Generate client once
-                generator = ClassbaseGenerator(
-                    spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=spec_file
-                )
-                generator.generate()
-
-                # Verify files were created
-                assert (output_dir / "client.py").exists()
-
-                # Create a non-config file to test removal
-                test_file = output_dir / "schemas.py"
-                test_file.write_text("# Old content")
-
-                # Generate again - should remove and recreate files (except config.py)
-                generator2 = ClassbaseGenerator(
-                    spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=spec_file
-                )
-                generator2.generate()
-
-                # File should have been replaced
-                assert test_file.exists()
-                assert "# Old content" not in test_file.read_text()
-
-            finally:
-                Path(spec_file).unlink()
-
-    def test_classbase_generator_with_servers(self):
-        """Test classbase generator with servers in spec."""
-        from clientele.generators.classbase.generator import ClassbaseGenerator
+    @pytest.mark.parametrize("generator_class", [StandardGenerator, ClassbaseGenerator, FrameworkGenerator])
+    def test_generator_with_servers(self, generator_class):
+        """Test generator with servers in spec."""
 
         openapi_spec = {
             "openapi": "3.0.0",
@@ -312,14 +262,14 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                generator = ClassbaseGenerator(
+                generator = generator_class(
                     spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=spec_file
                 )
                 generator.generate()
 
                 # Verify client was created with the server URL
-                assert (output_dir / "client.py").exists()
-                client_content = (output_dir / "client.py").read_text()
+                assert (output_dir / "config.py").exists()
+                client_content = (output_dir / "config.py").read_text()
                 # Check that the domain from the test spec is in the generated code
                 assert "api.example.com" in client_content  # nosec: B113 - False positive, this is a test assertion
 

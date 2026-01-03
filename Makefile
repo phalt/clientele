@@ -81,3 +81,7 @@ brew-test-local:  ## Test installing the formula locally (requires Homebrew inst
 
 test-openapi-directory:  ## Test clientele against all schemas from APIs-guru/openapi-directory
 	uv run python3 test_openapi_directory.py
+
+
+open-coverage-report:  ## Open the coverage report in a browser
+	uv run python3 -m webbrowser file://$(PWD)/htmlcov/index.html

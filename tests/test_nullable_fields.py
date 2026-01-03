@@ -10,12 +10,15 @@ Real-world example: PokeAPI pagination response with {"previous": null}
 import tempfile
 from pathlib import Path
 
+import pytest
 from cicerone import parse as cicerone_parse
 
+from clientele.generators.framework.generator import FrameworkGenerator
 from clientele.generators.standard.generator import StandardGenerator
 
 
-def test_nullable_pagination_fields():
+@pytest.mark.parametrize("generator_class", [StandardGenerator, FrameworkGenerator])
+def test_nullable_pagination_fields(generator_class):
     """Test that nullable pagination fields accept null values.
 
     This test uses a snippet from the PokeAPI schema to ensure that when
@@ -92,7 +95,7 @@ components:
 
         # Generate the client
         output_dir = Path(tmpdir) / "generated_client"
-        generator = StandardGenerator(
+        generator = generator_class(
             spec=spec,
             output_dir=str(output_dir),
             asyncio=False,
