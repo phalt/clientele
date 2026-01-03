@@ -32,7 +32,7 @@ class Config(clientele_framework.BaseConfig):
         )
     """
 
-    base_url: str = "http://localhost"
+    base_url: str = "http://localhost:8000"
     headers: dict[str, str] = Field(default_factory=dict)
     timeout: float | None = 5.0
     follow_redirects: bool = False
