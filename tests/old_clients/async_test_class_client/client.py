@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import typing  # noqa
 
-from tests.async_test_class_client import config as _config
-from tests.async_test_class_client import http, schemas  # noqa
+from tests.old_clients.async_test_class_client import config as _config
+from tests.old_clients.async_test_class_client import http, schemas  # noqa
 
 
 class Client:
@@ -19,7 +19,7 @@ class Client:
         client = Client()
 
         # Use custom configuration
-        from tests.async_test_class_client import config
+        from tests.old_clients.async_test_class_client import config
         custom_config = config.Config(
             api_base_url="https://api.example.com",
             bearer_token="my-token"

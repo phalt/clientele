@@ -8,8 +8,8 @@ from urllib import parse
 
 import httpx
 
-from tests.test_class_client import config as c  # noqa
-from tests.test_class_client import schemas  # noqa
+from tests.old_clients.test_class_client import config as c  # noqa
+from tests.old_clients.test_class_client import schemas  # noqa
 
 
 def json_serializer(obj):

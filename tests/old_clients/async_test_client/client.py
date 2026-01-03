@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing  # noqa
 
-from tests.async_test_client import http, schemas  # noqa
+from tests.old_clients.async_test_client import http, schemas  # noqa
 
 
 async def complex_model_request_complex_model_request_get() -> schemas.ComplexModelResponse:

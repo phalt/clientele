@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import contextlib
 import decimal
 import json
 import types
@@ -9,8 +8,8 @@ from urllib import parse
 
 import httpx
 
-from tests.async_test_client import config as c  # noqa
-from tests.async_test_client import schemas  # noqa
+from tests.old_clients.test_client import config as c  # noqa
+from tests.old_clients.test_client import schemas  # noqa
 
 
 def json_serializer(obj):
@@ -142,44 +141,42 @@ if _limits := c.config.limits:
     _client_kwargs["limits"] = _limits
 if _transport := c.config.transport:
     _client_kwargs["transport"] = _transport
-client = httpx.AsyncClient(**_client_kwargs)
+client = httpx.Client(**_client_kwargs)
 
 
-@contextlib.asynccontextmanager
-async def _client_context():
-    """Async context manager for the HTTP client."""
-    yield client
-
-
-async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
-    async with _client_context() as async_client:
-        return await async_client.get(parse_url(url), headers=client_headers)
+    return client.get(parse_url(url), headers=client_headers)
 
 
-async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP POST request"""
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with _client_context() as async_client:
-        return await async_client.post(parse_url(url), json=json_data, headers=client_headers)
+    return client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
-async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP PUT request"""
     if headers:
         client_headers.update(headers)
     json_data = json.loads(json.dumps(data, default=json_serializer))
-    async with _client_context() as async_client:
-        return await async_client.put(parse_url(url), json=json_data, headers=client_headers)
+    return client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
-async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP PATCH request"""
+    if headers:
+        client_headers.update(headers)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
+    return client.patch(parse_url(url), json=json_data, headers=client_headers)
+
+
+def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)
-    async with _client_context() as async_client:
-        return await async_client.delete(parse_url(url), headers=client_headers)
+    return client.delete(parse_url(url), headers=client_headers)

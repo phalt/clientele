@@ -13,7 +13,7 @@ from clientele.explore.introspector import ClientIntrospector
 @pytest.fixture
 def test_client_path():
     """Path to the test client."""
-    return Path(__file__).parent.parent / "test_client"
+    return Path(__file__).parent.parent / "old_clients" / "test_client"
 
 
 @pytest.fixture

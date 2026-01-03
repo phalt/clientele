@@ -9,8 +9,8 @@ from urllib import parse
 
 import httpx
 
-from tests.async_test_class_client import config as c  # noqa
-from tests.async_test_class_client import schemas  # noqa
+from tests.old_clients.async_test_client import config as c  # noqa
+from tests.old_clients.async_test_client import schemas  # noqa
 
 
 def json_serializer(obj):
@@ -30,13 +30,13 @@ class APIException(Exception):
         super().__init__(*args)
 
 
-def parse_url(url: str, config: c.Config) -> str:
+def parse_url(url: str) -> str:
     """
     Returns the full URL from a string.
 
     Will filter out any optional query parameters if they are None.
     """
-    api_url = f"{config.api_base_url}{url}"
+    api_url = f"{c.config.api_base_url}{url}"
     url_parts = parse.urlparse(url=api_url)
     # Filter out "None" optional query parameters
     filtered_query_params = {k: v for k, v in parse.parse_qs(url_parts.query).items() if v[0] not in ["None", ""]}
@@ -127,75 +127,59 @@ func_response_code_maps = {
 }
 
 
-class HTTPClient:
-    """HTTP client wrapper that manages the httpx client with configuration."""
+auth_key = c.config.bearer_token
+client_headers = c.config.additional_headers.copy()
+client_headers.update(Authorization=f"Bearer {auth_key}")
+_client_kwargs: dict[str, typing.Any] = {
+    "headers": client_headers,
+    "timeout": c.config.timeout,
+    "follow_redirects": c.config.follow_redirects,
+    "verify": c.config.verify_ssl,
+    "http2": c.config.http2,
+    "max_redirects": c.config.max_redirects,
+}
+if _limits := c.config.limits:
+    _client_kwargs["limits"] = _limits
+if _transport := c.config.transport:
+    _client_kwargs["transport"] = _transport
+client = httpx.AsyncClient(**_client_kwargs)
 
-    def __init__(self, config: c.Config):
-        self.config = config
-        self._client: typing.Optional[httpx.AsyncClient] = None
 
-    def _get_client(self) -> httpx.AsyncClient:
-        """Get or create the httpx client with current configuration."""
-        if self._client is None:
-            client_headers = self.config.additional_headers.copy()
-            client_headers.update(Authorization=f"Bearer {self.config.bearer_token}")
-            client_kwargs: dict[str, typing.Any] = {
-                "headers": client_headers,
-                "timeout": self.config.timeout,
-                "follow_redirects": self.config.follow_redirects,
-                "verify": self.config.verify_ssl,
-                "http2": self.config.http2,
-                "max_redirects": self.config.max_redirects,
-            }
-            if _limits := self.config.limits:
-                client_kwargs["limits"] = _limits
-            if _transport := self.config.transport:
-                client_kwargs["transport"] = _transport
-            self._client = httpx.AsyncClient(**client_kwargs)
-        return self._client
+@contextlib.asynccontextmanager
+async def _client_context():
+    """Async context manager for the HTTP client."""
+    yield client
 
-    def _get_headers(self, additional_headers: typing.Optional[dict] = None) -> dict:
-        """Get headers for a request, merging config and request-specific headers."""
-        headers = self.config.additional_headers.copy()
-        headers.update(Authorization=f"Bearer {self.config.bearer_token}")
-        if additional_headers:
-            headers.update(additional_headers)
-        return headers
 
-    @contextlib.asynccontextmanager
-    async def _client_context(self):
-        """Async context manager for the HTTP client."""
-        yield self._get_client()
+async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP GET request"""
+    if headers:
+        client_headers.update(headers)
+    async with _client_context() as async_client:
+        return await async_client.get(parse_url(url), headers=client_headers)
 
-    async def get(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-        """Issue an HTTP GET request"""
-        request_headers = self._get_headers(headers)
-        async with self._client_context() as async_client:
-            return await async_client.get(parse_url(url, self.config), headers=request_headers)
 
-    async def post(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-        """Issue an HTTP POST request"""
-        request_headers = self._get_headers(headers)
-        json_data = json.loads(json.dumps(data, default=json_serializer))
-        async with self._client_context() as async_client:
-            return await async_client.post(parse_url(url, self.config), json=json_data, headers=request_headers)
+async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP POST request"""
+    if headers:
+        client_headers.update(headers)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
+    async with _client_context() as async_client:
+        return await async_client.post(parse_url(url), json=json_data, headers=client_headers)
 
-    async def put(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-        """Issue an HTTP PUT request"""
-        request_headers = self._get_headers(headers)
-        json_data = json.loads(json.dumps(data, default=json_serializer))
-        async with self._client_context() as async_client:
-            return await async_client.put(parse_url(url, self.config), json=json_data, headers=request_headers)
 
-    async def patch(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
-        """Issue an HTTP PATCH request"""
-        request_headers = self._get_headers(headers)
-        json_data = json.loads(json.dumps(data, default=json_serializer))
-        async with self._client_context() as async_client:
-            return await async_client.patch(parse_url(url, self.config), json=json_data, headers=request_headers)
+async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP PUT request"""
+    if headers:
+        client_headers.update(headers)
+    json_data = json.loads(json.dumps(data, default=json_serializer))
+    async with _client_context() as async_client:
+        return await async_client.put(parse_url(url), json=json_data, headers=client_headers)
 
-    async def delete(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
-        """Issue an HTTP DELETE request"""
-        request_headers = self._get_headers(headers)
-        async with self._client_context() as async_client:
-            return await async_client.delete(parse_url(url, self.config), headers=request_headers)
+
+async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    """Issue an HTTP DELETE request"""
+    if headers:
+        client_headers.update(headers)
+    async with _client_context() as async_client:
+        return await async_client.delete(parse_url(url), headers=client_headers)

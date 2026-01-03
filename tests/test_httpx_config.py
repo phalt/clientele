@@ -4,9 +4,9 @@ import httpx
 import pytest
 from respx import MockRouter
 
-from .test_class_client import config as class_config
-from .test_class_client.client import Client
-from .test_client import config, http
+from .old_clients.test_class_client import config as class_config
+from .old_clients.test_class_client.client import Client
+from .old_clients.test_client import config, http
 
 
 def test_functional_client_timeout_config():
