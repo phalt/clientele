@@ -1,4 +1,4 @@
-"""Exceptions for the clientele framework."""
+"""Exceptions for the clientele api."""
 
 from __future__ import annotations
 

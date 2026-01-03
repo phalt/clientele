@@ -2,14 +2,14 @@ from __future__ import annotations
 
 import typing
 
-from clientele import framework as clientele_framework
-from tests.framework_clients.async_test_client import config, schemas
+from clientele import api as clientele_api
+from tests.api_clients.test_client import config, schemas
 
-client = clientele_framework.Client(config=config.Config())
+client = clientele_api.APIClient(config=config.Config())
 
 
 @client.get("/complex-model-request")
-async def complex_model_request_complex_model_request_get(
+def complex_model_request_complex_model_request_get(
     result: schemas.ComplexModelResponse,
 ) -> schemas.ComplexModelResponse:
     """Complex Model Request
@@ -20,7 +20,7 @@ async def complex_model_request_complex_model_request_get(
 
 
 @client.get("/header-request", response_map={200: schemas.HeadersResponse, 422: schemas.HTTPValidationError})
-async def header_request_header_request_get(
+def header_request_header_request_get(
     result: schemas.HTTPValidationError | schemas.HeadersResponse,
 ) -> schemas.HTTPValidationError | schemas.HeadersResponse:
     """Header Request"""
@@ -28,7 +28,7 @@ async def header_request_header_request_get(
 
 
 @client.get("/optional-parameters")
-async def optional_parameters_request_optional_parameters_get(
+def optional_parameters_request_optional_parameters_get(
     result: schemas.OptionalParametersResponse,
 ) -> schemas.OptionalParametersResponse:
     """Optional Parameters Request
@@ -39,7 +39,7 @@ async def optional_parameters_request_optional_parameters_get(
 
 
 @client.post("/request-data", response_map={200: schemas.RequestDataResponse, 422: schemas.HTTPValidationError})
-async def request_data_request_data_post(
+def request_data_request_data_post(
     data: schemas.RequestDataRequest,
     result: schemas.HTTPValidationError | schemas.RequestDataResponse,
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
@@ -51,7 +51,7 @@ async def request_data_request_data_post(
 
 
 @client.put("/request-data", response_map={200: schemas.RequestDataResponse, 422: schemas.HTTPValidationError})
-async def request_data_request_data_put(
+def request_data_request_data_put(
     data: schemas.RequestDataRequest,
     result: schemas.HTTPValidationError | schemas.RequestDataResponse,
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
@@ -66,7 +66,7 @@ async def request_data_request_data_put(
     "/request-data/{path_parameter}",
     response_map={200: schemas.RequestDataAndParameterResponse, 422: schemas.HTTPValidationError},
 )
-async def request_data_path_request_data(
+def request_data_path_request_data(
     path_parameter: str,
     data: schemas.RequestDataRequest,
     result: schemas.HTTPValidationError | schemas.RequestDataAndParameterResponse,
@@ -79,13 +79,13 @@ async def request_data_path_request_data(
 
 
 @client.delete("/request-delete")
-async def request_delete_request_delete_delete(result: schemas.DeleteResponse) -> schemas.DeleteResponse:
+def request_delete_request_delete_delete(result: schemas.DeleteResponse) -> schemas.DeleteResponse:
     """Request Delete"""
     return result
 
 
 @client.get("/security-required")
-async def security_required_request_security_required_get(
+def security_required_request_security_required_get(
     result: schemas.SecurityRequiredResponse,
 ) -> schemas.SecurityRequiredResponse:
     """Security Required Request"""
@@ -95,7 +95,7 @@ async def security_required_request_security_required_get(
 @client.get(
     "/simple-query", response_map={200: schemas.SimpleQueryParametersResponse, 422: schemas.HTTPValidationError}
 )
-async def query_request_simple_query_get(
+def query_request_simple_query_get(
     your_input: str, result: schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse
 ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request
@@ -108,7 +108,7 @@ async def query_request_simple_query_get(
 @client.get(
     "/optional-query", response_map={200: schemas.OptionalQueryParametersResponse, 422: schemas.HTTPValidationError}
 )
-async def query_request_optional_query_get(
+def query_request_optional_query_get(
     result: schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse,
     your_input: typing.Optional[str] = None,
 ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
@@ -120,7 +120,7 @@ async def query_request_optional_query_get(
 
 
 @client.get("/simple-request")
-async def simple_request_simple_request_get(result: schemas.SimpleResponse) -> schemas.SimpleResponse:
+def simple_request_simple_request_get(result: schemas.SimpleResponse) -> schemas.SimpleResponse:
     """Simple Request
 
     A simple API request with no parameters.
@@ -131,7 +131,7 @@ async def simple_request_simple_request_get(result: schemas.SimpleResponse) -> s
 @client.get(
     "/simple-request/{your_input}", response_map={200: schemas.ParameterResponse, 422: schemas.HTTPValidationError}
 )
-async def parameter_request_simple_request(
+def parameter_request_simple_request(
     your_input: str, result: schemas.HTTPValidationError | schemas.ParameterResponse
 ) -> schemas.HTTPValidationError | schemas.ParameterResponse:
     """Parameter Request
@@ -142,7 +142,7 @@ async def parameter_request_simple_request(
 
 
 @client.get("/deprecated-endpoint")
-async def deprecated_endpoint_deprecated_endpoint_get(result: schemas.SimpleResponse) -> schemas.SimpleResponse:
+def deprecated_endpoint_deprecated_endpoint_get(result: schemas.SimpleResponse) -> schemas.SimpleResponse:
     """Deprecated Endpoint
 
     An endpoint specifically for testing deprecated functionality

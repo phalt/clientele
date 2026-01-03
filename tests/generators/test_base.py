@@ -1,9 +1,9 @@
 import pytest
 
 from clientele.generators import Generator
+from clientele.generators.api.generator import APIGenerator
 from clientele.generators.basic.generator import BasicGenerator
 from clientele.generators.classbase.generator import ClassbaseGenerator
-from clientele.generators.framework.generator import FrameworkGenerator
 from clientele.generators.standard.generator import StandardGenerator
 
 
@@ -29,8 +29,8 @@ def test_classbase_generator_inherits_from_generator():
 
 
 def test_framework_generator_inherits_from_generator():
-    """Test that FrameworkGenerator inherits from Generator ABC."""
-    assert issubclass(FrameworkGenerator, Generator)
+    """Test that APIGenerator inherits from Generator ABC."""
+    assert issubclass(APIGenerator, Generator)
 
 
 def test_basic_generator_implements_generate():

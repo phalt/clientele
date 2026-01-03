@@ -1,6 +1,6 @@
-# Clientele framework
+# Clientele API
 
-Clientele framework is a decorator-driven http client that can create elegant API integrations.
+Clientele API is a decorator-driven http client that can create elegant API integrations.
 
 It intentionally works similar to FastAPI route decorators, which has taught us that:
 
@@ -8,7 +8,7 @@ It intentionally works similar to FastAPI route decorators, which has taught us 
 - Decorators are popular for declaring the configuration for those endpoints.
 - Types are amazing for documentation and validation.
 
-With Clientele we can follow these same rules but flip around who is sending and receiving data:
+With Clientele we follow the same ideas but flip around who is sending and receiving data:
 
 - the decorator issues an http request with the validated payload.
 - the decorator parses the http response and injects it into the function via the `result` parameter.
@@ -18,10 +18,10 @@ With Clientele we can follow these same rules but flip around who is sending and
 
 ```python
 from pydantic import BaseModel
-from clientele import framework
+from clientele import api as clientele_api
 import httpx
 
-client = framework.Client(base_url="https://api.example.com")
+client = clientele_api.APIClient(base_url="https://api.example.com")
 
 class User(BaseModel):
     id: int
@@ -47,9 +47,9 @@ How it works:
 
 ```python
 from pydantic import BaseModel
-from clientele import Client
+from clientele import api as clientele_api
 
-client = Client(base_url="https://api.example.com")
+client = clientele_api.APIClient(base_url="https://api.example.com")
 
 class CreateUserRequest(BaseModel):
     name: str
@@ -77,9 +77,9 @@ How body-based methods (POST, PUT, PATCH, DELETE) work:
 
 ```python
 from pydantic import BaseModel
-from clientele import Client
+from clientele import api as clientele_api
 
-client = Client(base_url="https://api.example.com")
+client = clientele_api.APIClient(base_url="https://api.example.com")
 
 class UpdateUser(BaseModel):
     name: str
@@ -158,9 +158,9 @@ The `response_map` parameter allows you to map status codes to specific Pydantic
 
 ```python
 from pydantic import BaseModel
-from clientele.framework import Client, APIException
+from clientele import api as clientele_api
 
-client = Client(base_url="https://api.example.com")
+client = clientele_api.APIClient(base_url="https://api.example.com")
 
 class User(BaseModel):
     id: int
@@ -188,17 +188,17 @@ match user:
     case NotFoundError() :
         print(f"Error: {user.error}")
 
-# For unexpected status codes, clientele.framework.APIException is raised
+# For unexpected status codes, clientele.api.APIException is raised
 try:
     get_user(-999)  # imagine the server returns 500
-except APIException as e:
+except clientele_api.APIException as e:
     print(f"Unexpected status: {e.response.status_code}")
     print(f"Reason: {e.reason}")
 ```
 
 ### `response_map` requirements
 
-1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele.framework` for reference, or any standard HTTP status code integers (100-599).
+1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele.api` for reference, or any standard HTTP status code integers (100-599).
 2. **Values must be Pydantic models**: Each value must be a `BaseModel` subclass.
 3. **Result parameter type must include all models**: The `result` parameter's type annotation must be a Union containing all the Pydantic models used in `response_map`.
 4. **Unexpected status codes raise `APIException`**: If the server returns a status code not in the `response_map`, an `APIException` is raised with details about the unexpected status.
@@ -233,4 +233,4 @@ match response:
 
 ## Connection persistence
 
-Clientele framework will generate a singleton instance for the async and sync http clients. When you import the module and issue multiple function calls it will use the same http connection.
+Clientele API will generate a singleton instance for the async and sync http clients. When you import the module and issue multiple function calls it will use the same http connection.

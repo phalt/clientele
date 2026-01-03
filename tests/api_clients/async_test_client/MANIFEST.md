@@ -21,7 +21,7 @@ CLIENTELE VERSION: 1.2.0
 Regenerate using this command:
 
 ```sh
-clientele generate-framework -f example_openapi_specs/best.json -o tests/framework_clients/test_client/  --regen t
+clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/async_test_client/ --asyncio t --regen t
 ```
 
 Explore this API interactively:

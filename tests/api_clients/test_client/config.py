@@ -6,7 +6,7 @@ Use it as a space to store configuration and constants.
 import httpx
 from pydantic import Field
 
-from clientele import framework as clientele_framework
+from clientele import api as clientele_framework
 
 
 class Config(clientele_framework.BaseConfig):
@@ -32,7 +32,7 @@ class Config(clientele_framework.BaseConfig):
         )
     """
 
-    base_url: str = "{{ base_url }}"
+    base_url: str = "http://localhost"
     headers: dict[str, str] = Field(default_factory=dict)
     timeout: float | None = 5.0
     follow_redirects: bool = False

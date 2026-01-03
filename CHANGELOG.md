@@ -2,23 +2,23 @@
 
 ## 1.3.0
 
-### Introducing **Clientele framework** - a different way to think about Python API Clients
+### Introducing **Clientele API** - a different way to think about Python API Clients
 
-- Clientele framework is a decorator-driven http client that can create elegant API integrations.
-- Clientele framework is considered a beta project for this release. It is an evolving idea that has been tested thoroughly and it works well in ideal conditions. Small changes to the API and usage may occur over time as we encounter unexpected scenarios.
+- Clientele API is a decorator-driven http client that can create elegant API integrations.
+- Clientele API is considered a beta project for this release. It is an evolving idea that has been tested thoroughly and it works well in ideal conditions. Small changes to the API and usage may occur over time as we encounter unexpected scenarios.
 
-### Generate scaffolding for OpenAPI projects with **clientele framework**
+### Generate scaffolding for OpenAPI projects with **clientele API**
 
-- The `generate-framework` command will produce scaffolding from an OpenAPI schema and uses the clientele framework.
+- The `scaffold-api` command will produce scaffolding from an OpenAPI schema and uses the new clientele api.
 
 ### Improved documentation
 
-- New documentation added to cover **Clientele framework**.
+- New documentation added to cover **Clientele API**.
 - Documentation sections have been reorganised to reflect the key features of Clientele.
 
 ### 2.0.0 deprecation notice
 
-- When **clientele framework** reaches maturity, support for the current "barebones" style of OpenAPI scaffolders will be deprecated.
+- When **clientele API** reaches maturity, support for the current "barebones" style of OpenAPI scaffolders will be deprecated.
 - This will be marked as the `2.0.0` release.
 
 ## 1.2.0

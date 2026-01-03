@@ -8,13 +8,13 @@ from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele import generators, settings, utils
-from clientele.generators.framework import writer
-from clientele.generators.framework.generators import clients, schemas
+from clientele.generators.api import writer
+from clientele.generators.api.generators import clients, schemas
 
 console = rich_console.Console()
 
 
-class FrameworkGenerator(generators.Generator):
+class APIGenerator(generators.Generator):
     """
     The framework Clientele generator.
 

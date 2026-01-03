@@ -1,6 +1,6 @@
 # Authentication
 
-Clientele framework supports multiple authentication methods through the client configuration.
+Clientele API supports multiple authentication methods through the client configuration.
 
 ## Bearer Token
 
@@ -10,9 +10,9 @@ Bearer token authentication can be configured by adding an `Authorization` heade
 
 ```python
 # config.py
-from clientele import framework as clientele_framework
+from clientele import api as clientele_api
 
-class Config(clientele_framework.BaseConfig):
+class Config(clientele_api.BaseConfig):
     ...
     headers = {"Authorization": "MY_SECRET_TOKEN"}
     ...
@@ -27,10 +27,10 @@ Basic authentication can be configured using [httpx.Auth](https://www.python-htt
 ```python
 # config.py
 import httpx
-from clientele import framework as clientele_framework
+from clientele import api as clientele_api
 from my_settings import AUTH_TOKEN
 
-class Config(clientele_framework.BaseConfig):
+class Config(clientele_api.BaseConfig):
     ...
     auth = httpx.BasicAuth("username", "password")
     ...

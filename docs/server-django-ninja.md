@@ -50,20 +50,20 @@ You can either:
 **Option A: Use the URL directly** (if the API is accessible):
 
 ```sh
-clientele generate-framework -u http://localhost:8000/api/openapi.json -o my_client/
+clientele scaffold-api -u http://localhost:8000/api/openapi.json -o my_client/
 ```
 
 **Option B: Download the schema file first**:
 
 ```sh
 curl http://localhost:8000/api/openapi.json > openapi.json
-clientele generate-framework -f openapi.json -o my_client/
+clientele scaffold-api -f openapi.json -o my_client/
 ```
 
 ## Step 2: Scaffold the Client
 
 ```sh
-clientele generate-framework -u http://localhost:8000/api/openapi.json -o my_client/
+clientele scaffold-api -u http://localhost:8000/api/openapi.json -o my_client/
 ```
 
 ### Async Client
@@ -71,7 +71,7 @@ clientele generate-framework -u http://localhost:8000/api/openapi.json -o my_cli
 Django Ninja supports both sync and async views. If you want an async client:
 
 ```sh
-clientele generate-framework -u http://localhost:8000/api/openapi.json -o my_client/ --asyncio t
+clientele scaffold-api -u http://localhost:8000/api/openapi.json -o my_client/ --asyncio t
 ```
 
 ## Step 3: Use the scaffolded Client
@@ -160,7 +160,7 @@ This generates:
 
 ## Authentication
 
-See [framework authentication](framework-authentication.md).
+See [api authentication](api-authentication.md).
 
 ## Regenerating the Client
 
@@ -293,5 +293,5 @@ print(response.username)
 ## Next Steps
 
 - [Learn about regeneration workflow](openapi-regeneration.md)
-- [Configure authentication](framework-authentication.md)
+- [Configure authentication](api-authentication.md)
 - [Set up testing with respx](testing.md)

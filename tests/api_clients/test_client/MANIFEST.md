@@ -14,14 +14,14 @@ Or with uv:
 uv tool install clientele
 ```
 
-API VERSION: {{api_version}}
-OPENAPI VERSION: {{openapi_version}}
-CLIENTELE VERSION: {{clientele_version}}
+API VERSION: 0.1.0
+OPENAPI VERSION: 3.0.2
+CLIENTELE VERSION: 1.2.0
 
 Regenerate using this command:
 
 ```sh
-clientele generate-framework {{command}}
+clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/test_client/  --regen t
 ```
 
 Explore this API interactively:

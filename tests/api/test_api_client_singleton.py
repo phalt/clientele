@@ -1,4 +1,4 @@
-"""Tests for singleton httpx client instances in the framework Client."""
+"""Tests for singleton httpx client instances in the APIClient."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import pytest
 from pydantic import BaseModel
 from respx import MockRouter
 
-from clientele.framework import Client
+from clientele.api import APIClient
 
 BASE_URL = "https://api.example.com"
 
@@ -20,7 +20,7 @@ class User(BaseModel):
 @pytest.mark.respx(base_url=BASE_URL)
 def test_client_reuses_same_httpx_client_instance(respx_mock: MockRouter) -> None:
     """Test that the Client reuses the same httpx.Client instance across multiple requests."""
-    client = Client(base_url=BASE_URL)
+    client = APIClient(base_url=BASE_URL)
 
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
     respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Bob"}))
@@ -45,8 +45,8 @@ def test_client_reuses_same_httpx_client_instance(respx_mock: MockRouter) -> Non
 @pytest.mark.respx(base_url=BASE_URL)
 @pytest.mark.asyncio
 async def test_async_client_reuses_same_httpx_client_instance(respx_mock: MockRouter) -> None:
-    """Test that the Client reuses the same httpx.AsyncClient instance across multiple requests."""
-    client = Client(base_url=BASE_URL)
+    """Test that the APIClient reuses the same httpx.AsyncAPIClient instance across multiple requests."""
+    client = APIClient(base_url=BASE_URL)
 
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
     respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Bob"}))
@@ -70,9 +70,9 @@ async def test_async_client_reuses_same_httpx_client_instance(respx_mock: MockRo
 
 @pytest.mark.respx(base_url=BASE_URL)
 def test_can_provide_custom_httpx_client(respx_mock: MockRouter) -> None:
-    """Test that a custom httpx.Client can be provided to the Client."""
+    """Test that a custom httpx.Client can be provided to the APIClient."""
     custom_httpx_client = httpx.Client(base_url=BASE_URL, timeout=30.0)
-    client = Client(base_url=BASE_URL, httpx_client=custom_httpx_client)
+    client = APIClient(base_url=BASE_URL, httpx_client=custom_httpx_client)
 
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
 
@@ -90,9 +90,9 @@ def test_can_provide_custom_httpx_client(respx_mock: MockRouter) -> None:
 @pytest.mark.respx(base_url=BASE_URL)
 @pytest.mark.asyncio
 async def test_can_provide_custom_httpx_async_client(respx_mock: MockRouter) -> None:
-    """Test that a custom httpx.AsyncClient can be provided to the Client."""
+    """Test that a custom httpx.AsyncClient can be provided to the APIClient."""
     custom_httpx_async_client = httpx.AsyncClient(base_url=BASE_URL, timeout=30.0)
-    client = Client(base_url=BASE_URL, httpx_async_client=custom_httpx_async_client)
+    client = APIClient(base_url=BASE_URL, httpx_async_client=custom_httpx_async_client)
 
     respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
 
@@ -109,7 +109,7 @@ async def test_can_provide_custom_httpx_async_client(respx_mock: MockRouter) -> 
 
 def test_close_method_closes_owned_sync_client() -> None:
     """Test that close() closes the sync client."""
-    client = Client(base_url=BASE_URL)
+    client = APIClient(base_url=BASE_URL)
 
     # Close should work without errors
     client.close()
@@ -121,7 +121,7 @@ def test_close_method_closes_owned_sync_client() -> None:
 @pytest.mark.asyncio
 async def test_aclose_method_closes_owned_async_client() -> None:
     """Test that aclose() closes the async client."""
-    client = Client(base_url=BASE_URL)
+    client = APIClient(base_url=BASE_URL)
 
     # Close should work without errors
     await client.aclose()

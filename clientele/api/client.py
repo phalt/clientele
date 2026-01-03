@@ -11,9 +11,9 @@ from urllib.parse import quote
 import httpx
 from pydantic import BaseModel
 
-from clientele.framework import config as framework_config
-from clientele.framework import exceptions as framework_exceptions
-from clientele.framework import http_status
+from clientele.api import config as api_config
+from clientele.api import exceptions as api_exceptions
+from clientele.api import http_status
 
 try:  # pragma: no cover - conditional import
     from pydantic import TypeAdapter
@@ -90,7 +90,7 @@ def build_request_context(
 ) -> _RequestContext:
     signature = inspect.signature(func)
     # Get type hints with proper handling of forward references
-    # This follows the pattern used in FastAPI and other frameworks
+    # This follows the pattern used in FastAPI and other server frameworks
     try:
         type_hints = get_type_hints(func, include_extras=True)
     except NameError:
@@ -178,8 +178,8 @@ class _PreparedCall(BaseModel):
     result_annotation: Any
 
 
-class Client:
-    """Clientele is a Python framework for building typed HTTP API clients.
+class APIClient:
+    """Clientele is a tool for building typed HTTP API clients.
 
     Supports common HTTP verbs (GET, POST, PUT, PATCH, DELETE) and works with
     both synchronous and ``async`` functions.
@@ -196,12 +196,12 @@ class Client:
 
     Basic example:
     ```
-    import clientele
+    from clientele import api as clientele_api
     from my_api_client import config, schemas
 
-    client = clientele.framework.Client(config=config.Config())
+    api_client = clientele_api.APIClient(config=config.Config())
 
-    @client.get("/users")
+    @api_client.get("/users")
     def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
         return result
     ```
@@ -210,7 +210,7 @@ class Client:
 
     ```
     import httpx
-    import clientele.framework
+    from clientele import api as clientele_api
 
     # Your custom httpx client with specific settings
     custom_client = httpx.Client(
@@ -218,7 +218,7 @@ class Client:
         limits=httpx.Limits(max_connections=100)
     )
 
-    client = clientele.framework.Client(
+    api_client = clientele_api.APIClient(
         base_url="https://api.example.com",
         httpx_client=custom_client
     )
@@ -232,7 +232,7 @@ class Client:
     def __init__(
         self,
         *,
-        config: framework_config.BaseConfig | None = None,
+        config: api_config.BaseConfig | None = None,
         base_url: str | None = None,
         httpx_client: httpx.Client | None = None,
         httpx_async_client: httpx.AsyncClient | None = None,
@@ -244,7 +244,7 @@ class Client:
             if base_url is None:
                 raise ValueError("Cannot provide both 'config' and 'base_url'.")
 
-            config = framework_config.get_default_config(base_url=base_url)
+            config = api_config.get_default_config(base_url=base_url)
         self.config = config
 
         # Create or use provided singleton clients for connection pooling
@@ -533,7 +533,7 @@ class Client:
             status_code = response.status_code
             if status_code not in response_map:
                 expected_codes = ", ".join(map(str, response_map.keys()))
-                raise framework_exceptions.APIException(
+                raise api_exceptions.APIException(
                     response=response,
                     reason=f"Unexpected status code {status_code}. Expected one of: {expected_codes}",
                 )

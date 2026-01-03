@@ -83,27 +83,27 @@ You can either:
 **Option A: Use the URL directly** (if the API is accessible):
 
 ```sh
-clientele generate-framework -u http://localhost:8000/api/schema/ -o my_client/
+clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/
 ```
 
 **Option B: Download the schema file first**:
 
 ```sh
 curl http://localhost:8000/api/schema/ > openapi.json
-clientele generate-framework -f openapi.json -o my_client/
+clientele scaffold-api -f openapi.json -o my_client/
 ```
 
 **Option C: Generate schema file with Django management command**:
 
 ```sh
 python manage.py spectacular --file openapi.json
-clientele generate-framework -f openapi.json -o my_client/
+clientele scaffold-api -f openapi.json -o my_client/
 ```
 
 ## Step 3: Scaffold the Client
 
 ```sh
-clientele generate-framework -u http://localhost:8000/api/schema/ -o my_client/
+clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/
 ```
 
 ### Async Client
@@ -111,7 +111,7 @@ clientele generate-framework -u http://localhost:8000/api/schema/ -o my_client/
 If you want an async client (note: DRF itself is synchronous, but the client can be async):
 
 ```sh
-clientele generate-framework -u http://localhost:8000/api/schema/ -o my_client/ --asyncio t
+clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/ --asyncio t
 ```
 
 ## Step 4: Use the scaffolded Client
@@ -204,7 +204,7 @@ def user_stats(request, user_id):
 
 ## Authentication
 
-See [framework authentication](framework-authentication.md).
+See [api authentication](api-authentication.md).
 
 ## Regenerating the Client
 
@@ -308,5 +308,5 @@ print(response.username)
 ## Next Steps
 
 - [Learn about regeneration workflow](openapi-regeneration.md)
-- [Configure authentication](framework-authentication.md)
+- [Configure authentication](api-authentication.md)
 - [Set up testing with respx](testing.md)

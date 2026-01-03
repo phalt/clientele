@@ -1,17 +1,17 @@
 # Async support
 
-Clientele framework supports both async and sync methods.
+Clientele API supports both async and sync methods.
 
 They can even be mixed in together if you prefer.
 
 ## Async and sync example
 
 ```python
-from clientele import framework
+from clientele import api as clientele_api
 from .my_config import Config
 from .my_models import BookResponse, CreateBookReponse, CreateBookRequest
 
-client = framework.Client(config=Config())
+client = clientele_api.APIClient(config=Config())
 
 @client.post("/books")
 def create_user(

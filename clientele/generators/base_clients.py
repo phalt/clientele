@@ -57,7 +57,7 @@ class ParametersResponse(pydantic.BaseModel):
         return ", ".join(optional_args) if optional_args else ""
 
     def get_required_path_args_as_string(self) -> str:
-        """Get only required path parameters (for framework generator)."""
+        """Get only required path parameters (for clientele-api generator)."""
         required_args = []
         for k, v in self.path_args.items():
             if not v.startswith("typing.Optional["):

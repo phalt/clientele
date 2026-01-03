@@ -6,7 +6,7 @@ Use it as a space to store configuration and constants.
 import httpx
 from pydantic import Field
 
-from clientele import framework as clientele_framework
+from clientele import api as clientele_framework
 
 
 class Config(clientele_framework.BaseConfig):

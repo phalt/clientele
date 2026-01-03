@@ -26,11 +26,11 @@ nav:
   - Home: index.md
   - Getting Started:
     - Install: install.md
-  - Clientele framework guide:
-    - Overview: framework-overview.md
-    - Configuration: framework-configuration.md
-    - Async Support: framework-async.md
-    - Authentication: framework-authentication.md
+  - Clientele API guide:
+    - Overview: api-overview.md
+    - Configuration: api-configuration.md
+    - Async Support: api-async.md
+    - Authentication: api-authentication.md
   - OpenAPI client scaffolder:
     - Usage & CLI: openapi-cli.md
     - Regeneration: openapi-regeneration.md

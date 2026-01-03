@@ -5,7 +5,7 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-from clientele.generators.framework.generator import FrameworkGenerator
+from clientele.generators.api.generator import APIGenerator
 from tests.generators.integration_utils import get_spec_path, load_spec
 
 
@@ -24,7 +24,7 @@ def test_framework_generator_preserves_existing_config_py():
         existing_config.write_text(custom_content)
         assert existing_config.exists()
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -50,7 +50,7 @@ def test_framework_generator_removes_existing_manifest():
         existing_manifest.write_text("# Old manifest content\n")
         assert existing_manifest.exists()
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -71,7 +71,7 @@ def test_framework_generator_handles_ruff_formatting_error():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -96,7 +96,7 @@ def test_framework_generator_handles_ruff_not_found():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 

@@ -3,7 +3,7 @@ import pathlib
 
 import jinja2
 
-templates = jinja2.Environment(loader=jinja2.PackageLoader("clientele", "generators/framework/templates/"))
+templates = jinja2.Environment(loader=jinja2.PackageLoader("clientele", "generators/api/templates/"))
 
 # Buffer for accumulating file content before writing
 _file_buffers: dict[str, list[str]] = collections.defaultdict(list)

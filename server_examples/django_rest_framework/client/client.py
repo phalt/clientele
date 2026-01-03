@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from clientele import framework as clientele_framework
+from clientele import api as clientele_api
 from server_examples.django_rest_framework.client import config, schemas
 
-client = clientele_framework.Client(config=config.Config())
+client = clientele_api.APIClient(config=config.Config())
 
 
 @client.get("/api/users/")

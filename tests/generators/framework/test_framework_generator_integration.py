@@ -3,12 +3,12 @@
 import tempfile
 from pathlib import Path
 
-from clientele.generators.framework.generator import FrameworkGenerator
+from clientele.generators.api.generator import APIGenerator
 from tests.generators.integration_utils import get_spec_path, load_spec
 
 
 def test_framework_generator_with_simple_spec():
-    """Test FrameworkGenerator can generate a complete client from simple spec."""
+    """Test APIGenerator can generate a complete client from simple spec."""
     spec = load_spec("simple.json")
     spec_path = get_spec_path("simple.json")
 
@@ -16,7 +16,7 @@ def test_framework_generator_with_simple_spec():
         output_dir = Path(tmpdir) / "generated_client"
 
         # Create generator
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -40,14 +40,14 @@ def test_framework_generator_with_simple_spec():
 
 
 def test_standard_generator_with_best_spec():
-    """Test FrameworkGenerator with the comprehensive 'best' spec."""
+    """Test APIGenerator with the comprehensive 'best' spec."""
     spec = load_spec("best.json")
     spec_path = get_spec_path("best.json")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "best_client"
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -64,14 +64,14 @@ def test_standard_generator_with_best_spec():
 
 
 def test_standard_generator_async_mode():
-    """Test FrameworkGenerator generates async client."""
+    """Test APIGenerator generates async client."""
     spec = load_spec("simple.json")
     spec_path = get_spec_path("simple.json")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "async_client"
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=True, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -91,13 +91,13 @@ def test_standard_generator_prevents_accidental_regen():
         output_dir = Path(tmpdir) / "protected_client"
 
         # First generation with regen=True
-        generator1 = FrameworkGenerator(
+        generator1 = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
         generator1.generate()
 
         # Second generation without regen should be prevented
-        generator2 = FrameworkGenerator(
+        generator2 = APIGenerator(
             spec=spec, asyncio=False, regen=False, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -106,14 +106,14 @@ def test_standard_generator_prevents_accidental_regen():
 
 
 def test_standard_generator_with_yaml_spec():
-    """Test FrameworkGenerator works with YAML spec."""
+    """Test APIGenerator works with YAML spec."""
     spec = load_spec("test_303.yaml")
     spec_path = get_spec_path("test_303.yaml")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "yaml_client"
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 
@@ -132,7 +132,7 @@ def test_standard_generator_creates_manifest():
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "manifest_test"
 
-        generator = FrameworkGenerator(
+        generator = APIGenerator(
             spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
         )
 

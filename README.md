@@ -24,17 +24,17 @@
 
 Clientele is a different way to think about Python API Clients.
 
-## Clientele framework
+## Clientele API
 
 Clientele lets your write API clients as easily as you would write API servers:
 
 ```python
 # api.py
-from clientele import framework as clientele_framework
+from clientele import api as clientele_api
 from .my_config import Config
 from .my_models import Book, CreateBookReponse, CreateBookRequest
 
-client = clientele_framework.Client(config=Config())
+client = clientele_api.APIClient(config=Config())
 
 @client.post("/books")
 def create_user(
@@ -56,7 +56,7 @@ def get_book_title(book_id: int, result: Book) -> str:
     return result.title
 ```
 
-The framework allows you to build elegant API integrations:
+Clientele allows you to build elegant API integrations:
 
 ```python
 # service.py
@@ -95,7 +95,7 @@ Clientele can scaffold an API client from an OpenAPI schema with:
 
 ![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
 
-## API REPL
+## API CLI explorer
 
 Clientele has an `explore` mode for quickly testing and debugging APIs through an interactive REPL:
 
@@ -119,7 +119,7 @@ uvx clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/maste
 - **Modify configuration** within the REPL as you're testing.
 - **Run debug mode** to see diagnostics and errors.
 
-## Works with your favourite API frameworks
+## Works with your favourite Python API Servers
 
 We have specifically built and tested Clientele to be 100% compatible with OpenAPI schemas generated from:
 

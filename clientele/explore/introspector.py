@@ -174,9 +174,9 @@ class ClientIntrospector:
             sig = inspect.signature(func)
             parameters: dict[str, dict[str, typing.Any]] = {}
 
-            # Skip 'self' parameter for methods and framework-injected parameters
+            # Skip 'self' parameter for methods and clientele-injected parameters
             params_to_skip = {"self"} if is_method else set()
-            # Framework-injected parameters that should not be exposed to users
+            # Clientele-injected parameters that should not be exposed to users
             params_to_skip.update({"result", "response"})
 
             for param_name, param in sig.parameters.items():
@@ -224,14 +224,14 @@ class ClientIntrospector:
         Args:
             name: Operation name
             docstring: Operation docstring
-            func: The function to inspect (for framework decorator extraction)
+            func: The function to inspect (for clientele decorator extraction)
 
         Returns:
             HTTP method string (GET, POST, PUT, PATCH, DELETE, or UNKNOWN)
         """
-        # First try to extract from framework decorator closure (for new framework-based clients)
+        # First try to extract from clientele decorator closure (for new clientele-based clients)
         if func is not None:
-            method = self._extract_method_from_framework_decorator(func)
+            method = self._extract_method_from_clientele_decorator(func)
             if method:
                 return method
 
@@ -265,10 +265,10 @@ class ClientIntrospector:
 
         return "UNKNOWN"
 
-    def _extract_method_from_framework_decorator(self, func: typing.Callable) -> str | None:
-        """Extract HTTP method from framework decorator closure.
+    def _extract_method_from_clientele_decorator(self, func: typing.Callable) -> str | None:
+        """Extract HTTP method from clientele decorator closure.
 
-        For framework-based clients using @client.get(), @client.post(), etc.,
+        For clientele-based clients using @client.get(), @client.post(), etc.,
         the decorator stores a _RequestContext object in the closure that contains
         the HTTP method.
 
@@ -305,7 +305,7 @@ class ClientIntrospector:
 
         except (AttributeError, TypeError, KeyError):
             # If anything goes wrong during extraction, fail silently
-            # This is expected for non-framework clients
+            # This is expected for non-clientele clients
             pass
 
         return None

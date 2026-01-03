@@ -3,8 +3,8 @@ import typing
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 
 from clientele.generators import base_clients
-from clientele.generators.framework import writer
-from clientele.generators.framework.generators import schemas
+from clientele.generators.api import writer
+from clientele.generators.api.generators import schemas
 
 
 class FrameworkHTTPPlaceholder:
@@ -24,7 +24,7 @@ class FrameworkHTTPPlaceholder:
 
 class ClientsGenerator(base_clients.BaseClientsGenerator):
     """
-    Handles all the content generated in the client.py file for the framework generator.
+    Handles all the content generated in the client.py file for the api generator.
     This generates decorator-based client functions instead of traditional functions.
     """
 
@@ -43,13 +43,13 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         # Pass placeholder as http_generator to base class
         super().__init__(spec, output_dir, schemas_generator, self.http_placeholder, asyncio)
         self.writer = writer
-        # Override template map for framework-specific templates
+        # Override template map for clientele-specific templates
         self.method_template_map = dict(
-            get="framework_get_method.jinja2",
-            delete="framework_get_method.jinja2",
-            post="framework_post_method.jinja2",
-            put="framework_post_method.jinja2",
-            patch="framework_post_method.jinja2",
+            get="api_get_method.jinja2",
+            delete="api_get_method.jinja2",
+            post="api_post_method.jinja2",
+            put="api_post_method.jinja2",
+            patch="api_post_method.jinja2",
         )
 
     def get_response_map(self, func_name: str) -> typing.Optional[str]:
@@ -85,7 +85,7 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         additional_parameters: list[dict],
         summary: typing.Optional[str],
     ) -> None:
-        """Override to add response_map to template context and fix URL handling for framework."""
+        """Override to add response_map to template context and fix URL handling for clientele api."""
         from rich import console as rich_console
 
         from clientele.generators.standard import utils
@@ -107,7 +107,7 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
             additional_parameters=additional_parameters,
         )
         # Replace path parameters in URL with sanitized names but DON'T add query args
-        # In the framework, query args are passed as function parameters, not in the URL
+        # In the clientele api, query args are passed as function parameters, not in the URL
         api_url = utils.replace_path_parameters(url, function_arguments.param_name_map)
 
         if method in ["post", "put", "patch"] and not operation.get("requestBody"):
@@ -126,7 +126,7 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         else:
             header_class_name = None
 
-        # Get response_map for framework decorator
+        # Get response_map for clientele api decorator
         response_map = self.get_response_map(func_name)
 
         content = template.render(

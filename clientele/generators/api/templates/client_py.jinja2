@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import typing
 
-from clientele import framework as clientele_framework
+from clientele import api as clientele_api
 {% if client_project_directory_path %}from {{client_project_directory_path}} import config, schemas
 {% else %}from . import config, schemas
 {% endif %}
-client = clientele_framework.Client(config=config.Config())
+client = clientele_api.APIClient(config=config.Config())

@@ -2,7 +2,7 @@
 
 !!! warning
 
-    This is for the "barebones" style clients. Please see [framework overview](framework-overview.md) if you are using Clientele framework.
+    This is for the "barebones" style clients. Please see [clientele api overview](api-overview.md) if you are using Clientele API.
 
 When you generate a client with Clientele, it creates several files that work together to provide a complete HTTP API client. 
 

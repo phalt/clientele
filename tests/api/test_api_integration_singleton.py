@@ -1,7 +1,7 @@
 """
-Integration test to demonstrate connection pooling with framework client pattern.
+Integration test to demonstrate connection pooling with api client pattern.
 
-These tests simulate how auto-generated framework clients work, where a single Client
+These tests simulate how auto-generated clients work, where a single APIClient
 instance (created at module level) is shared across multiple decorated API functions.
 The singleton httpx clients enable connection pooling across all API calls.
 """
@@ -13,7 +13,7 @@ import pytest
 from pydantic import BaseModel
 from respx import MockRouter
 
-from clientele import framework as clientele_framework
+from clientele import api as clientele_api
 
 BASE_URL = "https://api.example.com"
 
@@ -41,7 +41,7 @@ class Config(BaseModel):
 def test_generated_client_singleton_reuses_connections(respx_mock: MockRouter) -> None:
     """
     Test that simulates how a generated client would work with singleton httpx clients.
-    The generated client creates one Client instance and all decorated functions use it,
+    The generated client creates one APIClient instance and all decorated functions use it,
     which should reuse the same httpx.Client for connection pooling.
     """
     # Mock multiple endpoints
@@ -50,8 +50,8 @@ def test_generated_client_singleton_reuses_connections(respx_mock: MockRouter) -
     respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 3, "name": "Charlie"}))
 
     # This simulates how auto-generated client code creates the client (singleton pattern)
-    # The generated code has: client = clientele_framework.Client(config=config.Config())
-    client = clientele_framework.Client(base_url=BASE_URL)
+    # The generated code has: client = clientele_api.APIClient(config=config.Config())
+    client = clientele_api.APIClient(base_url=BASE_URL)
 
     # Store reference to verify singleton behavior
     original_sync_client = client._sync_client
@@ -95,8 +95,8 @@ def test_custom_httpx_client_with_generated_pattern(respx_mock: MockRouter) -> N
         limits=httpx.Limits(max_keepalive_connections=20, max_connections=100),
     )
 
-    # Pass the custom client to the framework Client
-    client = clientele_framework.Client(base_url=BASE_URL, httpx_client=custom_client)
+    # Pass the custom client to the api APIClient
+    client = clientele_api.APIClient(base_url=BASE_URL, httpx_client=custom_client)
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
