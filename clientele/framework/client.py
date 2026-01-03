@@ -417,10 +417,7 @@ class Client:
         )
         result = self._finalise_call(prepared, response)
         if inspect.isawaitable(result):
-            result = await result
-        # For async functions, check if the awaited result is None and default to parsed_result
-        if result is None and "result" in prepared.call_arguments:
-            return prepared.call_arguments["result"]
+            return await result
         return result
 
     def _prepare_body(
@@ -508,13 +505,7 @@ class Client:
             prepared.call_arguments["response"] = response
 
         # Call the function with all arguments including injected ones
-        user_return_value = prepared.context.func(**prepared.call_arguments)
-
-        # If the user function returns None, default to returning the parsed result
-        if user_return_value is None:
-            return parsed_result
-
-        return user_return_value
+        return prepared.context.func(**prepared.call_arguments)
 
     def _parse_response(
         self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None
