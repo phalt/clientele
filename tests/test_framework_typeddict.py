@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from typing import TypedDict
+
 import httpx
 import pytest
 from respx import MockRouter
-from typing import TypedDict
 
 from clientele.framework import Client
+
 
 # Test TypedDict definitions
 class UserDict(TypedDict):

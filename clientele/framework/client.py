@@ -46,7 +46,7 @@ def _is_pydantic_model(annotation: Any) -> bool:
 def _is_typeddict(annotation: Any) -> bool:
     """
     Check if annotation is a TypedDict class.
-    
+
     This wrapper exists for:
     1. Consistency with _is_pydantic_model helper
     2. Future extensibility if TypedDict detection needs special handling
@@ -600,7 +600,7 @@ class Client:
     def _validate_typeddict(self, typeddict_class: type, payload: Any) -> dict[str, Any]:
         """
         Validate payload as a TypedDict.
-        
+
         TypedDicts don't have runtime validation like Pydantic models,
         so we just ensure the payload is a dict and return it.
         The type checker will verify the structure at static analysis time.
