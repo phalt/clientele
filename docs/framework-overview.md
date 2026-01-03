@@ -11,7 +11,7 @@ It intentionally works similar to FastAPI route decorators, which has taught us 
 With Clientele we can follow these same rules but flip around who is sending and receiving data:
 
 - the decorator issues the http request with the validated payload
-- the decorator parses the http response and returns a typed object back to the function.
+- the decorator parses the http response and injects it into the function via the `result` parameter
 - The function becomes the high-level abstraction for the endpoint and defines the typed input and typed output for the rest of your application.
 
 ## GET example
@@ -29,7 +29,7 @@ class User(BaseModel):
     email: str
 
 @client.get("/users/{user_id}")
-def get_user(user_id: int, include_details: bool = True, result: User) -> User:
+def get_user(user_id: int, result: User, include_details: bool = True) -> User:
     return result
 
 user = get_user(42)
@@ -39,8 +39,9 @@ How it works:
 
 - Path parameters inside `{}` are filled from the function arguments (e.g. `user_id`).
 - Any remaining keyword arguments (like `include_details` above) become query parameters, but you can also provide a dict parameter `query={...}`.
-- The return type (`-> User`) drives response parsing.
-- Your function is injected with a `result` parameter - the response payload hydrated into your function's return type.
+- The **`result` parameter is mandatory** and its type annotation (`User`) drives response parsing.
+- Your function is injected with a `result` parameter - the response payload hydrated into your `result` parameter's type.
+- The function's return value is independent - you can return the result directly, transform it, or return something completely different.
 
 ## POST example
 
@@ -70,6 +71,7 @@ How body-based methods (POST, PUT, PATCH, DELETE) work:
 - The request body must be supplied via the `data` keyword argument.
 - The `data` object must be a Pydantic model.
 - Before being sent it will be validated and serialized to JSON automatically.
+- The **`result` parameter is mandatory** and determines how the response is parsed.
 
 ## PUT, PATCH, and DELETE examples
 
@@ -112,19 +114,46 @@ def delete_user(user_id: int, *, result: None) -> None:
 delete_user(1)
 ```
 
+## Return value independence
+
+The `result` parameter defines **what response you get from the API**, but your function's return value is independent. This gives you flexibility:
+
+```python
+# Return the result directly (most common)
+@client.get("/users/{user_id}")
+def get_user(user_id: int, result: User) -> User:
+    return result
+
+# Return a derived value
+@client.get("/users/{user_id}")
+def get_user_email(user_id: int, result: User) -> str:
+    return result.email
+
+# Return multiple values as a tuple
+@client.post("/events")
+def create_event(data: EventIn, result: EventOut) -> tuple[EventOut, str]:
+    log.info("Created event %s", result.id)
+    return result, "success"
+
+# Return None explicitly or implicitly - defaults to returning result
+@client.get("/users/{user_id}")
+def get_user_auto(user_id: int, result: User) -> User:
+    pass  # Implicitly returns None, so the wrapper returns result
+```
+
 ## Injected parameters
 
 Clientele will inject the following parameters into your function once an http response is returned:
 
-- `result`: an instance of return type of the function. This **must** be returned by the function for the decorator to work.
-- `response`: the `httpx.Response` - useful for logging, debugging etc.
+- `result`: an instance of the type specified in the `result` parameter annotation. This parameter is **mandatory** and its type annotation determines how the response is parsed.
+- `response`: the `httpx.Response` - useful for logging, debugging etc. (optional)
 
 ## Response parsing rules
 
 - If the response has a JSON content type, the payload is decoded from JSON.
 - If the response type is not JSON then a `str` is returned.
 - Empty body responses return `None`.
-- Return annotations drive response data validation with the `model_validate` method on pydantic models.
+- The `result` parameter's type annotation drives response data validation with the `model_validate` method on pydantic models.
 
 ## Handling multiple response bodies and status codes
 
@@ -176,8 +205,9 @@ except APIException as e:
 
 1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele.framework` for reference, or any standard HTTP status code integers (100-599).
 2. **Values must be Pydantic models**: Each value must be a `BaseModel` subclass.
-3. **Return type must include all models**: The function's return type annotation must be a Union containing all the Pydantic models used in `response_map`.
+3. **Result parameter type must include all models**: The `result` parameter's type annotation must be a Union containing all the Pydantic models used in `response_map`.
 4. **Unexpected status codes raise `APIException`**: If the server returns a status code not in the `response_map`, an `APIException` is raised with details about the unexpected status.
+5. **Precedence**: If `response_map` provides a model for the actual HTTP status code, that model is used. Otherwise, the `result` parameter annotation is used as the default for 2xx responses.
 
 #### Multi-status example with POST
 

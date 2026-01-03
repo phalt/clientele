@@ -757,4 +757,3 @@ async def test_async_function_returns_derived_value(respx_mock: MockRouter) -> N
     user_id = await get_user_id(5)
     assert user_id == 5
     assert isinstance(user_id, int)
-
