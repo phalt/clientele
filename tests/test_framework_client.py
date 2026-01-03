@@ -534,7 +534,7 @@ def test_response_map_non_pydantic_model_raises_error() -> None:
 
 
 def test_response_map_missing_return_type_raises_error() -> None:
-    """Test that missing model in return type raises ValueError."""
+    """Test that missing model in result parameter type raises ValueError."""
     client = Client(base_url=BASE_URL)
 
     with pytest.raises(ValueError, match="Response model 'ErrorResponse' for status code 404"):
@@ -550,20 +550,49 @@ def test_response_map_missing_return_type_raises_error() -> None:
             return result
 
 
-def test_response_map_no_return_annotation_raises_error() -> None:
-    """Test that function without return annotation raises ValueError."""
+def test_result_parameter_required() -> None:
+    """Test that function without result parameter raises TypeError."""
     client = Client(base_url=BASE_URL)
 
-    with pytest.raises(ValueError, match="must have a return type annotation"):
+    with pytest.raises(TypeError, match="must have a 'result' parameter"):
 
-        @client.get(
-            "/users/{user_id}",
-            response_map={
-                200: SuccessResponse,
-            },
-        )
-        def get_user(user_id: int, result: SuccessResponse):  # type: ignore[return]  # No return annotation
+        @client.get("/users/{user_id}")
+        def get_user(user_id: int) -> User:  # Missing result parameter
+            pass
+
+
+def test_result_parameter_annotation_required() -> None:
+    """Test that result parameter without annotation raises TypeError."""
+    client = Client(base_url=BASE_URL)
+
+    with pytest.raises(TypeError, match="lacks a type annotation"):
+
+        @client.get("/users/{user_id}")
+        def get_user(user_id: int, result) -> User:  # type: ignore[no-untyped-def]  # result without annotation
             return result
+
+
+def test_return_value_independent_of_result_type() -> None:
+    """Test that function can return a different type than result."""
+    client = Client(base_url=BASE_URL)
+
+    @client.get("/users/{user_id}")
+    def get_user_name(user_id: int, result: User) -> str:
+        return result.name
+
+    # This decorator should be allowed - return type is different from result type
+
+
+def test_function_returns_none_defaults_to_result() -> None:
+    """Test that when function returns None, the wrapper returns result."""
+    # This test will be added when we have a mocked response
+    pass
+
+
+def test_function_explicit_return_overrides_result() -> None:
+    """Test that explicit return value is used instead of result."""
+    # This test will be added when we have a mocked response
+    pass
 
 
 def test_signature_preservation_for_ide_support() -> None:
@@ -632,3 +661,100 @@ def test_async_signature_preservation() -> None:
 
     # Check that it's still recognized as async
     assert inspect.iscoroutinefunction(get_user_async)
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_function_returns_none_defaults_to_result_sync(respx_mock: MockRouter) -> None:
+    """Test that when function returns None, the wrapper returns the hydrated result."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Alice"}))
+
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User) -> User:
+        # Function returns None implicitly (no return statement)
+        pass
+
+    user = get_user(1)
+    assert user == User(id=1, name="Alice")
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_function_explicit_none_return_defaults_to_result(respx_mock: MockRouter) -> None:
+    """Test that explicit None return defaults to result."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Bob"}))
+
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User) -> User | None:
+        return None
+
+    user = get_user(2)
+    assert user == User(id=2, name="Bob")
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_function_returns_derived_value(respx_mock: MockRouter) -> None:
+    """Test that function can return a derived value different from result type."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Charlie"}))
+
+    @client.get("/users/{user_id}")
+    def get_user_name(user_id: int, result: User) -> str:
+        return result.name
+
+    name = get_user_name(3)
+    assert name == "Charlie"
+    assert isinstance(name, str)
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_function_returns_tuple_with_result(respx_mock: MockRouter) -> None:
+    """Test that function can return a tuple including the result."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Eve"}))
+
+    @client.post("/users")
+    def create_user(data: CreateUserRequest, result: User) -> tuple[User, str]:
+        return result, "created"
+
+    user, status = create_user(data=CreateUserRequest(name="Eve"))
+    assert user == User(id=10, name="Eve")
+    assert status == "created"
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_async_function_returns_none_defaults_to_result(respx_mock: MockRouter) -> None:
+    """Test that async function returning None defaults to result."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/4").mock(return_value=httpx.Response(200, json={"id": 4, "name": "David"}))
+
+    @client.get("/users/{user_id}")
+    async def get_user(user_id: int, result: User) -> User:
+        pass  # Returns None implicitly
+
+    user = await get_user(4)
+    assert user == User(id=4, name="David")
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_async_function_returns_derived_value(respx_mock: MockRouter) -> None:
+    """Test that async function can return a derived value."""
+    client = Client(base_url=BASE_URL)
+
+    respx_mock.get("/users/5").mock(return_value=httpx.Response(200, json={"id": 5, "name": "Frank"}))
+
+    @client.get("/users/{user_id}")
+    async def get_user_id(user_id: int, result: User) -> int:
+        return result.id
+
+    user_id = await get_user_id(5)
+    assert user_id == 5
+    assert isinstance(user_id, int)
+

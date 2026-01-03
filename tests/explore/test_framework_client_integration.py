@@ -57,19 +57,19 @@ from test_client import config, schemas
 client = clientele.framework.Client(config=config.Config())
 
 @client.get("/users")
-def list_users() -> list[schemas.User]:  # type: ignore[return]
+def list_users(result: list[schemas.User]) -> list[schemas.User]:
     '''List all users.'''
-    ...
+    return result
 
 @client.post("/users")
-def create_user(data: schemas.CreateUserRequest) -> schemas.User:  # type: ignore[return]
+def create_user(data: schemas.CreateUserRequest, result: schemas.User) -> schemas.User:
     '''Create a new user.'''
-    ...
+    return result
 
 @client.get("/users/{user_id}")
-def get_user(user_id: int) -> schemas.User:  # type: ignore[return]
+def get_user(user_id: int, result: schemas.User) -> schemas.User:
     '''Get a specific user by ID.'''
-    ...
+    return result
 """
         (client_dir / "client.py").write_text(client_content)
 

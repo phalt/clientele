@@ -174,8 +174,10 @@ class ClientIntrospector:
             sig = inspect.signature(func)
             parameters: dict[str, dict[str, typing.Any]] = {}
 
-            # Skip 'self' parameter for methods
+            # Skip 'self' parameter for methods and framework-injected parameters
             params_to_skip = {"self"} if is_method else set()
+            # Framework-injected parameters that should not be exposed to users
+            params_to_skip.update({"result", "response"})
 
             for param_name, param in sig.parameters.items():
                 if param_name in params_to_skip:
