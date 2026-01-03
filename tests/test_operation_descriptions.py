@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from .test_class_client.client import Client
-from .test_client import client
+from .old_clients.test_class_client.client import Client
+from .old_clients.test_client import client
 
 
 def test_function_with_description_has_description_in_docstring():

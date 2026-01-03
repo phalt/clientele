@@ -1,5 +1,26 @@
 # Change log
 
+## 1.3.0
+
+### Introducing **Clientele API** - a different way to think about Python API Clients
+
+- Clientele API is a decorator-driven http client that can create elegant API integrations.
+- Clientele API is considered a beta project for this release. It is an evolving idea that has been tested thoroughly and it works well in ideal conditions. Small changes to the API and usage may occur over time as we encounter unexpected scenarios.
+
+### Generate scaffolding for OpenAPI projects with **clientele API**
+
+- The `scaffold-api` command will produce scaffolding from an OpenAPI schema and uses the new clientele api.
+
+### Improved documentation
+
+- New documentation added to cover **Clientele API**.
+- Documentation sections have been reorganised to reflect the key features of Clientele.
+
+### 2.0.0 deprecation notice
+
+- When **clientele API** reaches maturity, support for the current "barebones" style of OpenAPI scaffolders will be deprecated.
+- This will be marked as the `2.0.0` release.
+
 ## 1.2.0
 
 - Print operation information in explorer by typing the name of the operation without parenthesis. Prints information such as the docstring, return type, and input arguments.

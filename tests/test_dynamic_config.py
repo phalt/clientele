@@ -6,11 +6,11 @@ import pytest
 from httpx import Response
 from respx import MockRouter
 
-from .async_test_class_client import config as async_config
-from .async_test_class_client import schemas as async_schemas
-from .async_test_class_client.client import Client as AsyncClient
-from .test_class_client import config, schemas
-from .test_class_client.client import Client
+from .old_clients.async_test_class_client import config as async_config
+from .old_clients.async_test_class_client import schemas as async_schemas
+from .old_clients.async_test_class_client.client import Client as AsyncClient
+from .old_clients.test_class_client import config, schemas
+from .old_clients.test_class_client.client import Client
 
 
 def test_client_with_custom_base_url(respx_mock: MockRouter):

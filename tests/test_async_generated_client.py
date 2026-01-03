@@ -9,7 +9,7 @@ import pytest
 from httpx import Response
 from respx import MockRouter
 
-from .async_test_client import client, config, http, schemas
+from .old_clients.async_test_client import client, config, http, schemas
 
 BASE_URL = config.config.api_base_url
 

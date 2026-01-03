@@ -3,6 +3,8 @@ info:
   title: DRF Example API
   version: 1.0.0
   description: Example API for Clientele documentation
+servers:
+- url: http://localhost:8000
 paths:
   /api/users/:
     get:

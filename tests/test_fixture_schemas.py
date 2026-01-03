@@ -58,7 +58,8 @@ def validate_generated_python_file(file_path: Path, file_content: str, fixture_p
 
 
 @pytest.mark.parametrize("fixture_path", FIXTURE_SCHEMAS)
-def test_fixture_schema_generates_client(fixture_path):
+@pytest.mark.parametrize("client_generator", [StandardGenerator])
+def test_fixture_schema_generates_client(fixture_path, client_generator) -> None:
     """Test that each fixture schema can generate a working client."""
     base_path = Path(__file__).parent.parent
     spec_path = base_path / fixture_path
@@ -77,7 +78,7 @@ def test_fixture_schema_generates_client(fixture_path):
         output_dir = Path(tmpdir) / "generated_client"
 
         # Create generator
-        generator = StandardGenerator(
+        generator = client_generator(
             spec=spec,
             asyncio=False,
             regen=True,
@@ -95,7 +96,6 @@ def test_fixture_schema_generates_client(fixture_path):
         # Verify expected files were created
         assert (output_dir / "client.py").exists(), f"client.py not created for {fixture_path}"
         assert (output_dir / "schemas.py").exists(), f"schemas.py not created for {fixture_path}"
-        assert (output_dir / "http.py").exists(), f"http.py not created for {fixture_path}"
         assert (output_dir / "config.py").exists(), f"config.py not created for {fixture_path}"
         assert (output_dir / "__init__.py").exists(), f"__init__.py not created for {fixture_path}"
 

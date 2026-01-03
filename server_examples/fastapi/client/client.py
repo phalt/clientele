@@ -1,32 +1,39 @@
 from __future__ import annotations
 
-import typing  # noqa
+import typing
 
-from server_examples.fastapi.client import http, schemas  # noqa
+from clientele import api as clientele_api
+from server_examples.fastapi.client import config, schemas
+
+client = clientele_api.APIClient(config=config.Config())
 
 
-def list_users() -> schemas.ResponseListUsers:
+@client.get("/users")
+def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
     """Get Users
 
     List all users.
     """
-
-    response = http.get(url="/users")
-    return http.handle_response(list_users, response)
+    return result
 
 
-def create_user(data: schemas.CreateUserRequest) -> schemas.HTTPValidationError | schemas.UserResponse:
+@client.post("/users", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
+def create_user(
+    data: schemas.CreateUserRequest,
+    result: schemas.HTTPValidationError | schemas.UserResponse,
+) -> schemas.HTTPValidationError | schemas.UserResponse:
     """Create User
 
     Create a new user.
     """
-
-    response = http.post(url="/users", data=data.model_dump())
-    return http.handle_response(create_user, response)
+    return result
 
 
+@client.get("/users/{user_id}", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
 def get_user(
-    user_id: int, include_posts: typing.Optional[bool] = None
+    user_id: int,
+    result: schemas.HTTPValidationError | schemas.UserResponse,
+    include_posts: typing.Optional[bool] = None,
 ) -> schemas.HTTPValidationError | schemas.UserResponse:
     """Get User
 
@@ -34,6 +41,4 @@ def get_user(
 
     The include_posts parameter is for demonstration purposes.
     """
-
-    response = http.get(url=f"/users/{user_id}?include_posts={include_posts}")
-    return http.handle_response(get_user, response)
+    return result

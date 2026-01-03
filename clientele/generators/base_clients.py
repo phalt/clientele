@@ -56,11 +56,23 @@ class ParametersResponse(pydantic.BaseModel):
                 optional_args.append(f"{k}: {v} = None")
         return ", ".join(optional_args) if optional_args else ""
 
+    def get_required_path_args_as_string(self) -> str:
+        """Get only required path parameters (for clientele-api generator)."""
+        required_args = []
+        for k, v in self.path_args.items():
+            if not v.startswith("typing.Optional["):
+                required_args.append(f"{k}: {v}")
+        return ", ".join(required_args) if required_args else ""
+
+    def has_query_args(self) -> bool:
+        """Check if there are any query parameters."""
+        return len(self.query_args) > 0
+
 
 class BaseClientsGenerator:
     """
     Base class for generating client code from OpenAPI specifications.
-    Provides common functionality for both standard and class-based client generators.
+    Provides common functionality for client generators.
     """
 
     method_template_map: dict[str, str]
