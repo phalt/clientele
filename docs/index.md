@@ -1,7 +1,7 @@
 # ⚜️ Clientele
 
 <div style="text-align: center;">
-    <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
+    <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header_1.png">
 
 <p>
     <a href="https://pypi.org/project/clientele">
