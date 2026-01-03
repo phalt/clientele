@@ -557,7 +557,7 @@ def test_result_parameter_required() -> None:
     with pytest.raises(TypeError, match="must have a 'result' parameter"):
 
         @client.get("/users/{user_id}")
-        def get_user(user_id: int) -> User:  # Missing result parameter
+        def get_user(user_id: int) -> User:  # type: ignore
             pass
 
 
@@ -579,8 +579,6 @@ def test_return_value_independent_of_result_type() -> None:
     @client.get("/users/{user_id}")
     def get_user_name(user_id: int, result: User) -> str:
         return result.name
-
-    # This decorator should be allowed - return type is different from result type
 
 
 def test_signature_preservation_for_ide_support() -> None:
