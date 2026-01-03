@@ -512,7 +512,7 @@ def test_response_map_custom_status_code_works() -> None:
 
 
 def test_response_map_non_pydantic_model_raises_error() -> None:
-    """Test that non-Pydantic model in response_map raises ValueError."""
+    """Test that non-Pydantic model and non-TypedDict in response_map raises ValueError."""
     from typing import cast
 
     client = APIClient(base_url=BASE_URL)
@@ -520,7 +520,7 @@ def test_response_map_non_pydantic_model_raises_error() -> None:
     class NotAModel:
         pass
 
-    with pytest.raises(ValueError, match="must be a Pydantic BaseModel subclass"):
+    with pytest.raises(ValueError, match="ust be a Pydantic BaseModel subclass or TypedDict"):
 
         @client.get(
             "/users/{user_id}",

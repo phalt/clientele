@@ -5,7 +5,7 @@ import re
 import types
 import typing
 from functools import wraps
-from typing import Any, Callable, TypeVar, cast, get_type_hints
+from typing import Any, Callable, TypeVar, cast, get_type_hints, is_typeddict
 from urllib.parse import quote
 
 import httpx
@@ -38,6 +38,23 @@ _F = TypeVar("_F", bound=Callable[..., Any])
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
 
 
+def _is_pydantic_model(annotation: Any) -> bool:
+    """Check if annotation is a Pydantic BaseModel class."""
+    return inspect.isclass(annotation) and issubclass(annotation, BaseModel)
+
+
+def _is_typeddict(annotation: Any) -> bool:
+    """
+    Check if annotation is a TypedDict class.
+
+    This wrapper exists for:
+    1. Consistency with _is_pydantic_model helper
+    2. Future extensibility if TypedDict detection needs special handling
+    3. Centralized location for TypedDict checking logic
+    """
+    return is_typeddict(annotation)
+
+
 class _RequestContext(BaseModel):
     """
     Captures metadata about a decorated HTTP method.
@@ -54,7 +71,7 @@ class _RequestContext(BaseModel):
     func: Callable[..., Any]
     signature: inspect.Signature
     type_hints: dict[str, Any]
-    response_map: dict[int, type[BaseModel]] | None = None
+    response_map: dict[int, type[Any]] | None = None
 
 
 def _validate_result_parameter(
@@ -86,7 +103,7 @@ def _validate_result_parameter(
 
 
 def build_request_context(
-    method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[BaseModel]] | None = None
+    method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[Any]] | None = None
 ) -> _RequestContext:
     signature = inspect.signature(func)
     # Get type hints with proper handling of forward references
@@ -115,10 +132,10 @@ def build_request_context(
 
 
 def _validate_response_map(
-    response_map: dict[int, type[BaseModel]], func: Callable[..., Any], type_hints: dict[str, Any]
+    response_map: dict[int, type[Any]], func: Callable[..., Any], type_hints: dict[str, Any]
 ) -> None:
     """
-    Validates that response_map contains valid status codes and Pydantic models,
+    Validates that response_map contains valid status codes and Pydantic models or TypedDicts,
     and that all response models are in the function's result parameter type annotation.
     """
     # Validate all keys are valid HTTP status codes
@@ -126,10 +143,12 @@ def _validate_response_map(
         if not http_status.codes.is_valid_status_code(status_code):
             raise ValueError(f"Invalid status code {status_code} in response_map")
 
-    # Validate all values are Pydantic BaseModel subclasses
+    # Validate all values are Pydantic BaseModel subclasses or TypedDict classes
     for status_code, model_class in response_map.items():
-        if not (inspect.isclass(model_class) and issubclass(model_class, BaseModel)):
-            raise ValueError(f"response_map value for status code {status_code} must be a Pydantic BaseModel subclass")
+        if not (_is_pydantic_model(model_class) or _is_typeddict(model_class)):
+            raise ValueError(
+                f"response_map value for status code {status_code} must be a Pydantic BaseModel subclass or TypedDict"
+            )
 
     # Get the result parameter annotation
     result_annotation = type_hints.get("result", inspect._empty)
@@ -259,23 +278,23 @@ class APIClient:
         """Close the asynchronous HTTP client."""
         await self._async_client.aclose()
 
-    def get(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+    def get(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("GET", path, response_map=response_map)
 
-    def post(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+    def post(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("POST", path, response_map=response_map)
 
-    def put(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+    def put(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("PUT", path, response_map=response_map)
 
-    def patch(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+    def patch(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("PATCH", path, response_map=response_map)
 
-    def delete(self, path: str, *, response_map: dict[int, type[BaseModel]] | None = None) -> Callable[[_F], _F]:
+    def delete(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
         return self._create_decorator("DELETE", path, response_map=response_map)
 
     def _create_decorator(
-        self, method: str, path: str, *, response_map: dict[int, type[BaseModel]] | None = None
+        self, method: str, path: str, *, response_map: dict[int, type[Any]] | None = None
     ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
             context = build_request_context(method, path, func, response_map=response_map)
@@ -457,7 +476,7 @@ class APIClient:
         query_params: dict[str, Any] | None,
         data_payload: dict[str, Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type[BaseModel]] | None = None,
+        response_map: dict[int, type[Any]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -480,7 +499,7 @@ class APIClient:
         query_params: dict[str, Any] | None,
         data_payload: dict[str, Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type[BaseModel]] | None = None,
+        response_map: dict[int, type[Any]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -508,7 +527,7 @@ class APIClient:
         return prepared.context.func(**prepared.call_arguments)
 
     def _parse_response(
-        self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None
+        self, response: httpx.Response, annotation: Any, response_map: dict[int, type[Any]] | None = None
     ) -> Any:
         # Extract payload from response
         payload: Any
@@ -541,7 +560,14 @@ class APIClient:
             model_class = response_map[status_code]
             if payload is None:
                 return None
-            return self._validate_model(model_class, payload)
+            # Check if it's a Pydantic model or TypedDict
+            if _is_pydantic_model(model_class):
+                return self._validate_model(model_class, payload)
+            elif _is_typeddict(model_class):
+                return self._validate_typeddict(model_class, payload)
+            else:
+                # Fallback to returning payload as-is
+                return payload
 
         # Standard parsing logic when no response_map
         if annotation is inspect._empty:
@@ -550,8 +576,11 @@ class APIClient:
         if payload is None:
             return None
 
-        if inspect.isclass(annotation) and issubclass(annotation, BaseModel):
+        if _is_pydantic_model(annotation):
             return self._validate_model(annotation, payload)
+
+        if _is_typeddict(annotation):
+            return self._validate_typeddict(annotation, payload)
 
         if _HAS_TYPE_ADAPTER and TypeAdapter is not None:
             adapter = TypeAdapter(annotation)
@@ -567,6 +596,19 @@ class APIClient:
         if hasattr(model_class, "model_validate"):
             return model_class.model_validate(payload)
         return model_class.parse_obj(payload)
+
+    def _validate_typeddict(self, typeddict_class: type[Any], payload: Any) -> dict[str, Any]:
+        """
+        Validate payload as a TypedDict.
+
+        TypedDicts don't have runtime validation like Pydantic models,
+        so we just ensure the payload is a dict and return it.
+        The type checker will verify the structure at static analysis time.
+        """
+        if not isinstance(payload, dict):
+            raise TypeError(f"Expected dict for TypedDict {typeddict_class.__name__}, got {type(payload).__name__}")
+        # Return the payload as-is; TypedDict is for type checking, not runtime validation
+        return payload
 
     def _substitute_path(self, path_template: str, values: dict[str, Any]) -> str:
         def replacer(match: re.Match[str]) -> str:
