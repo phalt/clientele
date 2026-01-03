@@ -51,7 +51,7 @@ def create_user(user: CreateUserRequest):
 
 
 @app.get("/users/{user_id}", operation_id="get_user", response_model=UserResponse)
-def get_user(user_id: int, include_posts: bool = False):
+def get_user(user_id: int):
     """
     Get a specific user by ID.
 

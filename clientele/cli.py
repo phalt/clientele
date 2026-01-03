@@ -100,15 +100,18 @@ def _prepare_spec(console, url: str | None = None, file: str | None = None):
 @click.group()
 def cli_group():
     """
-    Clientele:  The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja
-    https://github.com/phalt/clientele
+    ⚜️ Clientele: A different way to think about Python API Clients
+
+    📚 Docs: https://github.com/phalt/clientele
+
+    🐙 GitHub: https://github.com/phalt/clientele
     """
 
 
 @click.command()
 def version():
     """
-    Print the current version of clientele
+    🔢 Print the current version of clientele
     """
     from clientele import settings
 
@@ -123,7 +126,7 @@ def version():
 @click.option("-r", "--regen", help="Regenerate client", required=False)
 def generate(url, file, output, asyncio, regen):
     """
-    Generate a new client from an OpenAPI schema
+    ⚠️ DEPRECATED - Generate a new client from an OpenAPI schema
     """
     from rich.console import Console
 
@@ -145,7 +148,7 @@ def generate(url, file, output, asyncio, regen):
 @click.option("-o", "--output", help="Directory for the generated client", required=True)
 def generate_basic(output):
     """
-    Generate a "basic" file structure, no code.
+    🕳️ Generate a "basic" file structure, no code.
     """
     from rich.console import Console
 
@@ -168,7 +171,7 @@ def generate_basic(output):
 @click.option("-r", "--regen", help="Regenerate client", required=False)
 def generate_class(url, file, output, asyncio, regen):
     """
-    Generate a class-based client from an OpenAPI schema
+    ⚠️ DEPRECATED - Generate a class-based client from an OpenAPI schema
     """
     from rich.console import Console
 
@@ -187,12 +190,37 @@ def generate_class(url, file, output, asyncio, regen):
 
 
 @click.command()
+@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
+@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
+@click.option("-o", "--output", help="Directory for the generated client", required=True)
+@click.option("-a", "--asyncio", help="Generate async client", required=False)
+@click.option("-r", "--regen", help="Regenerate client", required=False)
+def scaffold_api(url, file, output, asyncio, regen):
+    """
+    🏗️ Scaffold an API client from an OpenAPI schema.
+    """
+    from rich.console import Console
+
+    console = Console()
+
+    from clientele.generators.api.generator import APIGenerator
+
+    spec = _prepare_spec(console=console, url=url, file=file)
+    if not spec:
+        return
+    generator = APIGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
+    if generator.prevent_accidental_regens():
+        generator.generate()
+        console.log("\n[green]⚜️ client generated! ⚜️ \n")
+
+
+@click.command()
 @click.option("-c", "--client", help="Path to generated client directory", required=False)
 @click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
 @click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
 def explore(client, file, url):
     """
-    Interactive API explorer - test and discover APIs interactively
+    🗺️ Interactive API REPL explorer
     """
     from rich.console import Console
 
@@ -276,6 +304,7 @@ def explore(client, file, url):
 cli_group.add_command(generate)
 cli_group.add_command(generate_basic)
 cli_group.add_command(generate_class)
+cli_group.add_command(scaffold_api)
 cli_group.add_command(version)
 cli_group.add_command(explore)
 

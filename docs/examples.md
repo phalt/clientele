@@ -1,5 +1,9 @@
 # 🗺️ Tour of a Generated Client
 
+!!! warning
+
+    This is for the "barebones" style clients. Please see [clientele api overview](api-overview.md) if you are using Clientele API.
+
 When you generate a client with Clientele, it creates several files that work together to provide a complete HTTP API client. 
 
 This guide explains each file's purpose and which ones you'll interact with as a developer.
@@ -48,7 +52,7 @@ Regenerate using this command:
 clientele generate -f openapi.json -o my_client/ --regen t
 ```
 
-This file is particularly useful when you need to regenerate the client after API changes. See [Regenerating](regeneration.md) for details.
+This file is particularly useful when you need to regenerate the client after API changes. See [Regenerating](openapi-regeneration.md) for details.
 
 ## client.py
 
@@ -102,8 +106,6 @@ Each function/method is fully typed and includes:
 - Type hints for all parameters
 - Return type annotations with all possible response types
 - The endpoint's description as a docstring
-
-See the [Usage](usage.md) guide for more on function-based vs class-based clients.
 
 ## schemas.py
 
@@ -193,7 +195,7 @@ config = Config()
 
 The `Config` class uses [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) to load values from environment variables or `.env` files.
 
-For detailed configuration options and examples, see the [Configuration Guide](configuration.md).
+For detailed configuration options and examples, see the [OpenAPI Configuration Guide](openapi-configuration.md).
 
 ## http.py
 
@@ -227,8 +229,8 @@ Here's a quick reference of what to do with each file:
 
 For more information:
 
-- [Usage & CLI](usage.md) - How to generate clients
-- [Configuration](configuration.md) - Configure the client
-- [Authentication](authentication.md) - Set up authentication
+- [OpenAPI client scaffolder](openapi-cli.md) - How to generate clients
+- [OpenAPI Configuration](openapi-configuration.md) - Configure the client
+- [Authentication](openapi-authentication.md) - Set up authentication
 - [Exception Handling](exceptions.md) - Handle API exceptions
 - [Testing](testing.md) - Write tests for your client

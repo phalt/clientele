@@ -174,8 +174,10 @@ class ClientIntrospector:
             sig = inspect.signature(func)
             parameters: dict[str, dict[str, typing.Any]] = {}
 
-            # Skip 'self' parameter for methods
+            # Skip 'self' parameter for methods and clientele-injected parameters
             params_to_skip = {"self"} if is_method else set()
+            # Clientele-injected parameters that should not be exposed to users
+            params_to_skip.update({"result", "response"})
 
             for param_name, param in sig.parameters.items():
                 if param_name in params_to_skip:
@@ -200,8 +202,8 @@ class ClientIntrospector:
             # Get docstring
             docstring = inspect.getdoc(func)
 
-            # Try to determine HTTP method from function name or docstring
-            http_method = self._guess_http_method(name, docstring)
+            # Try to determine HTTP method from function decorator, name, or docstring
+            http_method = self._guess_http_method(name, docstring, func)
 
             return OperationInfo(
                 name=name,
@@ -216,16 +218,23 @@ class ClientIntrospector:
             # If analysis fails, skip this operation
             return None
 
-    def _guess_http_method(self, name: str, docstring: str | None) -> str:
+    def _guess_http_method(self, name: str, docstring: str | None, func: typing.Callable | None = None) -> str:
         """Guess the HTTP method from the operation name or docstring.
 
         Args:
             name: Operation name
             docstring: Operation docstring
+            func: The function to inspect (for clientele decorator extraction)
 
         Returns:
             HTTP method string (GET, POST, PUT, PATCH, DELETE, or UNKNOWN)
         """
+        # First try to extract from clientele decorator closure (for new clientele-based clients)
+        if func is not None:
+            method = self._extract_method_from_clientele_decorator(func)
+            if method:
+                return method
+
         name_lower = name.lower()
 
         # Check function name for HTTP method hints
@@ -255,6 +264,51 @@ class ClientIntrospector:
                 return "DELETE"
 
         return "UNKNOWN"
+
+    def _extract_method_from_clientele_decorator(self, func: typing.Callable) -> str | None:
+        """Extract HTTP method from clientele decorator closure.
+
+        For clientele-based clients using @client.get(), @client.post(), etc.,
+        the decorator stores a _RequestContext object in the closure that contains
+        the HTTP method.
+
+        Args:
+            func: The decorated function
+
+        Returns:
+            HTTP method string (GET, POST, etc.) or None if not found
+        """
+        try:
+            # Check if the function has a closure (decorators create closures)
+            if not hasattr(func, "__closure__"):
+                return None
+
+            closure = func.__closure__
+            if closure is None:
+                return None
+
+            # Type narrowing: closure is guaranteed to be a tuple of cells at this point
+            closure = typing.cast(tuple, closure)
+
+            # Look through closure cells for _RequestContext
+            for cell in closure:
+                cell_contents = cell.cell_contents
+                # Check if this is a _RequestContext (has method and path_template attributes)
+                if hasattr(cell_contents, "__dict__"):
+                    cell_dict = getattr(cell_contents, "__dict__", {})
+                    # _RequestContext has both 'method' and 'path_template' attributes
+                    if "method" in cell_dict and "path_template" in cell_dict:
+                        # This looks like a _RequestContext
+                        method = cell_dict.get("method")
+                        if isinstance(method, str):
+                            return method.upper()
+
+        except (AttributeError, TypeError, KeyError):
+            # If anything goes wrong during extraction, fail silently
+            # This is expected for non-clientele clients
+            pass
+
+        return None
 
     def get_all_schemas(self) -> dict[str, typing.Any]:
         """Get all Pydantic schemas from the schemas module.

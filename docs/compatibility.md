@@ -75,24 +75,24 @@ Clientele is designed for **OpenAPI 3.0.x** schemas and supports most standard-c
 
 - **OpenAPI 2.0 (Swagger)** - The 2.0 format is deprecated and significantly different from 3.0+. Clientele does not support it. If you have a Swagger 2.0 schema, consider upgrading it to OpenAPI 3.0+ first.
 
-## Framework Compatibility
+## API Compatibility
 
-Clientele works with any tool that generates standard OpenAPI 3.0+ schemas. We actively test and verify compatibility with these Python frameworks:
+Clientele works with any tool that generates standard OpenAPI 3.0+ schemas. We actively test and verify compatibility with these Python API server frameworks:
 
-### Python Web Frameworks
+### Python API Frameworks
 
 #### ✅ FastAPI
 
 **Status**: 100% compatibility guaranteed
 
-[FastAPI](https://fastapi.tiangolo.com/) is Clientele's primary target framework. FastAPI's automatic OpenAPI schema generation works perfectly with Clientele.
+[FastAPI](https://fastapi.tiangolo.com/) is Clientele's primary target server framework. FastAPI's automatic OpenAPI schema generation works perfectly with Clientele.
 
 - **Schema location**: Usually `/openapi.json`
 - **operationId**: Auto-generated or customizable via `operation_id` parameter
 - **Async support**: Full support for both sync and async clients
 - **Authentication**: Bearer tokens, Basic auth, OAuth2 flows
 
-**Learn more**: [Using Clientele with FastAPI](framework-fastapi.md)
+**Learn more**: [Using Clientele with FastAPI](server-fastapi.md)
 
 #### ✅ Django REST Framework + drf-spectacular
 
@@ -107,7 +107,7 @@ Clientele works with any tool that generates standard OpenAPI 3.0+ schemas. We a
 
 We've tested Clientele with numerous DRF APIs - see [this GitHub issue](https://github.com/phalt/clientele/issues/23) for specific schemas we've validated.
 
-**Learn more**: [Using Clientele with Django REST Framework](framework-drf.md)
+**Learn more**: [Using Clientele with Django REST Framework](server-drf.md)
 
 #### ✅ Django Ninja
 
@@ -120,7 +120,7 @@ We've tested Clientele with numerous DRF APIs - see [this GitHub issue](https://
 - **Schemas**: Already uses Pydantic, no conversion needed
 - **Async support**: Supports both sync and async views
 
-**Learn more**: [Using Clientele with Django Ninja](framework-django-ninja.md)
+**Learn more**: [Using Clientele with Django Ninja](server-django-ninja.md)
 
 ### Other Tested APIs
 
@@ -175,7 +175,7 @@ Despite a well-defined [specification](https://www.openapis.org/), we've discove
 **What this means for you:**
 
 - Some schema generators sometimes have bugs or take liberties with the spec
-- We can't guarantee 100% compatibility with every OpenAPI schema outside the core frameworks we test
+- We can't guarantee 100% compatibility with every OpenAPI schema outside the core API server frameworks we test
 
 **Recommendation:**
 
@@ -222,7 +222,7 @@ If you're developing an API that others will consume with Clientele:
 If you're consuming an API with Clientele:
 
 1. **Validate first**: Run `clientele validate` before generating
-2. **Start with framework guides**: If using FastAPI/DRF/Ninja, follow the specific guide
+2. **Start with API server frameworks guides**: If using FastAPI/DRF/Ninja, follow the specific guide
 3. **Review generated code**: Ensure it matches your expectations
 4. **Test thoroughly**: The generated client should be tested like any dependency
 5. **Report issues**: Help us improve by reporting problematic schemas

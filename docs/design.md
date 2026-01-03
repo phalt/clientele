@@ -16,7 +16,7 @@ Every few years I check the HTTP API landscape to see what has changed, and what
 
 A big part of this research is seeing how far [OpenAPI client generators](https://www.openapis.org/) have come.  
 
-Despite the heavy adoption of OpenAPI _schema_ generators, the "last mile" (i.e. - generating, and using, a client library) still has a experience nowhere near the maturity as the schema generator landscape. The great thing about schema generators these days is they are seemlessly blended in - most API frameworks, especially in the Python landscape, generate schemas as standard.
+Despite the heavy adoption of OpenAPI _schema_ generators, the "last mile" (i.e. - generating, and using, a client library) still has a experience nowhere near the maturity as the schema generator landscape. The great thing about schema generators these days is they are seemlessly blended in - most API server frameworks, especially in the Python landscape, generate schemas as standard.
 
 But my experience with most _client_ generators always falls into one of these buckets:
 
@@ -38,7 +38,7 @@ So, like I did in the past, I used it as an opportunity to asses the landscape o
 
 And this was our summary at the time of writing:
 
-* API tools and providers had adopted OpenAPI very well. For example - tools like [FastAPI](https://fastapi.tiangolo.com/) and [drf-spectacular](https://github.com/tfranzel/drf-spectacular) now make it easy for the most popular python web frameworks to publish OpenAPI schemas.
+* API tools and providers had adopted OpenAPI very well. For example - tools like [FastAPI](https://fastapi.tiangolo.com/) and [drf-spectacular](https://github.com/tfranzel/drf-spectacular) now make it easy for the most popular python web server frameworks to publish OpenAPI schemas.
 
 * There are a lot of options for generating clients. They all meet the need of "generating a python client using the schema". But, almost universally, they have a poor developer experience.
 
@@ -104,6 +104,10 @@ It is that way because I know you will need to inspect it in the future. I want 
 
 ### Supporting Python API Frameworks
 
-The python ecosystem for API frameworks is very rich and mature. I love the options we have to build APIs with. I wanted to focus on supporting this ecosystem specifically because of how much I love the tooling, but also because it means I can focus on doing one thing great: client generation that specifically supports Python API frameworks.
+The python ecosystem for API server frameworks is very rich and mature. I love the options we have to build APIs with. I wanted to focus on supporting this ecosystem specifically because of how much I love the tooling, but also because it means I can focus on doing one thing great: client generation that specifically supports Python API server frameworks.
 
-You'll see in the project documentation that we explain how to use common API frameworks like FastAPI, Django REST Framework and Django-ninja, and the project even has [client and server examples](https://github.com/phalt/clientele/tree/main/server_examples) to help demonstrate and prove it's usefulness.
+You'll see in the project documentation that we explain how to use common API server frameworks like FastAPI, Django REST Framework and Django-ninja, and the project even has [client and server examples](https://github.com/phalt/clientele/tree/main/server_examples) to help demonstrate and prove it's usefulness.
+
+## Clientele API
+
+The best way to learn about the beginning of the clientele API is to read [this blog post](https://paulwrites.software/articles/python-api-clients).

@@ -4,12 +4,14 @@ Use it as a space to store configuration and constants.
 """
 
 import httpx
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
+
+from clientele import api as clientele_framework
 
 
-class Config(BaseSettings):
+class Config(clientele_framework.BaseConfig):
     """
-    Configuration object for the API client.
+    Configuration object for your API client.
 
     Values can be set via:
     1. Environment variables (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
@@ -30,26 +32,14 @@ class Config(BaseSettings):
         )
     """
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="ignore",
-    )
-
-    api_base_url: str = "http://localhost:8000"
-    additional_headers: dict = {}
-    user_key: str = "user"
-    pass_key: str = "password"
-    bearer_token: str = "token"
-    timeout: float = 5.0
+    base_url: str = "http://localhost:8000"
+    headers: dict[str, str] = Field(default_factory=dict)
+    timeout: float | None = 5.0
     follow_redirects: bool = False
-    verify_ssl: bool = True
+    verify: bool | str = True
     http2: bool = False
-    max_redirects: int = 20
+    auth: httpx.Auth | tuple[str, str] | None = None
     limits: httpx.Limits | None = None
+    proxies: httpx.Proxy | None = None
     transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
-
-
-# Create a singleton instance that can be imported and used
-config = Config()
+    cookies: httpx.Cookies | None = None

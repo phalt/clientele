@@ -38,20 +38,22 @@ clean:  ## Clear any cache files and test files
 	rm -rf .coverage
 
 test:  ## Run tests
-	uv run pytest -vvv --cov=clientele --cov-report=term-missing --cov-report=html --cov-config=pyproject.toml
+	uv run pytest -vvv -x --cov=clientele --cov-report=term-missing --cov-report=html --cov-config=pyproject.toml
 
 shell:  ## Run an ipython shell
 	uv run ipython
 
 generate-test-clients:  ## regenerate the test clients in the tests/ directory
 	uv sync
-	uv run clientele generate -f example_openapi_specs/best.json -o tests/test_client/ --regen t
-	uv run clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
-	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/test_class_client/ --regen t
-	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/async_test_class_client/ --asyncio t --regen t
-	uv run clientele generate -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/ --regen t
-	uv run clientele generate -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/ --regen t
-	uv run clientele generate -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/ --regen t
+	uv run clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/test_client/ --regen t
+	uv run clientele generate -f example_openapi_specs/best.json -o tests/old_clients/test_client/ --regen t
+	uv run clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/async_test_client/ --asyncio t --regen t
+	uv run clientele generate -f example_openapi_specs/best.json -o tests/old_clients/async_test_client/ --asyncio t --regen t
+	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/old_clients/test_class_client/ --regen t
+	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/old_clients/async_test_class_client/ --asyncio t --regen t
+	uv run clientele scaffold-api -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/ --regen t
+	uv run clientele scaffold-api -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/ --regen t
+	uv run clientele scaffold-api -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/ --regen t
 
 brew-status:  ## Check the status of Homebrew publishing setup
 	@homebrew/check_status.sh
@@ -79,3 +81,7 @@ brew-test-local:  ## Test installing the formula locally (requires Homebrew inst
 
 test-openapi-directory:  ## Test clientele against all schemas from APIs-guru/openapi-directory
 	uv run python3 test_openapi_directory.py
+
+
+open-coverage-report:  ## Open the coverage report in a browser
+	uv run python3 -m webbrowser file://$(PWD)/htmlcov/index.html

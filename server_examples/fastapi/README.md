@@ -1,6 +1,6 @@
 # FastAPI Server Example
 
-This is a working FastAPI application that demonstrates the code examples from the [Clientele FastAPI documentation](../../docs/framework-fastapi.md).
+This is a working FastAPI application that demonstrates the code examples from the [Clientele FastAPI documentation](../../docs/server-fastapi.md).
 
 ## Setup
 

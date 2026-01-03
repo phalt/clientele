@@ -3,32 +3,53 @@ site_url: https://phalt.github.io/clientele/
 theme:
   name: material
   palette:
-    scheme: slate
-    primary: blue grey
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: light blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
 repo_name: phalt/clientele
 repo_url: https://github.com/phalt/clientele
 nav:
   - Home: index.md
   - Getting Started:
     - Install: install.md
-    - Usage & CLI: usage.md
-  - Framework Guides:
-    - FastAPI: framework-fastapi.md
-    - Django REST Framework: framework-drf.md
-    - Django Ninja: framework-django-ninja.md
-  - Documentation:
-    - Configuration: configuration.md
-    - Regeneration: regeneration.md
-    - Authentication: authentication.md
-    - Exception Handling: exceptions.md
+  - Clientele API guide:
+    - Overview: api-overview.md
+    - Configuration: api-configuration.md
+    - Async Support: api-async.md
+    - Authentication: api-authentication.md
+  - OpenAPI client scaffolder:
+    - Usage & CLI: openapi-cli.md
+    - Regeneration: openapi-regeneration.md
+    - Barebones Configuration: openapi-configuration.md
+    - Barebones authentication: openapi-authentication.md
     - Generated Client Tour: examples.md
-    - Testing: testing.md
-    - Explorer Mode: explore.md
     - Compatibility & Limitations: compatibility.md
-    - Complex Schemas: complex_schemas.md
     - References in OpenAPI: references.md
+  - API Server Integrations:
+    - FastAPI: server-fastapi.md
+    - Django REST Framework: server-drf.md
+    - Django Ninja: server-django-ninja.md
+  - API Explorer:
+    - Overview: explore.md
+  - Other documentation:
+    - Exception Handling: exceptions.md
+    - Testing: testing.md
   - About:
-    - Design Philosophy: design.md
+    - Background: design.md
     - Change Log: CHANGELOG.md
 
 markdown_extensions:

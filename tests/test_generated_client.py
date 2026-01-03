@@ -4,7 +4,7 @@ import pytest
 from httpx import Response
 from respx import MockRouter
 
-from .test_client import client, config, http, schemas
+from .old_clients.test_client import client, config, http, schemas
 
 BASE_URL = config.config.api_base_url
 
