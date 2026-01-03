@@ -45,7 +45,9 @@ shell:  ## Run an ipython shell
 
 generate-test-clients:  ## regenerate the test clients in the tests/ directory
 	uv sync
+	uv run clientele generate-framework -f example_openapi_specs/best.json -o tests/framework_clients/test_client/ --regen t
 	uv run clientele generate -f example_openapi_specs/best.json -o tests/old_clients/test_client/ --regen t
+	uv run clientele generate-framework -f example_openapi_specs/best.json -o tests/framework_clients/async_test_client/ --asyncio t --regen t
 	uv run clientele generate -f example_openapi_specs/best.json -o tests/old_clients/async_test_client/ --asyncio t --regen t
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/old_clients/test_class_client/ --regen t
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/old_clients/async_test_class_client/ --asyncio t --regen t
