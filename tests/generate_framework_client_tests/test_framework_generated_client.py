@@ -126,6 +126,9 @@ def test_complex_model_request_complex_model_request_get(respx_mock: MockRouter)
     response = client.complex_model_request_complex_model_request_get()
     # Then
     assert isinstance(response, schemas.ComplexModelResponse)
+    # Verify nested models are actual instances, not dicts
+    assert isinstance(response.another_model, schemas.AnotherModel)
+    assert isinstance(response.a_list_of_other_models[0], schemas.AnotherModel)
     expected_dump_data = {
         "a_dict_response": {"dict": "response"},
         "a_enum": schemas.ExampleEnum.ONE,
