@@ -57,25 +57,27 @@ class _RequestContext(BaseModel):
     response_map: dict[int, type[BaseModel]] | None = None
 
 
-def _validate_result_parameter(func: Callable[..., Any], signature: inspect.Signature, type_hints: dict[str, Any]) -> None:
+def _validate_result_parameter(
+    func: Callable[..., Any], signature: inspect.Signature, type_hints: dict[str, Any]
+) -> None:
     """
     Validates that the decorated function has a 'result' parameter with a type annotation.
-    
+
     The 'result' parameter is mandatory and drives response hydration.
     """
     func_name = getattr(func, "__name__", "<function>")
-    
+
     # Check if 'result' parameter exists
     if "result" not in signature.parameters:
         raise TypeError(
             f"Function '{func_name}' must have a 'result' parameter. "
             "The 'result' parameter is required and its type annotation determines how the HTTP response is parsed."
         )
-    
+
     # Check if 'result' has a type annotation
     result_param = signature.parameters["result"]
     result_annotation = type_hints.get("result", result_param.annotation if result_param else inspect._empty)
-    
+
     if result_annotation is inspect._empty:
         raise TypeError(
             f"Function '{func_name}' has a 'result' parameter but it lacks a type annotation. "
@@ -131,7 +133,7 @@ def _validate_response_map(
 
     # Get the result parameter annotation
     result_annotation = type_hints.get("result", inspect._empty)
-    
+
     if result_annotation is inspect._empty:
         # This should not happen since we validate result parameter earlier, but defensive check
         raise ValueError("Function decorated with response_map must have a 'result' parameter with a type annotation")
@@ -156,7 +158,6 @@ def _validate_response_map(
             )
 
 
-
 class _PreparedCall(BaseModel):
     """
     Encapsulates all data needed to execute an HTTP request.
@@ -175,7 +176,6 @@ class _PreparedCall(BaseModel):
     data_payload: dict[str, Any] | None
     headers_override: dict[str, str] | None
     result_annotation: Any
-
 
 
 class Client:
@@ -509,13 +509,12 @@ class Client:
 
         # Call the function with all arguments including injected ones
         user_return_value = prepared.context.func(**prepared.call_arguments)
-        
+
         # If the user function returns None, default to returning the parsed result
         if user_return_value is None:
             return parsed_result
-        
-        return user_return_value
 
+        return user_return_value
 
     def _parse_response(
         self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None
