@@ -131,9 +131,7 @@ def build_request_context(
     )
 
 
-def _validate_response_map(
-    response_map: dict[int, type], func: Callable[..., Any], type_hints: dict[str, Any]
-) -> None:
+def _validate_response_map(response_map: dict[int, type], func: Callable[..., Any], type_hints: dict[str, Any]) -> None:
     """
     Validates that response_map contains valid status codes and Pydantic models or TypedDicts,
     and that all response models are in the function's result parameter type annotation.
