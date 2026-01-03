@@ -57,6 +57,32 @@ class _RequestContext(BaseModel):
     response_map: dict[int, type[BaseModel]] | None = None
 
 
+def _validate_result_parameter(func: Callable[..., Any], signature: inspect.Signature, type_hints: dict[str, Any]) -> None:
+    """
+    Validates that the decorated function has a 'result' parameter with a type annotation.
+    
+    The 'result' parameter is mandatory and drives response hydration.
+    """
+    func_name = getattr(func, "__name__", "<function>")
+    
+    # Check if 'result' parameter exists
+    if "result" not in signature.parameters:
+        raise TypeError(
+            f"Function '{func_name}' must have a 'result' parameter. "
+            "The 'result' parameter is required and its type annotation determines how the HTTP response is parsed."
+        )
+    
+    # Check if 'result' has a type annotation
+    result_param = signature.parameters["result"]
+    result_annotation = type_hints.get("result", result_param.annotation if result_param else inspect._empty)
+    
+    if result_annotation is inspect._empty:
+        raise TypeError(
+            f"Function '{func_name}' has a 'result' parameter but it lacks a type annotation. "
+            "The 'result' parameter must be annotated with the expected response type (e.g., 'result: User')."
+        )
+
+
 def build_request_context(
     method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[BaseModel]] | None = None
 ) -> _RequestContext:
@@ -68,6 +94,9 @@ def build_request_context(
     except NameError:
         # Forward references that can't be resolved - use raw annotations
         type_hints = func.__annotations__.copy()
+
+    # Validate that the function has a 'result' parameter with a type annotation
+    _validate_result_parameter(func, signature, type_hints)
 
     # Validate response_map if provided
     if response_map is not None:
@@ -88,7 +117,7 @@ def _validate_response_map(
 ) -> None:
     """
     Validates that response_map contains valid status codes and Pydantic models,
-    and that all response models are in the function's return type annotation.
+    and that all response models are in the function's result parameter type annotation.
     """
     # Validate all keys are valid HTTP status codes
     for status_code in response_map.keys():
@@ -100,30 +129,32 @@ def _validate_response_map(
         if not (inspect.isclass(model_class) and issubclass(model_class, BaseModel)):
             raise ValueError(f"response_map value for status code {status_code} must be a Pydantic BaseModel subclass")
 
-    # Get the return annotation
-    return_annotation = type_hints.get("return", func.__annotations__.get("return", inspect._empty))
+    # Get the result parameter annotation
+    result_annotation = type_hints.get("result", inspect._empty)
+    
+    if result_annotation is inspect._empty:
+        # This should not happen since we validate result parameter earlier, but defensive check
+        raise ValueError("Function decorated with response_map must have a 'result' parameter with a type annotation")
 
-    if return_annotation is inspect._empty:
-        raise ValueError("Function decorated with response_map must have a return type annotation")
-
-    # Extract all types from the return annotation (handle Union types)
-    return_types: list[Any] = []
-    origin = typing.get_origin(return_annotation)
+    # Extract all types from the result annotation (handle Union types)
+    result_types: list[Any] = []
+    origin = typing.get_origin(result_annotation)
     if origin in [typing.Union, types.UnionType]:
-        return_types = list(typing.get_args(return_annotation))
+        result_types = list(typing.get_args(result_annotation))
     else:
-        return_types = [return_annotation]
+        result_types = [result_annotation]
 
-    # Check that all response_map models are in the return types
+    # Check that all response_map models are in the result types
     for status_code, model_class in response_map.items():
-        if model_class not in return_types:
+        if model_class not in result_types:
             missing_model = model_class.__name__
             func_name = getattr(func, "__name__", "<function>")
             raise ValueError(
                 f"Response model '{missing_model}' for status code {status_code} "
-                f"is not in the function's return type annotation. "
-                f"Please add '{missing_model}' to the return type of '{func_name}'."
+                f"is not in the 'result' parameter's type annotation. "
+                f"Please add '{missing_model}' to the 'result' parameter type of '{func_name}'."
             )
+
 
 
 class _PreparedCall(BaseModel):
@@ -131,7 +162,7 @@ class _PreparedCall(BaseModel):
     Encapsulates all data needed to execute an HTTP request.
 
     Contains parsed arguments, URL path, query parameters, request body,
-    headers, and return type annotation for response parsing.
+    headers, and result type annotation for response parsing.
     """
 
     model_config = {"arbitrary_types_allowed": True}
@@ -143,7 +174,8 @@ class _PreparedCall(BaseModel):
     query_params: dict[str, Any] | None
     data_payload: dict[str, Any] | None
     headers_override: dict[str, str] | None
-    return_annotation: Any
+    result_annotation: Any
+
 
 
 class Client:
@@ -343,7 +375,7 @@ class Client:
                 data_payload = self._prepare_body(call_arguments, data_param, data_annotation)
 
         url_path = self._substitute_path(context.path_template, path_params)
-        return_annotation = context.type_hints.get("return", context.signature.return_annotation)
+        result_annotation = context.type_hints.get("result", inspect._empty)
 
         return _PreparedCall(
             context=context,
@@ -353,7 +385,7 @@ class Client:
             query_params=query_params,
             data_payload=data_payload,
             headers_override=headers_override,
-            return_annotation=return_annotation,
+            result_annotation=result_annotation,
         )
 
     def _execute_sync(self, context: _RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> Any:
@@ -385,7 +417,10 @@ class Client:
         )
         result = self._finalise_call(prepared, response)
         if inspect.isawaitable(result):
-            return await result
+            result = await result
+        # For async functions, check if the awaited result is None and default to parsed_result
+        if result is None and "result" in prepared.call_arguments:
+            return prepared.call_arguments["result"]
         return result
 
     def _prepare_body(
@@ -464,7 +499,7 @@ class Client:
         return response
 
     def _finalise_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
-        parsed_result = self._parse_response(response, prepared.return_annotation, prepared.context.response_map)
+        parsed_result = self._parse_response(response, prepared.result_annotation, prepared.context.response_map)
 
         # Update call_arguments with injected values from parsed_result and response
         if "result" in prepared.context.signature.parameters:
@@ -473,7 +508,14 @@ class Client:
             prepared.call_arguments["response"] = response
 
         # Call the function with all arguments including injected ones
-        return prepared.context.func(**prepared.call_arguments)
+        user_return_value = prepared.context.func(**prepared.call_arguments)
+        
+        # If the user function returns None, default to returning the parsed result
+        if user_return_value is None:
+            return parsed_result
+        
+        return user_return_value
+
 
     def _parse_response(
         self, response: httpx.Response, annotation: Any, response_map: dict[int, type[BaseModel]] | None = None
