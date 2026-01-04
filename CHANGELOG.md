@@ -11,6 +11,10 @@
 
 - The `scaffold-api` command will produce scaffolding from an OpenAPI schema and uses the new clientele api.
 
+### Explore APIs with **Clientele API** clients
+
+- The `explore` command has been updated to support clients that use the clientele api pattern.
+
 ### Improved documentation
 
 - New documentation added to cover **Clientele API**.
