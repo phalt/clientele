@@ -76,5 +76,5 @@ def test_raises_when_both_response_map_and_response_parser_are_provided(respx_mo
         @client.get(
             "/users/{user_id}", response_parser=my_response_parser, response_map={200: CustomResponseParserResponse}
         )
-        def get_raises_with_both(user_id: int, result: CustomResponseParserResponse) -> int:
-            return result.id
+        def get_raises_with_both(user_id: int, result: CustomResponseParserResponse) -> str:
+            return result.name
