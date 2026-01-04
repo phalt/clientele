@@ -58,10 +58,12 @@
   
     
     
+      
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -114,7 +116,33 @@
     </div>
     
       
+        <form class="md-header__option" data-md-component="palette">
+  
     
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -276,112 +304,31 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-clientele-does" class="md-nav__link">
+  <a href="#clientele-api" class="md-nav__link">
     <span class="md-ellipsis">
-      What Clientele Does
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What Clientele Does">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-clientele" class="md-nav__link">
-    <span class="md-ellipsis">
-      When to Use Clientele
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="When to Use Clientele">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#consumer" class="md-nav__link">
-    <span class="md-ellipsis">
-      Consumer
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#publisher" class="md-nav__link">
-    <span class="md-ellipsis">
-      Publisher
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick Start
+      Clientele API
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-generated-code" class="md-nav__link">
+  <a href="#openapi-client-generator" class="md-nav__link">
     <span class="md-ellipsis">
-      The generated code
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The generated code">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#function-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function-based client
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#class-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Class-based client
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Async support
+      OpenAPI client generator
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-explorer" class="md-nav__link">
+  <a href="#api-cli-explorer" class="md-nav__link">
     <span class="md-ellipsis">
-      API Explorer
+      API CLI explorer
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API Explorer">
+    <nav class="md-nav" aria-label="API CLI explorer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -399,48 +346,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#openapi-compatibility" class="md-nav__link">
+  <a href="#works-with-your-favourite-python-api-servers" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenAPI Compatibility
+      Works with your favourite Python API Servers
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="OpenAPI Compatibility">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verified-compatibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verified Compatibility
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Verified Compatibility">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#server-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Server Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#additional-features" class="md-nav__link">
+  <a href="#openapi-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      Additional Features
+      OpenAPI Compatibility
     </span>
   </a>
   
@@ -524,29 +441,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="usage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Usage & CLI
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -577,7 +471,7 @@
   
   
   <span class="md-ellipsis">
-    Framework Guides
+    Clientele API guide
     
   </span>
   
@@ -588,7 +482,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Framework Guides
+            Clientele API guide
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -599,12 +493,12 @@
   
   
     <li class="md-nav__item">
-      <a href="framework-fastapi/" class="md-nav__link">
+      <a href="api-overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    FastAPI
+    Overview
     
   </span>
   
@@ -622,12 +516,12 @@
   
   
     <li class="md-nav__item">
-      <a href="framework-drf/" class="md-nav__link">
+      <a href="api-configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Django REST Framework
+    Configuration
     
   </span>
   
@@ -645,12 +539,35 @@
   
   
     <li class="md-nav__item">
-      <a href="framework-django-ninja/" class="md-nav__link">
+      <a href="api-async/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Django Ninja
+    Async Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api-authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication
     
   </span>
   
@@ -691,7 +608,7 @@
   
   
   <span class="md-ellipsis">
-    Documentation
+    OpenAPI client scaffolder
     
   </span>
   
@@ -702,7 +619,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            Documentation
+            OpenAPI client scaffolder
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -713,12 +630,12 @@
   
   
     <li class="md-nav__item">
-      <a href="configuration/" class="md-nav__link">
+      <a href="openapi-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Configuration
+    Usage & CLI
     
   </span>
   
@@ -736,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="regeneration/" class="md-nav__link">
+      <a href="openapi-regeneration/" class="md-nav__link">
         
   
   
@@ -759,12 +676,12 @@
   
   
     <li class="md-nav__item">
-      <a href="authentication/" class="md-nav__link">
+      <a href="openapi-configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Authentication
+    Barebones Configuration
     
   </span>
   
@@ -782,12 +699,12 @@
   
   
     <li class="md-nav__item">
-      <a href="exceptions/" class="md-nav__link">
+      <a href="openapi-authentication/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Exception Handling
+    Barebones authentication
     
   </span>
   
@@ -828,81 +745,12 @@
   
   
     <li class="md-nav__item">
-      <a href="testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Testing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Explorer Mode
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="compatibility/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Compatibility & Limitations
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="complex_schemas/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Complex Schemas
     
   </span>
   
@@ -966,7 +814,7 @@
   
   
   <span class="md-ellipsis">
-    About
+    API Server Integrations
     
   </span>
   
@@ -976,6 +824,279 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            API Server Integrations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="server-fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FastAPI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="server-drf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django REST Framework
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="server-django-ninja/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django Ninja
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Explorer
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API Explorer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="explore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Other documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Other documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exception Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             About
           </label>
@@ -993,7 +1114,7 @@
   
   
   <span class="md-ellipsis">
-    Design Philosophy
+    Background
     
   </span>
   
@@ -1061,112 +1182,31 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-clientele-does" class="md-nav__link">
+  <a href="#clientele-api" class="md-nav__link">
     <span class="md-ellipsis">
-      What Clientele Does
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="What Clientele Does">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#when-to-use-clientele" class="md-nav__link">
-    <span class="md-ellipsis">
-      When to Use Clientele
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="When to Use Clientele">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#consumer" class="md-nav__link">
-    <span class="md-ellipsis">
-      Consumer
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#publisher" class="md-nav__link">
-    <span class="md-ellipsis">
-      Publisher
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#quick-start" class="md-nav__link">
-    <span class="md-ellipsis">
-      Quick Start
+      Clientele API
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-generated-code" class="md-nav__link">
+  <a href="#openapi-client-generator" class="md-nav__link">
     <span class="md-ellipsis">
-      The generated code
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="The generated code">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#function-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Function-based client
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#class-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Class-based client
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-support" class="md-nav__link">
-    <span class="md-ellipsis">
-      Async support
+      OpenAPI client generator
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-explorer" class="md-nav__link">
+  <a href="#api-cli-explorer" class="md-nav__link">
     <span class="md-ellipsis">
-      API Explorer
+      API CLI explorer
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API Explorer">
+    <nav class="md-nav" aria-label="API CLI explorer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1184,48 +1224,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#openapi-compatibility" class="md-nav__link">
+  <a href="#works-with-your-favourite-python-api-servers" class="md-nav__link">
     <span class="md-ellipsis">
-      OpenAPI Compatibility
+      Works with your favourite Python API Servers
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="OpenAPI Compatibility">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#verified-compatibility" class="md-nav__link">
-    <span class="md-ellipsis">
-      Verified Compatibility
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Verified Compatibility">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#server-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      Server Examples
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#additional-features" class="md-nav__link">
+  <a href="#openapi-compatibility" class="md-nav__link">
     <span class="md-ellipsis">
-      Additional Features
+      OpenAPI Compatibility
     </span>
   </a>
   
@@ -1260,166 +1270,140 @@
 
 
 <h1 id="clientele">⚜️ Clientele</h1>
+<style>
+  .ascii { max-width: 900px; margin: 48px auto; padding: 2px; }
+  .ascii pre { white-space: pre; font-family: ui-monospace, Menlo, Consolas, monospace;
+              font-size: 14px; line-height: 1.1; padding: 20px; border-radius: 12px;
+              background: #0b0f14; color: #e6edf3; overflow-x: auto; }
+  .ascii p { margin: 14px 2px 0; font-family: system-ui, sans-serif; }
+</style>
+
 <div style="text-align: center;">
-    <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png">
+<div class="ascii">
+<pre>
+___ _ _            _       _
+    / __\ (_) ___ _ __ | |_ ___| | ___
+    / /  | | |/ _ \ '_ \| __/ _ \ |/ _ \
+   / /___| | |  __/ | | | ||  __/ |  __/
+   \____/|_|_|\___|_| |_|\__\___|_|\___|</pre>
+<p>⚜️ Clientele is a different way to think about Python API Clients</p>
+</div>
+<p>
+    <a href="https://pypi.org/project/clientele">
+    <img alt="Package version" src="https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version">
+    </a>
+    <img alt="Python versions" src="https://img.shields.io/badge/python-3.10+-blue">
+    <img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele">
+    <a href="https://codecov.io/github/phalt/clientele">
+    <img alt="codecov" src="https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM">
+    </a>
+    <a href="https://pepy.tech/projects/clientele">
+    <img alt="PyPI Downloads" src="https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads">
+    </a>
+</p>
+<p>
+    <img alt="Works with" src="https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green">
+    <img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json">
+</p>
 </div>
 
-<p><a href="https://pypi.org/project/clientele"><img alt="Package version" src="https://img.shields.io/pypi/v/clientele?color=%2334D058&amp;label=latest%20version" /></a>
-<img alt="Python versions" src="https://img.shields.io/badge/python-3.10+-blue" />
-<a href="https://codecov.io/github/phalt/clientele"><img alt="codecov" src="https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM" /></a>
-<a href="https://pepy.tech/projects/clientele"><img alt="PyPI Downloads" src="https://static.pepy.tech/personalized-badge/clientele?period=total&amp;units=INTERNATIONAL_SYSTEM&amp;left_color=GREY&amp;right_color=GREEN&amp;left_text=Downloads" /></a>
-<img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele" />
-<img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json" /></p>
-<p>Clientele generates fully-typed, idiomatic python HTTP API clients from OpenAPI 3.0+ schemas.</p>
-<p>It is designed and tested to work perfectly with the most popular Python API frameworks:</p>
+<h2 id="clientele-api">Clientele API</h2>
+<p>Clientele lets your write API clients as easily as you would write API servers:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># api.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.my_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.my_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Book</span><span class="p">,</span> <span class="n">CreateBookReponse</span><span class="p">,</span> <span class="n">CreateBookRequest</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">())</span>
+
+<span class="c1"># Mix sync and async functions in the same client</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/book/</span><span class="si">{book_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Book</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Book</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="c1"># Return only what you need from the API</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/book/</span><span class="si">{book_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_book_title</span><span class="p">(</span><span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Book</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">title</span>
+
+<span class="c1"># POST, PUT, PATCH, DELETE all supported</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/books&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">CreateBookRequest</span><span class="p">,</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">CreateBookReponse</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookReponse</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<p>Clientele allows you to build elegant API integrations:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># service.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">api</span>
+
+<span class="c1"># Handle async requests</span>
+<span class="n">book_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="c1"># Or sync requests</span>
+<span class="n">book_title</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">get_book_title</span><span class="p">(</span><span class="n">book_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">create_book</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookRequest</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My awesome book&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="k">match</span> <span class="n">response</span><span class="p">:</span>
+    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookResponse</span><span class="p">():</span>
+        <span class="c1"># handle valid response</span>
+    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
+        <span class="c1"># handle errors</span>
+</code></pre></div>
+<h2 id="openapi-client-generator">OpenAPI client generator</h2>
+<p>Clientele can scaffold an API client from an OpenAPI schema with:</p>
 <ul>
-<li><strong><a href="https://fastapi.tiangolo.com/">FastAPI</a></strong></li>
-<li><strong><a href="https://www.django-rest-framework.org/">Django REST Framework</a></strong> via <strong><a href="https://github.com/tfranzel/drf-spectacular">drf-spectacular</a></strong></li>
-<li><strong><a href="https://django-ninja.dev/">Django Ninja</a></strong></li>
-</ul>
-<h2 id="what-clientele-does">What Clientele Does</h2>
-<p>Clientele transforms your OpenAPI schema into a clean, maintainable Python HTTP client with:</p>
-<ul>
-<li><strong>Developer first approach</strong> designed for a loveable developer experience.</li>
+<li><strong>A developer-first approach</strong> designed for a loveable developer experience.</li>
 <li><strong>Pydantic models</strong> for request and response validation.</li>
 <li><strong>Fully-typed function signatures</strong> for IDE autocomplete and type checking.</li>
-<li><strong>Async support</strong> if you want a concurrent client.</li>
-<li><strong>Multiple formats</strong> - class-based or functional, you can choose.</li>
-<li><strong>Tiny output</strong> - the generated code is readable, debuggable Python with only two dependencies.</li>
+<li><strong>Async support</strong> if you want a client with concurrency.</li>
+<li><strong>A tiny output</strong> - clientele is readable, debuggable Python.</li>
 <li><strong>Regeneration-friendly</strong> - update your API, regenerate, review the git diff, then ship it!</li>
-<li><strong>API REPL</strong> - a dedicated REPL for exploring and testing the client.</li>
-<li><strong>Deterministic</strong>: No expensive LLMs, no hallucinations - same input always produces same output.</li>
+<li><strong>Configuration</strong>: that's never overwritten on regeneration.</li>
+<li><strong>Testing</strong> is easy peasy with <a href="https://lundberg.github.io/respx/">respx</a>.</li>
+<li><strong>Formatted output</strong> with <a href="https://docs.astral.sh/ruff/">Ruff</a>.</li>
 </ul>
-<h3 id="when-to-use-clientele">When to Use Clientele</h3>
-<h4 id="consumer">Consumer</h4>
-<ul>
-<li>You want to use an HTTP API that has an OpenAPI schema</li>
-<li>And you want to consume that API from a Python application</li>
-<li>And you want type safety and validation without manual schema maintenance</li>
-<li>And you want code that is readable, maintainable, and extendable to suit your project</li>
-</ul>
-<h4 id="publisher">Publisher</h4>
-<ul>
-<li>You have an HTTP API that has an OpenAPI schema</li>
-<li>And you want to offer a client library in Python</li>
-<li>And you want developers to love using the client</li>
-</ul>
-<h2 id="quick-start">Quick Start</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Generate a client from the PokeAPI OpenAPI schema</span>
-uvx<span class="w"> </span>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml<span class="w"> </span>-o<span class="w"> </span>pokeapi_client/
-<span class="c1"># Load the REPL to start testing with the generated code immediately</span>
-uvx<span class="w"> </span>clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>pokeapi_client/
-</code></pre></div>
 <p><img alt="generate_gif" src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif" /></p>
-<h2 id="the-generated-code">The generated code</h2>
-<p>We offer many different flavours of client to suit your needs:</p>
-<h3 id="function-based-client">Function-based client</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
+<h2 id="api-cli-explorer">API CLI explorer</h2>
+<p>Clientele has an <code>explore</code> mode for quickly testing and debugging APIs through an interactive REPL:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Explore an existing clientele-compatible client</span>
+uvx<span class="w"> </span>clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>my_clientele_client/
 
-<span class="c1"># Pydantic models for inputs and outputs</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookRequest</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My awesome book&quot;</span><span class="p">)</span>
-
-<span class="c1"># Easy to read client functions</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_book</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-
-<span class="c1"># Handle responses elegantly</span>
-<span class="k">match</span> <span class="n">response</span><span class="p">:</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookResponse</span><span class="p">():</span>
-        <span class="c1"># Handle valid response</span>
-        <span class="o">...</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
-        <span class="c1"># Handle validation error</span>
-        <span class="o">...</span>
+<span class="c1"># Or generate a temporary client from any OpenAPI service on the web</span>
+uvx<span class="w"> </span>clientele<span class="w"> </span>explore<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
+<span class="c1"># 🤫 Pssst! Copy and paste this right now to try it!</span>
 </code></pre></div>
-<h3 id="class-based-client">Class-based client</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">Client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">my_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">schemas</span>
-
-<span class="c1"># Instantiate the client</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">()</span>
-
-<span class="c1"># Pydantic models for inputs and outputs</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookRequest</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My awesome book&quot;</span><span class="p">)</span>
-
-<span class="c1"># Call API methods on the client instance</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_book</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-
-<span class="c1"># Handle responses elegantly</span>
-<span class="k">match</span> <span class="n">response</span><span class="p">:</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookResponse</span><span class="p">():</span>
-        <span class="c1"># Handle valid response</span>
-        <span class="o">...</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
-        <span class="c1"># Handle validation error</span>
-        <span class="o">...</span>
-</code></pre></div>
-<h2 id="async-support">Async support</h2>
-<p>For both class-based and functional clients we can produce async versions:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_async_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
-
-<span class="c1"># Async client functions</span>
-<span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">list_books</span><span class="p">()</span>
-</code></pre></div>
-<h2 id="api-explorer">API Explorer</h2>
 <p><img alt="repl demo" src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele.gif" /></p>
-<p>Clientele includes an <strong>interactive REPL</strong> that lets you explore and test APIs without writing any code:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Explore an existing client</span>
-clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>pokeapi_client/
-
-<span class="c1"># Or generate a temporary client from any OpenAPI service on the web and start using it immediately</span>
-clientele<span class="w"> </span>explore<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
-
-═══════════════════════════════════════════════════════════
-<span class="w">  </span>Clientele<span class="w"> </span>Interactive<span class="w"> </span>API<span class="w"> </span>Explorer<span class="w"> </span>v1.2.0
-═══════════════════════════════════════════════════════════
-
-Type<span class="w"> </span>/help<span class="w"> </span>or<span class="w"> </span>?<span class="w"> </span><span class="k">for</span><span class="w"> </span>commands,<span class="w"> </span>/exit<span class="w"> </span>or<span class="w"> </span>Ctrl+D<span class="w"> </span>to<span class="w"> </span>quit
-Type<span class="w"> </span>/list<span class="w"> </span>to<span class="w"> </span>see<span class="w"> </span>available<span class="w"> </span>operations
-
-Press<span class="w"> </span>TAB<span class="w"> </span><span class="k">for</span><span class="w"> </span>autocomplete
-
-&gt;&gt;&gt;
-</code></pre></div>
 <h3 id="explorer-features">Explorer Features</h3>
 <ul>
-<li><strong>Autocomplete</strong>: Press TAB to discover operations and parameters with type hints.</li>
-<li><strong>Execute instantly</strong>: Execute API operations with Python-like syntax.</li>
-<li><strong>Beautiful output</strong>: Syntax-highlighted JSON responses.</li>
-<li><strong>Command history</strong>: Navigate previous commands with UP/DOWN arrows.</li>
-<li><strong>Local config</strong>: Modify configuration locally as you're testing.</li>
-<li><strong>Debug mode</strong>: Run debug mode to see diagnostics and errors.</li>
+<li><strong>Autocomplete</strong> for operations and schemas.</li>
+<li><strong>Execute API operations</strong> with Python-like syntax.</li>
+<li><strong>Syntax-highlighted</strong> JSON responses.</li>
+<li><strong>Navigate previous commands</strong> like a python shell.</li>
+<li><strong>Modify configuration</strong> within the REPL as you're testing.</li>
+<li><strong>Run debug mode</strong> to see diagnostics and errors.</li>
 </ul>
+<h2 id="works-with-your-favourite-python-api-servers">Works with your favourite Python API Servers</h2>
+<p>We have specifically built and tested Clientele to be 100% compatible with OpenAPI schemas generated from:</p>
+<ul>
+<li><strong>FastAPI</strong></li>
+<li><strong>Django REST Framework</strong> via <strong>drf-spectacular</strong></li>
+<li><strong>Django Ninja</strong></li>
+</ul>
+<p>We have working example servers in the <a href="https://github.com/phalt/clientele/tree/main/server_examples"><code>server_examples/</code></a> directory.</p>
+<p>These examples match the code shown in our documentation and provide real, working servers you can run locally to test out Clientele.</p>
 <h2 id="openapi-compatibility">OpenAPI Compatibility</h2>
-<p>Clientele works by traversing OpenAPI 3.0+ schemas.</p>
-<p>Any framework or tool that generates standards-compliant OpenAPI schemas should work with Clientele.</p>
-<h3 id="verified-compatibility">Verified Compatibility</h3>
+<p>Clientele is compatible with OpenAPI 3.0+ schemas.</p>
 <p>We test Clientele against 2000+ real-world OpenAPI schemas from the <a href="https://github.com/APIs-guru/openapi-directory">APIs.guru OpenAPI Directory</a> through a CI cron job.</p>
 <p>As of our latest run, we successfully generate clients for <strong>95.39%</strong> of schemas in the directory.</p>
 <p><img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json" /></p>
-<p>Additionally we have specifically built and tested Clientele to support:</p>
-<ul>
-<li><strong>FastAPI</strong> - 100% compatibility with FastAPI's built-in OpenAPI schema generation.</li>
-<li><strong>Django REST Framework</strong> with <strong>drf-spectacular</strong> - Full support for DRF's OpenAPI schemas.</li>
-<li><strong>Django Ninja</strong> - Works with Django Ninja's OpenAPI output.</li>
-</ul>
-<h4 id="server-examples">Server Examples</h4>
-<p>Working example server applications are available in the <a href="https://github.com/phalt/clientele/tree/main/server_examples"><code>server_examples/</code></a> directory. Read more about each in our documentation:</p>
-<ul>
-<li><strong>FastAPI</strong> - See <a href="https://phalt.github.io/clientele/framework-fastapi/"><code>server_examples/fastapi/</code></a></li>
-<li><strong>Django REST Framework</strong> - See <a href="https://phalt.github.io/clientele/framework-drf/"><code>server_examples/django-rest-framework/</code></a></li>
-<li><strong>Django Ninja</strong> - See <a href="https://phalt.github.io/clientele/framework-django-ninja/"><code>server_examples/django-ninja/</code></a></li>
-</ul>
-<p>These examples match the code shown in our framework-specific documentation and provide real, working servers you can run locally to test Clientele's client generation.</p>
-<h2 id="additional-features">Additional Features</h2>
-<ul>
-<li><strong>Authentication</strong>: HTTP Basic and HTTP Bearer authentication built-in.</li>
-<li><strong>Configuration</strong>: A <code>config.py</code> entry point that's never overwritten on regeneration.</li>
-<li><strong>Testing</strong>: Designed for easy testing thanks to <a href="https://lundberg.github.io/respx/">respx</a>.</li>
-<li><strong>Formatting</strong>: Automatically formats generated code with <a href="https://docs.astral.sh/ruff/">Ruff</a>.</li>
-</ul>
 <h2 id="getting-started">Getting Started</h2>
-<p>👉 See our <a href="https://phalt.github.io/clientele/framework-fastapi/">framework-specific guides</a> for FastAPI, Django REST Framework, and Django Ninja</p>
-<p>👉 Read the <a href="https://phalt.github.io/clientele/">full documentation</a> for advanced usage</p>
+<p>👉 Read the <a href="https://phalt.github.io/clientele/">full documentation</a> for all documentation.</p>
 
 
 

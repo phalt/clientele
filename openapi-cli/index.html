@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://phalt.github.io/clientele/regeneration/">
+        <link rel="canonical" href="https://phalt.github.io/clientele/openapi-cli/">
       
       
-        <link rel="prev" href="../configuration/">
+        <link rel="prev" href="../api-authentication/">
       
       
-        <link rel="next" href="../authentication/">
+        <link rel="next" href="../openapi-regeneration/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Regeneration - ⚜️ Clientele</title>
+        <title>Usage & CLI - ⚜️ Clientele</title>
       
     
     
@@ -60,10 +60,12 @@
   
     
     
+      
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#regeneration" class="md-skip">
+        <a href="#usage-and-cli" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Regeneration
+              Usage & CLI
             
           </span>
         </div>
@@ -116,7 +118,33 @@
     </div>
     
       
+        <form class="md-header__option" data-md-component="palette">
+  
     
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -304,29 +332,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Usage & CLI
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -357,7 +362,7 @@
   
   
   <span class="md-ellipsis">
-    Framework Guides
+    Clientele API guide
     
   </span>
   
@@ -368,7 +373,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Framework Guides
+            Clientele API guide
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -379,12 +384,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-fastapi/" class="md-nav__link">
+      <a href="../api-overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    FastAPI
+    Overview
     
   </span>
   
@@ -402,12 +407,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-drf/" class="md-nav__link">
+      <a href="../api-configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Django REST Framework
+    Configuration
     
   </span>
   
@@ -425,12 +430,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-django-ninja/" class="md-nav__link">
+      <a href="../api-async/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Django Ninja
+    Async Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication
     
   </span>
   
@@ -473,7 +501,7 @@
   
   
   <span class="md-ellipsis">
-    Documentation
+    OpenAPI client scaffolder
     
   </span>
   
@@ -484,32 +512,9 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            Documentation
+            OpenAPI client scaffolder
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Configuration
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
             
               
                 
@@ -532,7 +537,7 @@
   
   
   <span class="md-ellipsis">
-    Regeneration
+    Usage & CLI
     
   </span>
   
@@ -545,7 +550,7 @@
   
   
   <span class="md-ellipsis">
-    Regeneration
+    Usage & CLI
     
   </span>
   
@@ -568,47 +573,119 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#understanding-regeneration" class="md-nav__link">
+  <a href="#openapi-scaffold-styles" class="md-nav__link">
     <span class="md-ellipsis">
-      Understanding Regeneration
+      OpenAPI scaffold styles
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenAPI scaffold styles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clientele-api-generators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clientele API generators
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#barebones-generators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Barebones generators
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaffold-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      scaffold-api
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scaffold-api">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-a-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      From a URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      From a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asyncio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Async.io
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-basic" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate-basic
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-manifestmd-file" class="md-nav__link">
+  <a href="#generate" class="md-nav__link">
     <span class="md-ellipsis">
-      The MANIFEST.md File
+      generate
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#regeneration-workflow" class="md-nav__link">
+  <a href="#generate-class" class="md-nav__link">
     <span class="md-ellipsis">
-      Regeneration Workflow
+      generate-class
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="generate-class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Handling Breaking Changes
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-cicd" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with CI/CD
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -628,12 +705,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
+      <a href="../openapi-regeneration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Authentication
+    Regeneration
     
   </span>
   
@@ -651,12 +728,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../exceptions/" class="md-nav__link">
+      <a href="../openapi-configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Exception Handling
+    Barebones Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openapi-authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Barebones authentication
     
   </span>
   
@@ -697,81 +797,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Testing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Explorer Mode
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../compatibility/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Compatibility & Limitations
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../complex_schemas/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Complex Schemas
     
   </span>
   
@@ -835,7 +866,7 @@
   
   
   <span class="md-ellipsis">
-    About
+    API Server Integrations
     
   </span>
   
@@ -845,6 +876,279 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            API Server Integrations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FastAPI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-drf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django REST Framework
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-django-ninja/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django Ninja
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Explorer
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API Explorer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Other documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Other documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exception Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             About
           </label>
@@ -862,7 +1166,7 @@
   
   
   <span class="md-ellipsis">
-    Design Philosophy
+    Background
     
   </span>
   
@@ -930,47 +1234,119 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#understanding-regeneration" class="md-nav__link">
+  <a href="#openapi-scaffold-styles" class="md-nav__link">
     <span class="md-ellipsis">
-      Understanding Regeneration
+      OpenAPI scaffold styles
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="OpenAPI scaffold styles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#clientele-api-generators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clientele API generators
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#barebones-generators" class="md-nav__link">
+    <span class="md-ellipsis">
+      Barebones generators
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaffold-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      scaffold-api
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="scaffold-api">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#from-a-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      From a URL
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#from-a-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      From a file
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#asyncio" class="md-nav__link">
+    <span class="md-ellipsis">
+      Async.io
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generate-basic" class="md-nav__link">
+    <span class="md-ellipsis">
+      generate-basic
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#the-manifestmd-file" class="md-nav__link">
+  <a href="#generate" class="md-nav__link">
     <span class="md-ellipsis">
-      The MANIFEST.md File
+      generate
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#regeneration-workflow" class="md-nav__link">
+  <a href="#generate-class" class="md-nav__link">
     <span class="md-ellipsis">
-      Regeneration Workflow
+      generate-class
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="generate-class">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      Handling Breaking Changes
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-cicd" class="md-nav__link">
-    <span class="md-ellipsis">
-      Integration with CI/CD
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -993,112 +1369,77 @@
   
 
 
-<h1 id="regeneration">Regeneration</h1>
-<p>At times you may wish to regenerate a client.</p>
-<p>This could be because the API has updated or you just want to use a newer version of Clientele.</p>
-<p>To force a regeneration you must pass the <code>--regen</code> or <code>-r</code> argument, for example:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w">  </span>--regen<span class="w"> </span>t
-</code></pre></div>
+<h1 id="usage-and-cli">📝 Usage and CLI</h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can copy and paste the command from the <code>MANIFEST.md</code> file in your previously-generated client for a quick and easy regeneration.</p>
+<p>You can type <code>clientele COMMAND --help</code> at anytime to see information about the available arguments.</p>
 </div>
-<h2 id="understanding-regeneration">Understanding Regeneration</h2>
-<p>When you regenerate a client with <code>--regen t</code>, Clientele follows these rules:</p>
-<p><strong>Files that WILL be overwritten:</strong></p>
-<ul>
-<li><code>client.py</code> - Your API client functions/class</li>
-<li><code>schemas.py</code> - Pydantic models for request/response data</li>
-<li><code>http.py</code> - HTTP handling logic</li>
-<li><code>__init__.py</code> - Package initialization</li>
-<li><code>MANIFEST.md</code> - Metadata about the generated client</li>
-</ul>
-<p><strong>Files that will NOT be overwritten:</strong></p>
-<ul>
-<li><code>config.py</code> - Your custom configuration (API URL, auth tokens, headers)</li>
-</ul>
-<p>This design ensures your customizations in <code>config.py</code> are preserved while keeping the client code in sync with the latest API schema.</p>
-<h2 id="the-manifestmd-file">The MANIFEST.md File</h2>
-<p>Every generated client includes a <code>MANIFEST.md</code> file that records:</p>
-<ul>
-<li>The exact command used to generate the client</li>
-<li>The OpenAPI version of the source schema</li>
-<li>The Clientele version used</li>
-<li>Generation timestamp</li>
-</ul>
-<p>Example <code>MANIFEST.md</code>:</p>
-<div class="highlight"><pre><span></span><code># Manifest
-
-Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
-Install with pipx:
-
-```sh
-pipx install clientele
-```
-
-API VERSION: 0.1.0
-OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 1.2.0
-
-Regenerate using this command:
-
-```sh
-clientele generate -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
-```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```
-</code></pre></div>
-<h2 id="regeneration-workflow">Regeneration Workflow</h2>
-<p>Here's the recommended workflow for keeping your client in sync:</p>
+<h2 id="openapi-scaffold-styles">OpenAPI scaffold styles</h2>
+<p>Clientele offers four styles of client generators.</p>
+<h3 id="clientele-api-generators">Clientele API generators</h3>
+<p>These generators will produce scaffolding that uses the <a href="../api-overview/">clientele API</a>:</p>
 <ol>
-<li><strong>API Updated</strong>: Your API has new endpoints or changed schemas</li>
-<li><strong>Regenerate</strong>: Run <code>clientele generate</code> with <code>--regen t</code>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen<span class="w"> </span>t
-</code></pre></div></li>
-<li><strong>Review Changes</strong>: Use git to see what changed
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>diff<span class="w"> </span>my_client/
-</code></pre></div></li>
-<li><strong>Inspect</strong> the changes.</li>
-<li><strong>Test</strong>: Run your test suite to catch breaking changes
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/
-</code></pre></div></li>
-<li><strong>Commit</strong>: Add the changes to git
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>my_client/
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Regenerate client for API v2.1&quot;</span>
-</code></pre></div></li>
+<li><strong><code>generate-basic</code></strong> - Basic scaffolding with no generated code.</li>
+<li><strong><code>scaffold-api</code></strong> - A fully scaffolded client integration either async or sync.</li>
 </ol>
-<h2 id="handling-breaking-changes">Handling Breaking Changes</h2>
-<p>When the API introduces breaking changes, regeneration will reflect them:</p>
+<h3 id="barebones-generators">Barebones generators</h3>
+<p>Clientele can provide generated http clients that do not use <a href="../api-overview/">clientele API</a> and instead provide a <code>http.py</code> package that manages most of the core http request/response logic.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These options are considered deprecated from clientele version 2.0.0 and will not be supported in future versions.</p>
+</div>
+<ol>
+<li><strong><code>generate</code></strong> - a barebones function-based client either as async or sync.</li>
+<li><strong><code>generate-class</code></strong> - a barebones class-based client either as async or sync.</li>
+</ol>
+<h2 id="scaffold-api">scaffold-api</h2>
+<p>The <code>scaffold-api</code> command can be used to scaffold an entire API client integration from an OpenAPI schema.</p>
+<p>This command will generate:</p>
 <ul>
-<li><strong>Removed endpoints</strong> → Functions deleted from <code>client.py</code></li>
-<li><strong>Renamed fields</strong> → Schema properties change</li>
-<li><strong>New required fields</strong> → Function signatures updated</li>
-<li><strong>Changed response types</strong> → Schema unions modified</li>
+<li>All available operations in the <code>operations</code> of the OpenAPI spec as fully typed, decorated functions.</li>
+<li>All available <code>schemas</code> in the <code>schemas</code> of the OpenAPI spec as Pyantic models.</li>
 </ul>
-<p>You should have tests to catch these issues.</p>
-<p>If you need to support multiple API versions, consider generating separate clients for each version sing version-specific directories (e.g., <code>my_client_v1/</code>, <code>my_client_v2/</code>).</p>
-<h2 id="integration-with-cicd">Integration with CI/CD</h2>
-<p>You can automate regeneration in CI/CD:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Example GitHub Actions workflow</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regenerate API client</span>
-<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">clientele generate \</span>
-<span class="w">      </span><span class="no">-u http://api:8000/openapi.json \</span>
-<span class="w">      </span><span class="no">-o clients/my_api/ \</span>
-<span class="w">      </span><span class="no">--regen t</span>
-
-<span class="w">    </span><span class="no"># Check if client changed</span>
-<span class="w">    </span><span class="no">if ! git diff --quiet clients/my_api/; then</span>
-<span class="w">      </span><span class="no">echo &quot;API client changed - review required&quot;</span>
-<span class="w">      </span><span class="no">git diff clients/my_api/</span>
-<span class="w">      </span><span class="no">exit 1</span>
-<span class="w">    </span><span class="no">fi</span>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
-<p>This keeps your client in sync with the API schema.</p>
+<h3 id="from-a-url">From a URL</h3>
+<p>Use the <code>-u</code> or <code>--url</code> argument.</p>
+<p><code>-o</code> or <code>--output</code> is the target directory for the generated client.</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+</code></pre></div>
+<h3 id="from-a-file">From a file</h3>
+<p>Alternatively you can provide a local file using the <code>-f</code> or <code>--file</code> argument.</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+</code></pre></div>
+<h3 id="asyncio">Async.io</h3>
+<p>If you prefer an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> client, just pass <code>--asyncio t</code> to your command.</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
+</code></pre></div>
+<h2 id="generate-basic">generate-basic</h2>
+<p>The <code>generate-basic</code> command can be used to scaffold a basic file structure for an HTTP client.</p>
+<p>It does not require an OpenAPI schema.</p>
+<p>It will generate some basic imports and a sample configuration class.</p>
+<p>This command is there for when have an HTTP API without an OpenAPI schema, but you want to keep a consistent file structure with other Clientele API clients.</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-basic<span class="w"> </span>-o<span class="w"> </span>my_client/
+</code></pre></div>
+<h2 id="generate"><code>generate</code></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option is considered deprecated from clientele version 2.0.0 and will not be supported in future versions.</p>
+</div>
+<p>Generate a barebones function-based Python HTTP Client from an OpenAPI Schema.</p>
+<p>It accepts the same arguments as <code>scaffold-api</code>.</p>
+<h2 id="generate-class"><code>generate-class</code></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This option is considered deprecated from clientele version 2.0.0 and will not be supported in future versions.</p>
+</div>
+<p>Generate a barebones class-based Python HTTP Client from an OpenAPI Schema. </p>
+<p>This generator creates a <code>Client</code> class object with methods for each API endpoint instead of functions in a module.</p>
+<h3 id="usage">Usage</h3>
+<p>The <code>generate-class</code> command accepts the same arguments as <code>generate</code>:</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-class<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+</code></pre></div>
+<p>It accepts the same arguments as <code>scaffold-api</code>.</p>
 
 
 

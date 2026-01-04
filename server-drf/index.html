@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://phalt.github.io/clientele/framework-drf/">
+        <link rel="canonical" href="https://phalt.github.io/clientele/server-drf/">
       
       
-        <link rel="prev" href="../framework-fastapi/">
+        <link rel="prev" href="../server-fastapi/">
       
       
-        <link rel="next" href="../framework-django-ninja/">
+        <link rel="next" href="../server-django-ninja/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -60,10 +60,12 @@
   
     
     
+      
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -116,7 +118,33 @@
     </div>
     
       
+        <form class="md-header__option" data-md-component="palette">
+  
     
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -304,6 +332,51 @@
 
               
             
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Clientele API guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Clientele API guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
               
                 
   
@@ -311,12 +384,287 @@
   
   
     <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
+      <a href="../api-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-async/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Async Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    OpenAPI client scaffolder
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            OpenAPI client scaffolder
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openapi-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Usage & CLI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openapi-regeneration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Regeneration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openapi-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Barebones Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openapi-authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Barebones authentication
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Generated Client Tour
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../compatibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Compatibility & Limitations
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../references/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    References in OpenAPI
     
   </span>
   
@@ -351,15 +699,15 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Framework Guides
+    API Server Integrations
     
   </span>
   
@@ -367,10 +715,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
-            Framework Guides
+            API Server Integrations
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -381,7 +729,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-fastapi/" class="md-nav__link">
+      <a href="../server-fastapi/" class="md-nav__link">
         
   
   
@@ -524,9 +872,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#download-the-schema" class="md-nav__link">
+  <a href="#downloading-the-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      Download the Schema
+      Downloading the Schema
     </span>
   </a>
   
@@ -538,32 +886,14 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-generate-the-client" class="md-nav__link">
+  <a href="#step-3-scaffold-the-client" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 3: Generate the Client
+      Step 3: Scaffold the Client
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 3: Generate the Client">
+    <nav class="md-nav" aria-label="Step 3: Scaffold the Client">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-generation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Generation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#class-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Class-Based Client
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#async-client" class="md-nav__link">
@@ -580,19 +910,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-use-the-generated-client" class="md-nav__link">
+  <a href="#step-4-use-the-scaffolded-client" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 4: Use the Generated Client
+      Step 4: Use the scaffolded Client
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Use the Generated Client">
+    <nav class="md-nav" aria-label="Step 4: Use the scaffolded Client">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#function-based-client-example" class="md-nav__link">
+  <a href="#usage-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Function-Based Client Example
+      Usage Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#async-usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Async usage Example
     </span>
   </a>
   
@@ -643,39 +982,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Authentication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#token-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Token Authentication
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#session-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Session Authentication
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jwt-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      JWT Authentication
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -684,21 +990,6 @@
       Regenerating the Client
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Regenerating the Client">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommended-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Recommended Workflow
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -745,143 +1036,20 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#viewsets-and-routers" class="md-nav__link">
+  <a href="#path-and-query-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      ViewSets and Routers
+      Path and Query Parameters
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="ViewSets and Routers">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#drf-viewset" class="md-nav__link">
-    <span class="md-ellipsis">
-      DRF ViewSet
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#router-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Router Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pagination" class="md-nav__link">
+  <a href="#response-models" class="md-nav__link">
     <span class="md-ellipsis">
-      Pagination
+      Response Models
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Pagination">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#drf-pagination-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      DRF Pagination Setup
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#generated-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      Generated Schema
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#filtering-and-query-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Filtering and Query Parameters
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Filtering and Query Parameters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#drf-view-with-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      DRF View with Filtering
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#client-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Client Usage
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Known Limitations
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Known Limitations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#openapi-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      OpenAPI Version
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#complex-serializers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Complex Serializers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#file-uploads" class="md-nav__link">
-    <span class="md-ellipsis">
-      File Uploads
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -891,39 +1059,6 @@
       Best Practices
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#helpful-drf-spectacular-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      Helpful drf-spectacular Features
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Helpful drf-spectacular Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#documenting-responses" class="md-nav__link">
-    <span class="md-ellipsis">
-      Documenting Responses
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#documenting-request-bodies" class="md-nav__link">
-    <span class="md-ellipsis">
-      Documenting Request Bodies
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -952,7 +1087,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-django-ninja/" class="md-nav__link">
+      <a href="../server-django-ninja/" class="md-nav__link">
         
   
   
@@ -990,15 +1125,15 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
   <span class="md-ellipsis">
-    Documentation
+    API Explorer
     
   </span>
   
@@ -1006,10 +1141,10 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
-            Documentation
+            API Explorer
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -1020,12 +1155,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../explore/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Configuration
+    Overview
     
   </span>
   
@@ -1036,51 +1171,50 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../regeneration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Regeneration
-    
-  </span>
-  
-
-      </a>
+          </ul>
+        </nav>
+      
     </li>
   
 
-              
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
-        
   
   
   <span class="md-ellipsis">
-    Authentication
+    Other documentation
     
   </span>
   
 
-      </a>
-    </li>
-  
-
-              
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Other documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1095,29 +1229,6 @@
   
   <span class="md-ellipsis">
     Exception Handling
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Generated Client Tour
     
   </span>
   
@@ -1151,98 +1262,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Explorer Mode
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../compatibility/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Compatibility & Limitations
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../complex_schemas/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Complex Schemas
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../references/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    References in OpenAPI
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1265,10 +1284,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1281,8 +1300,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             About
           </label>
@@ -1300,7 +1319,7 @@
   
   
   <span class="md-ellipsis">
-    Design Philosophy
+    Background
     
   </span>
   
@@ -1438,9 +1457,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#download-the-schema" class="md-nav__link">
+  <a href="#downloading-the-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      Download the Schema
+      Downloading the Schema
     </span>
   </a>
   
@@ -1452,32 +1471,14 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-3-generate-the-client" class="md-nav__link">
+  <a href="#step-3-scaffold-the-client" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 3: Generate the Client
+      Step 3: Scaffold the Client
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 3: Generate the Client">
+    <nav class="md-nav" aria-label="Step 3: Scaffold the Client">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#basic-generation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Basic Generation
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#class-based-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      Class-Based Client
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#async-client" class="md-nav__link">
@@ -1494,19 +1495,28 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#step-4-use-the-generated-client" class="md-nav__link">
+  <a href="#step-4-use-the-scaffolded-client" class="md-nav__link">
     <span class="md-ellipsis">
-      Step 4: Use the Generated Client
+      Step 4: Use the scaffolded Client
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Step 4: Use the Generated Client">
+    <nav class="md-nav" aria-label="Step 4: Use the scaffolded Client">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#function-based-client-example" class="md-nav__link">
+  <a href="#usage-example" class="md-nav__link">
     <span class="md-ellipsis">
-      Function-Based Client Example
+      Usage Example
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#async-usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Async usage Example
     </span>
   </a>
   
@@ -1557,39 +1567,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Authentication">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#token-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Token Authentication
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#session-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      Session Authentication
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#jwt-authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      JWT Authentication
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1598,21 +1575,6 @@
       Regenerating the Client
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Regenerating the Client">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recommended-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      Recommended Workflow
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1659,143 +1621,20 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#viewsets-and-routers" class="md-nav__link">
+  <a href="#path-and-query-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      ViewSets and Routers
+      Path and Query Parameters
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="ViewSets and Routers">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#drf-viewset" class="md-nav__link">
-    <span class="md-ellipsis">
-      DRF ViewSet
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#router-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      Router Configuration
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#pagination" class="md-nav__link">
+  <a href="#response-models" class="md-nav__link">
     <span class="md-ellipsis">
-      Pagination
+      Response Models
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Pagination">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#drf-pagination-setup" class="md-nav__link">
-    <span class="md-ellipsis">
-      DRF Pagination Setup
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#generated-schema" class="md-nav__link">
-    <span class="md-ellipsis">
-      Generated Schema
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#filtering-and-query-parameters" class="md-nav__link">
-    <span class="md-ellipsis">
-      Filtering and Query Parameters
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Filtering and Query Parameters">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#drf-view-with-filtering" class="md-nav__link">
-    <span class="md-ellipsis">
-      DRF View with Filtering
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#client-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Client Usage
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-limitations" class="md-nav__link">
-    <span class="md-ellipsis">
-      Known Limitations
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Known Limitations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#openapi-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      OpenAPI Version
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#complex-serializers" class="md-nav__link">
-    <span class="md-ellipsis">
-      Complex Serializers
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#file-uploads" class="md-nav__link">
-    <span class="md-ellipsis">
-      File Uploads
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1805,39 +1644,6 @@
       Best Practices
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#helpful-drf-spectacular-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      Helpful drf-spectacular Features
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Helpful drf-spectacular Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#documenting-responses" class="md-nav__link">
-    <span class="md-ellipsis">
-      Documenting Responses
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#documenting-request-bodies" class="md-nav__link">
-    <span class="md-ellipsis">
-      Documenting Request Bodies
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1870,9 +1676,9 @@
 
 
 <h1 id="using-clientele-with-django-rest-framework">Using Clientele with Django REST Framework</h1>
-<p>This guide shows you how to generate a Python client for a Django REST Framework (DRF) API using Clientele and <strong>drf-spectacular</strong>.</p>
+<p>This guide shows you how to scaffold a Python client for a Django REST Framework (DRF) API using Clientele and <strong>drf-spectacular</strong>.</p>
 <blockquote>
-<p><strong>💡 Working Example</strong>: See a real Django REST Framework application with code examples from this guide in <a href="https://github.com/phalt/clientele/tree/main/server_examples/django-rest-framework"><code>server_examples/django-rest-framework/</code></a></p>
+<p><strong>💡 Working Example</strong>: See a real Django REST Framework application with code examples from this guide in <a href="https://github.com/phalt/clientele/tree/main/server_examples/django_rest_framework"><code>server_examples/django_rest_framework/</code></a></p>
 </blockquote>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
@@ -1924,33 +1730,28 @@
 <p>For local development:</p>
 <div class="highlight"><pre><span></span><code>http://localhost:8000/api/schema/
 </code></pre></div>
-<h3 id="download-the-schema">Download the Schema</h3>
-<p><strong>Option A: Use the URL directly</strong>:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
+<h3 id="downloading-the-schema">Downloading the Schema</h3>
+<p>You can either:</p>
+<p><strong>Option A: Use the URL directly</strong> (if the API is accessible):</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
-<p><strong>Option B: Download the schema file</strong>:</p>
+<p><strong>Option B: Download the schema file first</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>&gt;<span class="w"> </span>openapi.json
-clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
 <p><strong>Option C: Generate schema file with Django management command</strong>:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>manage.py<span class="w"> </span>spectacular<span class="w"> </span>--file<span class="w"> </span>openapi.json
-clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
-<h2 id="step-3-generate-the-client">Step 3: Generate the Client</h2>
-<h3 id="basic-generation">Basic Generation</h3>
-<p>Generate a function-based client:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
-</code></pre></div>
-<h3 id="class-based-client">Class-Based Client</h3>
-<p>For an object-oriented approach:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-class<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
+<h2 id="step-3-scaffold-the-client">Step 3: Scaffold the Client</h2>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
 <h3 id="async-client">Async Client</h3>
-<p>Generate an async client (note: DRF itself is synchronous, but the client can be async):</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
+<p>If you want an async client (note: DRF itself is synchronous, but the client can be async):</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
 </code></pre></div>
-<h2 id="step-4-use-the-generated-client">Step 4: Use the Generated Client</h2>
-<h3 id="function-based-client-example">Function-Based Client Example</h3>
+<h2 id="step-4-use-the-scaffolded-client">Step 4: Use the scaffolded Client</h2>
+<h3 id="usage-example">Usage Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
 
 <span class="c1"># List resources</span>
@@ -1969,6 +1770,17 @@ clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User created: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">detail</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="async-usage-example">Async usage Example</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_async_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">():</span>
+    <span class="n">user_data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">UserRequest</span><span class="p">(</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="s2">&quot;alice@example.com&quot;</span>
+    <span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">create_user_api_users_post</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">user_data</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span>
 </code></pre></div>
 <h2 id="improving-operationid-in-drf">Improving operationId in DRF</h2>
 <p>By default, drf-spectacular generates operation IDs from view names and paths. You can customize them for cleaner function names.</p>
@@ -2012,48 +1824,9 @@ clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="authentication">Authentication</h2>
-<h3 id="token-authentication">Token Authentication</h3>
-<p>If your DRF API uses token authentication:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Django settings.py</span>
-<span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;DEFAULT_AUTHENTICATION_CLASSES&#39;</span><span class="p">:</span> <span class="p">[</span>
-        <span class="s1">&#39;rest_framework.authtoken.models.TokenAuthentication&#39;</span><span class="p">,</span>
-    <span class="p">],</span>
-<span class="p">}</span>
-</code></pre></div>
-<p>Configure in the client's <code>config.py</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_bearer_token</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Provide your DRF auth token.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">environ</span>
-    <span class="k">return</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;DRF_AUTH_TOKEN&quot;</span><span class="p">,</span> <span class="s2">&quot;your-token-here&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="session-authentication">Session Authentication</h3>
-<p>For session-based auth, you may need to handle cookie management manually in the client's <code>config.py</code> using additional headers.</p>
-<h3 id="jwt-authentication">JWT Authentication</h3>
-<p>If using JWT (e.g., with djangorestframework-simplejwt):</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_bearer_token</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Provide your JWT access token.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">environ</span>
-    <span class="k">return</span> <span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;JWT_ACCESS_TOKEN&quot;</span><span class="p">,</span> <span class="s2">&quot;your-jwt-token&quot;</span><span class="p">)</span>
-</code></pre></div>
+<p>See <a href="../api-authentication/">api authentication</a>.</p>
 <h2 id="regenerating-the-client">Regenerating the Client</h2>
-<p>When your DRF API changes, regenerate the client:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen<span class="w"> </span>t
-</code></pre></div>
-<h3 id="recommended-workflow">Recommended Workflow</h3>
-<ol>
-<li>Update your DRF serializers/views</li>
-<li>Run migrations if needed</li>
-<li>Regenerate the schema: <code>python manage.py spectacular --file openapi.json</code></li>
-<li>Regenerate the client: <code>clientele generate -f openapi.json -o my_client/ --regen t</code></li>
-<li>Review changes: <code>git diff</code></li>
-<li>Test the updated client</li>
-<li>Commit changes</li>
-</ol>
+<p>See <a href="../openapi-regeneration/">regeneration</a>.</p>
 <h2 id="serializers-and-schemas">Serializers and Schemas</h2>
 <p>DRF serializers become Pydantic models in the generated client:</p>
 <h3 id="drf-serializer">DRF Serializer</h3>
@@ -2066,6 +1839,8 @@ clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="
 </code></pre></div>
 <h3 id="generated-pydantic-schema">Generated Pydantic Schema</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># In my_client/schemas.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pydantic</span>
+
 <span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">pydantic</span><span class="o">.</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">username</span><span class="p">:</span> <span class="nb">str</span>
@@ -2076,119 +1851,55 @@ clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="
 <div class="highlight"><pre><span></span><code><span class="c1"># The client returns properly typed responses</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user_api_users_id_get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 <span class="c1"># response is typed as schemas.User</span>
-<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">User</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>  <span class="c1"># Full IDE support</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="viewsets-and-routers">ViewSets and Routers</h2>
-<p>DRF ViewSets with routers automatically generate appropriate endpoints:</p>
-<h3 id="drf-viewset">DRF ViewSet</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">viewsets</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">UserViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
-    <span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
-</code></pre></div>
-<h3 id="router-configuration">Router Configuration</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.routers</span><span class="w"> </span><span class="kn">import</span> <span class="n">DefaultRouter</span>
-
-<span class="n">router</span> <span class="o">=</span> <span class="n">DefaultRouter</span><span class="p">()</span>
-<span class="n">router</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;users&#39;</span><span class="p">,</span> <span class="n">UserViewSet</span><span class="p">)</span>
-</code></pre></div>
-<p>This generates endpoints like:</p>
-<ul>
-<li><code>GET /users/</code> → <code>client.list_users()</code></li>
-<li><code>POST /users/</code> → <code>client.create_user(data=...)</code></li>
-<li><code>GET /users/{id}/</code> → <code>client.get_user(id=...)</code></li>
-<li><code>PUT /users/{id}/</code> → <code>client.update_user(id=..., data=...)</code></li>
-<li><code>DELETE /users/{id}/</code> → <code>client.delete_user(id=...)</code></li>
-</ul>
-<h2 id="pagination">Pagination</h2>
-<p>DRF pagination is reflected in the schema and client:</p>
-<h3 id="drf-pagination-setup">DRF Pagination Setup</h3>
-<div class="highlight"><pre><span></span><code><span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;DEFAULT_PAGINATION_CLASS&#39;</span><span class="p">:</span> <span class="s1">&#39;rest_framework.pagination.PageNumberPagination&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;PAGE_SIZE&#39;</span><span class="p">:</span> <span class="mi">100</span>
-<span class="p">}</span>
-</code></pre></div>
-<h3 id="generated-schema">Generated Schema</h3>
-<p>The response will include pagination fields:</p>
-<div class="highlight"><pre><span></span><code><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">list_users_api_users_get</span><span class="p">(</span><span class="n">page</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="c1"># Response has structure like:</span>
-<span class="c1"># {</span>
-<span class="c1">#   &quot;count&quot;: 250,</span>
-<span class="c1">#   &quot;next&quot;: &quot;http://...&quot;,</span>
-<span class="c1">#   &quot;previous&quot;: &quot;http://...&quot;,</span>
-<span class="c1">#   &quot;results&quot;: [...]</span>
-<span class="c1"># }</span>
-</code></pre></div>
-<h2 id="filtering-and-query-parameters">Filtering and Query Parameters</h2>
+<h2 id="path-and-query-parameters">Path and Query Parameters</h2>
 <p>Query parameters are automatically converted to function arguments:</p>
-<h3 id="drf-view-with-filtering">DRF View with Filtering</h3>
+<p><strong>DRF View with Filtering</strong></p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">UserViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
     <span class="n">filterset_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;is_active&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">]</span>
 </code></pre></div>
-<h3 id="client-usage">Client Usage</h3>
+<p><strong>Client Usage</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Query parameters become function arguments</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">list_users_api_users_get</span><span class="p">(</span>
     <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">username</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span>
 <span class="p">)</span>
 </code></pre></div>
-<h2 id="known-limitations">Known Limitations</h2>
-<h3 id="openapi-version">OpenAPI Version</h3>
-<ul>
-<li><strong>Supported</strong>: drf-spectacular generates OpenAPI 3.0 schemas that work perfectly with Clientele</li>
-<li><strong>Partial Support</strong>: Some complex DRF features may need schema customization</li>
-<li><strong>Not Supported</strong>: DRF's older CoreAPI schema format is not supported - use drf-spectacular</li>
-</ul>
-<h3 id="complex-serializers">Complex Serializers</h3>
-<ul>
-<li>Most DRF serializer features work out of the box</li>
-<li>Nested serializers are fully supported</li>
-<li>SerializerMethodField may require manual schema hints with <code>@extend_schema_field</code></li>
-</ul>
-<h3 id="file-uploads">File Uploads</h3>
-<p>File upload endpoints may require manual customization in the generated client.</p>
+<h2 id="response-models">Response Models</h2>
+<p>DRF's serializers become response models in the client:</p>
+<p><strong>DRF ViewSet</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework</span><span class="w"> </span><span class="kn">import</span> <span class="n">serializers</span><span class="p">,</span> <span class="n">viewsets</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">UserModel</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">UserViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">UserModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">User</span>
+</code></pre></div>
+<p><strong>Generated Client Usage</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user_api_users_id_get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="c1"># response is typed as schemas.User</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">username</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="best-practices">Best Practices</h2>
 <ol>
 <li><strong>Use <code>@extend_schema</code></strong> to provide clear operation IDs and response types</li>
+<li><strong>Keep schemas in sync</strong> by regenerating after API changes</li>
+<li><strong>Version your generated client</strong> in git to track changes</li>
+<li><strong>Test thoroughly</strong> after regenerating</li>
 <li><strong>Document your serializers</strong> - drf-spectacular uses docstrings in schema generation</li>
-<li><strong>Regenerate regularly</strong> to keep client in sync with API changes</li>
-<li><strong>Use <code>extend_schema_field</code></strong> for SerializerMethodFields to ensure proper typing</li>
-<li><strong>Version your generated client</strong> in git</li>
 </ol>
-<h2 id="helpful-drf-spectacular-features">Helpful drf-spectacular Features</h2>
-<h3 id="documenting-responses">Documenting Responses</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">drf_spectacular.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">extend_schema</span><span class="p">,</span> <span class="n">OpenApiResponse</span>
-
-<span class="nd">@extend_schema</span><span class="p">(</span>
-    <span class="n">responses</span><span class="o">=</span><span class="p">{</span>
-        <span class="mi">200</span><span class="p">:</span> <span class="n">UserSerializer</span><span class="p">,</span>
-        <span class="mi">400</span><span class="p">:</span> <span class="n">OpenApiResponse</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Invalid request&#39;</span><span class="p">),</span>
-        <span class="mi">404</span><span class="p">:</span> <span class="n">OpenApiResponse</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;User not found&#39;</span><span class="p">),</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-<span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
-    <span class="c1"># ...</span>
-</code></pre></div>
-<h3 id="documenting-request-bodies">Documenting Request Bodies</h3>
-<div class="highlight"><pre><span></span><code><span class="nd">@extend_schema</span><span class="p">(</span>
-    <span class="n">request</span><span class="o">=</span><span class="n">UserSerializer</span><span class="p">,</span>
-    <span class="n">responses</span><span class="o">=</span><span class="p">{</span><span class="mi">201</span><span class="p">:</span> <span class="n">UserSerializer</span><span class="p">}</span>
-<span class="p">)</span>
-<span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
-    <span class="c1"># ...</span>
-</code></pre></div>
 <h2 id="next-steps">Next Steps</h2>
 <ul>
-<li><a href="https://drf-spectacular.readthedocs.io/">drf-spectacular documentation</a></li>
-<li><a href="../regeneration/">Learn about regeneration workflow</a></li>
+<li><a href="../openapi-regeneration/">Learn about regeneration workflow</a></li>
+<li><a href="../api-authentication/">Configure authentication</a></li>
 <li><a href="../testing/">Set up testing with respx</a></li>
-<li><a href="../examples/">Understand client structure</a></li>
 </ul>
 
 

@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://phalt.github.io/clientele/design/">
       
       
-        <link rel="prev" href="../references/">
+        <link rel="prev" href="../testing/">
       
       
         <link rel="next" href="../CHANGELOG/">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Design Philosophy - ⚜️ Clientele</title>
+        <title>Background - ⚜️ Clientele</title>
       
     
     
@@ -60,10 +60,12 @@
   
     
     
+      
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Design Philosophy
+              Background
             
           </span>
         </div>
@@ -116,7 +118,33 @@
     </div>
     
       
+        <form class="md-header__option" data-md-component="palette">
+  
     
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -304,29 +332,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../usage/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Usage & CLI
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -357,7 +362,7 @@
   
   
   <span class="md-ellipsis">
-    Framework Guides
+    Clientele API guide
     
   </span>
   
@@ -368,7 +373,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
-            Framework Guides
+            Clientele API guide
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -379,12 +384,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-fastapi/" class="md-nav__link">
+      <a href="../api-overview/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    FastAPI
+    Overview
     
   </span>
   
@@ -402,12 +407,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-drf/" class="md-nav__link">
+      <a href="../api-configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Django REST Framework
+    Configuration
     
   </span>
   
@@ -425,12 +430,35 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-django-ninja/" class="md-nav__link">
+      <a href="../api-async/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Django Ninja
+    Async Support
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-authentication/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Authentication
     
   </span>
   
@@ -471,7 +499,7 @@
   
   
   <span class="md-ellipsis">
-    Documentation
+    OpenAPI client scaffolder
     
   </span>
   
@@ -482,7 +510,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            Documentation
+            OpenAPI client scaffolder
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -493,12 +521,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../openapi-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Configuration
+    Usage & CLI
     
   </span>
   
@@ -516,7 +544,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../regeneration/" class="md-nav__link">
+      <a href="../openapi-regeneration/" class="md-nav__link">
         
   
   
@@ -539,12 +567,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
+      <a href="../openapi-configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Authentication
+    Barebones Configuration
     
   </span>
   
@@ -562,12 +590,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../exceptions/" class="md-nav__link">
+      <a href="../openapi-authentication/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Exception Handling
+    Barebones authentication
     
   </span>
   
@@ -608,81 +636,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Testing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Explorer Mode
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../compatibility/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Compatibility & Limitations
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../complex_schemas/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Complex Schemas
     
   </span>
   
@@ -727,6 +686,279 @@
       
   
   
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Server Integrations
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            API Server Integrations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FastAPI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-drf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django REST Framework
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-django-ninja/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django Ninja
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Explorer
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API Explorer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Other documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Other documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exception Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -740,10 +972,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -756,8 +988,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             About
           </label>
@@ -784,7 +1016,7 @@
   
   
   <span class="md-ellipsis">
-    Design Philosophy
+    Background
     
   </span>
   
@@ -797,7 +1029,7 @@
   
   
   <span class="md-ellipsis">
-    Design Philosophy
+    Background
     
   </span>
   
@@ -894,6 +1126,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clientele-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clientele API
+    </span>
+  </a>
   
 </li>
       
@@ -1040,6 +1281,15 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#clientele-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clientele API
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1068,7 +1318,7 @@
 <h2 id="openapi-client-generators">OpenAPI client generators</h2>
 <p>Every few years I check the HTTP API landscape to see what has changed, and what new tooling is available.</p>
 <p>A big part of this research is seeing how far <a href="https://www.openapis.org/">OpenAPI client generators</a> have come.  </p>
-<p>Despite the heavy adoption of OpenAPI <em>schema</em> generators, the "last mile" (i.e. - generating, and using, a client library) still has a experience nowhere near the maturity as the schema generator landscape. The great thing about schema generators these days is they are seemlessly blended in - most API frameworks, especially in the Python landscape, generate schemas as standard.</p>
+<p>Despite the heavy adoption of OpenAPI <em>schema</em> generators, the "last mile" (i.e. - generating, and using, a client library) still has a experience nowhere near the maturity as the schema generator landscape. The great thing about schema generators these days is they are seemlessly blended in - most API server frameworks, especially in the Python landscape, generate schemas as standard.</p>
 <p>But my experience with most <em>client</em> generators always falls into one of these buckets:</p>
 <ul>
 <li>
@@ -1089,7 +1339,7 @@
 <p>And this was our summary at the time of writing:</p>
 <ul>
 <li>
-<p>API tools and providers had adopted OpenAPI very well. For example - tools like <a href="https://fastapi.tiangolo.com/">FastAPI</a> and <a href="https://github.com/tfranzel/drf-spectacular">drf-spectacular</a> now make it easy for the most popular python web frameworks to publish OpenAPI schemas.</p>
+<p>API tools and providers had adopted OpenAPI very well. For example - tools like <a href="https://fastapi.tiangolo.com/">FastAPI</a> and <a href="https://github.com/tfranzel/drf-spectacular">drf-spectacular</a> now make it easy for the most popular python web server frameworks to publish OpenAPI schemas.</p>
 </li>
 <li>
 <p>There are a lot of options for generating clients. They all meet the need of "generating a python client using the schema". But, almost universally, they have a poor developer experience.</p>
@@ -1128,8 +1378,10 @@
 <p>In fact, I have some generated clients in our <a href="https://github.com/phalt/clientele/tree/main/tests">project repository</a> so you can see what it looks like. We even have example <a href="https://github.com/phalt/clientele/blob/main/tests/test_generated_client.py">tests</a> for you to learn how to integrate with it.</p>
 <p>It is that way because I know you will need to inspect it in the future. I want you to know that this is a sane and sensible tool.</p>
 <h3 id="supporting-python-api-frameworks">Supporting Python API Frameworks</h3>
-<p>The python ecosystem for API frameworks is very rich and mature. I love the options we have to build APIs with. I wanted to focus on supporting this ecosystem specifically because of how much I love the tooling, but also because it means I can focus on doing one thing great: client generation that specifically supports Python API frameworks.</p>
-<p>You'll see in the project documentation that we explain how to use common API frameworks like FastAPI, Django REST Framework and Django-ninja, and the project even has <a href="https://github.com/phalt/clientele/tree/main/server_examples">client and server examples</a> to help demonstrate and prove it's usefulness.</p>
+<p>The python ecosystem for API server frameworks is very rich and mature. I love the options we have to build APIs with. I wanted to focus on supporting this ecosystem specifically because of how much I love the tooling, but also because it means I can focus on doing one thing great: client generation that specifically supports Python API server frameworks.</p>
+<p>You'll see in the project documentation that we explain how to use common API server frameworks like FastAPI, Django REST Framework and Django-ninja, and the project even has <a href="https://github.com/phalt/clientele/tree/main/server_examples">client and server examples</a> to help demonstrate and prove it's usefulness.</p>
+<h2 id="clientele-api">Clientele API</h2>
+<p>The best way to learn about the beginning of the clientele API is to read <a href="https://paulwrites.software/articles/python-api-clients">this blog post</a>.</p>
 
 
 

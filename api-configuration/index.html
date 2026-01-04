@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://phalt.github.io/clientele/usage/">
+        <link rel="canonical" href="https://phalt.github.io/clientele/api-configuration/">
       
       
-        <link rel="prev" href="../install/">
+        <link rel="prev" href="../api-overview/">
       
       
-        <link rel="next" href="../framework-fastapi/">
+        <link rel="next" href="../api-async/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
@@ -22,7 +22,7 @@
     
     
       
-        <title>Usage & CLI - ⚜️ Clientele</title>
+        <title>Configuration - ⚜️ Clientele</title>
       
     
     
@@ -60,10 +60,12 @@
   
     
     
+      
     
     
     
-    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue">
   
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
@@ -72,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#use-clientele" class="md-skip">
+        <a href="#client-configuration" class="md-skip">
           Skip to content
         </a>
       
@@ -108,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage & CLI
+              Configuration
             
           </span>
         </div>
@@ -116,7 +118,33 @@
     </div>
     
       
+        <form class="md-header__option" data-md-component="palette">
+  
     
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue-grey" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -247,20 +275,18 @@
       
   
   
-    
   
   
-  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
         
           
           <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
@@ -276,7 +302,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_2">
             <span class="md-nav__icon md-icon"></span>
             Getting Started
@@ -296,6 +322,76 @@
   
   <span class="md-ellipsis">
     Install
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Clientele API guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Clientele API guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
     
   </span>
   
@@ -327,7 +423,7 @@
   
   
   <span class="md-ellipsis">
-    Usage & CLI
+    Configuration
     
   </span>
   
@@ -340,7 +436,7 @@
   
   
   <span class="md-ellipsis">
-    Usage & CLI
+    Configuration
     
   </span>
   
@@ -363,46 +459,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#client-types" class="md-nav__link">
+  <a href="#base-url" class="md-nav__link">
     <span class="md-ellipsis">
-      Client Types
+      base url
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#generate" class="md-nav__link">
+  <a href="#standard-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      generate
+      Standard configuration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="generate">
+    <nav class="md-nav" aria-label="Standard configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#from-a-url" class="md-nav__link">
+  <a href="#configuration-options" class="md-nav__link">
     <span class="md-ellipsis">
-      From a URL
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#from-a-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      From a file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#asyncio" class="md-nav__link">
-    <span class="md-ellipsis">
-      Async.io
+      Configuration options
     </span>
   </a>
   
@@ -414,60 +492,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#generate-class" class="md-nav__link">
+  <a href="#custom-httpx-client" class="md-nav__link">
     <span class="md-ellipsis">
-      generate-class
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="generate-class">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generate-basic" class="md-nav__link">
-    <span class="md-ellipsis">
-      generate-basic
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#functional-vs-class" class="md-nav__link">
-    <span class="md-ellipsis">
-      Functional vs Class
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#explore" class="md-nav__link">
-    <span class="md-ellipsis">
-      explore
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#version" class="md-nav__link">
-    <span class="md-ellipsis">
-      version
+      Custom httpx client
     </span>
   </a>
   
@@ -482,51 +509,6 @@
 
               
             
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
-        
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Framework Guides
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            Framework Guides
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
               
                 
   
@@ -534,12 +516,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-fastapi/" class="md-nav__link">
+      <a href="../api-async/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    FastAPI
+    Async Support
     
   </span>
   
@@ -557,35 +539,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../framework-drf/" class="md-nav__link">
+      <a href="../api-authentication/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Django REST Framework
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../framework-django-ninja/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Django Ninja
+    Authentication
     
   </span>
   
@@ -626,7 +585,7 @@
   
   
   <span class="md-ellipsis">
-    Documentation
+    OpenAPI client scaffolder
     
   </span>
   
@@ -637,7 +596,7 @@
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
-            Documentation
+            OpenAPI client scaffolder
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
@@ -648,12 +607,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../openapi-cli/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Configuration
+    Usage & CLI
     
   </span>
   
@@ -671,7 +630,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../regeneration/" class="md-nav__link">
+      <a href="../openapi-regeneration/" class="md-nav__link">
         
   
   
@@ -694,12 +653,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../authentication/" class="md-nav__link">
+      <a href="../openapi-configuration/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Authentication
+    Barebones Configuration
     
   </span>
   
@@ -717,12 +676,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../exceptions/" class="md-nav__link">
+      <a href="../openapi-authentication/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Exception Handling
+    Barebones authentication
     
   </span>
   
@@ -763,81 +722,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Testing
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Explorer Mode
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="../compatibility/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     Compatibility & Limitations
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../complex_schemas/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Complex Schemas
     
   </span>
   
@@ -901,7 +791,7 @@
   
   
   <span class="md-ellipsis">
-    About
+    API Server Integrations
     
   </span>
   
@@ -911,6 +801,279 @@
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            API Server Integrations
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-fastapi/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FastAPI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-drf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django REST Framework
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../server-django-ninja/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Django Ninja
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API Explorer
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            API Explorer
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../explore/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Other documentation
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            Other documentation
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exceptions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Exception Handling
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             About
           </label>
@@ -928,7 +1091,7 @@
   
   
   <span class="md-ellipsis">
-    Design Philosophy
+    Background
     
   </span>
   
@@ -996,46 +1159,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#client-types" class="md-nav__link">
+  <a href="#base-url" class="md-nav__link">
     <span class="md-ellipsis">
-      Client Types
+      base url
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#generate" class="md-nav__link">
+  <a href="#standard-configuration" class="md-nav__link">
     <span class="md-ellipsis">
-      generate
+      Standard configuration
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="generate">
+    <nav class="md-nav" aria-label="Standard configuration">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#from-a-url" class="md-nav__link">
+  <a href="#configuration-options" class="md-nav__link">
     <span class="md-ellipsis">
-      From a URL
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#from-a-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      From a file
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#asyncio" class="md-nav__link">
-    <span class="md-ellipsis">
-      Async.io
+      Configuration options
     </span>
   </a>
   
@@ -1047,60 +1192,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#generate-class" class="md-nav__link">
+  <a href="#custom-httpx-client" class="md-nav__link">
     <span class="md-ellipsis">
-      generate-class
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="generate-class">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#generate-basic" class="md-nav__link">
-    <span class="md-ellipsis">
-      generate-basic
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#functional-vs-class" class="md-nav__link">
-    <span class="md-ellipsis">
-      Functional vs Class
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#explore" class="md-nav__link">
-    <span class="md-ellipsis">
-      explore
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#version" class="md-nav__link">
-    <span class="md-ellipsis">
-      version
+      Custom httpx client
     </span>
   </a>
   
@@ -1125,68 +1219,49 @@
   
 
 
-<h1 id="use-clientele">📝 Use Clientele</h1>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You can type <code>clientele COMMAND --help</code> at anytime to see information about the available arguments.</p>
-</div>
-<h2 id="client-types">Client Types</h2>
-<p>Clientele offers five types of generators:</p>
-<ol>
-<li><strong><code>generate</code></strong> - a function-based client either as async or sync.</li>
-<li><strong><code>generate-class</code></strong> - a class-based client either as async or sync.</li>
-<li><strong><code>generate-basic</code></strong> - Basic file structure with no generated code.</li>
-</ol>
-<h2 id="generate"><code>generate</code></h2>
-<p>Generate a function-based Python HTTP Client from an OpenAPI Schema.</p>
-<h3 id="from-a-url">From a URL</h3>
-<p>Use the <code>-u</code> or <code>--url</code> argument.</p>
-<p><code>-o</code> or <code>--output</code> is the target directory for the generated client.</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+<h1 id="client-configuration">Client configuration</h1>
+<h2 id="base-url">base url</h2>
+<p>You can configure Clientele with just a <code>base_url</code> and let it use sensible defaults for the client:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://myapi.com/v1&quot;</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="from-a-file">From a file</h3>
-<p>Alternatively you can provide a local file using the <code>-f</code> or <code>--file</code> argument.</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+<h2 id="standard-configuration">Standard configuration</h2>
+<p>We recommend subclassing <code>BaseConfig</code> and managing your own config:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &lt;token&gt;&quot;</span><span class="p">},</span>
+    <span class="n">timeout</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="asyncio">Async.io</h3>
-<p>If you prefer an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> client, just pass <code>--asyncio t</code> to your command.</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio<span class="w"> </span>t
-</code></pre></div>
-<h2 id="generate-class"><code>generate-class</code></h2>
-<p>Generate a class-based Python HTTP Client from an OpenAPI Schema. This generator creates a <code>Client</code> class object with methods for each API endpoint instead of functions in a module.</p>
-<h3 id="usage">Usage</h3>
-<p>The <code>generate-class</code> command accepts the same arguments as <code>generate</code>:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-class<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
-</code></pre></div>
-<h2 id="generate-basic">generate-basic</h2>
-<p>The <code>generate-basic</code> command can be used to generate a basic file structure for an HTTP client.</p>
-<p>It does not require an OpenAPI schema. It does not generate any code.</p>
-<p>This command is there for when have an HTTP API without an OpenAPI schema, but you want to keep a consistent file structure with other Clientele clients.</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>generate-basic<span class="w"> </span>-o<span class="w"> </span>my_client/
-</code></pre></div>
-<h2 id="functional-vs-class">Functional vs Class</h2>
-<p>Use function-based clients (<code>generate</code>) when:</p>
+<p>The <code>BaseConfig</code> class is powered by <a href="https://docs.pydantic.dev/latest/concepts/pydantic_settings/">pydantic-settings</a> that automatically loads values from environment variables, <code>.env</code> files or just plain hard coded configuration.</p>
+<h3 id="configuration-options">Configuration options</h3>
 <ul>
-<li>You prefer a functional programming style.</li>
-<li>You want the simplest possible client.</li>
-<li>You don't need to maintain state between requests.</li>
-<li>You only need a single static configuration.</li>
+<li><code>base_url: str</code> - the url for the API server</li>
+<li><code>headers: dict[str, str]</code> - headers that you want to send with http requests.</li>
+<li><code>timeout: float | None = 5.0</code> - the time to wait for an HTTP response before closing the connection.</li>
+<li><code>follow_redirects: bool = False</code> - if redirects should be followed.</li>
+<li><code>verify: bool | str = True</code> - if SSL connections should be verified.</li>
+<li><code>http2: bool = False</code> - if http2 should be used for making requests.</li>
+<li><code>auth: httpx.Auth | tuple[str, str] | None = None</code> - the <a href="https://www.python-httpx.org/advanced/authentication/">authentication method</a> for requests.</li>
+<li><code>limits: httpx.Limits | None = None</code> - the <a href="https://www.python-httpx.org/advanced/resource-limits/">connection pool size</a> for the underlying client.</li>
+<li><code>proxies: httpx.Proxy | None = None</code> - the <a href="https://www.python-httpx.org/advanced/proxies/">proxies</a> for the underlying client.</li>
+<li><code>transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None</code> - custom <a href="https://www.python-httpx.org/advanced/transports/">transport objects</a> for the underlying client.</li>
+<li><code>cookies: httpx.Cookies | None = None</code> - the <a href="https://www.python-httpx.org/quickstart/#cookies">cookies</a> you want to send with http requests.</li>
 </ul>
-<p>Use class-based (<code>generate-class</code>) clients when:</p>
-<ul>
-<li>You prefer an object-oriented programming style.</li>
-<li>You need to maintain state or configuration in the client instance.</li>
-<li>You want to subclass and extend the client behavior.</li>
-<li>You need dynamic configuration or multiple clients with different settings.</li>
-</ul>
-<h2 id="explore"><code>explore</code></h2>
-<p>Run the explorer mode. See <a href="../explore/">explore</a>.</p>
-<h2 id="version"><code>version</code></h2>
-<p>Print the current version of Clientele:</p>
-<div class="highlight"><pre><span></span><code>```sh
-&gt; clientele version
-Clientele 1.2.0
-```
+<h2 id="custom-httpx-client">Custom httpx client</h2>
+<p>You can supply your own <code>httpx.Client</code> and <code>httpx.AsyncClient</code> if you prefer full control:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
+    <span class="n">httpx_client</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">Client</span><span class="p">(),</span> 
+    <span class="n">httpx_async_client</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span>
+<span class="p">)</span>
 </code></pre></div>
 
 

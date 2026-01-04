@@ -8,22 +8,28 @@
       
       
       
+        <link rel="canonical" href="https://phalt.github.io/clientele/api-authentication/">
       
       
+        <link rel="prev" href="../api-async/">
       
-      <link rel="icon" href="/clientele/assets/images/favicon.png">
+      
+        <link rel="next" href="../openapi-cli/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
     
     
       
-        <title>⚜️ Clientele</title>
+        <title>Authentication - ⚜️ Clientele</title>
       
     
     
-      <link rel="stylesheet" href="/clientele/assets/stylesheets/main.84d31ad4.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
       
         
-        <link rel="stylesheet" href="/clientele/assets/stylesheets/palette.06af60db.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
       
       
 
@@ -42,7 +48,7 @@
       
     
     
-    <script>__md_scope=new URL("/clientele/",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -67,6 +73,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#authentication" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -79,7 +90,7 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/clientele/." title="⚜️ Clientele" class="md-header__button md-logo" aria-label="⚜️ Clientele" data-md-component="logo">
+    <a href=".." title="⚜️ Clientele" class="md-header__button md-logo" aria-label="⚜️ Clientele" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -99,7 +110,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Authentication
             
           </span>
         </div>
@@ -215,7 +226,7 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/clientele/." title="⚜️ Clientele" class="md-nav__button md-logo" aria-label="⚜️ Clientele" data-md-component="logo">
+    <a href=".." title="⚜️ Clientele" class="md-nav__button md-logo" aria-label="⚜️ Clientele" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -245,7 +256,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -305,7 +316,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/install/" class="md-nav__link">
+      <a href="../install/" class="md-nav__link">
         
   
   
@@ -332,18 +343,20 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -359,7 +372,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Clientele API guide
@@ -373,7 +386,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/api-overview/" class="md-nav__link">
+      <a href="../api-overview/" class="md-nav__link">
         
   
   
@@ -396,7 +409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/api-configuration/" class="md-nav__link">
+      <a href="../api-configuration/" class="md-nav__link">
         
   
   
@@ -419,7 +432,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/api-async/" class="md-nav__link">
+      <a href="../api-async/" class="md-nav__link">
         
   
   
@@ -439,10 +452,32 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="/clientele/api-authentication/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Authentication
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -453,6 +488,50 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bearer-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bearer Token
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bearer Token">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-basic-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTP Basic Authentication
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -510,7 +589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/openapi-cli/" class="md-nav__link">
+      <a href="../openapi-cli/" class="md-nav__link">
         
   
   
@@ -533,7 +612,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/openapi-regeneration/" class="md-nav__link">
+      <a href="../openapi-regeneration/" class="md-nav__link">
         
   
   
@@ -556,7 +635,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/openapi-configuration/" class="md-nav__link">
+      <a href="../openapi-configuration/" class="md-nav__link">
         
   
   
@@ -579,7 +658,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/openapi-authentication/" class="md-nav__link">
+      <a href="../openapi-authentication/" class="md-nav__link">
         
   
   
@@ -602,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/examples/" class="md-nav__link">
+      <a href="../examples/" class="md-nav__link">
         
   
   
@@ -625,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/compatibility/" class="md-nav__link">
+      <a href="../compatibility/" class="md-nav__link">
         
   
   
@@ -648,7 +727,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/references/" class="md-nav__link">
+      <a href="../references/" class="md-nav__link">
         
   
   
@@ -716,7 +795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/server-fastapi/" class="md-nav__link">
+      <a href="../server-fastapi/" class="md-nav__link">
         
   
   
@@ -739,7 +818,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/server-drf/" class="md-nav__link">
+      <a href="../server-drf/" class="md-nav__link">
         
   
   
@@ -762,7 +841,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/server-django-ninja/" class="md-nav__link">
+      <a href="../server-django-ninja/" class="md-nav__link">
         
   
   
@@ -830,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/explore/" class="md-nav__link">
+      <a href="../explore/" class="md-nav__link">
         
   
   
@@ -898,7 +977,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/exceptions/" class="md-nav__link">
+      <a href="../exceptions/" class="md-nav__link">
         
   
   
@@ -921,7 +1000,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -989,7 +1068,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/design/" class="md-nav__link">
+      <a href="../design/" class="md-nav__link">
         
   
   
@@ -1012,7 +1091,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/clientele/CHANGELOG/" class="md-nav__link">
+      <a href="../CHANGELOG/" class="md-nav__link">
         
   
   
@@ -1052,6 +1131,40 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bearer-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bearer Token
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bearer Token">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#http-basic-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTP Basic Authentication
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1063,8 +1176,52 @@
             <div class="md-content" data-md-component="content">
               <article class="md-content__inner md-typeset">
                 
-  <h1>404 - Not found</h1>
+                  
 
+
+  
+  
+
+
+<h1 id="authentication">Authentication</h1>
+<p>Clientele API supports multiple authentication methods through the client configuration.</p>
+<h2 id="bearer-token">Bearer Token</h2>
+<p>Bearer token authentication can be configured by adding an <code>Authorization</code> header.</p>
+<p><strong>Configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># config.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">(</span><span class="n">clientele_api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;MY_SECRET_TOKEN&quot;</span><span class="p">}</span>
+    <span class="o">...</span>
+</code></pre></div>
+<h3 id="http-basic-authentication">HTTP Basic Authentication</h3>
+<p>Basic authentication can be configured using <a href="https://www.python-httpx.org/advanced/authentication/#basic-authentication">httpx.Auth</a>:</p>
+<p><strong>Configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># config.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_settings</span><span class="w"> </span><span class="kn">import</span> <span class="n">AUTH_TOKEN</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">(</span><span class="n">clientele_api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="o">...</span>
+    <span class="n">auth</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">BasicAuth</span><span class="p">(</span><span class="s2">&quot;username&quot;</span><span class="p">,</span> <span class="s2">&quot;password&quot;</span><span class="p">)</span>
+    <span class="o">...</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
               </article>
             </div>
           
@@ -1100,10 +1257,10 @@
     
     
       
-      <script id="__config" type="application/json">{"base": "/clientele/", "features": [], "search": "/clientele/assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="/clientele/assets/javascripts/bundle.f55a23d4.min.js"></script>
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
       
     
   </body>
