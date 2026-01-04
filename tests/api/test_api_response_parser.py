@@ -70,7 +70,7 @@ def test_raises_when_both_response_map_and_response_parser_are_provided(respx_mo
 
     with pytest.raises(
         TypeError,
-        match="Function 'get_raises_with_both' cannot have both 'response_map' and 'response_parser' defined. Please provide only one.",
+        match="Function 'get_raises_with_both' cannot have both 'response_map' and 'response_parser' defined.",
     ):
 
         @client.get(
