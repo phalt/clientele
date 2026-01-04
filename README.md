@@ -1,7 +1,7 @@
 # ⚜️ Clientele
 
 <div style="text-align: center;">
-<div class="ascii">
+
 <pre>
       ___ _ _            _       _
      / __\ (_) ___ _ __ | |_ ___| | ___
@@ -9,25 +9,18 @@
    / /___| | |  __/ | | | ||  __/ |  __/
    \____/|_|_|\___|_| |_|\__\___|_|\___|</pre>
 <p>⚜️ Clientele is a different way to think about Python API Clients</p>
+
 </div>
-<p>
-    <a href="https://pypi.org/project/clientele">
-    <img alt="Package version" src="https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version">
-    </a>
-    <img alt="Python versions" src="https://img.shields.io/badge/python-3.10+-blue">
-    <img alt="PyPI - License" src="https://img.shields.io/pypi/l/clientele">
-    <a href="https://codecov.io/github/phalt/clientele">
-    <img alt="codecov" src="https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM">
-    </a>
-    <a href="https://pepy.tech/projects/clientele">
-    <img alt="PyPI Downloads" src="https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads">
-    </a>
-</p>
-<p>
-    <img alt="Works with" src="https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green">
-    <img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json">
-</p>
-</div>
+
+[![Package version](https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version)](https://pypi.org/project/clientele)
+![Python versions](https://img.shields.io/badge/python-3.10+-blue)
+![PyPI - License](https://img.shields.io/pypi/l/clientele)
+[![codecov](https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM)](https://codecov.io/github/phalt/clientele)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads)](https://pepy.tech/projects/clientele)
+
+![Works with](https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green)
+![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
+
 
 ## Clientele API
 
