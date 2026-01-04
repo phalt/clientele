@@ -168,6 +168,38 @@ Clientele will inject the following parameters into your function once an http r
 - Empty body responses return `None`.
 - The `result` parameter's type annotation drives response data validation. Pydantic models use `model_validate` for runtime validation, while TypedDict provides type hints without runtime validation.
 
+## Custom response parsing
+
+- You can provide a callable `response_parser` to the decorator to handle your own response parsing.
+- `response_parser` will receive the `httpx.Response` object.
+- The return type of the `response_parser` **must** match the type of the `result` parameter.
+- You cannot provide `response_parser` and `response_mapping` (see below) at the same time.
+
+Example:
+
+```python
+from clientele import api as clientele_api
+import httpx
+from pydantic import BaseModel
+
+client = clientele_api.APIClient(base_url="http://localhost:8000")
+
+class CustomResponseParserResponse(BaseModel):
+    name: str
+    other_value: str
+
+# A custom handler for parsing the response
+def custom_parser(response: httpx.Response) -> CustomResponseParserResponse:
+    data = response.json()
+    return CustomResponseParserResponse(name=data["name"], other_value="other value")
+
+# Annotate the decorate to use, `result` type must match
+@client.get("/users/{user_id}", response_parser=custom_parser)
+def get_user_custom_response(user_id: int, result: CustomResponseParserResponse) -> str:
+    return result.other_value
+
+```
+
 ## Handling multiple response bodies and status codes
 
 Real APIs often return different response models based on the HTTP status code. This is also a common feature of OpenAPI schemas.
