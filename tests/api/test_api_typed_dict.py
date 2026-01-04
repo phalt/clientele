@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import TypedDict
 
 import httpx
@@ -249,7 +250,6 @@ def test_post_with_typeddict_data_validates_request_body(respx_mock: MockRouter)
     assert route.called
     request = route.calls[0].request
     assert request.headers.get("content-type") == "application/json"
-    import json
 
     sent_data = json.loads(request.content.decode())
     assert sent_data == {"name": "Charlie"}
@@ -273,7 +273,6 @@ def test_put_with_typeddict_data_validates_request_body(respx_mock: MockRouter) 
     # Verify the request was made with correct JSON body
     assert route.called
     request = route.calls[0].request
-    import json
 
     sent_data = json.loads(request.content.decode())
     assert sent_data == {"name": "Ada Updated"}
@@ -297,7 +296,6 @@ def test_patch_with_typeddict_data_validates_request_body(respx_mock: MockRouter
     # Verify the request was made with correct JSON body
     assert route.called
     request = route.calls[0].request
-    import json
 
     sent_data = json.loads(request.content.decode())
     assert sent_data == {"name": "Ada Patched"}
@@ -322,7 +320,6 @@ def test_delete_with_typeddict_data_validates_request_body(respx_mock: MockRoute
     # Verify the request was made with correct JSON body
     assert route.called
     request = route.calls[0].request
-    import json
 
     sent_data = json.loads(request.content.decode())
     assert sent_data == {"user_ids": [1, 2]}
@@ -360,7 +357,6 @@ async def test_async_post_with_typeddict_data_validates_request_body(respx_mock:
     # Verify the request was made with correct JSON body
     assert route.called
     request = route.calls[0].request
-    import json
 
     sent_data = json.loads(request.content.decode())
     assert sent_data == {"name": "Charlie"}
@@ -385,7 +381,6 @@ def test_post_with_both_typeddict_data_and_result(respx_mock: MockRouter) -> Non
     # Verify request body
     assert route.called
     request = route.calls[0].request
-    import json
 
     sent_data = json.loads(request.content.decode())
     assert sent_data == {"name": "Charlie"}
