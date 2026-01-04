@@ -1,8 +1,15 @@
 # ⚜️ Clientele
 
 <div style="text-align: center;">
-    <img src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header_1.png">
-
+<div class="ascii">
+<pre>
+___ _ _            _       _
+    / __\ (_) ___ _ __ | |_ ___| | ___
+    / /  | | |/ _ \ '_ \| __/ _ \ |/ _ \
+   / /___| | |  __/ | | | ||  __/ |  __/
+   \____/|_|_|\___|_| |_|\__\___|_|\___|</pre>
+<p>⚜️ Clientele is a different way to think about Python API Clients</p>
+</div>
 <p>
     <a href="https://pypi.org/project/clientele">
     <img alt="Package version" src="https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version">
@@ -21,8 +28,13 @@
     <img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json">
 </p>
 </div>
-
-Clientele is a different way to think about Python API Clients.
+<style>
+  .ascii { max-width: 900px; margin: 48px auto; padding: 2px; }
+  .ascii pre { white-space: pre; font-family: ui-monospace, Menlo, Consolas, monospace;
+              font-size: 14px; line-height: 1.1; padding: 20px; border-radius: 12px;
+              background: #0b0f14; color: #e6edf3; overflow-x: auto; }
+  .ascii p { margin: 14px 2px 0; font-family: system-ui, sans-serif; }
+</style>
 
 ## Clientele API
 
