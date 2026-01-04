@@ -7,6 +7,8 @@ from pathlib import Path
 
 import click
 
+from clientele import settings
+
 CLIENTELE_HEADER = r"""
    ___ _ _            _       _
   / __\ (_) ___ _ __ | |_ ___| | ___
@@ -117,9 +119,12 @@ cli_group.help = textwrap.dedent(f"""\
 
 ⚜️  Clientele is a different way to think about Python API clients
 
+🔢 Version {settings.VERSION}
+
 📚 Read the docs: https://github.com/phalt/clientele
 
 🐙 Contribute on GitHub: https://github.com/phalt/clientele
+
 """).strip("\n")
 
 
