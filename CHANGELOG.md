@@ -1,5 +1,9 @@
 # Change log
 
+## 1.4.0
+
+- You can now pass `TypedDict` instances for the `data` parameter on `post`, `put`, `patch` and `delete` methods.
+
 ## 1.3.0
 
 ### Introducing **Clientele API** - a different way to think about Python API Clients
