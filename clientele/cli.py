@@ -2,9 +2,18 @@ from __future__ import annotations
 
 import shutil
 import tempfile
+import textwrap
 from pathlib import Path
 
 import click
+
+CLIENTELE_HEADER = r"""
+   ___ _ _            _       _
+  / __\ (_) ___ _ __ | |_ ___| | ___
+ / /  | | |/ _ \ '_ \| __/ _ \ |/ _ \
+/ /___| | |  __/ | | | ||  __/ |  __/
+\____/|_|_|\___|_| |_|\__\___|_|\___|
+""".strip("\n")
 
 
 def _print_dependency_instructions(console):
@@ -99,13 +108,19 @@ def _prepare_spec(console, url: str | None = None, file: str | None = None):
 
 @click.group()
 def cli_group():
-    """
-    ⚜️ Clientele: A different way to think about Python API Clients
+    pass
 
-    📚 Docs: https://github.com/phalt/clientele
 
-    🐙 GitHub: https://github.com/phalt/clientele
-    """
+cli_group.help = textwrap.dedent(f"""\
+\b
+{CLIENTELE_HEADER}
+
+⚜️  Clientele is a different way to think about Python API clients
+
+📚 Read the docs: https://github.com/phalt/clientele
+
+🐙 Contribute on GitHub: https://github.com/phalt/clientele
+""").strip("\n")
 
 
 @click.command()
@@ -126,7 +141,7 @@ def version():
 @click.option("-r", "--regen", help="Regenerate client", required=False)
 def generate(url, file, output, asyncio, regen):
     """
-    ⚠️ DEPRECATED - Generate a new client from an OpenAPI schema
+    DEPRECATED - Generate a new client from an OpenAPI schema
     """
     from rich.console import Console
 
@@ -140,7 +155,7 @@ def generate(url, file, output, asyncio, regen):
     generator = StandardGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
     if generator.prevent_accidental_regens():
         generator.generate()
-        console.log("\n[green]⚜️ Client generated! ⚜️ \n")
+        console.log("\n[green]Client generated! ⚜️ \n")
         _print_dependency_instructions(console)
 
 
@@ -148,7 +163,7 @@ def generate(url, file, output, asyncio, regen):
 @click.option("-o", "--output", help="Directory for the generated client", required=True)
 def generate_basic(output):
     """
-    🕳️ Generate a "basic" file structure, no code.
+    Generate a "basic" file structure, no code.
     """
     from rich.console import Console
 
@@ -171,7 +186,7 @@ def generate_basic(output):
 @click.option("-r", "--regen", help="Regenerate client", required=False)
 def generate_class(url, file, output, asyncio, regen):
     """
-    ⚠️ DEPRECATED - Generate a class-based client from an OpenAPI schema
+    DEPRECATED - Generate a class-based client from an OpenAPI schema
     """
     from rich.console import Console
 
@@ -197,7 +212,7 @@ def generate_class(url, file, output, asyncio, regen):
 @click.option("-r", "--regen", help="Regenerate client", required=False)
 def scaffold_api(url, file, output, asyncio, regen):
     """
-    🏗️ Scaffold an API client from an OpenAPI schema.
+    Scaffold an API client from an OpenAPI schema.
     """
     from rich.console import Console
 
@@ -220,7 +235,7 @@ def scaffold_api(url, file, output, asyncio, regen):
 @click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
 def explore(client, file, url):
     """
-    🗺️ Interactive API REPL explorer
+    Interactive API REPL explorer
     """
     from rich.console import Console
 
