@@ -1,5 +1,13 @@
 # ⚜️ Clientele
 
+<style>
+  .ascii { max-width: 900px; margin: 48px auto; padding: 2px; }
+  .ascii pre { white-space: pre; font-family: ui-monospace, Menlo, Consolas, monospace;
+              font-size: 14px; line-height: 1.1; padding: 20px; border-radius: 12px;
+              background: #0b0f14; color: #e6edf3; overflow-x: auto; }
+  .ascii p { margin: 14px 2px 0; font-family: system-ui, sans-serif; }
+</style>
+
 <div style="text-align: center;">
 <div class="ascii">
 <pre>
@@ -28,13 +36,6 @@ ___ _ _            _       _
     <img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json">
 </p>
 </div>
-<style>
-  .ascii { max-width: 900px; margin: 48px auto; padding: 2px; }
-  .ascii pre { white-space: pre; font-family: ui-monospace, Menlo, Consolas, monospace;
-              font-size: 14px; line-height: 1.1; padding: 20px; border-radius: 12px;
-              background: #0b0f14; color: #e6edf3; overflow-x: auto; }
-  .ascii p { margin: 14px 2px 0; font-family: system-ui, sans-serif; }
-</style>
 
 ## Clientele API
 
