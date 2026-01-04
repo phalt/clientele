@@ -46,11 +46,13 @@ How it works:
 ## POST example
 
 ```python
+from typing import TypedDict
 from pydantic import BaseModel
 from clientele import api as clientele_api
 
 client = clientele_api.APIClient(base_url="https://api.example.com")
 
+# Using Pydantic models
 class CreateUserRequest(BaseModel):
     name: str
 
@@ -64,16 +66,7 @@ def create_user(*, data: CreateUserRequest, result: User) -> User:
 
 user = create_user(data=CreateUserRequest(name="Ada"))
 
-```
-
-You can also use TypedDict for the `data` parameter:
-
-```python
-from typing import TypedDict
-from clientele import api as clientele_api
-
-client = clientele_api.APIClient(base_url="https://api.example.com")
-
+# Or use TypedDict for the `data` and `result` parameters
 class CreateUserRequestDict(TypedDict):
     name: str
 
@@ -82,11 +75,11 @@ class UserDict(TypedDict):
     name: str
 
 @client.post("/users")
-def create_user(*, data: CreateUserRequestDict, result: UserDict) -> UserDict:
+def create_user_with_dict(*, data: CreateUserRequestDict, result: UserDict) -> UserDict:
     return result
 
 # Pass dict directly - no instantiation needed
-user = create_user(data={"name": "Ada"})
+user = create_user_with_dict(data={"name": "Ada"})
 
 ```
 
