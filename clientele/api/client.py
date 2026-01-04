@@ -72,6 +72,7 @@ class _RequestContext(BaseModel):
     signature: inspect.Signature
     type_hints: dict[str, Any]
     response_map: dict[int, type[Any]] | None = None
+    response_parser: Callable[[httpx.Response], Any] | None = None
 
 
 def _validate_result_parameter(
@@ -103,7 +104,11 @@ def _validate_result_parameter(
 
 
 def build_request_context(
-    method: str, path: str, func: Callable[..., Any], response_map: dict[int, type[Any]] | None = None
+    method: str,
+    path: str,
+    func: Callable[..., Any],
+    response_map: dict[int, type[Any]] | None = None,
+    response_parser: Callable[[httpx.Response], Any] | None = None,
 ) -> _RequestContext:
     signature = inspect.signature(func)
     # Get type hints with proper handling of forward references
@@ -117,9 +122,20 @@ def build_request_context(
     # Validate that the function has a 'result' parameter with a type annotation
     _validate_result_parameter(func, signature, type_hints)
 
+    if response_map is not None and response_parser is not None:
+        raise TypeError(
+            f"Function '{getattr(func, '__name__', '<function>')}' cannot have both "
+            "'response_map' and 'response_parser' defined. Please provide only one."
+        )
+
     # Validate response_map if provided
     if response_map is not None:
         _validate_response_map(response_map, func, type_hints)
+
+    if response_parser is not None:
+        _validate_response_parser_return_type_matches_result_return_type(
+            response_parser=response_parser, func=func, type_hints=type_hints
+        )
 
     return _RequestContext(
         method=method,
@@ -128,7 +144,65 @@ def build_request_context(
         signature=signature,
         type_hints=type_hints,
         response_map=response_map,
+        response_parser=response_parser,
     )
+
+
+def _get_result_types_from_type_hints(
+    type_hints: dict[str, Any],
+) -> list[Any]:
+    """
+    Extracts all types from the 'result' parameter annotation (handles Union types).
+    """
+    result_annotation = type_hints.get("result", inspect._empty)
+
+    if result_annotation is inspect._empty:
+        # This should not happen since we validate result parameter earlier, but defensive check
+        raise ValueError("Function decorated with response_map must have a 'result' parameter with a type annotation")
+
+    result_types: list[Any] = []
+    origin = typing.get_origin(result_annotation)
+    if origin in [typing.Union, types.UnionType]:
+        result_types = list(typing.get_args(result_annotation))
+    else:
+        result_types = [result_annotation]
+
+    return result_types
+
+
+def _validate_response_parser_return_type_matches_result_return_type(
+    response_parser: Callable[[httpx.Response], Any],
+    func: Callable[..., Any],
+    type_hints: dict[str, Any],
+) -> None:
+    """
+    Validates that the return type of the response_parser matches the type of the 'result' parameter.
+    """
+    func_name = getattr(func, "__name__", "<function>")
+
+    # Get the return type of the response_parser
+    parser_signature = inspect.signature(response_parser)
+    parser_return_annotation = parser_signature.return_annotation
+
+    if parser_return_annotation is inspect._empty:
+        raise TypeError(f"The response_parser provided for function '{func_name}' must have a return type annotation.")
+
+    parser_return_types: list[Any] = []
+    origin = typing.get_origin(parser_return_annotation)
+    if origin in [typing.Union, types.UnionType]:
+        parser_return_types = list(typing.get_args(parser_return_annotation))
+    else:
+        parser_return_types = [parser_return_annotation]
+
+    result_types = _get_result_types_from_type_hints(type_hints)
+
+    if not [ptype.__name__ for ptype in result_types] == parser_return_types:
+        raise TypeError(
+            f"The return type of the response_parser for function '{func_name}': "
+            f"[{', '.join([t for t in parser_return_types])}] does not "
+            "match the type(s) of the 'result' parameter: "
+            f"[{', '.join([t.__name__ for t in result_types])}]."
+        )
 
 
 def _validate_response_map(
@@ -151,19 +225,7 @@ def _validate_response_map(
             )
 
     # Get the result parameter annotation
-    result_annotation = type_hints.get("result", inspect._empty)
-
-    if result_annotation is inspect._empty:
-        # This should not happen since we validate result parameter earlier, but defensive check
-        raise ValueError("Function decorated with response_map must have a 'result' parameter with a type annotation")
-
-    # Extract all types from the result annotation (handle Union types)
-    result_types: list[Any] = []
-    origin = typing.get_origin(result_annotation)
-    if origin in [typing.Union, types.UnionType]:
-        result_types = list(typing.get_args(result_annotation))
-    else:
-        result_types = [result_annotation]
+    result_types = _get_result_types_from_type_hints(type_hints)
 
     # Check that all response_map models are in the result types
     for status_code, model_class in response_map.items():
@@ -278,26 +340,63 @@ class APIClient:
         """Close the asynchronous HTTP client."""
         await self._async_client.aclose()
 
-    def get(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
-        return self._create_decorator("GET", path, response_map=response_map)
+    def get(
+        self,
+        path: str,
+        *,
+        response_map: dict[int, type[Any]] | None = None,
+        response_parser: Callable[[httpx.Response], Any] | None = None,
+    ) -> Callable[[_F], _F]:
+        return self._create_decorator("GET", path, response_map=response_map, response_parser=response_parser)
 
-    def post(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
-        return self._create_decorator("POST", path, response_map=response_map)
+    def post(
+        self,
+        path: str,
+        *,
+        response_map: dict[int, type[Any]] | None = None,
+        response_parser: Callable[[httpx.Response], Any] | None = None,
+    ) -> Callable[[_F], _F]:
+        return self._create_decorator("POST", path, response_map=response_map, response_parser=response_parser)
 
-    def put(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
-        return self._create_decorator("PUT", path, response_map=response_map)
+    def put(
+        self,
+        path: str,
+        *,
+        response_map: dict[int, type[Any]] | None = None,
+        response_parser: Callable[[httpx.Response], Any] | None = None,
+    ) -> Callable[[_F], _F]:
+        return self._create_decorator("PUT", path, response_map=response_map, response_parser=response_parser)
 
-    def patch(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
-        return self._create_decorator("PATCH", path, response_map=response_map)
+    def patch(
+        self,
+        path: str,
+        *,
+        response_map: dict[int, type[Any]] | None = None,
+        response_parser: Callable[[httpx.Response], Any] | None = None,
+    ) -> Callable[[_F], _F]:
+        return self._create_decorator("PATCH", path, response_map=response_map, response_parser=response_parser)
 
-    def delete(self, path: str, *, response_map: dict[int, type[Any]] | None = None) -> Callable[[_F], _F]:
-        return self._create_decorator("DELETE", path, response_map=response_map)
+    def delete(
+        self,
+        path: str,
+        *,
+        response_map: dict[int, type[Any]] | None = None,
+        response_parser: Callable[[httpx.Response], Any] | None = None,
+    ) -> Callable[[_F], _F]:
+        return self._create_decorator("DELETE", path, response_map=response_map, response_parser=response_parser)
 
     def _create_decorator(
-        self, method: str, path: str, *, response_map: dict[int, type[Any]] | None = None
+        self,
+        method: str,
+        path: str,
+        *,
+        response_map: dict[int, type[Any]] | None = None,
+        response_parser: Callable[[httpx.Response], Any] | None = None,
     ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
-            context = build_request_context(method, path, func, response_map=response_map)
+            context = build_request_context(
+                method, path, func, response_map=response_map, response_parser=response_parser
+            )
 
             if inspect.iscoroutinefunction(func):
 
@@ -421,7 +520,7 @@ class APIClient:
             headers_override=prepared.headers_override,
             response_map=context.response_map,
         )
-        result = self._finalise_call(prepared, response)
+        result = self._finalise_call(prepared=prepared, response=response)
         if inspect.isawaitable(result):
             raise TypeError(
                 "Synchronous handlers cannot return awaitable results; declare the function as async instead"
@@ -438,7 +537,7 @@ class APIClient:
             headers_override=prepared.headers_override,
             response_map=context.response_map,
         )
-        result = self._finalise_call(prepared, response)
+        result = self._finalise_call(prepared=prepared, response=response)
         if inspect.isawaitable(result):
             return await result
         return result
@@ -527,8 +626,17 @@ class APIClient:
             response.raise_for_status()
         return response
 
-    def _finalise_call(self, prepared: _PreparedCall, response: httpx.Response) -> Any:
-        parsed_result = self._parse_response(response, prepared.result_annotation, prepared.context.response_map)
+    def _finalise_call(
+        self,
+        prepared: _PreparedCall,
+        response: httpx.Response,
+    ) -> Any:
+        parsed_result = self._parse_response(
+            response=response,
+            annotation=prepared.result_annotation,
+            response_map=prepared.context.response_map,
+            response_parser=prepared.context.response_parser,
+        )
 
         # Update call_arguments with injected values from parsed_result and response
         if "result" in prepared.context.signature.parameters:
@@ -540,7 +648,11 @@ class APIClient:
         return prepared.context.func(**prepared.call_arguments)
 
     def _parse_response(
-        self, response: httpx.Response, annotation: Any, response_map: dict[int, type[Any]] | None = None
+        self,
+        response: httpx.Response,
+        annotation: Any,
+        response_map: dict[int, type[Any]] | None = None,
+        response_parser: Callable[[httpx.Response], Any] | None = None,
     ) -> Any:
         # Extract payload from response
         payload: Any
@@ -559,6 +671,10 @@ class APIClient:
             else:
                 # Explicit non-JSON content type
                 payload = response.text
+
+        if response_parser is not None:
+            # If a custom response_parser is provided, use it directly
+            return response_parser(response)
 
         # If response_map is provided, use it to determine the response model
         if response_map is not None:
