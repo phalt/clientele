@@ -374,6 +374,10 @@ class APIClient:
             query_params = {k: v for k, v in request_arguments.items() if k != "data"}
             query_params.update(extra_kwargs)
 
+        # Filter out None values from query params to avoid adding empty parameters to the URL
+        if query_params:
+            query_params = {k: v for k, v in query_params.items() if v is not None}
+
         data_payload: dict[str, Any] | None = None
         if context.method in {"POST", "PUT", "PATCH", "DELETE"}:
             # Fetch 'data' payload for methods that support a body

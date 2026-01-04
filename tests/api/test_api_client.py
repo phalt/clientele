@@ -693,3 +693,97 @@ async def test_async_function_returns_derived_value(respx_mock: MockRouter) -> N
     user_id = await get_user_id(5)
     assert user_id == 5
     assert isinstance(user_id, int)
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_optional_query_param_none_is_omitted(respx_mock: MockRouter) -> None:
+    """Test that optional query parameters with None value are omitted from the URL."""
+    client = APIClient(base_url=BASE_URL)
+
+    respx_mock.get("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Alice"}))
+
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
+        return result
+
+    # Call without providing the optional parameter
+    user = get_user(user_id=3)
+
+    assert user.id == 3
+    call = respx_mock.calls[0]
+
+    # The URL should NOT have any query parameters
+    assert "include_details" not in call.request.url.params
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_optional_query_param_provided_is_included(respx_mock: MockRouter) -> None:
+    """Test that optional query parameters with non-None value are included in the URL."""
+    client = APIClient(base_url=BASE_URL)
+
+    respx_mock.get("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Alice"}))
+
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
+        return result
+
+    # Call with the optional parameter
+    user = get_user(user_id=3, include_details=True)
+
+    assert user.id == 3
+    call = respx_mock.calls[0]
+
+    # The URL should have the query parameter
+    assert call.request.url.params.get("include_details") == "true"
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_multiple_optional_query_params_some_none(respx_mock: MockRouter) -> None:
+    """Test that when some optional query params are None and others have values, only non-None ones are included."""
+    client = APIClient(base_url=BASE_URL)
+
+    respx_mock.get("/users").mock(
+        return_value=httpx.Response(200, json=[{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}])
+    )
+
+    @client.get("/users")
+    def list_users(
+        result: list[User],
+        include_details: bool | None = None,
+        page: int | None = None,
+        limit: int | None = None,
+    ) -> list[User]:
+        return result
+
+    # Call with only some parameters provided
+    users = list_users(page=2, limit=10)
+
+    assert len(users) == 2
+    call = respx_mock.calls[0]
+
+    # Only page and limit should be in params
+    assert call.request.url.params.get("page") == "2"
+    assert call.request.url.params.get("limit") == "10"
+    assert "include_details" not in call.request.url.params
+
+
+@pytest.mark.asyncio
+@pytest.mark.respx(base_url=BASE_URL)
+async def test_async_optional_query_param_none_is_omitted(respx_mock: MockRouter) -> None:
+    """Test that async functions also omit None query parameters."""
+    client = APIClient(base_url=BASE_URL)
+
+    respx_mock.get("/users/4").mock(return_value=httpx.Response(200, json={"id": 4, "name": "Bob"}))
+
+    @client.get("/users/{user_id}")
+    async def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
+        return result
+
+    # Call without providing the optional parameter
+    user = await get_user(user_id=4)
+
+    assert user.id == 4
+    call = respx_mock.calls[0]
+
+    # The URL should NOT have any query parameters
+    assert "include_details" not in call.request.url.params
