@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from typing import TypedDict
 
 import httpx
@@ -22,6 +23,14 @@ class CreateUserRequestDict(TypedDict):
 class ErrorDict(TypedDict):
     message: str
     code: str
+
+
+class DeleteBatchDict(TypedDict):
+    user_ids: list[int]
+
+
+class DeleteResultDict(TypedDict):
+    deleted: int
 
 
 BASE_URL = "https://api.example.com"
@@ -220,3 +229,158 @@ async def test_async_post_with_typeddict_result(respx_mock: MockRouter) -> None:
 
     assert user == {"id": 10, "name": "Charlie"}
     assert isinstance(user, dict)
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_post_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+    """Test that POST with TypedDict data parameter sends correct JSON body."""
+    client = APIClient(base_url=BASE_URL)
+
+    route = respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+
+    @client.post("/users")
+    def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+        return result
+
+    user = create_user(data={"name": "Charlie"})
+
+    assert user == {"id": 10, "name": "Charlie"}
+
+    # Verify the request was made with correct JSON body
+    assert route.called
+    request = route.calls[0].request
+    assert request.headers.get("content-type") == "application/json"
+
+    sent_data = json.loads(request.content.decode())
+    assert sent_data == {"name": "Charlie"}
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_put_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+    """Test that PUT with TypedDict data parameter sends correct JSON body."""
+    client = APIClient(base_url=BASE_URL)
+
+    route = respx_mock.put("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada Updated"}))
+
+    @client.put("/users/{user_id}")
+    def update_user(user_id: int, data: CreateUserRequestDict, result: UserDict) -> UserDict:
+        return result
+
+    user = update_user(1, data={"name": "Ada Updated"})
+
+    assert user == {"id": 1, "name": "Ada Updated"}
+
+    # Verify the request was made with correct JSON body
+    assert route.called
+    request = route.calls[0].request
+
+    sent_data = json.loads(request.content.decode())
+    assert sent_data == {"name": "Ada Updated"}
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_patch_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+    """Test that PATCH with TypedDict data parameter sends correct JSON body."""
+    client = APIClient(base_url=BASE_URL)
+
+    route = respx_mock.patch("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada Patched"}))
+
+    @client.patch("/users/{user_id}")
+    def patch_user(user_id: int, data: CreateUserRequestDict, result: UserDict) -> UserDict:
+        return result
+
+    user = patch_user(1, data={"name": "Ada Patched"})
+
+    assert user == {"id": 1, "name": "Ada Patched"}
+
+    # Verify the request was made with correct JSON body
+    assert route.called
+    request = route.calls[0].request
+
+    sent_data = json.loads(request.content.decode())
+    assert sent_data == {"name": "Ada Patched"}
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_delete_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+    """Test that DELETE with TypedDict data parameter sends correct JSON body."""
+    client = APIClient(base_url=BASE_URL)
+
+    # Some APIs support DELETE with a body
+    route = respx_mock.delete("/users/batch").mock(return_value=httpx.Response(200, json={"deleted": 2}))
+
+    @client.delete("/users/batch")
+    def delete_users(data: DeleteBatchDict, result: DeleteResultDict) -> DeleteResultDict:
+        return result
+
+    result = delete_users(data={"user_ids": [1, 2]})
+
+    assert result == {"deleted": 2}
+
+    # Verify the request was made with correct JSON body
+    assert route.called
+    request = route.calls[0].request
+
+    sent_data = json.loads(request.content.decode())
+    assert sent_data == {"user_ids": [1, 2]}
+
+
+def test_typeddict_data_validation_error_on_non_dict() -> None:
+    """Test that TypedDict data validation raises error for non-dict payloads."""
+    client = APIClient(base_url=BASE_URL)
+
+    @client.post("/users")
+    def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+        return result
+
+    # Passing a non-dict should raise TypeError before making the request
+    with pytest.raises(TypeError, match="Expected dict for TypedDict"):
+        create_user(data="not a dict")  # type: ignore[arg-type]
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+@pytest.mark.asyncio
+async def test_async_post_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+    """Test that async POST with TypedDict data parameter sends correct JSON body."""
+    client = APIClient(base_url=BASE_URL)
+
+    route = respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+
+    @client.post("/users")
+    async def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+        return result
+
+    user = await create_user(data={"name": "Charlie"})
+
+    assert user == {"id": 10, "name": "Charlie"}
+
+    # Verify the request was made with correct JSON body
+    assert route.called
+    request = route.calls[0].request
+
+    sent_data = json.loads(request.content.decode())
+    assert sent_data == {"name": "Charlie"}
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_post_with_both_typeddict_data_and_result(respx_mock: MockRouter) -> None:
+    """Test that both data and result can be TypedDict simultaneously."""
+    client = APIClient(base_url=BASE_URL)
+
+    route = respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+
+    @client.post("/users")
+    def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+        return result
+
+    user = create_user(data={"name": "Charlie"})
+
+    assert user == {"id": 10, "name": "Charlie"}
+    assert isinstance(user, dict)
+
+    # Verify request body
+    assert route.called
+    request = route.calls[0].request
+
+    sent_data = json.loads(request.content.decode())
+    assert sent_data == {"name": "Charlie"}
