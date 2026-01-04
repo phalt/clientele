@@ -46,11 +46,13 @@ How it works:
 ## POST example
 
 ```python
+from typing import TypedDict
 from pydantic import BaseModel
 from clientele import api as clientele_api
 
 client = clientele_api.APIClient(base_url="https://api.example.com")
 
+# Using Pydantic models
 class CreateUserRequest(BaseModel):
     name: str
 
@@ -64,13 +66,29 @@ def create_user(*, data: CreateUserRequest, result: User) -> User:
 
 user = create_user(data=CreateUserRequest(name="Ada"))
 
+# Or use TypedDict for the `data` and `result` parameters
+class CreateUserRequestDict(TypedDict):
+    name: str
+
+class UserDict(TypedDict):
+    id: int
+    name: str
+
+@client.post("/users")
+def create_user_with_dict(*, data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    return result
+
+# Pass dict directly - no instantiation needed
+user = create_user_with_dict(data={"name": "Ada"})
+
 ```
 
 How body-based methods (POST, PUT, PATCH, DELETE) work:
 
 - The request body must be supplied via the `data` keyword argument.
-- The `data` object must be a Pydantic model.
-- Before being sent it will be validated and serialized to JSON automatically.
+- The `data` parameter can be a Pydantic model or a TypedDict.
+- For Pydantic models, the data is validated and serialized to JSON automatically.
+- For TypedDict, the data is sent as-is (TypedDict provides type hints without runtime validation).
 - The **`result` parameter is mandatory** and determines how the response is parsed.
 
 ## PUT, PATCH, and DELETE examples

@@ -457,13 +457,22 @@ class APIClient:
         if annotation is inspect._empty:
             return payload
 
+        # Handle Pydantic BaseModel instances
         if isinstance(payload, BaseModel):
             return self._dump_model(payload)
 
-        if inspect.isclass(annotation) and issubclass(annotation, BaseModel):
+        # Handle Pydantic BaseModel classes (validate and dump)
+        if _is_pydantic_model(annotation):
             validator = annotation.model_validate if hasattr(annotation, "model_validate") else annotation.parse_obj
             model_instance = validator(payload)
             return self._dump_model(model_instance)
+
+        # Handle TypedDict classes
+        # TypedDicts don't have runtime validation, so we just ensure the payload is a dict
+        if _is_typeddict(annotation):
+            if not isinstance(payload, dict):
+                raise TypeError(f"Expected dict for TypedDict {annotation.__name__}, got {type(payload).__name__}")
+            return payload
 
         return payload
 
