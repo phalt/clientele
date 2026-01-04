@@ -34,14 +34,6 @@ from .my_models import Book, CreateBookReponse, CreateBookRequest
 
 client = clientele_api.APIClient(config=Config())
 
-@client.post("/books")
-def create_user(
-    data: CreateBookReponse,
-    result: CreateBookReponse,
-) -> CreateBookReponse:
-    return result
-
-
 # Mix sync and async functions in the same client
 @client.get("/book/{book_id}")
 async def get_book(book_id: int, result: Book) -> Book:
@@ -52,6 +44,14 @@ async def get_book(book_id: int, result: Book) -> Book:
 @client.get("/book/{book_id}")
 def get_book_title(book_id: int, result: Book) -> str:
     return result.title
+
+# POST, PUT, PATCH, DELETE all supported
+@client.post("/books")
+def create_user(
+    data: CreateBookRequest,
+    result: CreateBookReponse,
+) -> CreateBookReponse:
+    return result
 ```
 
 Clientele allows you to build elegant API integrations:
@@ -59,6 +59,12 @@ Clientele allows you to build elegant API integrations:
 ```python
 # service.py
 import api
+
+# Handle async requests
+book_response = await api.get_book(book_id=123)
+
+# Or sync requests
+book_title = api.get_book_title(book_id=123)
 
 response = api.create_book(
     data=schemas.CreateBookRequest(title="My awesome book")
@@ -69,12 +75,6 @@ match response:
         # handle valid response
     case schemas.ValidationError():
         # handle errors
-
-# Handle async requests
-book_response = await api.get_book(book_id=123)
-
-# Get the data you care about
-book_title = api.get_book_title(book_id=123)
 ```
 
 ## OpenAPI client generator
