@@ -471,9 +471,7 @@ class APIClient:
         # TypedDicts don't have runtime validation, so we just ensure the payload is a dict
         if _is_typeddict(annotation):
             if not isinstance(payload, dict):
-                raise TypeError(
-                    f"Expected dict for TypedDict {annotation.__name__}, got {type(payload).__name__}"
-                )
+                raise TypeError(f"Expected dict for TypedDict {annotation.__name__}, got {type(payload).__name__}")
             return payload
 
         return payload
