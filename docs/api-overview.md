@@ -1,8 +1,8 @@
-# Clientele API
+# API Client guide
 
 Clientele API is a decorator-driven http client that can create elegant API integrations.
 
-It intentionally works similar to FastAPI route decorators, which has taught us that:
+It intentionally works similar to FastAPI route decorators, which has shown us that:
 
 - Functions are a popular unit for encapsulating endpoint behaviour.
 - Decorators are popular for declaring the configuration for those endpoints.

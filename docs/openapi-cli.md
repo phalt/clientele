@@ -1,5 +1,5 @@
 
-# 📝 Usage and CLI
+# 📝 Client Scaffolder
 
 !!! note
 

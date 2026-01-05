@@ -32,12 +32,14 @@ nav:
   - Home: index.md
   - Getting Started:
     - Install: install.md
-  - Clientele API guide:
+  - API Client guide:
     - Overview: api-overview.md
     - Configuration: api-configuration.md
     - Async Support: api-async.md
     - Authentication: api-authentication.md
-  - OpenAPI client scaffolder:
+    - Exception Handling: exceptions.md
+    - Testing: testing.md
+  - Client Scaffolder:
     - Usage & CLI: openapi-cli.md
     - Regeneration: openapi-regeneration.md
     - Barebones Configuration: openapi-configuration.md
@@ -51,9 +53,6 @@ nav:
     - Django Ninja: server-django-ninja.md
   - API Explorer:
     - Overview: explore.md
-  - Other documentation:
-    - Exception Handling: exceptions.md
-    - Testing: testing.md
   - About:
     - Background: design.md
     - Change Log: CHANGELOG.md
