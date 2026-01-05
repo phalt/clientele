@@ -316,10 +316,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#clientele-api" class="md-nav__link">
+  <a href="#api-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clientele API
+        API Client
       
     </span>
   </a>
@@ -327,10 +327,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#openapi-client-generator" class="md-nav__link">
+  <a href="#client-generator" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OpenAPI client generator
+        Client generator
       
     </span>
   </a>
@@ -338,15 +338,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-cli-explorer" class="md-nav__link">
+  <a href="#cli-explorer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API CLI explorer
+        CLI explorer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API CLI explorer">
+    <nav class="md-nav" aria-label="CLI explorer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1371,10 +1371,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#clientele-api" class="md-nav__link">
+  <a href="#api-client" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clientele API
+        API Client
       
     </span>
   </a>
@@ -1382,10 +1382,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#openapi-client-generator" class="md-nav__link">
+  <a href="#client-generator" class="md-nav__link">
     <span class="md-ellipsis">
       
-        OpenAPI client generator
+        Client generator
       
     </span>
   </a>
@@ -1393,15 +1393,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#api-cli-explorer" class="md-nav__link">
+  <a href="#cli-explorer" class="md-nav__link">
     <span class="md-ellipsis">
       
-        API CLI explorer
+        CLI explorer
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="API CLI explorer">
+    <nav class="md-nav" aria-label="CLI explorer">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1511,8 +1511,8 @@ ___ _ _            _       _
 </p>
 </div>
 
-<h2 id="clientele-api">Clientele API</h2>
-<p>Clientele lets your write API clients as easily as you would write API servers:</p>
+<h2 id="api-client">API Client</h2>
+<p>Clientele lets you write API clients as easily as you would write API servers:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># api.py</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.my_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
@@ -1559,8 +1559,8 @@ ___ _ _            _       _
     <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
         <span class="c1"># handle errors</span>
 </code></pre></div>
-<h2 id="openapi-client-generator">OpenAPI client generator</h2>
-<p>Clientele can scaffold an API client from an OpenAPI schema with:</p>
+<h2 id="client-generator">Client generator</h2>
+<p>Clientele can create scaffolding for an API client from an OpenAPI schema with:</p>
 <ul>
 <li><strong>A developer-first approach</strong> designed for a loveable developer experience.</li>
 <li><strong>Pydantic models</strong> for request and response validation.</li>
@@ -1573,7 +1573,7 @@ ___ _ _            _       _
 <li><strong>Formatted output</strong> with <a href="https://docs.astral.sh/ruff/">Ruff</a>.</li>
 </ul>
 <p><img alt="generate_gif" src="https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif" /></p>
-<h2 id="api-cli-explorer">API CLI explorer</h2>
+<h2 id="cli-explorer">CLI explorer</h2>
 <p>Clientele has an <code>explore</code> mode for quickly testing and debugging APIs through an interactive REPL:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Explore an existing clientele-compatible client</span>
 uvx<span class="w"> </span>clientele<span class="w"> </span>explore<span class="w"> </span>-c<span class="w"> </span>my_clientele_client/
