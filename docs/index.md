@@ -62,7 +62,7 @@ def get_book_title(book_id: int, result: Book) -> str:
 
 # POST, PUT, PATCH, DELETE all supported
 @client.post("/books")
-def create_user(
+def create_book(
     data: CreateBookRequest,
     result: CreateBookReponse,
 ) -> CreateBookReponse:
