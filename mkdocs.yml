@@ -2,6 +2,12 @@ site_name: ⚜️ Clientele
 site_url: https://phalt.github.io/clientele/
 theme:
   name: material
+  features:
+    - navigation.tabs
+    - content.code.copy
+    - search.suggest
+    - search.highlight
+    - navigation.footer
   palette:
     # Palette toggle for light mode
     - media: "(prefers-color-scheme: light)"
