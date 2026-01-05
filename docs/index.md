@@ -37,62 +37,64 @@ ___ _ _            _       _
 </p>
 </div>
 
-## API Client
+## Why use Clientele?
 
-Clientele lets you write API clients as easily as you would write API servers:
+- **Inspired by FastAPI** - write API clients as easily as you would write API servers.
+- **A neat abstraction** - Focus on the data, let Clientele manage everything else.
+- **Modern python** - [Python Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and [httpx](https://www.python-httpx.org/), that's it.
+- **Easy to learn** - No complexity, beautiful developer experience, easy to read.
+- **Easy to configure** - sane defaults, but plenty of hooks for customisation and control.
+
+## A Simple Example
 
 ```python
-# api.py
 from clientele import api as clientele_api
-from .my_config import Config
-from .my_models import Book, CreateBookReponse, CreateBookRequest
+from .my_pydantic_models import Book
 
-client = clientele_api.APIClient(config=Config())
+client = clientele_api.APIClient(base_url="http://localhost:8000")
 
-# Mix sync and async functions in the same client
+@client.get("/book/{book_id}")
+def get_book(book_id: int, result: Book) -> Book:
+    return result
+
+# Or just return the data you want!
+@client.get("/book/{book_id}")
+def get_book_title(book_id: int, result: Book) -> str:
+    return result.title
+```
+
+## Async support
+
+```python
+from clientele import api as clientele_api
+from .my_pydantic_models import Book
+
+client = clientele_api.APIClient(base_url="http://localhost:8000")
+
+
+# Note: mix sync and async in one client if you want!
 @client.get("/book/{book_id}")
 async def get_book(book_id: int, result: Book) -> Book:
     return result
 
+```
 
-# Return only what you need from the API
-@client.get("/book/{book_id}")
-def get_book_title(book_id: int, result: Book) -> str:
-    return result.title
+## Input and output validation with Pydantic
 
-# POST, PUT, PATCH, DELETE all supported
+```python
+from clientele import api as clientele_api
+from .my_pydantic_models import CreateBookRequest, CreateBookResponse
+
+client = clientele_api.APIClient(base_url="http://localhost:8000")
+
+
+# Strongly typed inputs and outputs
 @client.post("/books")
-def create_book(
-    data: CreateBookRequest,
-    result: CreateBookReponse,
-) -> CreateBookReponse:
+def create_book(data: CreateBookRequest, result: CreateBookReponse) -> CreateBookResponse:
     return result
 ```
 
-Clientele allows you to build elegant API integrations:
-
-```python
-# service.py
-import api
-
-# Handle async requests
-book_response = await api.get_book(book_id=123)
-
-# Or sync requests
-book_title = api.get_book_title(book_id=123)
-
-response = api.create_book(
-    data=schemas.CreateBookRequest(title="My awesome book")
-)
-
-match response:
-    case schemas.CreateBookResponse():
-        # handle valid response
-    case schemas.ValidationError():
-        # handle errors
-```
-
-## Client generator
+## API Client generator
 
 Clientele can create scaffolding for an API client from an OpenAPI schema with:
 
@@ -108,7 +110,7 @@ Clientele can create scaffolding for an API client from an OpenAPI schema with:
 
 ![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
 
-## CLI explorer
+## API Client explorer
 
 Clientele has an `explore` mode for quickly testing and debugging APIs through an interactive REPL:
 
@@ -123,7 +125,7 @@ uvx clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/maste
 
 ![repl demo](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele.gif)
 
-### Explorer Features
+**Explorer Features**
 
 - **Autocomplete** for operations and schemas.
 - **Execute API operations** with Python-like syntax.
