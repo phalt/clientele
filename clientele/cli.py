@@ -213,9 +213,9 @@ def generate_class(url, file, output, asyncio, regen):
 @click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
 @click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
 @click.option("-o", "--output", help="Directory for the generated client", required=True)
-@click.option("-a", "--asyncio", help="Generate async client", required=False)
-@click.option("-r", "--regen", help="Regenerate client", required=False)
-def scaffold_api(url, file, output, asyncio, regen):
+@click.option("-a", "--asyncio", is_flag=True, help="Generate async client")
+@click.option("-r", "--regen", is_flag=True, help="Regenerate client")
+def scaffold_api(url, file, output, asyncio=False, regen=False):
     """
     Scaffold an API client from an OpenAPI schema.
     """
