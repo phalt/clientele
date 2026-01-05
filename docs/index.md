@@ -37,9 +37,9 @@ ___ _ _            _       _
 </p>
 </div>
 
-## Clientele API
+## API Client
 
-Clientele lets your write API clients as easily as you would write API servers:
+Clientele lets you write API clients as easily as you would write API servers:
 
 ```python
 # api.py
@@ -92,9 +92,9 @@ match response:
         # handle errors
 ```
 
-## OpenAPI client generator
+## Client generator
 
-Clientele can scaffold an API client from an OpenAPI schema with:
+Clientele can create scaffolding for an API client from an OpenAPI schema with:
 
 - **A developer-first approach** designed for a loveable developer experience.
 - **Pydantic models** for request and response validation.
@@ -108,7 +108,7 @@ Clientele can scaffold an API client from an OpenAPI schema with:
 
 ![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
 
-## API CLI explorer
+## CLI explorer
 
 Clientele has an `explore` mode for quickly testing and debugging APIs through an interactive REPL:
 
