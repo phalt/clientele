@@ -1,7 +1,7 @@
 [project]
 name = "clientele"
-version = "1.3.0"
-description = "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"
+version = "1.4.0"
+description = "Clientele is a different way to think about Python API Clients"
 authors = [{ name = "Paul Hallett", email = "paulandrewhallett@gmail.com" }]
 license = { text = "MIT" }
 readme = "README.md"
