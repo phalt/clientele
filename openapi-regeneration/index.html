@@ -1544,14 +1544,14 @@
 <p>At times you may wish to regenerate a client.</p>
 <p>This could be because the API has updated or you just want to use a newer version of Clientele.</p>
 <p>To force a regeneration you must pass the <code>--regen</code> or <code>-r</code> argument, for example:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w">  </span>--regen<span class="w"> </span>t
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w">  </span>--regen
 </code></pre></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>You can copy and paste the command from the <code>MANIFEST.md</code> file in your previously-generated client for a quick and easy regeneration.</p>
 </div>
 <h2 id="understanding-regeneration">Understanding Regeneration</h2>
-<p>When you regenerate a client with <code>--regen t</code>, Clientele follows these rules:</p>
+<p>When you regenerate a client with <code>--regen</code>, Clientele follows these rules:</p>
 <p><strong>Files that WILL be overwritten:</strong></p>
 <ul>
 <li><code>client.py</code> - Your API client functions/class</li>
@@ -1583,12 +1583,12 @@ pipx install clientele
 
 API VERSION: 0.1.0
 OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 1.4.0
+CLIENTELE VERSION: 1.4.1
 
 Regenerate using this command:
 
 ```sh
-clientele scaffold-api -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio t --regen t
+clientele scaffold-api -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio --regen
 ```
 
 Explore this API interactively:
@@ -1602,7 +1602,7 @@ clientele explore -c .
 <ol>
 <li><strong>API Updated</strong>: Your API has new endpoints or changed schemas</li>
 <li><strong>Regenerate</strong>: Run <code>clientele generate</code> with <code>--regen t</code>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen<span class="w"> </span>t
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen
 </code></pre></div></li>
 <li><strong>Review Changes</strong>: Use git to see what changed
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>diff<span class="w"> </span>my_client/
@@ -1634,7 +1634,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
 <span class="w">    </span><span class="no">clientele scaffold-api \</span>
 <span class="w">      </span><span class="no">-u http://api:8000/openapi.json \</span>
 <span class="w">      </span><span class="no">-o clients/my_api/ \</span>
-<span class="w">      </span><span class="no">--regen t</span>
+<span class="w">      </span><span class="no">--regen</span>
 
 <span class="w">    </span><span class="no"># Check if client changed</span>
 <span class="w">    </span><span class="no">if ! git diff --quiet clients/my_api/; then</span>
