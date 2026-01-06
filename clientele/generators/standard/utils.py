@@ -18,6 +18,7 @@ class DataType:
     BOOLEAN = "boolean"
     ARRAY = "array"
     OBJECT = "object"
+    NULL = "null"
     ONE_OF = "oneOf"
     ANY_OF = "anyOf"
 
@@ -134,6 +135,10 @@ def get_type(t):
         base_type = "bool"
     elif t_type == DataType.OBJECT:
         base_type = "dict[str, typing.Any]"
+    elif t_type == DataType.NULL:
+        # OpenAPI 3.1.0 uses {"type": "null"} for null values
+        # In Python, this should be None
+        base_type = "None"
     elif t_type == DataType.ARRAY:
         inner_class = get_type(t.get("items"))
         base_type = f"list[{inner_class}]"

@@ -155,3 +155,14 @@ class Client:
 
         response = await self._http_client.get(url="/deprecated-endpoint")
         return http.handle_response(self.deprecated_endpoint_deprecated_endpoint_get, response)
+
+    async def nullable_fields_nullable_fields_post(
+        self, data: schemas.NullableFieldsRequest
+    ) -> schemas.HTTPValidationError | schemas.NullableFieldsResponse:
+        """Nullable Fields Request
+
+        A request with nullable fields using OpenAPI 3.1.0 format
+        """
+
+        response = await self._http_client.post(url="/nullable-fields", data=data.model_dump())
+        return http.handle_response(self.nullable_fields_nullable_fields_post, response)

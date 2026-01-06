@@ -90,6 +90,18 @@ class ValidationError(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(populate_by_name=True)
 
 
+class NullableFieldsRequest(pydantic.BaseModel):
+    nullable_string: typing.Optional[str | None] = None
+    nullable_integer: typing.Optional[int | None] = None
+    required_field: str
+
+
+class NullableFieldsResponse(pydantic.BaseModel):
+    nullable_string: str | None
+    nullable_integer: int | None
+    required_field: str
+
+
 class HeaderRequestHeaderRequestGetHeaders(pydantic.BaseModel):
     x_test: typing.Any = pydantic.Field(serialization_alias="x-test")
 
