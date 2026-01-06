@@ -2,7 +2,7 @@
 
 ## UNRELEASED 1.4.1
 
-- Correct `--regen` and `--asyncio` to be boolean flags in `scaffold-api` command. Contributor: @peterHoburg
+- Correct `--regen` and `--asyncio` to be boolean flags in `scaffold-api` command. Contributor: [@peterHoburg](https://github.com/peterHoburg).
 
 ## 1.4.0
 
