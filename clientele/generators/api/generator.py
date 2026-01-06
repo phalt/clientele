@@ -92,7 +92,7 @@ class APIGenerator(generators.Generator):
         if manifest_file.exists():
             os.remove(manifest_file)
         template = writer.templates.get_template("manifest.jinja2")
-        generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio t' if self.asyncio else ''} --regen t"  # noqa
+        generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio' if self.asyncio else ''} --regen"  # noqa
         content = (
             template.render(
                 api_version=self.spec.info.version if self.spec.info else "N/A",

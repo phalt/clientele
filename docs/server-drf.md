@@ -111,7 +111,7 @@ clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/
 If you want an async client (note: DRF itself is synchronous, but the client can be async):
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/ --asyncio t
+clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/ --asyncio
 ```
 
 ## Step 4: Use the scaffolded Client

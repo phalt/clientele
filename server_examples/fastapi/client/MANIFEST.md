@@ -21,7 +21,7 @@ CLIENTELE VERSION: 1.4.0
 Regenerate using this command:
 
 ```sh
-clientele scaffold-api -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/  --regen t
+clientele scaffold-api -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/  --regen
 ```
 
 Explore this API interactively:

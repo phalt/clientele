@@ -1,5 +1,9 @@
 # Change log
 
+## UNRELEASED 1.4.1
+
+- Correct `--regen` and `--asyncio` to be boolean flags in `scaffold-api` command. Contributor: @peterHoburg
+
 ## 1.4.0
 
 - You can now pass `TypedDict` instances for the `data` parameter on `post`, `put`, `patch` and `delete` methods.
