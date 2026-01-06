@@ -51,7 +51,7 @@ clientele scaffold-api -u http://localhost:8000/openapi.json -o my_client/
 If your FastAPI app uses async endpoints and you want an async client:
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/openapi.json -o my_client/ --asyncio t
+clientele scaffold-api -u http://localhost:8000/openapi.json -o my_client/ --asyncio
 ```
 
 ## Step 3: Use the scaffolded Client

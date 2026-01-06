@@ -60,10 +60,10 @@ clientele scaffold-api -f path/to/file.json -o my_client/
 
 ### Async.io
 
-If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) client, just pass `--asyncio t` to your command.
+If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) client, just pass `--asyncio` to your command.
 
 ```sh
-clientele scaffold-api -f path/to/file.json -o my_client/ --asyncio t
+clientele scaffold-api -f path/to/file.json -o my_client/ --asyncio
 ```
 
 ## generate-basic
