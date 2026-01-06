@@ -142,4 +142,4 @@ As of our latest run, we successfully generate clients for **95.39%** of schemas
 
 ## Getting Started
 
-👉 Read the [full documentation](https://phalt.github.io/clientele/) for all documentation.
+👉 Read the [full documentation](https://clientele.spice.tools/) for all documentation.
