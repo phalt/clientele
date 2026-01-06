@@ -151,3 +151,15 @@ async def deprecated_endpoint_deprecated_endpoint_get(result: schemas.SimpleResp
         This operation is deprecated and may be removed in a future version.
     """
     return result
+
+
+@client.post("/nullable-fields", response_map={200: schemas.NullableFieldsResponse, 422: schemas.HTTPValidationError})
+async def nullable_fields_nullable_fields_post(
+    data: schemas.NullableFieldsRequest,
+    result: schemas.HTTPValidationError | schemas.NullableFieldsResponse,
+) -> schemas.HTTPValidationError | schemas.NullableFieldsResponse:
+    """Nullable Fields Request
+
+    A request with nullable fields using OpenAPI 3.1.0 format
+    """
+    return result

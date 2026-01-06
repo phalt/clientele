@@ -139,3 +139,15 @@ def deprecated_endpoint_deprecated_endpoint_get() -> schemas.SimpleResponse:
 
     response = http.get(url="/deprecated-endpoint")
     return http.handle_response(deprecated_endpoint_deprecated_endpoint_get, response)
+
+
+def nullable_fields_nullable_fields_post(
+    data: schemas.NullableFieldsRequest,
+) -> schemas.HTTPValidationError | schemas.NullableFieldsResponse:
+    """Nullable Fields Request
+
+    A request with nullable fields using OpenAPI 3.1.0 format
+    """
+
+    response = http.post(url="/nullable-fields", data=data.model_dump())
+    return http.handle_response(nullable_fields_nullable_fields_post, response)
