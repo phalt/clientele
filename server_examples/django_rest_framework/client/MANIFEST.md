@@ -21,7 +21,7 @@ CLIENTELE VERSION: 1.4.0
 Regenerate using this command:
 
 ```sh
-clientele scaffold-api -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/  --regen t
+clientele scaffold-api -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/  --regen
 ```
 
 Explore this API interactively:

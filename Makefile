@@ -45,15 +45,15 @@ shell:  ## Run an ipython shell
 
 generate-test-clients:  ## regenerate the test clients in the tests/ directory
 	uv sync
-	uv run clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/test_client/ --regen t
+	uv run clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/test_client/ --regen
 	uv run clientele generate -f example_openapi_specs/best.json -o tests/old_clients/test_client/ --regen t
-	uv run clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/async_test_client/ --asyncio t --regen t
+	uv run clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/async_test_client/ --asyncio --regen
 	uv run clientele generate -f example_openapi_specs/best.json -o tests/old_clients/async_test_client/ --asyncio t --regen t
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/old_clients/test_class_client/ --regen t
 	uv run clientele generate-class -f example_openapi_specs/best.json -o tests/old_clients/async_test_class_client/ --asyncio t --regen t
-	uv run clientele scaffold-api -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/ --regen t
-	uv run clientele scaffold-api -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/ --regen t
-	uv run clientele scaffold-api -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/ --regen t
+	uv run clientele scaffold-api -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/ --regen
+	uv run clientele scaffold-api -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/ --regen
+	uv run clientele scaffold-api -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/ --regen
 
 brew-status:  ## Check the status of Homebrew publishing setup
 	@homebrew/check_status.sh
