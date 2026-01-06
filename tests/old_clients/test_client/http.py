@@ -123,6 +123,7 @@ func_response_code_maps = {
     "simple_request_simple_request_get": {"200": "SimpleResponse"},
     "parameter_request_simple_request": {"200": "ParameterResponse", "422": "HTTPValidationError"},
     "deprecated_endpoint_deprecated_endpoint_get": {"200": "SimpleResponse"},
+    "nullable_fields_nullable_fields_post": {"200": "NullableFieldsResponse", "422": "HTTPValidationError"},
 }
 
 

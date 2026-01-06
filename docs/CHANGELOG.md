@@ -3,6 +3,7 @@
 ## UNRELEASED 1.4.1
 
 - Correct `--regen` and `--asyncio` to be boolean flags in `scaffold-api` command. Contributor: [@peterHoburg](https://github.com/peterHoburg).
+- Properly support `null` field for `anyOf` schemas in OpenAPI schema generation. They now produce `None` correctly.
 
 ## 1.4.0
 

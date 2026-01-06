@@ -306,6 +306,80 @@
                 ],
                 "title": "ValidationError",
                 "type": "object"
+            },
+            "NullableFieldsRequest": {
+                "description": "A request with nullable fields using OpenAPI 3.1.0 format",
+                "properties": {
+                    "nullable_string": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nullable String"
+                    },
+                    "nullable_integer": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nullable Integer"
+                    },
+                    "required_field": {
+                        "title": "Required Field",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "required_field"
+                ],
+                "title": "NullableFieldsRequest",
+                "type": "object"
+            },
+            "NullableFieldsResponse": {
+                "description": "A response with nullable fields using OpenAPI 3.1.0 format",
+                "properties": {
+                    "nullable_string": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nullable String"
+                    },
+                    "nullable_integer": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Nullable Integer"
+                    },
+                    "required_field": {
+                        "title": "Required Field",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "nullable_string",
+                    "nullable_integer",
+                    "required_field"
+                ],
+                "title": "NullableFieldsResponse",
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -721,6 +795,45 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/nullable-fields": {
+            "post": {
+                "summary": "Nullable Fields Request",
+                "description": "A request with nullable fields using OpenAPI 3.1.0 format",
+                "operationId": "nullable_fields_nullable_fields_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NullableFieldsRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NullableFieldsResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
                     }
                 }
             }
