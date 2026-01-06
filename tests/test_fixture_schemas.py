@@ -6,12 +6,24 @@ from pathlib import Path
 import pytest
 from cicerone import parse as cicerone_parse
 
+from clientele.generators.api.generator import APIGenerator
 from clientele.generators.standard.generator import StandardGenerator
 
 
 def load_fixture_spec(spec_path: Path):
     """Load an OpenAPI spec from a fixture file."""
     return cicerone_parse.parse_spec_from_file(str(spec_path))
+
+
+def get_regression_schemas() -> list[str]:
+    """Discover all schema files in the regressions fixture directory."""
+    regressions_dir = Path(__file__).parent / "fixtures" / "regression"
+    if not regressions_dir.exists():
+        return []
+    schemas = []
+    for ext in ["*.yaml", "*.yml", "*.json"]:
+        schemas.extend(regressions_dir.glob(ext))
+    return [str(p.relative_to(Path(__file__).parent.parent)) for p in sorted(schemas)]
 
 
 # Define all fixture schemas to test
@@ -36,6 +48,8 @@ FIXTURE_SCHEMAS = [
     "tests/fixtures/realworld/medium.yaml",
     "tests/fixtures/realworld/spacetraders.yaml",
     "tests/fixtures/realworld/twilio.yaml",
+    # Auto-discovered regression schemas
+    *get_regression_schemas(),
 ]
 
 
@@ -58,7 +72,7 @@ def validate_generated_python_file(file_path: Path, file_content: str, fixture_p
 
 
 @pytest.mark.parametrize("fixture_path", FIXTURE_SCHEMAS)
-@pytest.mark.parametrize("client_generator", [StandardGenerator])
+@pytest.mark.parametrize("client_generator", [APIGenerator, StandardGenerator])
 def test_fixture_schema_generates_client(fixture_path, client_generator) -> None:
     """Test that each fixture schema can generate a working client."""
     base_path = Path(__file__).parent.parent
