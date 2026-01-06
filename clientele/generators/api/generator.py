@@ -107,7 +107,7 @@ class APIGenerator(generators.Generator):
     def prevent_accidental_regens(self) -> bool:
         if path.exists(self.output_dir):
             if not self.regen:
-                console.log("[red]WARNING! If you want to regenerate, please pass --regen t")
+                console.log("[red]WARNING! If you want to regenerate, please pass --regen")
                 return False
         return True
 
