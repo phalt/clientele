@@ -2,90 +2,90 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://phalt.github.io/clientele/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/CHANGELOG/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/api-async/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/api-authentication/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/api-configuration/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/api-overview/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/compatibility/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/complex_schemas/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/design/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/examples/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/exceptions/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/explore/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/install/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/openapi-authentication/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/openapi-cli/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/openapi-configuration/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/openapi-regeneration/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/references/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/server-django-ninja/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/server-drf/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/server-fastapi/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
     <url>
          <loc>https://phalt.github.io/clientele/testing/</loc>
-         <lastmod>2026-01-06</lastmod>
+         <lastmod>2026-01-07</lastmod>
     </url>
 </urlset>
