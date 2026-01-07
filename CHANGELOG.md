@@ -1,6 +1,6 @@
 # Change log
 
-## Unreleased 1.4.2
+## 1.4.2
 
 - Fix `scaffold-api` generating post/put/patch/delete methods with a `,,` when dealing with optional args. Contributor: [@peterHoburg](https://github.com/peterHoburg).
 

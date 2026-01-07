@@ -18,10 +18,7 @@ def list_users(result: schemas.Response) -> schemas.Response:
 
 
 @client.post("/api/users")
-def create_user(
-    data: schemas.UserIn,
-    result: schemas.UserOut,
-) -> schemas.UserOut:
+def create_user(data: schemas.UserIn, result: schemas.UserOut) -> schemas.UserOut:
     """Create User
 
     Create a new user.

@@ -40,8 +40,7 @@ async def optional_parameters_request_optional_parameters_get(
 
 @client.post("/request-data", response_map={200: schemas.RequestDataResponse, 422: schemas.HTTPValidationError})
 async def request_data_request_data_post(
-    data: schemas.RequestDataRequest,
-    result: schemas.HTTPValidationError | schemas.RequestDataResponse,
+    data: schemas.RequestDataRequest, result: schemas.HTTPValidationError | schemas.RequestDataResponse
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data
 
@@ -52,8 +51,7 @@ async def request_data_request_data_post(
 
 @client.put("/request-data", response_map={200: schemas.RequestDataResponse, 422: schemas.HTTPValidationError})
 async def request_data_request_data_put(
-    data: schemas.RequestDataRequest,
-    result: schemas.HTTPValidationError | schemas.RequestDataResponse,
+    data: schemas.RequestDataRequest, result: schemas.HTTPValidationError | schemas.RequestDataResponse
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data
 
@@ -155,8 +153,7 @@ async def deprecated_endpoint_deprecated_endpoint_get(result: schemas.SimpleResp
 
 @client.post("/nullable-fields", response_map={200: schemas.NullableFieldsResponse, 422: schemas.HTTPValidationError})
 async def nullable_fields_nullable_fields_post(
-    data: schemas.NullableFieldsRequest,
-    result: schemas.HTTPValidationError | schemas.NullableFieldsResponse,
+    data: schemas.NullableFieldsRequest, result: schemas.HTTPValidationError | schemas.NullableFieldsResponse
 ) -> schemas.HTTPValidationError | schemas.NullableFieldsResponse:
     """Nullable Fields Request
 

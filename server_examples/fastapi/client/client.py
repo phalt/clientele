@@ -19,8 +19,7 @@ def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
 
 @client.post("/users", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
 def create_user(
-    data: schemas.CreateUserRequest,
-    result: schemas.HTTPValidationError | schemas.UserResponse,
+    data: schemas.CreateUserRequest, result: schemas.HTTPValidationError | schemas.UserResponse
 ) -> schemas.HTTPValidationError | schemas.UserResponse:
     """Create User
 
