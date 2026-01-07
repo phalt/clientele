@@ -23,7 +23,7 @@
 
 ## Why use Clientele?
 
-- **Inspired by FastAPI** - write API clients as easily as you would write API servers.
+- **A simple API** - write API clients as easily as you would write API servers.
 - **A neat abstraction** - Focus on the data, let Clientele manage everything else.
 - **Modern python** - [Python Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and [httpx](https://www.python-httpx.org/), that's it.
 - **Easy to learn** - No complexity, beautiful developer experience, easy to read.
