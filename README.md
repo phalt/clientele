@@ -8,7 +8,7 @@
     / /  | | |/ _ \ '_ \| __/ _ \ |/ _ \
    / /___| | |  __/ | | | ||  __/ |  __/
    \____/|_|_|\___|_| |_|\__\___|_|\___|</pre>
-<p>⚜️ Clientele is a different way to think about Python API Clients</p>
+<p>Clientele is a different way to think about Python API Clients</p>
 
 </div>
 
