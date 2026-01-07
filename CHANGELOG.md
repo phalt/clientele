@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased 1.4.2
+
+- Fix `scaffold-api` generating post/put/patch/delete methods with a `,,` when dealing with optional args. Contributor: [@peterHoburg](https://github.com/peterHoburg).
+
 ## 1.4.1
 
 - Correct `--regen` and `--asyncio` to be boolean flags in `scaffold-api` command. Contributor: [@peterHoburg](https://github.com/peterHoburg).
