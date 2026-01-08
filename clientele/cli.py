@@ -117,7 +117,7 @@ cli_group.help = textwrap.dedent(f"""\
 \b
 {CLIENTELE_HEADER}
 
-⚜️  Clientele is a different way to think about Python API clients
+⚜️  Clientele is a different way to build Python API Clients
 
 🔢 Version {settings.VERSION}
 
