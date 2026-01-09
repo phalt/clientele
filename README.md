@@ -1,16 +1,4 @@
-# ⚜️ Clientele
-
-<div style="text-align: center;">
-
-<pre>
-      ___ _ _            _       _
-     / __\ (_) ___ _ __ | |_ ___| | ___
-    / /  | | |/ _ \ '_ \| __/ _ \ |/ _ \
-   / /___| | |  __/ | | | ||  __/ |  __/
-   \____/|_|_|\___|_| |_|\__\___|_|\___|</pre>
-<p>Clientele is a different way to build Python API Clients</p>
-
-</div>
+![https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png)
 
 [![Package version](https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version)](https://pypi.org/project/clientele)
 ![Python versions](https://img.shields.io/badge/python-3.10+-blue)
