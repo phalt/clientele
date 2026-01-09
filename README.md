@@ -35,8 +35,6 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 
 ## Async support
 
-- You can use sync and async in one client.
-
 ```python
 @client.get("/pokemon/{id}")
 async def get_pokemon_name(id: int, result: Pokemon) -> str:
@@ -44,8 +42,6 @@ async def get_pokemon_name(id: int, result: Pokemon) -> str:
 ```
 
 ## Automatic data validation
-
-- Pydantic models are recognised and validated.
 
 ```python
 from clientele import api as clientele_api
