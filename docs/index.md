@@ -48,7 +48,7 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 
 ```python
 @client.get("/pokemon/{id}")
-def get_pokemon_name(id: int, result: Pokemon) -> str:
+async def get_pokemon_name(id: int, result: Pokemon) -> str:
     return result.name
 ```
 
