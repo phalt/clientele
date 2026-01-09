@@ -1,6 +1,6 @@
-# Exception Handling
+# 🚨 Exception Handling
 
-Clientele clients handle unexpected API responses by raising an `APIException`.
+Clientele wll handle unexpected API responses by raising an `APIException`.
 
 ## When APIException is Raised
 

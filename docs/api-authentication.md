@@ -1,4 +1,4 @@
-# Authentication
+# 🔐 Authentication
 
 Clientele API supports multiple authentication methods through the client configuration.
 

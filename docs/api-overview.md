@@ -1,20 +1,6 @@
-# API Client guide
+# 📕 Documentation
 
-Clientele API is a decorator-driven http client that can create elegant API integrations.
-
-It intentionally works similar to FastAPI route decorators, which has shown us that:
-
-- Functions are a popular unit for encapsulating endpoint behaviour.
-- Decorators are popular for declaring the configuration for those endpoints.
-- Types are amazing for documentation and validation.
-
-With Clientele we follow the same ideas but flip around who is sending and receiving data:
-
-- the decorator issues an http request with the validated payload.
-- the decorator parses the http response and injects it into the function via the `result` parameter.
-- The function becomes the high-level abstraction for the endpoint and defines the typed input and typed output for the rest of your application.
-
-## GET example
+## HTTP GET example
 
 ```python
 from pydantic import BaseModel
@@ -35,7 +21,7 @@ def get_user(user_id: int, result: User, include_details: bool = True) -> User:
 user = get_user(42)
 ```
 
-How it works:
+How Clientele works:
 
 - Path parameters inside `{}` are filled from the function arguments (e.g. `user_id`).
 - Any remaining keyword arguments (like `include_details` above) become query parameters, but you can also provide a dict function parameter `query={...}` instead.
@@ -43,7 +29,7 @@ How it works:
 - Your function is injected with the `result` parameter - this is the response payload hydrated into your `result` parameter's type.
 - The function's return value is independent - you can return the result directly, transform it, or return something completely different.
 
-## POST example
+## HTTP POST example
 
 ```python
 from typing import TypedDict
@@ -83,12 +69,12 @@ user = create_user_with_dict(data={"name": "Ada"})
 
 ```
 
-How body-based methods (POST, PUT, PATCH, DELETE) work:
+How body-based methods (POST, PUT, PATCH, DELETE) work with Clientele:
 
 - The request body must be supplied via the `data` keyword argument.
 - The `data` parameter can be a Pydantic model or a TypedDict.
 - For Pydantic models, the data is validated and serialized to JSON automatically.
-- For TypedDict, the data is sent as-is (TypedDict provides type hints without runtime validation).
+- For TypedDict, the data is sent as-is (because TypedDict provides type hints without runtime validation).
 - The **`result` parameter is mandatory** and determines how the response is parsed.
 
 ## PUT, PATCH, and DELETE examples

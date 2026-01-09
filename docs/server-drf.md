@@ -1,4 +1,4 @@
-# Using Clientele with Django REST Framework
+# 🦄 Using Clientele with Django REST Framework
 
 This guide shows you how to scaffold a Python client for a Django REST Framework (DRF) API using Clientele and **drf-spectacular**.
 

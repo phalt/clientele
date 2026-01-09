@@ -1,5 +1,5 @@
 
-# 📝 Client Scaffolder
+# 🏗️ Client Scaffolder
 
 !!! note
 

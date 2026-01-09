@@ -1,4 +1,4 @@
-# API Explorer
+# 🗺️ API Explorer
 
 The `explore` command launches an **interactive REPL** that lets you explore and test API operations without writing any code. It's perfect for API discovery, testing, and debugging.
 

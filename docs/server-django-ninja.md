@@ -1,4 +1,4 @@
-# Using Clientele with Django Ninja
+# 🥷 Using Clientele with Django Ninja
 
 This guide shows you how to scaffold a Python client for a Django Ninja API using Clientele.
 

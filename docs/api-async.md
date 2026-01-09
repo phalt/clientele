@@ -1,6 +1,6 @@
-# Async support
+# 🔀 Async support
 
-Clientele API supports both async and sync methods.
+Clientele API supports both async and sync functions.
 
 They can even be mixed in together if you prefer.
 

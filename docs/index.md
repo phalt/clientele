@@ -22,6 +22,8 @@
 </p>
 </div>
 
+## Example code
+
 ```python
 from clientele import api
 from .schemas import Pokemon

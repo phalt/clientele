@@ -1,4 +1,4 @@
-# Using Clientele with FastAPI
+# ⚡️ Using Clientele with FastAPI
 
 This guide shows you how to scaffold a Python client for a FastAPI application using Clientele.
 

@@ -1,6 +1,6 @@
-# Testing
+# 🧪 Testing
 
-Clientele is designed for easy testing. 
+Clientele is designed for easy testing.
 
 Our [own test suite](https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py) shows how you can write mock tests for your API client.
 

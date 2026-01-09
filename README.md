@@ -1,3 +1,5 @@
+# ⚜️ Clientele 
+
 ![https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png)
 
 [![Package version](https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version)](https://pypi.org/project/clientele)
@@ -8,6 +10,8 @@
 
 ![Works with](https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green)
 ![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
+
+## Example code
 
 ```python
 from clientele import api

@@ -1,4 +1,4 @@
-# 🏗️ Install
+# 🚀 Install
 
 ## uv
 

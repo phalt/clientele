@@ -31,17 +31,17 @@ theme:
 repo_name: phalt/clientele
 repo_url: https://github.com/phalt/clientele
 nav:
-  - Home: index.md
-  - Getting Started:
+  - ⚜️ Home: index.md
+  - 🚀 Install:
     - Install: install.md
-  - API Client guide:
-    - Overview: api-overview.md
-    - Configuration: api-configuration.md
-    - Async Support: api-async.md
-    - Authentication: api-authentication.md
-    - Exception Handling: exceptions.md
-    - Testing: testing.md
-  - Client Scaffolder:
+  - 📕 Documentation:
+    - 📕 Documentation: api-overview.md
+    - ⚙️ Configuration: api-configuration.md
+    - 🔀 Async Support: api-async.md
+    - 🔐 Authentication: api-authentication.md
+    - 🚨 Exception Handling: exceptions.md
+    - 🧪 Testing: testing.md
+  - 🏗️ Client Scaffolder:
     - Usage & CLI: openapi-cli.md
     - Regeneration: openapi-regeneration.md
     - Barebones Configuration: openapi-configuration.md
@@ -49,13 +49,13 @@ nav:
     - Generated Client Tour: examples.md
     - Compatibility & Limitations: compatibility.md
     - References in OpenAPI: references.md
-  - API Server Integrations:
-    - FastAPI: server-fastapi.md
-    - Django REST Framework: server-drf.md
-    - Django Ninja: server-django-ninja.md
-  - API Explorer:
+  - ⚡️API Server Integrations:
+    - ⚡️ FastAPI: server-fastapi.md
+    - 🦄 Django REST Framework: server-drf.md
+    - 🥷 Django Ninja: server-django-ninja.md
+  - 🗺️ API Explorer:
     - Overview: explore.md
-  - About:
+  - ❓About:
     - Background: design.md
     - Change Log: CHANGELOG.md
 
