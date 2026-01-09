@@ -1,5 +1,4 @@
-# ⚜️ Clientele
-
+# 
 <style>
   .ascii { max-width: 900px; margin: 48px auto; padding: 2px; }
   .ascii pre { white-space: pre; font-family: ui-monospace, Menlo, Consolas, monospace;

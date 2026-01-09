@@ -1,7 +1,9 @@
-site_name: ⚜️ Clientele
+site_name: Clientele
 site_url: https://docs.clientele.dev
 theme:
   name: material
+  favicon: favicon.png
+  logo: favicon.png
   features:
     - navigation.tabs
     - content.code.copy
