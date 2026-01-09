@@ -41,7 +41,7 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 - **Easy to learn** - Clientele is visually similar to popular python API server frameworks.
 - **Easy to test** - Works with existing tools like [respx](https://lundberg.github.io/respx/) and [pytest-httpx](https://pypi.org/project/pytest-httpx/).
 - **Easy to configure** - Clientele has sensible defaults and plenty of hooks for customisation.
-- **A Comfortable abstraction** - Focus on the data and the functionality, not the connectivity.
+- **A comfortable abstraction** - Focus on the data and the functionality, not the connectivity.
 - **OpenAPI support** - Build your own client, or scaffold one from an OpenAPI schema.
 
 ## Async support
