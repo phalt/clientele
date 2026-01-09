@@ -158,4 +158,4 @@ As of our latest run, we successfully generate clients for **95.39%** of schemas
 
 ## Getting Started
 
-👉 Read the [full documentation](https://clientele.spice.tools/) for all documentation.
+👉 Read the [full documentation](https://docs.clientele.dev/) for all documentation.

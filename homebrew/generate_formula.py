@@ -270,7 +270,7 @@ def main():
     formula_lines.append(
         '  desc "The Python API Client Generator for FastAPI, Django REST Framework, and Django Ninja"'
     )
-    formula_lines.append('  homepage "https://phalt.github.io/clientele/"')
+    formula_lines.append('  homepage "https://clientele.dev"')
     formula_lines.append(f'  url "{clientele_info["url"]}"')
     formula_lines.append(f'  sha256 "{clientele_info["sha256"]}"')
     formula_lines.append('  license "MIT"')

@@ -23,9 +23,9 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://phalt.github.io/clientele/"
-Changelog = "https://phalt.github.io/clientele/CHANGELOG/"
-Documentation = "https://phalt.github.io/clientele/"
+Homepage = "https://clientele.dev"
+Changelog = "https://docs.clientele.dev/CHANGELOG/"
+Documentation = "https://docs.clientele.dev/"
 Issues = "https://github.com/phalt/clientele/issues"
 
 [project.scripts]
