@@ -21,49 +21,39 @@
 ![Works with](https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green)
 ![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
 
+```python
+from clientele import api
+from .schemas import Pokemon
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2/")
+
+@client.get("/pokemon/{id}")
+def get_pokemon_name(id: int, result: Pokemon) -> str:
+    return result.name
+```
+
 ## Why use Clientele?
 
-- **A simple API** - write API clients as easily as you would write API servers.
-- **A neat abstraction** - Focus on the data, let Clientele manage everything else.
-- **Modern python** - [Python Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and [httpx](https://www.python-httpx.org/), that's it.
-- **Easy to learn** - No complexity, beautiful developer experience, easy to read.
-- **Easy to configure** - sane defaults, but plenty of hooks for customisation and control.
-
-## A Simple Example
-
-```python
-from clientele import api as clientele_api
-from .my_pydantic_models import Book
-
-client = clientele_api.APIClient(base_url="http://localhost:8000")
-
-@client.get("/book/{book_id}")
-def get_book(book_id: int, result: Book) -> Book:
-    return result
-
-# Or just return the data you want!
-@client.get("/book/{book_id}")
-def get_book_title(book_id: int, result: Book) -> str:
-    return result.title
-```
+- **Just modern Python** - [Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and [HTTPX](https://www.python-httpx.org/), that's it.
+- **Easy to learn** - Clientele is visually similar to popular python API server frameworks.
+- **Easy to test** - Works with existing tools like [respx](https://lundberg.github.io/respx/) and [pytest-httpx](https://pypi.org/project/pytest-httpx/).
+- **Easy to configure** - Clientele has sensible defaults and plenty of hooks for customisation.
+- **A Comfortable abstraction** - Focus on the data and the functionality, not the connectivity.
+- **OpenAPI support** - Build your own client, or scaffold one from an OpenAPI schema.
 
 ## Async support
 
+- You can use sync and async in one client.
+
 ```python
-from clientele import api as clientele_api
-from .my_pydantic_models import Book
-
-client = clientele_api.APIClient(base_url="http://localhost:8000")
-
-
-# Note: mix sync and async in one client if you want!
-@client.get("/book/{book_id}")
-async def get_book(book_id: int, result: Book) -> Book:
-    return result
-
+@client.get("/pokemon/{id}")
+def get_pokemon_name(id: int, result: Pokemon) -> str:
+    return result.name
 ```
 
-## Input and output validation with Pydantic
+## Automatic data validation
+
+- Pydantic models are recognised and validated.
 
 ```python
 from clientele import api as clientele_api
@@ -72,25 +62,31 @@ from .my_pydantic_models import CreateBookRequest, CreateBookResponse
 client = clientele_api.APIClient(base_url="http://localhost:8000")
 
 
-# Strongly typed inputs and outputs
 @client.post("/books")
 def create_book(data: CreateBookRequest, result: CreateBookReponse) -> CreateBookResponse:
     return result
 ```
 
-## API Client generator
+## Works with Python API frameworks
+
+Built and tested to be 100% compatible with the OpenAPI schemas generated from:
+
+- **FastAPI**
+- **Django REST Framework** via **drf-spectacular**
+- **Django Ninja**
+
+See the working demos in our [`server_examples/`](https://github.com/phalt/clientele/tree/main/server_examples) directory.
+
+## OpenAPI support
 
 Clientele can create scaffolding for an API client from an OpenAPI schema with:
 
-- **A developer-first approach** designed for a loveable developer experience.
-- **Pydantic models** for request and response validation.
-- **Fully-typed function signatures** for IDE autocomplete and type checking.
+- **Pydantic models** generated from the schema objects.
+- **Smart function signatures** generated from schema operations.
 - **Async support** if you want a client with concurrency.
-- **A tiny output** - clientele is readable, debuggable Python.
+- **A tiny output** that is only 3 files big.
 - **Regeneration-friendly** - update your API, regenerate, review the git diff, then ship it!
-- **Configuration**: that's never overwritten on regeneration.
-- **Testing** is easy peasy with [respx](https://lundberg.github.io/respx/).
-- **Formatted output** with [Ruff](https://docs.astral.sh/ruff/).
+- **Formatted code** thanks to [Ruff](https://docs.astral.sh/ruff/).
 
 ![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
 
@@ -109,36 +105,10 @@ uvx clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/maste
 
 ![repl demo](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele.gif)
 
-**Explorer Features**
-
 - **Autocomplete** for operations and schemas.
-- **Execute API operations** with Python-like syntax.
-- **Syntax-highlighted** JSON responses.
-- **Navigate previous commands** like a python shell.
+- **Execute API operations** to test the API.
+- **Inspect schemas** to see what the objects look like.
 - **Modify configuration** within the REPL as you're testing.
-- **Run debug mode** to see diagnostics and errors.
-
-## Works with your favourite Python API Servers
-
-We have specifically built and tested Clientele to be 100% compatible with OpenAPI schemas generated from:
-
-- **FastAPI**
-- **Django REST Framework** via **drf-spectacular**
-- **Django Ninja**
-
-We have working example servers in the [`server_examples/`](https://github.com/phalt/clientele/tree/main/server_examples) directory.
-
-These examples match the code shown in our documentation and provide real, working servers you can run locally to test out Clientele.
-
-## OpenAPI Compatibility
-
-Clientele is compatible with OpenAPI 3.0+ schemas.
-
-We test Clientele against 2000+ real-world OpenAPI schemas from the [APIs.guru OpenAPI Directory](https://github.com/APIs-guru/openapi-directory) through a CI cron job.
-
-As of our latest run, we successfully generate clients for **95.39%** of schemas in the directory.
-
-![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
 
 ## Getting Started
 
