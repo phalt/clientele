@@ -223,3 +223,76 @@ except api.APIException as e:
 - If `response_map` is provided then the `httpx.Response` status code must match one of the keys.
 - The `APIException` will have a human readable `reason`.
 - The `APIException` will also have the `httpx.Response` that raised the exception for inspection.
+
+## Configuration
+
+### Using BaseConfig
+
+```python
+from clientele import api
+import httpx
+
+my_config = api.BaseConfig(base_url="https://httpbin.org")
+
+client = api.APIClient(config=my_config)
+
+
+@client.get("/get")
+def my_function(result: dict) -> dict:
+    return result
+```
+
+- Instead of providing `base_url` to `APIClient` you can instead provide a `BaseConfig` object.
+- This gives you simplified access to common http configuration options.
+
+### Custom headers
+
+```python
+from clientele import api
+import httpx
+
+my_config = api.BaseConfig(
+    base_url="https://httpbin.org", 
+    headers={"Custom-Header": "Hello, Clientele!"}
+)
+
+client = api.APIClient(config=my_config)
+
+
+@client.get("/get")
+def return_headers(result: dict) -> str:
+    """httpbin returns the headers it received."""
+    return result["headers"]["Custom-Header"]
+```
+
+- Headers can be configured through `BaseConfig`.
+- See full configuration options [here](api-configuration.md).
+
+## Async
+
+### Make multiple requests in parallel
+
+```python
+import asyncio
+from clientele import api
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+
+@client.get("/pokemon/{pokemon_id}")
+async def get_pokemon_name(pokemon_id: int, result: dict) -> str:
+    return result["name"]
+
+
+async def gather():
+    async_tasks = [get_pokemon_name(pokemon_id=i) for i in range(1, 152)]
+    return await asyncio.gather(*async_tasks)
+
+
+def get_all_pokemon_names():
+    return asyncio.run(gather())
+
+```
+
+- Use the common `gather` / `run` pattern to build modular API calls with Clientele.
+- This example executes 151 HTTP requests in parallel.
