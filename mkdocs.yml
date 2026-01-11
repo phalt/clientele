@@ -36,6 +36,7 @@ nav:
     - Install: install.md
   - 📕 Documentation:
     - 📕 Documentation: api-overview.md
+    - 🎪 Examples: api-examples.md
     - ⚙️ Configuration: api-configuration.md
     - 🔀 Async Support: api-async.md
     - 🔐 Authentication: api-authentication.md
