@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.clientele.dev/api-configuration/">
+        <link rel="canonical" href="https://docs.clientele.dev/api-examples/">
       
       
-        <link rel="prev" href="../api-examples/">
+        <link rel="prev" href="../api-overview/">
       
       
-        <link rel="next" href="../api-async/">
+        <link rel="next" href="../api-configuration/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>⚙️ Configuration - Clientele</title>
+        <title>🎪 Examples - Clientele</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#configuration" class="md-skip">
+        <a href="#clientele-by-example" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ⚙️ Configuration
+              🎪 Examples
             
           </span>
         </div>
@@ -600,34 +600,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../api-examples/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🎪 Examples
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -647,7 +619,7 @@
   <span class="md-ellipsis">
     
   
-    ⚙️ Configuration
+    🎪 Examples
   
 
     
@@ -665,7 +637,7 @@
   <span class="md-ellipsis">
     
   
-    ⚙️ Configuration
+    🎪 Examples
   
 
     
@@ -691,10 +663,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#base-url" class="md-nav__link">
+  <a href="#simple-get-request" class="md-nav__link">
     <span class="md-ellipsis">
       
-        base url
+        Simple GET request
       
     </span>
   </a>
@@ -702,22 +674,99 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#standard-configuration" class="md-nav__link">
+  <a href="#receive-specific-data-in-result" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Standard configuration
+        Receive specific data in result
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Standard configuration">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#return-specific-data-after-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return specific data after result
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simple-post-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple POST request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspect-http-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspect HTTP responses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-response-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control response parsing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Control response parsing">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
+  <a href="#using-a-callback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration options
+        Using a callback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-strong-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using strong types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-a-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a map
       
     </span>
   </a>
@@ -730,10 +779,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-httpx-client" class="md-nav__link">
+  <a href="#handling-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom httpx client
+        Handling errors
       
     </span>
   </a>
@@ -744,6 +793,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ⚙️ Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1487,10 +1564,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#base-url" class="md-nav__link">
+  <a href="#simple-get-request" class="md-nav__link">
     <span class="md-ellipsis">
       
-        base url
+        Simple GET request
       
     </span>
   </a>
@@ -1498,22 +1575,99 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#standard-configuration" class="md-nav__link">
+  <a href="#receive-specific-data-in-result" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Standard configuration
+        Receive specific data in result
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Standard configuration">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#return-specific-data-after-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return specific data after result
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#simple-post-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple POST request
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspect-http-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspect HTTP responses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#control-response-parsing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control response parsing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Control response parsing">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#configuration-options" class="md-nav__link">
+  <a href="#using-a-callback" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration options
+        Using a callback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-strong-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using strong types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-a-map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a map
       
     </span>
   </a>
@@ -1526,10 +1680,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-httpx-client" class="md-nav__link">
+  <a href="#handling-errors" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom httpx client
+        Handling errors
       
     </span>
   </a>
@@ -1556,50 +1710,207 @@
   
 
 
-<h1 id="configuration">⚙️ Configuration</h1>
-<h2 id="base-url">base url</h2>
-<p>You can configure Clientele with just a <code>base_url</code> and let it use sensible defaults for the client:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+<h1 id="clientele-by-example">🎪 Clientele by example</h1>
+<p>All these examples can be copied and pasted into a file and run in a python application.</p>
+<h2 id="simple-get-request">Simple GET request</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://myapi.com/v1&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="standard-configuration">Standard configuration</h2>
-<p>We recommend subclassing <code>BaseConfig</code> and managing your own config:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
-    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="s2">&quot;Bearer &lt;token&gt;&quot;</span><span class="p">},</span>
-    <span class="n">timeout</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
-<p>The <code>BaseConfig</code> class is powered by <a href="https://docs.pydantic.dev/latest/concepts/pydantic_settings/">pydantic-settings</a> that automatically loads values from environment variables, <code>.env</code> files or just plain hard coded configuration.</p>
-<h3 id="configuration-options">Configuration options</h3>
 <ul>
-<li><code>base_url: str</code> - the url for the API server</li>
-<li><code>headers: dict[str, str]</code> - headers that you want to send with http requests.</li>
-<li><code>timeout: float | None = 5.0</code> - the time to wait for an HTTP response before closing the connection.</li>
-<li><code>follow_redirects: bool = False</code> - if redirects should be followed.</li>
-<li><code>verify: bool | str = True</code> - if SSL connections should be verified.</li>
-<li><code>http2: bool = False</code> - if http2 should be used for making requests.</li>
-<li><code>auth: httpx.Auth | tuple[str, str] | None = None</code> - the <a href="https://www.python-httpx.org/advanced/authentication/">authentication method</a> for requests.</li>
-<li><code>limits: httpx.Limits | None = None</code> - the <a href="https://www.python-httpx.org/advanced/resource-limits/">connection pool size</a> for the underlying client.</li>
-<li><code>proxies: httpx.Proxy | None = None</code> - the <a href="https://www.python-httpx.org/advanced/proxies/">proxies</a> for the underlying client.</li>
-<li><code>transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None</code> - custom <a href="https://www.python-httpx.org/advanced/transports/">transport objects</a> for the underlying client.</li>
-<li><code>cookies: httpx.Cookies | None = None</code> - the <a href="https://www.python-httpx.org/quickstart/#cookies">cookies</a> you want to send with http requests.</li>
+<li>The simplest logic you can do with Clientele.</li>
+<li>No validation will be ran on the data.</li>
 </ul>
-<h2 id="custom-httpx-client">Custom httpx client</h2>
-<p>You can supply your own <code>httpx.Client</code> and <code>httpx.AsyncClient</code> if you prefer full control:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+<h2 id="receive-specific-data-in-result">Receive specific data in result</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PokemonInfo</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">PokemonInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PokemonInfo</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<ul>
+<li>Use Pydantic <code>BaseModel</code> to return only the data you want in the <code>result</code> parameter.</li>
+<li>Pydantic's <code>model_validate</code> will be ran against the <code>reponse.json</code>.</li>
+<li>Only values explicitly declared in the <code>BaseModel</code> will be returned.</li>
+</ul>
+<h2 id="return-specific-data-after-result">Return specific data after result</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>The return type of the decorated function does not need to match the <code>result</code> parameter.</li>
+<li>You can return whatever you like.</li>
+<li>This is also a good time to do logging, persistence of results, dispatching post-request actions, etc.</li>
+</ul>
+<h2 id="simple-post-request">Simple POST request</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/post&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">post_input_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<ul>
+<li>The <code>data</code> parameter is serialized to JSON and sent in an HTTP POST request.</li>
+<li>This pattern is identical in <code>PUT</code> / <code>PATCH</code> / <code>DELETE</code> decorators functions.</li>
+</ul>
+<h2 id="data-validation">Data validation</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InputData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/post&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">post_input_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">InputData</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InputData</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<ul>
+<li>Pydantic will run <code>model_validate</code> on the <code>data</code> parameter before sending the HTTP POST request.</li>
+<li>This pattern is identical in <code>PUT</code> / <code>PATCH</code> / <code>DELETE</code> decorators functions.</li>
+</ul>
+<h2 id="inspect-http-responses">Inspect HTTP responses</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
-    <span class="n">httpx_client</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">Client</span><span class="p">(),</span> 
-    <span class="n">httpx_async_client</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span>
-<span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
+<ul>
+<li>Pass the <code>response</code> parameter to the decorated function to recive the <code>httpx.Response</code> object.</li>
+</ul>
+<h2 id="control-response-parsing">Control response parsing</h2>
+<h3 id="using-a-callback">Using a callback</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_response_myself</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;my_custom_key&quot;</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">parse_response_myself</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;my_custom_key&quot;</span><span class="p">]</span>
+</code></pre></div>
+<ul>
+<li>Pass a callable to the <code>response_parser</code> parameter to control how http responses are parsed.</li>
+<li>Clientele will no longer handle any data validation for you, but you have compelete control.</li>
+<li>The return type of this callback must match the type of the <code>result</code> parameter.</li>
+</ul>
+<h3 id="using-strong-types">Using strong types</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">custom_key</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_response_myself</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MyResult</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">MyResult</span><span class="p">(</span>
+        <span class="n">custom_key</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span>
+    <span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">parse_response_myself</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">MyResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">custom_key</span>
+</code></pre></div>
+<h3 id="using-a-map">Using a map</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OkResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">NotFoundResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">200</span><span class="p">:</span> <span class="n">OkResult</span><span class="p">,</span> <span class="mi">404</span><span class="p">:</span> <span class="n">NotFoundResult</span><span class="p">})</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">OkResult</span> <span class="o">|</span> <span class="n">NotFoundResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
+</code></pre></div>
+<ul>
+<li>The <code>response_map</code> accepts <code>{int: ResponseModel}</code>.</li>
+<li>The HTTP response status code will be matched against the model and used as validation.</li>
+<li>If the http response does not match any status codes in the <code>response_map</code> then an <code>clientele.api.APIException</code> exception will be raised.</li>
+</ul>
+<h2 id="handling-errors">Handling errors</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OnlyErroResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">500</span><span class="p">:</span> <span class="n">OnlyErroResult</span><span class="p">})</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">OnlyErroResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
+
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">get_pokemon_info</span><span class="p">(</span><span class="s2">&quot;pikachu&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">api</span><span class="o">.</span><span class="n">APIException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error occurred: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response details: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>Unexpected response statuses will throw an <code>clientele.api.APIException</code> exception.</li>
+<li>If there is no <code>response_map</code> provided then Clientele will call <code>raise_for_status</code> on the <code>httpx.Response</code> object.</li>
+<li>If <code>response_map</code> is provided then the <code>httpx.Response</code> status code must match one of the keys.</li>
+<li>The <code>APIException</code> will have a human readable <code>reason</code>.</li>
+<li>The <code>APIException</code> will also have the <code>httpx.Response</code> that raised the exception for inspection.</li>
+</ul>
 
 
 
@@ -1629,7 +1940,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../api-examples/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🎪 Examples">
+          <a href="../api-overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 📕 Documentation">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1639,20 +1950,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                🎪 Examples
+                📕 Documentation
               </div>
             </div>
           </a>
         
         
           
-          <a href="../api-async/" class="md-footer__link md-footer__link--next" aria-label="Next: 🔀 Async Support">
+          <a href="../api-configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: ⚙️ Configuration">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                🔀 Async Support
+                ⚙️ Configuration
               </div>
             </div>
             <div class="md-footer__button md-icon">
