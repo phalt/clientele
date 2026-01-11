@@ -24,6 +24,8 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
     return result.name
 ```
 
+[See more examples](https://docs.clientele.dev/api-examples/).
+
 ## Why use Clientele?
 
 - **Just modern Python** - [Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and [HTTPX](https://www.python-httpx.org/), that's it.
