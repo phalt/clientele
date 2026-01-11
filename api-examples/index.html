@@ -789,6 +789,73 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-baseconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using BaseConfig
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Async">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#make-multiple-requests-in-parallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Make multiple requests in parallel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1690,6 +1757,73 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-baseconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using BaseConfig
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Async">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#make-multiple-requests-in-parallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Make multiple requests in parallel
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1910,6 +2044,70 @@
 <li>If <code>response_map</code> is provided then the <code>httpx.Response</code> status code must match one of the keys.</li>
 <li>The <code>APIException</code> will have a human readable <code>reason</code>.</li>
 <li>The <code>APIException</code> will also have the <code>httpx.Response</code> that raised the exception for inspection.</li>
+</ul>
+<h2 id="configuration">Configuration</h2>
+<h3 id="using-baseconfig">Using BaseConfig</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+
+<span class="n">my_config</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org&quot;</span><span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">my_config</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/get&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<ul>
+<li>Instead of providing <code>base_url</code> to <code>APIClient</code> you can instead provide a <code>BaseConfig</code> object.</li>
+<li>This gives you simplified access to common http configuration options.</li>
+</ul>
+<h3 id="custom-headers">Custom headers</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+
+<span class="n">my_config</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org&quot;</span><span class="p">,</span> 
+    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;Custom-Header&quot;</span><span class="p">:</span> <span class="s2">&quot;Hello, Clientele!&quot;</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">my_config</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/get&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">return_headers</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;httpbin returns the headers it received.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">][</span><span class="s2">&quot;Custom-Header&quot;</span><span class="p">]</span>
+</code></pre></div>
+<ul>
+<li>Headers can be configured through <code>BaseConfig</code>.</li>
+<li>See full configuration options <a href="../api-configuration/">here</a>.</li>
+</ul>
+<h2 id="async">Async</h2>
+<h3 id="make-multiple-requests-in-parallel">Make multiple requests in parallel</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_name</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
+
+
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">gather</span><span class="p">():</span>
+    <span class="n">async_tasks</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_pokemon_name</span><span class="p">(</span><span class="n">pokemon_id</span><span class="o">=</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">152</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="o">*</span><span class="n">async_tasks</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_all_pokemon_names</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">gather</span><span class="p">())</span>
+</code></pre></div>
+<ul>
+<li>Use the common <code>gather</code> / <code>run</code> pattern to build modular API calls with Clientele.</li>
+<li>This example executes 151 HTTP requests in parallel.</li>
 </ul>
 
 
