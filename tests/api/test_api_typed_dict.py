@@ -335,7 +335,7 @@ def test_typeddict_data_validation_error_on_non_dict() -> None:
 
     # Passing a non-dict should raise TypeError before making the request
     with pytest.raises(TypeError, match="Expected dict for TypedDict"):
-        create_user(data="not a dict")  # type: ignore[arg-type]
+        create_user(data="not a dict")
 
 
 @pytest.mark.respx(base_url=BASE_URL)
