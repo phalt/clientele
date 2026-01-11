@@ -196,12 +196,17 @@ def _validate_response_parser_return_type_matches_result_return_type(
 
     result_types = _get_result_types_from_type_hints(type_hints)
 
-    if not [ptype.__name__ for ptype in result_types] == parser_return_types:
+    def _stringify_types(types_list: list[Any]) -> list[str]:
+        return [t.__name__ if not isinstance(t, str) else t for t in types_list]
+
+    stringified_parser_types = _stringify_types(parser_return_types)
+    stringified_return_types = _stringify_types(result_types)
+    if not stringified_return_types == stringified_parser_types:
         raise TypeError(
             f"The return type of the response_parser for function '{func_name}': "
-            f"[{', '.join([t for t in parser_return_types])}] does not "
+            f"[{', '.join([t for t in stringified_parser_types])}] does not "
             "match the type(s) of the 'result' parameter: "
-            f"[{', '.join([t.__name__ for t in result_types])}]."
+            f"[{', '.join([t for t in stringified_return_types])}]."
         )
 
 

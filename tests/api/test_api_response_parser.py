@@ -43,6 +43,28 @@ def test_accepts_response_parser_and_uses_it_to_return_response(respx_mock: Mock
     assert call.request.url.path == "/users/1"
 
 
+@pytest.mark.respx(base_url=BASE_URL)
+def test_response_parser_handles_simple_response_types(respx_mock: MockRouter) -> None:
+    client = APIClient(base_url=BASE_URL)
+
+    respx_mock.get("/users/1").mock(
+        return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}, headers={"x-source": "mock"})
+    )
+
+    def my_response_parser(response: httpx.Response) -> dict:
+        return {"other_value": "other value"}
+
+    @client.get("/users/{user_id}", response_parser=my_response_parser)
+    def get_user_custom_response(user_id: int, result: dict) -> str:
+        return result["other_value"]
+
+    custom_response = get_user_custom_response(1)
+
+    assert custom_response == "other value"
+    call = respx_mock.calls[0]
+    assert call.request.url.path == "/users/1"
+
+
 def test_errors_when_parser_return_types_do_not_match_result_types(respx_mock: MockRouter) -> None:
     client = APIClient(base_url=BASE_URL)
 

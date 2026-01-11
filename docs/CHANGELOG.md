@@ -1,5 +1,9 @@
 # Change log
 
+## 1.4.3
+
+- A tiny fix with error handling and using `response_parser` with plain types.
+
 ## 1.4.2
 
 - Fix `scaffold-api` generating post/put/patch/delete methods with a `,,` when dealing with optional args. Contributor: [@peterHoburg](https://github.com/peterHoburg).
