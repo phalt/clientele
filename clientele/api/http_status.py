@@ -34,7 +34,7 @@ class codes(IntEnum):
         obj = int.__new__(cls, value)
         obj._value_ = value
 
-        obj.phrase = phrase  # type: ignore[attr-defined]
+        obj.phrase = phrase
         return obj
 
     def __str__(self) -> str:

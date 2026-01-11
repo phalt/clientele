@@ -31,7 +31,7 @@ try:  # pragma: no cover - conditional import
 except Exception:  # pragma: no cover - fallback for Pydantic v2 only environments
     # parse_obj_as is the Pydantic v1 equivalent of TypeAdapter.
     # In Pydantic v2-only environments, this import will fail and we use TypeAdapter instead.
-    parse_obj_as = None  # type: ignore[assignment]
+    parse_obj_as = None
 
 
 _F = TypeVar("_F", bound=Callable[..., Any])
@@ -578,7 +578,7 @@ class APIClient:
     def _dump_model(self, model: BaseModel) -> dict[str, Any]:
         if hasattr(model, "model_dump"):
             return model.model_dump(mode="json")
-        return model.dict()  # type: ignore[no-any-return]
+        return model.dict()
 
     def _send_request(
         self,

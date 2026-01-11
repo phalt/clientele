@@ -59,7 +59,7 @@ def test_get_respects_query_override_and_list_validation(respx_mock: MockRouter)
     )
 
     @client.get("/users")
-    def list_users(query: dict[str, str], result: list[User]) -> list[User]:  # type: ignore[return]
+    def list_users(query: dict[str, str], result: list[User]) -> list[User]:
         return result
 
     users = list_users(query={"search": "dev"})
@@ -77,7 +77,7 @@ def test_post_accepts_model_instance_and_dict(respx_mock: MockRouter) -> None:
     respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
 
     @client.post("/users")
-    def create_user(data: CreateUserRequest, result: User) -> User:  # type: ignore[return]
+    def create_user(data: CreateUserRequest, result: User) -> User:
         return result
 
     user = create_user(data=CreateUserRequest(name="Charlie"))
@@ -393,7 +393,7 @@ def test_response_map_multiple_status_codes_sync(respx_mock: MockRouter) -> None
     )
     def create_user(
         data: dict, result: SuccessResponse | ErrorResponse | ValidationErrorResponse
-    ) -> SuccessResponse | ErrorResponse | ValidationErrorResponse:  # type: ignore[return]
+    ) -> SuccessResponse | ErrorResponse | ValidationErrorResponse:
         return result
 
     # Test 201 response
@@ -565,7 +565,7 @@ def test_result_parameter_annotation_required() -> None:
     with pytest.raises(TypeError, match="lacks a type annotation"):
 
         @client.get("/users/{user_id}")
-        def get_user(user_id: int, result) -> User:  # type: ignore[no-untyped-def]  # result without annotation
+        def get_user(user_id: int, result) -> User:
             return result
 
 
@@ -585,7 +585,7 @@ def test_signature_preservation_for_ide_support() -> None:
     client = APIClient(base_url=BASE_URL)
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User, expand: bool = False) -> User:  # type: ignore[return]
+    def get_user(user_id: int, result: User, expand: bool = False) -> User:
         """Get a user by ID."""
         return result
 

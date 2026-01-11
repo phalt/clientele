@@ -387,7 +387,7 @@ def path_item_to_operations_dict(path_item) -> dict:
 
     # Add path-level parameters if they exist
     if hasattr(path_item, "parameters") and path_item.parameters:
-        operations_dict["parameters"] = [parameter_to_dict(p) for p in path_item.parameters]  # type: ignore[assignment]
+        operations_dict["parameters"] = [parameter_to_dict(p) for p in path_item.parameters]
     else:
         # Check in pydantic extra fields
         parameters = get_pydantic_extra(path_item, "parameters")

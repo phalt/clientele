@@ -10,7 +10,7 @@ from clientele.generators.standard.generator import StandardGenerator
 def test_generator_is_abstract():
     """Test that Generator is an abstract base class and cannot be instantiated."""
     with pytest.raises(TypeError):
-        Generator()  # type: ignore[abstract]
+        Generator()
 
 
 def test_basic_generator_inherits_from_generator():
@@ -61,4 +61,4 @@ def test_generator_abstract_method_raises_not_implemented():
 
     # Should not be able to instantiate
     with pytest.raises(TypeError):
-        IncompleteGenerator()  # type: ignore[abstract]
+        IncompleteGenerator()
