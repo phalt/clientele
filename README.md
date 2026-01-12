@@ -1,4 +1,4 @@
-# ⚜️ Clientele 
+# ⚜️ Clientele
 
 ![https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_header.png)
 
