@@ -56,6 +56,48 @@ def get_pokemon_info(pokemon_name: str, result: dict) -> str:
 - You can return whatever you like.
 - This is also a good time to do logging, persistence of results, dispatching post-request actions, etc.
 
+## Query parameters
+
+### Using parameters
+
+```python
+from clientele import api
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+
+@client.get("/pokemon/")
+def get_pokemon_page(result: dict, limit: int, offset: int) -> dict:
+    return result
+```
+
+```python
+get_pokemon_page(limit=10, offset=30)
+```
+
+- Parameters not declared in the path string will instead become query parameters.
+- Optional or `None` values will be ignored.
+
+### Using query dict
+
+```python
+from clientele import api
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+
+@client.get("/pokemon/")
+def get_pokemon_page(result: dict) -> dict:
+    return result
+```
+
+```python
+get_pokemon_page(query={"limit": 10, "offset": 30})
+```
+
+- You can pass a dict `query` to achieve the same results.
+- This does not need to be declared in your decorated function.
+
 ## Simple POST request
 
 ```python
