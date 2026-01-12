@@ -696,6 +696,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Query parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-query-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using query dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#simple-post-request" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1664,6 +1703,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Query parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-query-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using query dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#simple-post-request" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1893,6 +1971,39 @@
 <li>The return type of the decorated function does not need to match the <code>result</code> parameter.</li>
 <li>You can return whatever you like.</li>
 <li>This is also a good time to do logging, persistence of results, dispatching post-request actions, etc.</li>
+</ul>
+<h2 id="query-parameters">Query parameters</h2>
+<h3 id="using-parameters">Using parameters</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_page</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">get_pokemon_page</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>Parameters not declared in the path string will instead become query parameters.</li>
+<li>Optional or <code>None</code> values will be ignored.</li>
+</ul>
+<h3 id="using-query-dict">Using query dict</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_page</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">get_pokemon_page</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;limit&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">})</span>
+</code></pre></div>
+<ul>
+<li>You can pass a dict <code>query</code> to achieve the same results.</li>
+<li>This does not need to be declared in your decorated function.</li>
 </ul>
 <h2 id="simple-post-request">Simple POST request</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
