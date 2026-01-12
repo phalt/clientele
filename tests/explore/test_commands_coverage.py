@@ -45,7 +45,7 @@ def test_get_config_instance_with_config_singleton(introspector):
 
     # Create a mock config module with a config instance
     config_module = ModuleType("test_config")
-    config_module.config = Mock()
+    setattr(config_module, "config", Mock())
 
     result = handler._get_config_instance(config_module)
     assert result is config_module.config
@@ -62,7 +62,7 @@ def test_get_config_instance_with_config_class_no_singleton(introspector):
         def __init__(self):
             self.api_base_url = "http://example.com"
 
-    config_module.Config = MockConfig
+    setattr(config_module, "Config", MockConfig)
 
     result = handler._get_config_instance(config_module)
     assert result is not None
@@ -84,7 +84,7 @@ def test_get_config_instance_config_class_instantiation_fails(introspector):
         def __init__(self):
             raise ValueError("Required argument missing")
 
-    config_module.Config = FailingConfig
+    setattr(config_module, "Config", FailingConfig)
 
     result = handler._get_config_instance(config_module)
     assert result is None
@@ -96,8 +96,8 @@ def test_get_config_instance_old_function_based_config(introspector):
 
     # Create a mock config module with old-style functions
     config_module = ModuleType("test_config")
-    config_module.api_base_url = lambda: "http://example.com"
-    config_module.get_bearer_token = lambda: "token123"
+    setattr(config_module, "api_base_url", lambda: "http://example.com")
+    setattr(config_module, "get_bearer_token", lambda: "token123")
 
     result = handler._get_config_instance(config_module)
     assert result is None
@@ -125,11 +125,11 @@ def test_show_config_with_old_format_callable_values(introspector, session_confi
     try:
         # Create old-style config module
         old_config = ModuleType(config_module_name)
-        old_config.api_base_url = lambda: "http://old.example.com"
-        old_config.get_bearer_token = lambda: "old_token"
-        old_config.get_user_key = lambda: "old_user"
-        old_config.get_pass_key = lambda: "old_pass"
-        old_config.additional_headers = lambda: {"X-Custom": "header"}
+        setattr(old_config, "api_base_url", lambda: "http://old.example.com")
+        setattr(old_config, "get_bearer_token", lambda: "old_token")
+        setattr(old_config, "get_user_key", lambda: "old_user")
+        setattr(old_config, "get_pass_key", lambda: "old_pass")
+        setattr(old_config, "additional_headers", lambda: {"X-Custom": "header"})
 
         sys.modules[config_module_name] = old_config
 
@@ -152,8 +152,8 @@ def test_show_config_with_non_callable_old_format_values(introspector, session_c
     try:
         # Create old-style config module with direct values
         old_config = ModuleType(config_module_name)
-        old_config.api_base_url = "http://direct.example.com"
-        old_config.bearer_token = "direct_token"
+        setattr(old_config, "api_base_url", "http://direct.example.com")
+        setattr(old_config, "bearer_token", "direct_token")
 
         sys.modules[config_module_name] = old_config
 
@@ -182,7 +182,7 @@ def test_show_config_with_additional_headers_old_format_exception(introspector, 
     try:
         # Create old-style config module with failing additional_headers
         old_config = ModuleType(config_module_name)
-        old_config.additional_headers = lambda: 1 / 0  # Will raise ZeroDivisionError
+        setattr(old_config, "additional_headers", lambda: 1 / 0)  # Will raise ZeroDivisionError
 
         sys.modules[config_module_name] = old_config
 
@@ -212,7 +212,7 @@ def test_show_config_attribute_error_handling(introspector, session_config):
             def api_base_url(self):
                 raise RuntimeError("Cannot access property")
 
-        bad_config.config = ProblematicConfig()
+        setattr(bad_config, "config", ProblematicConfig())
 
         sys.modules[config_module_name] = bad_config
 
@@ -259,7 +259,7 @@ def test_show_config_skip_default_token_password(introspector, session_config):
             bearer_token = "token"
             pass_key = "password"
 
-        config_module.config = DefaultConfig()
+        setattr(config_module, "config", DefaultConfig())
 
         sys.modules[config_module_name] = config_module
 
@@ -301,10 +301,10 @@ def test_apply_config_override_old_format(introspector, session_config):
     try:
         # Create old-style config module
         old_config = ModuleType(config_module_name)
-        old_config.api_base_url = lambda: "http://old.example.com"
-        old_config.get_bearer_token = lambda: "old_token"
-        old_config.get_user_key = lambda: "old_user"
-        old_config.get_pass_key = lambda: "old_pass"
+        setattr(old_config, "api_base_url", lambda: "http://old.example.com")
+        setattr(old_config, "get_bearer_token", lambda: "old_token")
+        setattr(old_config, "get_user_key", lambda: "old_user")
+        setattr(old_config, "get_pass_key", lambda: "old_pass")
 
         sys.modules[config_module_name] = old_config
 
@@ -317,10 +317,10 @@ def test_apply_config_override_old_format(introspector, session_config):
         handler._apply_config_override("pass_key", "override_pass")
 
         # Verify the functions were replaced
-        assert old_config.api_base_url() == "https://override.example.com"
-        assert old_config.get_bearer_token() == "override_token"
-        assert old_config.get_user_key() == "override_user"
-        assert old_config.get_pass_key() == "override_pass"
+        assert getattr(old_config, "api_base_url")() == "https://override.example.com"
+        assert getattr(old_config, "get_bearer_token")() == "override_token"
+        assert getattr(old_config, "get_user_key")() == "override_user"
+        assert getattr(old_config, "get_pass_key")() == "override_pass"
 
     finally:
         if saved_module:
@@ -343,7 +343,7 @@ def test_apply_config_override_pydantic_without_attribute(introspector, session_
             api_base_url = "http://example.com"
             # Missing other attributes
 
-        config_module.config = PartialConfig()
+        setattr(config_module, "config", PartialConfig())
 
         sys.modules[config_module_name] = config_module
 
@@ -368,7 +368,7 @@ def test_apply_config_override_old_format_missing_function(introspector, session
         # Create old-style config with missing functions
         old_config = ModuleType(config_module_name)
         # Only has api_base_url, missing others
-        old_config.api_base_url = lambda: "http://example.com"
+        setattr(old_config, "api_base_url", lambda: "http://example.com")
 
         sys.modules[config_module_name] = old_config
 
@@ -539,7 +539,7 @@ def test_show_config_with_empty_additional_headers(introspector, session_config)
             api_base_url = "http://example.com"
             additional_headers = {}  # Empty dict
 
-        config_module.config = ConfigWithEmptyHeaders()
+        setattr(config_module, "config", ConfigWithEmptyHeaders())
 
         sys.modules[config_module_name] = config_module
 
