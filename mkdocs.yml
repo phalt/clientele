@@ -52,7 +52,7 @@ nav:
     - Generated Client Tour: examples.md
     - Compatibility & Limitations: compatibility.md
     - References in OpenAPI: references.md
-  - ⚡️API Server Integrations:
+  - ⚡️ API Server Integrations:
     - ⚡️ FastAPI: server-fastapi.md
     - 🦄 Django REST Framework: server-drf.md
     - 🥷 Django Ninja: server-django-ninja.md
