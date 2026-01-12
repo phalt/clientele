@@ -1,6 +1,6 @@
 # Change log
 
-## UNRELEASED 1.5.0
+## 1.5.0
 
 - Introduce `cache.memoize` decorator for sensible, http-specific caching of HTTP get requests.
 - Add documentation covering common approaches to handling retry logic.
