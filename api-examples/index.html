@@ -309,7 +309,7 @@
           
   
   
-  ⚡️API Server Integrations
+  ⚡️ API Server Integrations
 
         </a>
       </li>
@@ -895,6 +895,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-caching-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple caching example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-paginated-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching Paginated Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-with-query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching with Query Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace-isolation-with-custom-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace Isolation with Custom Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#short-lived-cache-for-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short-Lived Cache for Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -995,6 +1067,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../api-cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💾 Caching
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../exceptions/" class="md-nav__link">
         
   
@@ -1003,6 +1103,34 @@
     
   
     🚨 Exception Handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api-retries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔄 Retries
   
 
     
@@ -1332,7 +1460,7 @@
   <span class="md-ellipsis">
     
   
-    ⚡️API Server Integrations
+    ⚡️ API Server Integrations
   
 
     
@@ -1348,7 +1476,7 @@
             <span class="md-nav__icon md-icon"></span>
             
   
-    ⚡️API Server Integrations
+    ⚡️ API Server Integrations
   
 
           </label>
@@ -1902,6 +2030,78 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Caching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#simple-caching-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple caching example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-paginated-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching Paginated Results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#caching-with-query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Caching with Query Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace-isolation-with-custom-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Namespace Isolation with Custom Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#short-lived-cache-for-rate-limiting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Short-Lived Cache for Rate Limiting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2220,6 +2420,86 @@
 <li>Use the common <code>gather</code> / <code>run</code> pattern to build modular API calls with Clientele.</li>
 <li>This example executes 151 HTTP requests in parallel.</li>
 </ul>
+<h2 id="caching">Caching</h2>
+<h3 id="simple-caching-example">Simple caching example</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">cache</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+<span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># Cache for 5 minutes</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># First call - hits the API</span>
+<span class="n">pikachu</span> <span class="o">=</span> <span class="n">get_pokemon</span><span class="p">(</span><span class="n">pokemon_id</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+
+<span class="c1"># Second call - returns cached result (no HTTP request)</span>
+<span class="n">pikachu_cached</span> <span class="o">=</span> <span class="n">get_pokemon</span><span class="p">(</span><span class="n">pokemon_id</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="caching-paginated-results">Caching Paginated Results</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">cache</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+<span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_pokemon</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Each limit/offset combination is cached separately</span>
+<span class="n">page1</span> <span class="o">=</span> <span class="n">list_pokemon</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">page2</span> <span class="o">=</span> <span class="n">list_pokemon</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">page1_again</span> <span class="o">=</span> <span class="n">list_pokemon</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Cached!</span>
+</code></pre></div>
+<h3 id="caching-with-query-parameters">Caching with Query Parameters</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">cache</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+<span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/ability&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_abilities</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Different query params = different cache entries</span>
+<span class="n">abilities1</span> <span class="o">=</span> <span class="n">list_abilities</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">abilities2</span> <span class="o">=</span> <span class="n">list_abilities</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Different cache entry</span>
+<span class="n">abilities3</span> <span class="o">=</span> <span class="n">list_abilities</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Uses cached abilities1</span>
+</code></pre></div>
+<h3 id="namespace-isolation-with-custom-keys">Namespace Isolation with Custom Keys</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">cache</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+<span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span>
+    <span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pokemon_id</span><span class="p">,</span> <span class="n">version_id</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pokemon:</span><span class="si">{</span><span class="n">pokemon_id</span><span class="si">}</span><span class="s2">:version:</span><span class="si">{</span><span class="n">version_id</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_version</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">version_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="c1"># Custom key ensures different versions are cached separately</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Each pokemon/version combination has its own cache entry</span>
+<span class="n">red_pikachu</span> <span class="o">=</span> <span class="n">get_pokemon_version</span><span class="p">(</span><span class="n">pokemon_id</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">version_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">blue_pikachu</span> <span class="o">=</span> <span class="n">get_pokemon_version</span><span class="p">(</span><span class="n">pokemon_id</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">version_id</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="short-lived-cache-for-rate-limiting">Short-Lived Cache for Rate Limiting</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">cache</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+<span class="c1"># Cache for just 10 seconds to reduce burst traffic</span>
+<span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_burst</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Multiple rapid calls within 10 seconds use cache</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">get_pokemon_burst</span><span class="p">(</span><span class="n">pokemon_id</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>  <span class="c1"># Only makes 1 HTTP request</span>
+</code></pre></div>
 
 
 

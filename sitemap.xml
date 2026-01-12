@@ -17,6 +17,10 @@
          <lastmod>2026-01-12</lastmod>
     </url>
     <url>
+         <loc>https://docs.clientele.dev/api-cache/</loc>
+         <lastmod>2026-01-12</lastmod>
+    </url>
+    <url>
          <loc>https://docs.clientele.dev/api-configuration/</loc>
          <lastmod>2026-01-12</lastmod>
     </url>
@@ -26,6 +30,10 @@
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-overview/</loc>
+         <lastmod>2026-01-12</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.clientele.dev/api-retries/</loc>
          <lastmod>2026-01-12</lastmod>
     </url>
     <url>

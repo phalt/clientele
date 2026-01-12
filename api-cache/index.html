@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.clientele.dev/api-async/">
+        <link rel="canonical" href="https://docs.clientele.dev/api-cache/">
       
       
-        <link rel="prev" href="../api-configuration/">
+        <link rel="prev" href="../api-authentication/">
       
       
-        <link rel="next" href="../api-authentication/">
+        <link rel="next" href="../exceptions/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>🔀 Async Support - Clientele</title>
+        <title>💾 Caching - Clientele</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#async-support" class="md-skip">
+        <a href="#caching" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🔀 Async Support
+              💾 Caching
             
           </span>
         </div>
@@ -656,37 +656,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🔀 Async Support
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../api-async/" class="md-nav__link">
         
   
   
@@ -702,48 +675,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#async-and-sync-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async and sync example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-and-sync-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async and sync usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -781,10 +712,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../api-cache/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    💾 Caching
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -800,6 +758,187 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-ttl-time-to-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic TTL (Time-To-Live)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-cache-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Cache Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-key-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Key Generation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cache Key Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#excluded-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Excluded Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-a-custom-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing a Custom Backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing a Custom Backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#redis-backend-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redis Backend example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-your-custom-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Your Custom Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1515,10 +1654,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#async-and-sync-example" class="md-nav__link">
+  <a href="#quick-start" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async and sync example
+        Quick Start
       
     </span>
   </a>
@@ -1526,13 +1665,152 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#async-and-sync-usage" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async and sync usage
+        How It Works
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-ttl-time-to-live" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic TTL (Time-To-Live)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-cache-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Cache Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cache-key-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Key Generation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cache Key Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#excluded-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Excluded Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#writing-a-custom-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Writing a Custom Backend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Writing a Custom Backend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#redis-backend-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redis Backend example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-your-custom-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Your Custom Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1556,46 +1834,172 @@
   
 
 
-<h1 id="async-support">🔀 Async support</h1>
-<p>Clientele API supports both async and sync functions.</p>
-<p>They can even be mixed in together if you prefer.</p>
-<h2 id="async-and-sync-example">Async and sync example</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.my_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.my_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BookResponse</span><span class="p">,</span> <span class="n">CreateBookReponse</span><span class="p">,</span> <span class="n">CreateBookRequest</span>
+<h1 id="caching">💾 Caching</h1>
+<p>Clientele provides built-in support for caching HTTP GET requests using the <code>@memoize</code> decorator.</p>
+<h2 id="quick-start">Quick Start</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">cache</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">())</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/books&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">CreateBookReponse</span><span class="p">,</span>
-    <span class="n">result</span><span class="p">:</span> <span class="n">CreateBookReponse</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookReponse</span><span class="p">:</span>
+<span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># Cache for 5 minutes</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
+<span class="c1"># First call - hits the API</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 
-<span class="c1"># Mix sync and async functions in the same client</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/book/</span><span class="si">{book_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">BookResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BookResponse</span><span class="p">:</span>
+<span class="c1"># Second call - returns cached result</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>  <span class="c1"># No HTTP request made!</span>
+</code></pre></div>
+<h2 id="how-it-works">How It Works</h2>
+<p>The <code>@memoize</code> decorator:</p>
+<ol>
+<li><strong>Extracts request context</strong> from the underlying <code>@client.get()</code> decorator</li>
+<li><strong>Generates cache keys</strong> from the HTTP method, path template, and function parameters</li>
+<li><strong>Checks the cache</strong> before executing the HTTP request</li>
+<li><strong>Stores results</strong> with optional TTL (time-to-live) expiration</li>
+<li><strong>Respects LRU eviction</strong> when the cache reaches its maximum size</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">GET Requests Only</p>
+<p>Only use <code>@memoize</code> with GET requests (idempotent operations). POST/PUT/PATCH/DELETE should <strong>not</strong> be cached as they modify server state.</p>
+</div>
+<h2 id="configuration">Configuration</h2>
+<h3 id="basic-ttl-time-to-live">Basic TTL (Time-To-Live)</h3>
+<p>Set how long cached responses remain valid:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># 5 minutes</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
-<h2 id="async-and-sync-usage">Async and sync usage</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_clientele_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
-
-<span class="c1"># handle sync requests</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_book</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookRequest</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My awesome book&quot;</span><span class="p">)</span>
+<h3 id="custom-cache-keys">Custom Cache Keys</h3>
+<p>Override the default key generation with a custom function:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@memoize</span><span class="p">(</span>
+    <span class="n">ttl</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span>
+    <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">user_id</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;user:</span><span class="si">{</span><span class="n">user_id</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Custom key format</span>
 <span class="p">)</span>
-
-<span class="k">match</span> <span class="n">response</span><span class="p">:</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookResponse</span><span class="p">():</span>
-        <span class="c1"># handle valid response</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
-        <span class="c1"># handle errors</span>
-
-<span class="c1"># Handle async requests</span>
-<span class="n">book_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
+<p>The custom key function receives all parameters <strong>except</strong> <code>result</code> and <code>response</code> (which are injected by Clientele).</p>
+<h3 id="conditional-caching">Conditional Caching</h3>
+<p>Enable or disable caching based on configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="n">ENABLE_CACHE</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;ENABLE_CACHE&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+
+<span class="nd">@memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="n">ENABLE_CACHE</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<h3 id="custom-backend">Custom Backend</h3>
+<p>Swap the default in-memory backend for your own:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele.cache</span><span class="w"> </span><span class="kn">import</span> <span class="n">memoize</span><span class="p">,</span> <span class="n">MemoryBackend</span>
+
+<span class="c1"># Create a backend with smaller cache size</span>
+<span class="n">small_cache</span> <span class="o">=</span> <span class="n">MemoryBackend</span><span class="p">(</span><span class="n">max_size</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="nd">@memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">small_cache</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/items/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_item</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<h2 id="async-support">Async Support</h2>
+<p>The <code>@memoize</code> decorator works seamlessly with async functions:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Usage</span>
+<span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">user</span> <span class="o">=</span> <span class="k">await</span> <span class="n">get_user</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>  <span class="c1"># Cached!</span>
+</code></pre></div>
+<h2 id="cache-key-generation">Cache Key Generation</h2>
+<p>Cache keys are automatically generated from:</p>
+<ol>
+<li><strong>HTTP method</strong> - Prepended to the key (e.g., <code>GET:</code>)</li>
+<li><strong>Path template</strong> - The API endpoint path</li>
+<li><strong>Function parameters</strong> - Sorted alphabetically for consistency</li>
+</ol>
+<p>Example cache keys:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># GET /pokemon/{id} with id=25</span>
+<span class="c1"># Key: &quot;GET:/pokemon/{id}:id=25&quot;</span>
+
+<span class="c1"># GET /search with query=&quot;python&quot;, limit=10</span>
+<span class="c1"># Key: &quot;GET:/search:limit=10:query=python&quot;</span>
+</code></pre></div>
+<h3 id="excluded-parameters">Excluded Parameters</h3>
+<p>The following parameters are <strong>automatically excluded</strong> from cache keys because they are injected by Clientele at runtime:</p>
+<ul>
+<li><code>result</code> - The parsed response object</li>
+<li><code>response</code> - The raw HTTP response</li>
+<li><code>data</code> - The request body</li>
+</ul>
+<h2 id="writing-a-custom-backend">Writing a Custom Backend</h2>
+<p>The <code>MemoryBackend</code> is suitable for single-process applications.</p>
+<p>For production systems, you may want Redis, Memcached, or disk-based caching.</p>
+<h3 id="redis-backend-example">Redis Backend example</h3>
+<p>Implement the <code>CacheBackend</code> protocol:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">redis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">RedisBackend</span><span class="p">(</span><span class="n">cache</span><span class="o">.</span><span class="n">CacheBackend</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Redis-based cache backend example.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">redis_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">redis</span><span class="o">.</span><span class="n">from_url</span><span class="p">(</span><span class="n">redis_url</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve a value from Redis.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">ttl</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Store a value in Redis with optional TTL.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+        <span class="n">serialized</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ttl</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">setex</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">ttl</span><span class="p">,</span> <span class="n">serialized</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">serialized</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a value from Redis.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clear all values (use with caution!).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">flushdb</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if a key exists in Redis.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="using-your-custom-backend">Using Your Custom Backend</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache</span>
+
+<span class="c1"># Create and configure your backend</span>
+<span class="n">redis_cache</span> <span class="o">=</span> <span class="n">RedisBackend</span><span class="p">(</span><span class="n">redis_url</span><span class="o">=</span><span class="s2">&quot;redis://localhost:6379/0&quot;</span><span class="p">)</span>
+
+<span class="c1"># Use per-decorator</span>
+<span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">redis_cache</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<ul>
+<li><a href="../api-configuration/">API Configuration</a> - General API client configuration</li>
+<li><a href="../api-async/">Async Support</a> - Using async/await with Clientele</li>
+<li><a href="../testing/">Testing</a> - How to test code that uses caching</li>
+</ul>
 
 
 
@@ -1625,7 +2029,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../api-configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: ⚙️ Configuration">
+          <a href="../api-authentication/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🔐 Authentication">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1635,20 +2039,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                ⚙️ Configuration
+                🔐 Authentication
               </div>
             </div>
           </a>
         
         
           
-          <a href="../api-authentication/" class="md-footer__link md-footer__link--next" aria-label="Next: 🔐 Authentication">
+          <a href="../exceptions/" class="md-footer__link md-footer__link--next" aria-label="Next: 🚨 Exception Handling">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                🔐 Authentication
+                🚨 Exception Handling
               </div>
             </div>
             <div class="md-footer__button md-icon">
