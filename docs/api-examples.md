@@ -338,3 +338,111 @@ def get_all_pokemon_names():
 
 - Use the common `gather` / `run` pattern to build modular API calls with Clientele.
 - This example executes 151 HTTP requests in parallel.
+
+## Caching
+
+### Simple caching example
+
+```python
+from clientele import api, cache
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+@cache.memoize(ttl=300)  # Cache for 5 minutes
+@client.get("/pokemon/{pokemon_id}")
+def get_pokemon(pokemon_id: int, result: dict) -> dict:
+    return result
+```
+
+```python
+# First call - hits the API
+pikachu = get_pokemon(pokemon_id=25)
+
+# Second call - returns cached result (no HTTP request)
+pikachu_cached = get_pokemon(pokemon_id=25)
+```
+
+### Caching Paginated Results
+
+```python
+from clientele import api, cache
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+@cache.memoize(ttl=300)
+@client.get("/pokemon")
+def list_pokemon(limit: int, offset: int, result: dict) -> dict:
+    return result
+```
+
+```python
+# Each limit/offset combination is cached separately
+page1 = list_pokemon(limit=20, offset=0)
+page2 = list_pokemon(limit=20, offset=20)
+page1_again = list_pokemon(limit=20, offset=0)  # Cached!
+```
+
+### Caching with Query Parameters
+
+```python
+from clientele import api, cache
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+@cache.memoize(ttl=600)
+@client.get("/ability")
+def list_abilities(limit: int, offset: int, result: dict) -> dict:
+    return result
+```
+
+```python
+# Different query params = different cache entries
+abilities1 = list_abilities(limit=10, offset=0)
+abilities2 = list_abilities(limit=20, offset=0)  # Different cache entry
+abilities3 = list_abilities(limit=10, offset=0)  # Uses cached abilities1
+```
+
+### Namespace Isolation with Custom Keys
+
+```python
+from clientele import api, cache
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+@cache.memoize(
+    ttl=300,
+    key=lambda pokemon_id, version_id: f"pokemon:{pokemon_id}:version:{version_id}"
+)
+@client.get("/pokemon/{pokemon_id}")
+def get_pokemon_version(pokemon_id: int, version_id: int, result: dict) -> dict:
+    # Custom key ensures different versions are cached separately
+    return result
+
+```
+
+```python
+# Each pokemon/version combination has its own cache entry
+red_pikachu = get_pokemon_version(pokemon_id=25, version_id=1)
+blue_pikachu = get_pokemon_version(pokemon_id=25, version_id=2)
+```
+
+### Short-Lived Cache for Rate Limiting
+
+```python
+from clientele import api, cache
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+# Cache for just 10 seconds to reduce burst traffic
+@cache.memoize(ttl=10)
+@client.get("/pokemon/{pokemon_id}")
+def get_pokemon_burst(pokemon_id: int, result: dict) -> dict:
+    return result
+
+```
+
+```python
+# Multiple rapid calls within 10 seconds use cache
+for _ in range(100):
+    get_pokemon_burst(pokemon_id=25)  # Only makes 1 HTTP request
+```

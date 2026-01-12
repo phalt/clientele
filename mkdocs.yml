@@ -40,6 +40,7 @@ nav:
     - ⚙️ Configuration: api-configuration.md
     - 🔀 Async Support: api-async.md
     - 🔐 Authentication: api-authentication.md
+    - 💷 Caching: api-cache.md
     - 🚨 Exception Handling: exceptions.md
     - 🧪 Testing: testing.md
   - 🏗️ Client Scaffolder:
