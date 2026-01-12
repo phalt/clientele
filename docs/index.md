@@ -35,7 +35,7 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
     return result.name
 ```
 
-[See more examples](https://docs.clientele.dev/api-examples/).
+[See more examples](https://docs.clientele.dev/api-examples/)
 
 ## Why use Clientele?
 
@@ -65,6 +65,19 @@ client = clientele_api.APIClient(base_url="http://localhost:8000")
 
 @client.post("/books")
 def create_book(data: CreateBookRequest, result: CreateBookReponse) -> CreateBookResponse:
+    return result
+```
+
+## Sensible HTTP caching
+
+```python
+from clientele import api, cache
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+@cache.memoize()
+@client.get("/pokemon/{pokemon_name}")
+def get_pokemon_info(pokemon_name: str, result: dict) -> dict:
     return result
 ```
 
