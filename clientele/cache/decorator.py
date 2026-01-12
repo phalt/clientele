@@ -1,26 +1,26 @@
-"""Memoization decorator for caching HTTP GET requests."""
+from __future__ import annotations
 
 import functools
 import inspect
-from typing import Any, Callable, Optional, TypeVar, cast
+import typing
 
 from clientele.cache.backends import MemoryBackend
 from clientele.cache.key_generator import IGNORE_KEYS, generate_cache_key
 from clientele.cache.types import CacheBackend
 
 # Type variable for generic function decoration
-F = TypeVar("F", bound=Callable[..., Any])
+F = typing.TypeVar("F", bound=typing.Callable[..., typing.Any])
 
 # Global default cache backend
 _default_backend: CacheBackend = MemoryBackend()
 
 
 def memoize(
-    ttl: Optional[int | float] = None,
-    backend: Optional[CacheBackend] = None,
-    key: Optional[Callable[..., str]] = None,
+    ttl: typing.Optional[int | float] = None,
+    backend: typing.Optional[CacheBackend] = None,
+    key: typing.Optional[typing.Callable[..., str]] = None,
     enabled: bool = True,
-) -> Callable[[F], F]:
+) -> typing.Callable[[F], F]:
     """Decorator to cache HTTP GET request results.
 
     This decorator should be applied ABOVE the @client.get() decorator:
@@ -82,7 +82,7 @@ def memoize(
                 return f"{http_method}:{cache_key}" if http_method else cache_key
 
         @functools.wraps(func)
-        def sync_wrapper(*args: Any, **kwargs: Any) -> Any:
+        def sync_wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
             if not enabled:
                 return func(*args, **kwargs)
 
@@ -103,7 +103,7 @@ def memoize(
             return result
 
         @functools.wraps(func)
-        async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
+        async def async_wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
             if not enabled:
                 return await func(*args, **kwargs)
 
@@ -125,14 +125,14 @@ def memoize(
 
         # Return appropriate wrapper based on whether function is async
         if inspect.iscoroutinefunction(func):
-            return cast(F, async_wrapper)
+            return typing.cast(F, async_wrapper)
         else:
-            return cast(F, sync_wrapper)
+            return typing.cast(F, sync_wrapper)
 
     return decorator
 
 
-def _extract_request_context(func: Callable) -> tuple[Optional[str], Optional[str]]:
+def _extract_request_context(func: typing.Callable) -> tuple[typing.Optional[str], typing.Optional[str]]:
     """Extract path template and HTTP method from clientele decorator closure.
 
     This function inspects the closure of a function decorated with @client.get(), etc.

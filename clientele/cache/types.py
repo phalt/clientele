@@ -1,17 +1,17 @@
-"""Type definitions and protocols for cache backends."""
+from __future__ import annotations
 
 import time
-from typing import Any, Optional, Protocol
+import typing
 
 
-class CacheBackend(Protocol):
+class CacheBackend(typing.Protocol):
     """Protocol for cache backend implementations.
 
     All cache backends must implement these methods.
     Thread-safe implementations are required for concurrent usage.
     """
 
-    def get(self, key: str) -> Optional[Any]:
+    def get(self, key: str) -> typing.Optional[typing.Any]:
         """Retrieve a value from the cache.
 
         Args:
@@ -22,7 +22,7 @@ class CacheBackend(Protocol):
         """
         ...
 
-    def set(self, key: str, value: Any, ttl: Optional[int | float] = None) -> None:
+    def set(self, key: str, value: typing.Any, ttl: typing.Optional[int | float] = None) -> None:
         """Store a value in the cache.
 
         Args:
@@ -62,7 +62,7 @@ class CacheEntry:
     Internal class used by cache backends to track value lifetime.
     """
 
-    def __init__(self, value: Any, ttl: Optional[int | float] = None):
+    def __init__(self, value: typing.Any, ttl: typing.Optional[int | float] = None):
         """Initialize a cache entry.
 
         Args:
@@ -84,6 +84,6 @@ class CacheEntry:
         return time.time() > self._expires_at
 
     @property
-    def value(self) -> Any:
+    def value(self) -> typing.Any:
         """Get the cached value."""
         return self._value

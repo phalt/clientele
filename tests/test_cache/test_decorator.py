@@ -1,4 +1,4 @@
-"""Tests for @memoize decorator."""
+from __future__ import annotations
 
 import inspect
 
@@ -10,8 +10,6 @@ from clientele.cache.decorator import (
 
 
 class TestMemoizeDecorator:
-    """Tests for memoize decorator."""
-
     def test_memoize_preserves_function_name(self):
         """Decorator should preserve the original function name."""
 
@@ -33,13 +31,13 @@ class TestMemoizeDecorator:
         assert params == ["a", "b", "c"]
 
         # Check parameter types
-        assert sig.parameters["a"].annotation is int
-        assert sig.parameters["b"].annotation is str
-        assert sig.parameters["c"].annotation is float
+        assert sig.parameters["a"].annotation == "int"
+        assert sig.parameters["b"].annotation == "str"
+        assert sig.parameters["c"].annotation == "float"
         assert sig.parameters["c"].default == 3.14
 
         # Check return type
-        assert sig.return_annotation is str
+        assert sig.return_annotation == "str"
 
     def test_memoize_preserves_docstring(self):
         """Decorator should preserve the original function docstring."""

@@ -1,19 +1,19 @@
-"""Cache key generation utilities."""
+from __future__ import annotations
 
 import inspect
 import json
 import re
-from typing import Any, Callable, Optional
+import typing
 
 # Parameters to ignore when generating cache keys (injected by clientele at runtime)
 IGNORE_KEYS = {"result", "response", "data", "headers"}
 
 
 def generate_cache_key(
-    func: Callable,
+    func: typing.Callable,
     args: tuple,
     kwargs: dict,
-    path_template: Optional[str] = None,
+    path_template: typing.Optional[str] = None,
 ) -> str:
     """Generate a deterministic cache key from function arguments.
 
@@ -100,7 +100,7 @@ def extract_path_params(path_template: str) -> list[str]:
     return re.findall(r"\{([^}]+)\}", path_template)
 
 
-def serialize_value(value: Any) -> str:
+def serialize_value(value: typing.Any) -> str:
     """Serialize a value for cache key generation.
 
     Creates deterministic string representations suitable for cache keys.

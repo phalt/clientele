@@ -1,8 +1,8 @@
-"""Cache backend implementations."""
+from __future__ import annotations
 
+import collections
 import threading
-from collections import OrderedDict
-from typing import Any, Optional
+import typing
 
 from clientele.cache.types import CacheEntry
 
@@ -21,10 +21,10 @@ class MemoryBackend:
     def __init__(self, max_size: int = 128):
         """Initialize the memory backend."""
         self.max_size = max_size
-        self._cache: OrderedDict[str, CacheEntry] = OrderedDict()
+        self._cache: collections.OrderedDict[str, CacheEntry] = collections.OrderedDict()
         self._lock = threading.RLock()
 
-    def _get_valid_entry(self, key: str) -> Optional[CacheEntry]:
+    def _get_valid_entry(self, key: str) -> typing.Optional[CacheEntry]:
         """Get entry if exists and not expired, removing expired entries.
 
         Must be called within self._lock context.
@@ -39,7 +39,7 @@ class MemoryBackend:
 
         return entry
 
-    def get(self, key: str) -> Optional[Any]:
+    def get(self, key: str) -> typing.Optional[typing.Any]:
         """Retrieve a value from the cache (thread-safe)."""
         with self._lock:
             entry = self._get_valid_entry(key)
@@ -50,7 +50,7 @@ class MemoryBackend:
             self._cache.move_to_end(key)
             return entry.value
 
-    def set(self, key: str, value: Any, ttl: Optional[int | float] = None) -> None:
+    def set(self, key: str, value: typing.Any, ttl: typing.Optional[int | float] = None) -> None:
         """Store a value in the cache (thread-safe)."""
         with self._lock:
             # Remove existing entry to update position
