@@ -60,19 +60,10 @@ def test_version_command(runner):
     assert settings.VERSION in result.output
 
 
-def test_generate_command_exists_and_is_callable(runner):
-    """Test generate command exists and can be invoked."""
-    # Just test that the command exists and handles missing parameters correctly
-    result = runner.invoke(cli.cli_group, ["generate"])
-    # Should fail because required parameter --output is missing
-    assert result.exit_code != 0
-    assert "--output" in result.output or "output" in result.output.lower()
-
-
-def test_generate_class_command_exists_and_is_callable(runner):
-    """Test generate-class command exists and can be invoked."""
-    # Just test that the command exists and handles missing parameters correctly
-    result = runner.invoke(cli.cli_group, ["generate-class"])
+@pytest.mark.parametrize("command", ["generate", "generate-class", "scaffold-api"])
+def test_generate_commands_require_output_parameter(runner, command):
+    """Test that all generate commands require --output parameter."""
+    result = runner.invoke(cli.cli_group, [command])
     # Should fail because required parameter --output is missing
     assert result.exit_code != 0
     assert "--output" in result.output or "output" in result.output.lower()
@@ -153,8 +144,16 @@ def test_load_openapi_spec_from_url(simple_openapi_spec, httpserver, content_typ
     assert spec.info.title == "Test API"
 
 
-def test_generate_command_with_valid_spec(runner):
-    """Test generate command creates client successfully."""
+@pytest.mark.parametrize(
+    "command,regen_arg,expected_output",
+    [
+        ("generate", ["--regen", "true"], "Client generated"),
+        ("generate-class", ["--regen", "true"], "generated"),
+        ("scaffold-api", ["--regen"], "generated"),
+    ],
+)
+def test_generate_commands_with_valid_spec(runner, command, regen_arg, expected_output):
+    """Test that all generate commands create client successfully with valid spec."""
     import tempfile
     from pathlib import Path
 
@@ -166,33 +165,12 @@ def test_generate_command_with_valid_spec(runner):
 
         result = runner.invoke(
             cli.cli_group,
-            ["generate", "--file", str(spec_path), "--output", str(output_dir), "--regen", "true"],
+            [command, "--file", str(spec_path), "--output", str(output_dir)] + regen_arg,
         )
 
         # Should succeed
         assert result.exit_code == 0
-        assert "Client generated" in result.output or "generated" in result.output.lower()
-
-
-def test_generate_class_command_with_valid_spec(runner):
-    """Test generate-class command creates client successfully."""
-    import tempfile
-    from pathlib import Path
-
-    # Use the simple spec from example_openapi_specs
-    spec_path = Path(__file__).parent.parent / "example_openapi_specs" / "simple.json"
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_client"
-
-        result = runner.invoke(
-            cli.cli_group,
-            ["generate-class", "--file", str(spec_path), "--output", str(output_dir), "--regen", "true"],
-        )
-
-        # Should succeed
-        assert result.exit_code == 0
-        assert "generated" in result.output.lower()
+        assert expected_output.lower() in result.output.lower()
 
 
 def test_cli_main_block():
