@@ -3,7 +3,7 @@
 ## uv
 
 ```sh
-uv tool install clientele
+uv add clientele
 ```
 
 ## pip
