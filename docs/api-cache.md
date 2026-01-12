@@ -1,4 +1,4 @@
-# 💷 Caching
+# 💾 Caching
 
 Clientele provides built-in support for caching HTTP GET requests using the `@memoize` decorator.
 
