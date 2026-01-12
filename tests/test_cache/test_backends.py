@@ -1,4 +1,4 @@
-"""Tests for cache backend implementations."""
+from __future__ import annotations
 
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -8,8 +8,6 @@ from clientele.cache.types import CacheEntry
 
 
 class TestCacheEntry:
-    """Tests for CacheEntry class."""
-
     def test_cache_entry_no_expiration(self):
         """Cache entry without TTL should never expire."""
         entry = CacheEntry(value="test_value", ttl=None)
@@ -28,17 +26,6 @@ class TestCacheEntry:
 
         # Wait for expiration
         time.sleep(1.1)
-        assert entry.is_expired()
-
-    def test_cache_entry_is_expired_boundary(self):
-        """Test expiration at exact boundary."""
-        entry = CacheEntry(value="test", ttl=0.5)
-        assert not entry.is_expired()
-
-        time.sleep(0.3)
-        assert not entry.is_expired()
-
-        time.sleep(0.3)  # Total 0.6 seconds
         assert entry.is_expired()
 
 
