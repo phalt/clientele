@@ -13,19 +13,9 @@ class MemoryBackend:
     Uses an OrderedDict for LRU eviction when the cache reaches max_size.
     Thread-safe for concurrent access using a threading.RLock.
 
-    This is the default backend, suitable for:
-    - Single-process applications
-    - Development and testing
-    - Small to medium cache sizes
-
-    NOT suitable for:
-    - Multi-process applications (use Redis instead)
-    - Very large datasets (consider Redis or disk-based cache)
-    - Persistent caching across restarts
-
     Args:
         max_size: Maximum number of entries to store (default: 128)
-                 When exceeded, least recently used entries are evicted.
+                  When exceeded, least recently used entries are evicted.
     """
 
     def __init__(self, max_size: int = 128):

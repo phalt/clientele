@@ -30,22 +30,12 @@ def memoize(
         def get_pokemon(id: int, result: dict) -> dict:
             return result
 
-    The decorator:
-    - Extracts the HTTP method and path from the clientele decorator
-    - Generates cache keys from the path template and function parameters
-    - Checks the cache before executing the HTTP request
-    - Stores results in the cache after successful requests
-    - Respects TTL for automatic expiration
-
-    IMPORTANT: Only use with GET requests (idempotent operations).
-    POST/PUT/PATCH/DELETE should not be cached as they modify state.
-
     Args:
-        ttl: Time-to-live in seconds (None = cache forever, not recommended)
+        ttl: Time-to-live in seconds (None = cache forever)
         backend: Cache backend to use (defaults to global MemoryBackend)
         key: Custom cache key function receiving the same args as the decorated function
-             (excluding 'result'). Should return a string cache key.
-        enabled: Whether caching is enabled (allows conditional disable via config)
+             (excluding 'result' and 'response'). Should return a string cache key.
+        enabled: Whether caching is enabled
 
     Returns:
         Decorated function with caching behavior
@@ -72,29 +62,23 @@ def memoize(
     """
 
     def decorator(func: F) -> F:
-        # Use provided backend or fall back to default
         cache_backend = backend or _default_backend
 
-        # Extract path template and HTTP method from clientele decorator closure
         path_template, http_method = _extract_request_context(func)
 
         def _generate_cache_key(args: tuple, kwargs: dict) -> str:
             """Generate cache key from arguments (shared by sync and async wrappers)."""
             if key is not None:
-                # Use custom key function
                 sig = inspect.signature(func)
                 try:
                     bound = sig.bind_partial(*args, **kwargs)
                     bound.apply_defaults()
                     key_args = {k: v for k, v in bound.arguments.items() if k not in IGNORE_KEYS}
                 except TypeError:
-                    # Fallback to kwargs only
                     key_args = {k: v for k, v in kwargs.items() if k not in IGNORE_KEYS}
                 return key(**key_args)
             else:
-                # Use automatic key generation
                 cache_key = generate_cache_key(func, args, kwargs, path_template)
-                # Prepend HTTP method to cache key for uniqueness
                 return f"{http_method}:{cache_key}" if http_method else cache_key
 
         @functools.wraps(func)

@@ -75,7 +75,7 @@ from clientele import api, cache
 
 client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
-@cache.memoize()
+@cache.memoize(ttl=300)
 @client.get("/pokemon/{pokemon_name}")
 def get_pokemon_info(pokemon_name: str, result: dict) -> dict:
     return result
