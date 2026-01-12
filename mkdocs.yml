@@ -42,6 +42,7 @@ nav:
     - 🔐 Authentication: api-authentication.md
     - 💾 Caching: api-cache.md
     - 🚨 Exception Handling: exceptions.md
+    - 🔄 Retries: api-retries.md
     - 🧪 Testing: testing.md
   - 🏗️ Client Scaffolder:
     - Usage & CLI: openapi-cli.md
