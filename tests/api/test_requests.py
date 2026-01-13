@@ -198,11 +198,14 @@ class TestBuildRequestContext:
     def test_build_request_context_forward_reference_fallback(self):
         """Test handling of forward references that can't be resolved."""
 
-        # Create a function with annotations that will cause NameError
-        def func(result: "UndefinedType") -> "UndefinedType":  # noqa: F821
+        # Create a function with forward reference annotation using typing.ForwardRef
+        def func(result: dict) -> dict:
             return result
 
-        # This should fall back to using __annotations__
+        # Manually set __annotations__ to simulate forward reference that can't be resolved
+        func.__annotations__ = {"result": "SomeForwardRef", "return": "SomeForwardRef"}
+
+        # This should fall back to using __annotations__ when get_type_hints raises NameError
         context = requests.build_request_context("GET", "/test", func)
 
         assert context.type_hints is not None
