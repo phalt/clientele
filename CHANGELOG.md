@@ -4,7 +4,7 @@
 
 ### Streaming responses
 
-- Clientele now supports streaming responses from server sent events.
+- Clientele now supports streaming responses via Server Sent Events.
 - HTTP GET, POST, PUT, PATCH and DELETE are supported.
 - Clientele will attempt to hydrate the response into the correct type supplied by the `result` parameter.
 - `response_map` is not currently supported but will be in future updates.
