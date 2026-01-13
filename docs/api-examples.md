@@ -446,3 +446,29 @@ def get_pokemon_burst(pokemon_id: int, result: dict) -> dict:
 for _ in range(100):
     get_pokemon_burst(pokemon_id=25)  # Only makes 1 HTTP request
 ```
+
+## Streaming
+
+### Basic Server Sent Events example
+
+```python
+from typing import AsyncIterator
+from pydantic import BaseModel
+from clientele import api
+
+client = api.APIClient(base_url="http://localhost:8000")
+
+class Event(BaseModel):
+    text: str
+
+@client.stream.get("/events")
+async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+    return result
+```
+
+```python
+async for event in await stream_events():
+    print(event.text)
+```
+
+See [Stream](api-stream.md) for more.

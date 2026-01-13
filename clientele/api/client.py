@@ -2,266 +2,19 @@ from __future__ import annotations
 
 import inspect
 import re
-import types
-import typing
 from functools import wraps
-from typing import Any, Callable, TypeVar, cast, get_type_hints, is_typeddict
+from typing import Any, Callable, TypeVar, cast
 from urllib.parse import quote
 
 import httpx
-from pydantic import BaseModel
+from pydantic import BaseModel, TypeAdapter
 
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
-from clientele.api import http_status
-
-try:  # pragma: no cover - conditional import
-    from pydantic import TypeAdapter
-
-    _HAS_TYPE_ADAPTER = True
-except ImportError:  # pragma: no cover - fallback for Pydantic v1
-    # TypeAdapter is used for validating complex types like List[Model], Optional[Model], etc.
-    # It's available in Pydantic v2 and provides better type handling than parse_obj_as.
-    # For Pydantic v1, we fall back to parse_obj_as which has similar functionality.
-    TypeAdapter = None  # type: ignore[assignment, misc]
-    _HAS_TYPE_ADAPTER = False
-
-try:  # pragma: no cover - conditional import
-    from pydantic.tools import parse_obj_as
-except Exception:  # pragma: no cover - fallback for Pydantic v2 only environments
-    # parse_obj_as is the Pydantic v1 equivalent of TypeAdapter.
-    # In Pydantic v2-only environments, this import will fail and we use TypeAdapter instead.
-    parse_obj_as = None
-
+from clientele.api import requests, stream, type_utils
 
 _F = TypeVar("_F", bound=Callable[..., Any])
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
-
-
-def _is_pydantic_model(annotation: Any) -> bool:
-    """Check if annotation is a Pydantic BaseModel class."""
-    return inspect.isclass(annotation) and issubclass(annotation, BaseModel)
-
-
-def _is_typeddict(annotation: Any) -> bool:
-    """
-    Check if annotation is a TypedDict class.
-
-    This wrapper exists for:
-    1. Consistency with _is_pydantic_model helper
-    2. Future extensibility if TypedDict detection needs special handling
-    3. Centralized location for TypedDict checking logic
-    """
-    return is_typeddict(annotation)
-
-
-class _RequestContext(BaseModel):
-    """
-    Captures metadata about a decorated HTTP method.
-
-    Stores the HTTP method, path template, original function, signature,
-    type hints, and response map to enable request preparation and execution
-    without re-parsing function metadata on every call.
-    """
-
-    model_config = {"arbitrary_types_allowed": True}
-
-    method: str
-    path_template: str
-    func: Callable[..., Any]
-    signature: inspect.Signature
-    type_hints: dict[str, Any]
-    response_map: dict[int, type[Any]] | None = None
-    response_parser: Callable[[httpx.Response], Any] | None = None
-
-
-def _validate_result_parameter(
-    func: Callable[..., Any], signature: inspect.Signature, type_hints: dict[str, Any]
-) -> None:
-    """
-    Validates that the decorated function has a 'result' parameter with a type annotation.
-
-    The 'result' parameter is mandatory and drives response hydration.
-    """
-    func_name = getattr(func, "__name__", "<function>")
-
-    # Check if 'result' parameter exists
-    if "result" not in signature.parameters:
-        raise TypeError(
-            f"Function '{func_name}' must have a 'result' parameter. "
-            "The 'result' parameter is required and its type annotation determines how the HTTP response is parsed."
-        )
-
-    # Check if 'result' has a type annotation
-    result_param = signature.parameters["result"]
-    result_annotation = type_hints.get("result", result_param.annotation if result_param else inspect._empty)
-
-    if result_annotation is inspect._empty:
-        raise TypeError(
-            f"Function '{func_name}' has a 'result' parameter but it lacks a type annotation. "
-            "The 'result' parameter must be annotated with the expected response type (e.g., 'result: User')."
-        )
-
-
-def build_request_context(
-    method: str,
-    path: str,
-    func: Callable[..., Any],
-    response_map: dict[int, type[Any]] | None = None,
-    response_parser: Callable[[httpx.Response], Any] | None = None,
-) -> _RequestContext:
-    signature = inspect.signature(func)
-    # Get type hints with proper handling of forward references
-    # This follows the pattern used in FastAPI and other server frameworks
-    try:
-        type_hints = get_type_hints(func, include_extras=True)
-    except NameError:
-        # Forward references that can't be resolved - use raw annotations
-        type_hints = func.__annotations__.copy()
-
-    # Validate that the function has a 'result' parameter with a type annotation
-    _validate_result_parameter(func, signature, type_hints)
-
-    if response_map is not None and response_parser is not None:
-        raise TypeError(
-            f"Function '{getattr(func, '__name__', '<function>')}' cannot have both "
-            "'response_map' and 'response_parser' defined. Please provide only one."
-        )
-
-    # Validate response_map if provided
-    if response_map is not None:
-        _validate_response_map(response_map, func, type_hints)
-
-    if response_parser is not None:
-        _validate_response_parser_return_type_matches_result_return_type(
-            response_parser=response_parser, func=func, type_hints=type_hints
-        )
-
-    return _RequestContext(
-        method=method,
-        path_template=path,
-        func=func,
-        signature=signature,
-        type_hints=type_hints,
-        response_map=response_map,
-        response_parser=response_parser,
-    )
-
-
-def _get_result_types_from_type_hints(
-    type_hints: dict[str, Any],
-) -> list[Any]:
-    """
-    Extracts all types from the 'result' parameter annotation (handles Union types).
-    """
-    result_annotation = type_hints.get("result", inspect._empty)
-
-    if result_annotation is inspect._empty:
-        # This should not happen since we validate result parameter earlier, but defensive check
-        raise ValueError("Function decorated with response_map must have a 'result' parameter with a type annotation")
-
-    result_types: list[Any] = []
-    origin = typing.get_origin(result_annotation)
-    if origin in [typing.Union, types.UnionType]:
-        result_types = list(typing.get_args(result_annotation))
-    else:
-        result_types = [result_annotation]
-
-    return result_types
-
-
-def _validate_response_parser_return_type_matches_result_return_type(
-    response_parser: Callable[[httpx.Response], Any],
-    func: Callable[..., Any],
-    type_hints: dict[str, Any],
-) -> None:
-    """
-    Validates that the return type of the response_parser matches the type of the 'result' parameter.
-    """
-    func_name = getattr(func, "__name__", "<function>")
-
-    # Get the return type of the response_parser
-    parser_signature = inspect.signature(response_parser)
-    parser_return_annotation = parser_signature.return_annotation
-
-    if parser_return_annotation is inspect._empty:
-        raise TypeError(f"The response_parser provided for function '{func_name}' must have a return type annotation.")
-
-    parser_return_types: list[Any] = []
-    origin = typing.get_origin(parser_return_annotation)
-    if origin in [typing.Union, types.UnionType]:
-        parser_return_types = list(typing.get_args(parser_return_annotation))
-    else:
-        parser_return_types = [parser_return_annotation]
-
-    result_types = _get_result_types_from_type_hints(type_hints)
-
-    def _stringify_types(types_list: list[Any]) -> list[str]:
-        return [t.__name__ if not isinstance(t, str) else t for t in types_list]
-
-    stringified_parser_types = _stringify_types(parser_return_types)
-    stringified_return_types = _stringify_types(result_types)
-    if not stringified_return_types == stringified_parser_types:
-        raise TypeError(
-            f"The return type of the response_parser for function '{func_name}': "
-            f"[{', '.join([t for t in stringified_parser_types])}] does not "
-            "match the type(s) of the 'result' parameter: "
-            f"[{', '.join([t for t in stringified_return_types])}]."
-        )
-
-
-def _validate_response_map(
-    response_map: dict[int, type[Any]], func: Callable[..., Any], type_hints: dict[str, Any]
-) -> None:
-    """
-    Validates that response_map contains valid status codes and Pydantic models or TypedDicts,
-    and that all response models are in the function's result parameter type annotation.
-    """
-    # Validate all keys are valid HTTP status codes
-    for status_code in response_map.keys():
-        if not http_status.codes.is_valid_status_code(status_code):
-            raise ValueError(f"Invalid status code {status_code} in response_map")
-
-    # Validate all values are Pydantic BaseModel subclasses or TypedDict classes
-    for status_code, model_class in response_map.items():
-        if not (_is_pydantic_model(model_class) or _is_typeddict(model_class)):
-            raise ValueError(
-                f"response_map value for status code {status_code} must be a Pydantic BaseModel subclass or TypedDict"
-            )
-
-    # Get the result parameter annotation
-    result_types = _get_result_types_from_type_hints(type_hints)
-
-    # Check that all response_map models are in the result types
-    for status_code, model_class in response_map.items():
-        if model_class not in result_types:
-            missing_model = model_class.__name__
-            func_name = getattr(func, "__name__", "<function>")
-            raise ValueError(
-                f"Response model '{missing_model}' for status code {status_code} "
-                f"is not in the 'result' parameter's type annotation. "
-                f"Please add '{missing_model}' to the 'result' parameter type of '{func_name}'."
-            )
-
-
-class _PreparedCall(BaseModel):
-    """
-    Encapsulates all data needed to execute an HTTP request.
-
-    Contains parsed arguments, URL path, query parameters, request body,
-    headers, and result type annotation for response parsing.
-    """
-
-    model_config = {"arbitrary_types_allowed": True}
-
-    context: _RequestContext
-    bound_arguments: inspect.BoundArguments
-    call_arguments: dict[str, Any]
-    url_path: str
-    query_params: dict[str, Any] | None
-    data_payload: dict[str, Any] | None
-    headers_override: dict[str, str] | None
-    result_annotation: Any
 
 
 class APIClient:
@@ -337,6 +90,9 @@ class APIClient:
         self._sync_client = httpx_client or self._build_client()
         self._async_client = httpx_async_client or self._build_async_client()
 
+        # Create stream decorator instance
+        self._stream_decorators = stream.StreamDecorators(self)
+
     def close(self) -> None:
         """Close the synchronous HTTP client."""
         self._sync_client.close()
@@ -344,6 +100,18 @@ class APIClient:
     async def aclose(self) -> None:
         """Close the asynchronous HTTP client."""
         await self._async_client.aclose()
+
+    @property
+    def stream(self):
+        """
+        Access SSE (Server-Sent Events) streaming decorators.
+
+        Example:
+            @client.stream.get("/events")
+            async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+                return result
+        """
+        return self._stream_decorators
 
     def get(
         self,
@@ -399,7 +167,7 @@ class APIClient:
         response_parser: Callable[[httpx.Response], Any] | None = None,
     ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
-            context = build_request_context(
+            context = requests.build_request_context(
                 method, path, func, response_map=response_map, response_parser=response_parser
             )
 
@@ -429,7 +197,9 @@ class APIClient:
     def _build_async_client(self) -> httpx.AsyncClient:
         return httpx.AsyncClient(**self.config.httpx_client_options())
 
-    def _prepare_call(self, context: _RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> _PreparedCall:
+    def _prepare_call(
+        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
+    ) -> requests.PreparedCall:
         """
         Parse function arguments into an HTTP request specification.
 
@@ -504,7 +274,7 @@ class APIClient:
         url_path = self._substitute_path(context.path_template, path_params)
         result_annotation = context.type_hints.get("result", inspect._empty)
 
-        return _PreparedCall(
+        return requests.PreparedCall(
             context=context,
             bound_arguments=bound_arguments,
             call_arguments=call_arguments,
@@ -515,7 +285,7 @@ class APIClient:
             result_annotation=result_annotation,
         )
 
-    def _execute_sync(self, context: _RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> Any:
+    def _execute_sync(self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> Any:
         prepared = self._prepare_call(context, args, kwargs)
         response = self._send_request(
             method=context.method,
@@ -532,7 +302,9 @@ class APIClient:
             )
         return result
 
-    async def _execute_async(self, context: _RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> Any:
+    async def _execute_async(
+        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
+    ) -> Any:
         prepared = self._prepare_call(context, args, kwargs)
         response = await self._send_request_async(
             method=context.method,
@@ -545,6 +317,112 @@ class APIClient:
         result = self._finalise_call(prepared=prepared, response=response)
         if inspect.isawaitable(result):
             return await result
+        return result
+
+    async def _execute_async_stream(
+        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
+    ) -> Any:
+        """
+        Execute an async streaming request (SSE).
+
+        Similar to _execute_async but doesn't parse the full response,
+        instead returns an async generator that yields parsed items.
+        """
+
+        prepared = self._prepare_call(context, args, kwargs)
+
+        # Send request but DON'T consume the response
+        response = await self._send_request_async(
+            method=context.method,
+            url=prepared.url_path,
+            query_params=prepared.query_params,
+            data_payload=prepared.data_payload,
+            headers_override=prepared.headers_override,
+            response_map=None,  # Currently not supported for streaming
+        )
+
+        # Check status manually since we can't use raise_for_status with streaming
+        if response.status_code >= 400:
+            # Read error content before raising
+            error_content = await response.aread()
+            response._content = error_content  # Restore for exception
+            response.raise_for_status()
+
+        # Extract the inner type from AsyncIterator[T]
+        inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
+
+        # Create the async generator
+        stream_generator = stream.parse_sse_stream(response, inner_type)
+
+        # Inject the generator as 'result' and call the user's function
+        prepared.call_arguments["result"] = stream_generator
+        if "response" in prepared.context.signature.parameters:
+            prepared.call_arguments["response"] = response
+
+        # The user's function should just return the result
+        result = prepared.context.func(**prepared.call_arguments)
+
+        # The user function should return the generator (or yield from it)
+        if inspect.isawaitable(result):
+            result = await result
+
+        return result
+
+    def _execute_sync_stream(
+        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
+    ) -> Any:
+        """
+        Execute a sync streaming request (SSE).
+
+        Synchronous version of _execute_async_stream.
+        """
+
+        prepared = self._prepare_call(context, args, kwargs)
+
+        # Send request
+        response = self._send_request(
+            method=context.method,
+            url=prepared.url_path,
+            query_params=prepared.query_params,
+            data_payload=prepared.data_payload,
+            headers_override=prepared.headers_override,
+            response_map=None,
+        )
+
+        # Check status
+        if response.status_code >= 400:
+            error_content = response.read()
+            response._content = error_content
+            response.raise_for_status()
+
+        # Extract inner type
+        inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
+
+        # Create sync generator
+        def stream_generator():
+            for line in response.iter_lines():
+                if not line:
+                    continue
+
+                if line.startswith("data: "):
+                    data_content = line[6:]
+                else:
+                    data_content = line
+
+                yield stream.hydrate_content(data_content, inner_type)
+
+        # Inject and call
+        prepared.call_arguments["result"] = stream_generator()
+        if "response" in prepared.context.signature.parameters:
+            prepared.call_arguments["response"] = response
+
+        result = prepared.context.func(**prepared.call_arguments)
+
+        if inspect.isawaitable(result):
+            raise TypeError(
+                "Synchronous handlers cannot return awaitable results; declare the function as async instead"
+            )
+
         return result
 
     def _prepare_body(
@@ -561,19 +439,14 @@ class APIClient:
         if annotation is inspect._empty:
             return payload
 
-        # Handle Pydantic BaseModel instances
         if isinstance(payload, BaseModel):
             return self._dump_model(payload)
 
-        # Handle Pydantic BaseModel classes (validate and dump)
-        if _is_pydantic_model(annotation):
-            validator = annotation.model_validate if hasattr(annotation, "model_validate") else annotation.parse_obj
-            model_instance = validator(payload)
+        if type_utils.is_pydantic_model(annotation):
+            model_instance = annotation.model_validate(payload)
             return self._dump_model(model_instance)
 
-        # Handle TypedDict classes
-        # TypedDicts don't have runtime validation, so we just ensure the payload is a dict
-        if _is_typeddict(annotation):
+        if type_utils.is_typeddict(annotation):
             if not isinstance(payload, dict):
                 raise TypeError(f"Expected dict for TypedDict {annotation.__name__}, got {type(payload).__name__}")
             return payload
@@ -633,7 +506,7 @@ class APIClient:
 
     def _finalise_call(
         self,
-        prepared: _PreparedCall,
+        prepared: requests.PreparedCall,
         response: httpx.Response,
     ) -> Any:
         parsed_result = self._parse_response(
@@ -694,11 +567,10 @@ class APIClient:
             model_class = response_map[status_code]
             if payload is None:
                 return None
-            # Check if it's a Pydantic model or TypedDict
-            if _is_pydantic_model(model_class):
-                return self._validate_model(model_class, payload)
-            elif _is_typeddict(model_class):
-                return self._validate_typeddict(model_class, payload)
+            if type_utils.is_pydantic_model(model_class):
+                return type_utils.validate_model(model_class, payload)
+            elif type_utils.is_typeddict(model_class):
+                return type_utils.validate_typeddict(model_class, payload)
             else:
                 # Fallback to returning payload as-is
                 return payload
@@ -710,39 +582,14 @@ class APIClient:
         if payload is None:
             return None
 
-        if _is_pydantic_model(annotation):
-            return self._validate_model(annotation, payload)
+        if type_utils.is_pydantic_model(annotation):
+            return type_utils.validate_model(annotation, payload)
 
-        if _is_typeddict(annotation):
-            return self._validate_typeddict(annotation, payload)
+        if type_utils.is_typeddict(annotation):
+            return type_utils.validate_typeddict(annotation, payload)
 
-        if _HAS_TYPE_ADAPTER and TypeAdapter is not None:
-            adapter = TypeAdapter(annotation)
-            return adapter.validate_python(payload)
-
-        if parse_obj_as is not None:
-            return parse_obj_as(annotation, payload)
-
-        return payload
-
-    def _validate_model(self, model_class: type[BaseModel], payload: Any) -> BaseModel:
-        """Validate payload using a Pydantic model, supporting both v1 and v2."""
-        if hasattr(model_class, "model_validate"):
-            return model_class.model_validate(payload)
-        return model_class.parse_obj(payload)
-
-    def _validate_typeddict(self, typeddict_class: type[Any], payload: Any) -> dict[str, Any]:
-        """
-        Validate payload as a TypedDict.
-
-        TypedDicts don't have runtime validation like Pydantic models,
-        so we just ensure the payload is a dict and return it.
-        The type checker will verify the structure at static analysis time.
-        """
-        if not isinstance(payload, dict):
-            raise TypeError(f"Expected dict for TypedDict {typeddict_class.__name__}, got {type(payload).__name__}")
-        # Return the payload as-is; TypedDict is for type checking, not runtime validation
-        return payload
+        adapter = TypeAdapter(annotation)
+        return adapter.validate_python(payload)
 
     def _substitute_path(self, path_template: str, values: dict[str, Any]) -> str:
         def replacer(match: re.Match[str]) -> str:

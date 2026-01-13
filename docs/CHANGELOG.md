@@ -2,7 +2,40 @@
 
 ## UNRELEASED 1.6.0
 
+### Streaming responses
+
+- Clientele now supports streaming responses from server sent events.
+- HTTP GET, POST, PUT, PATCH and DELETE are supported.
+- Clientele will attempt to hydrate the response into the correct type supplied by the `result` parameter.
+- `response_map` is not currently supported but will be in future updates.
+- `response_parser` is not currently supported but will be in future updates.
+
+```python
+from typing import AsyncIterator
+from pydantic import BaseModel
+from clientele import api
+
+client = api.APIClient(base_url="http://localhost:8000")
+
+class Event(BaseModel):
+    text: str
+
+@client.stream.get("/events")
+async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+    return result
+```
+
+Usage:
+
+```python
+async for event in await stream_events():
+    print(event.text)
+```
+
+### Other changes
+
 - The `scaffold-api` command now outputs a standard `pyproject.toml` into the client directory. It will not be overwritten on subsequent regenerations.
+- Big code refactor - reorganising the `request` preparation and type handling into separate files.
 
 ## 1.5.0
 
