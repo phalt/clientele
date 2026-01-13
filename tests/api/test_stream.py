@@ -375,3 +375,33 @@ class TestSSESyncDecorators:
         assert all(isinstance(line_item, str) for line_item in lines)
         assert lines[0] == "hello"
         assert lines[1] == "world"
+
+    @respx.mock
+    def test_sse_sync_error_response_raises(self):
+        """Test sync SSE streaming raises on error responses."""
+        respx.get("http://localhost:8000/events").mock(return_value=httpx.Response(404, text="Not Found"))
+
+        client = APIClient(base_url="http://localhost:8000")
+
+        @client.stream.get("/events")
+        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+            return result
+
+        with pytest.raises(httpx.HTTPStatusError):
+            for _ in stream_tokens():
+                pass
+
+    @respx.mock
+    def test_sse_sync_500_error_response_raises(self):
+        """Test sync SSE streaming raises on 500 error."""
+        respx.get("http://localhost:8000/events").mock(return_value=httpx.Response(500, text="Internal Server Error"))
+
+        client = APIClient(base_url="http://localhost:8000")
+
+        @client.stream.get("/events")
+        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+            return result
+
+        with pytest.raises(httpx.HTTPStatusError):
+            for _ in stream_tokens():
+                pass
