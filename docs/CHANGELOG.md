@@ -1,5 +1,9 @@
 # Change log
 
+## UNRELEASED 1.6.0
+
+- The `scaffold-api` command now outputs a standard `pyproject.toml` into the client directory. It will not be overwritten on subsequent regenerations.
+
 ## 1.5.0
 
 - Introduce `cache.memoize` decorator for sensible, http-specific caching of HTTP get requests.

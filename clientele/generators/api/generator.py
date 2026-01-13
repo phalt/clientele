@@ -103,6 +103,15 @@ class APIGenerator(generators.Generator):
             + "\n"
         )
         writer.write_to_manifest(content, output_dir=self.output_dir)
+        # pyproject.toml file
+        pyproject_file = pathlib.Path(self.output_dir) / "pyproject.toml"
+        if pyproject_file.exists():
+            # Do not replace existing pyproject.toml if it exists
+            pass
+        else:
+            template = writer.templates.get_template("pyproject.toml.jinja2")
+            content = template.render()
+            writer.write_to_pyproject(content, output_dir=self.output_dir)
 
     def prevent_accidental_regens(self) -> bool:
         if path.exists(self.output_dir):
