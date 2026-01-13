@@ -4,3 +4,4 @@
 - [Matthew Knight](https://github.com/matthewknight)
 - [Pradish Bijukchhe](https://github.com/pradishb)
 - [Peter Hoburg](https://github.com/peterHoburg)
+- [Christian Assing](https://github.com/chassing)
