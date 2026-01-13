@@ -34,6 +34,11 @@ def write_to_init(output_dir: str) -> None:
     _write_to(path, "")
 
 
+def write_to_pyproject(content: str, output_dir: str) -> None:
+    path = pathlib.Path(output_dir) / "pyproject.toml"
+    _write_to(path, content)
+
+
 def _buffer_content(path: pathlib.Path, content: str) -> None:
     """Buffer content to be written later in a single operation."""
     _file_buffers[str(path)].append(content)
