@@ -41,6 +41,7 @@ nav:
     - 🔀 Async Support: api-async.md
     - 🔐 Authentication: api-authentication.md
     - 💾 Caching: api-cache.md
+    - 🌊 Streaming: api-stream.md
     - 🚨 Exception Handling: exceptions.md
     - 🔄 Retries: api-retries.md
     - 🧪 Testing: testing.md
