@@ -315,9 +315,7 @@ class APIClient:
             response_map=context.response_map,
         )
         result = self._finalise_call(prepared=prepared, response=response)
-        if inspect.isawaitable(result):
-            return await result
-        return result
+        return await result
 
     async def _execute_async_stream(
         self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
@@ -338,15 +336,8 @@ class APIClient:
             query_params=prepared.query_params,
             data_payload=prepared.data_payload,
             headers_override=prepared.headers_override,
-            response_map=None,  # Currently not supported for streaming
+            response_map=None,
         )
-
-        # Check status manually since we can't use raise_for_status with streaming
-        if response.status_code >= 400:
-            # Read error content before raising
-            error_content = await response.aread()
-            response._content = error_content  # Restore for exception
-            response.raise_for_status()
 
         # Extract the inner type from AsyncIterator[T]
         inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
@@ -389,12 +380,6 @@ class APIClient:
             response_map=None,
         )
 
-        # Check status
-        if response.status_code >= 400:
-            error_content = response.read()
-            response._content = error_content
-            response.raise_for_status()
-
         # Extract inner type
         inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
 
@@ -404,12 +389,7 @@ class APIClient:
                 if not line:
                     continue
 
-                if line.startswith("data: "):
-                    data_content = line[6:]
-                else:
-                    data_content = line
-
-                yield stream.hydrate_content(data_content, inner_type)
+                yield stream.hydrate_content(line, inner_type)
 
         # Inject and call
         prepared.call_arguments["result"] = stream_generator()
@@ -440,11 +420,11 @@ class APIClient:
             return payload
 
         if isinstance(payload, BaseModel):
-            return self._dump_model(payload)
+            return payload.model_dump(mode="json")
 
         if type_utils.is_pydantic_model(annotation):
             model_instance = annotation.model_validate(payload)
-            return self._dump_model(model_instance)
+            return model_instance.model_dump(mode="json")
 
         if type_utils.is_typeddict(annotation):
             if not isinstance(payload, dict):
@@ -452,11 +432,6 @@ class APIClient:
             return payload
 
         return payload
-
-    def _dump_model(self, model: BaseModel) -> dict[str, Any]:
-        if hasattr(model, "model_dump"):
-            return model.model_dump(mode="json")
-        return model.dict()
 
     def _send_request(
         self,
