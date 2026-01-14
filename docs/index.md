@@ -68,16 +68,20 @@ def create_book(data: CreateBookRequest, result: CreateBookReponse) -> CreateBoo
     return result
 ```
 
-## Sensible HTTP caching
+## Streaming responses
 
 ```python
-from clientele import api, cache
+from typing import AsyncIterator
+from pydantic import BaseModel
+from clientele import api
 
-client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+client = api.APIClient(base_url="http://localhost:8000")
 
-@cache.memoize(ttl=300)
-@client.get("/pokemon/{pokemon_name}")
-def get_pokemon_info(pokemon_name: str, result: dict) -> dict:
+class Event(BaseModel):
+    text: str
+
+@client.get("/events", streaming_response=True)
+async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
 ```
 
