@@ -3,7 +3,7 @@ from __future__ import annotations
 import inspect
 import typing
 
-from pydantic import BaseModel
+import pydantic
 
 
 def is_typeddict(annotation: typing.Any) -> bool:
@@ -12,7 +12,7 @@ def is_typeddict(annotation: typing.Any) -> bool:
 
 def is_pydantic_model(annotation: typing.Any) -> bool:
     """Check if annotation is a Pydantic BaseModel class."""
-    return inspect.isclass(annotation) and issubclass(annotation, BaseModel)
+    return inspect.isclass(annotation) and issubclass(annotation, pydantic.BaseModel)
 
 
 def is_streaming_type(annotation: typing.Any) -> bool:
@@ -76,6 +76,6 @@ def validate_typeddict(typeddict_class: type[typing.Any], payload: typing.Any) -
     return payload
 
 
-def validate_model(model_class: type[BaseModel], payload: typing.Any) -> BaseModel:
+def validate_model(model_class: type[pydantic.BaseModel], payload: typing.Any) -> pydantic.BaseModel:
     """Validate payload using a Pydantic model."""
     return model_class.model_validate(payload)

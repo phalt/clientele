@@ -276,20 +276,41 @@ class TestStreamDecorators:
         async def dummy_func(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
-        with pytest.raises(TypeError, match="cannot use response_map or response_parser"):
+        with pytest.raises(TypeError, match="cannot use response_map"):
             requests.build_request_context("GET", "/events", dummy_func, response_map={200: Token}, streaming=True)
 
-    def test_sse_cannot_use_response_parser(self):
-        """Test that SSE decorators cannot use response_parser."""
+    @pytest.mark.asyncio
+    @respx.mock
+    async def test_stream_with_response_parser(self):
+        """Test SSE streaming with custom response_parser."""
 
-        async def dummy_func(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def mock_sse_stream():
+            yield b"line1,data1\n\n"
+            yield b"line2,data2\n\n"
+            yield b"line3,data3\n\n"
+
+        respx.get("http://localhost:8000/events").mock(
+            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
+        )
+
+        client = APIClient(base_url="http://localhost:8000")
+
+        def custom_parser(line: str) -> dict:
+            parts = line.split(",")
+            return {"key": parts[0], "value": parts[1]}
+
+        @client.get("/events", streaming_response=True, response_parser=custom_parser)
+        async def stream_custom(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
             return result
 
-        def parser(response: httpx.Response) -> Token:
-            return Token(text="test")
+        items = []
+        async for item in await stream_custom():
+            items.append(item)
 
-        with pytest.raises(TypeError, match="cannot use response_map or response_parser"):
-            requests.build_request_context("GET", "/events", dummy_func, response_parser=parser, streaming=True)
+        assert len(items) == 3
+        assert items[0] == {"key": "line1", "value": "data1"}
+        assert items[1] == {"key": "line2", "value": "data2"}
+        assert items[2] == {"key": "line3", "value": "data3"}
 
 
 class TestSSESyncDecorators:
@@ -375,6 +396,36 @@ class TestSSESyncDecorators:
         assert all(isinstance(line_item, str) for line_item in lines)
         assert lines[0] == "hello"
         assert lines[1] == "world"
+
+    @respx.mock
+    def test_sse_sync_with_response_parser(self):
+        """Test sync SSE streaming with custom response_parser."""
+
+        def mock_sse_stream():
+            yield b"a:1\n\n"
+            yield b"b:2\n\n"
+
+        respx.get("http://localhost:8000/events").mock(
+            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
+        )
+
+        client = APIClient(base_url="http://localhost:8000")
+
+        def custom_parser(line: str) -> dict:
+            parts = line.split(":")
+            return {"letter": parts[0], "number": int(parts[1])}
+
+        @client.get("/events", streaming_response=True, response_parser=custom_parser)
+        def stream_custom(*, result: Iterator[dict]) -> Iterator[dict]:
+            return result
+
+        items = []
+        for item in stream_custom():
+            items.append(item)
+
+        assert len(items) == 2
+        assert items[0] == {"letter": "a", "number": 1}
+        assert items[1] == {"letter": "b", "number": 2}
 
     @respx.mock
     def test_sse_sync_error_response_raises(self):

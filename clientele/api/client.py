@@ -1,19 +1,19 @@
 from __future__ import annotations
 
+import functools
 import inspect
 import re
-from functools import wraps
-from typing import Any, Callable, TypeVar, cast
-from urllib.parse import quote
+import typing
+from urllib import parse
 
 import httpx
-from pydantic import BaseModel, TypeAdapter
+import pydantic
 
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
 from clientele.api import requests, stream, type_utils
 
-_F = TypeVar("_F", bound=Callable[..., Any])
+_F = typing.TypeVar("_F", bound=typing.Callable[..., typing.Any])
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
 
 
@@ -102,10 +102,12 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[Any]] | None = None,
-        response_parser: Callable[[httpx.Response], Any] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
+        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        | typing.Callable[[str], typing.Any]
+        | None = None,
         streaming_response: bool = False,
-    ) -> Callable[[_F], _F]:
+    ) -> typing.Callable[[_F], _F]:
         return self._create_decorator(
             "GET",
             path,
@@ -118,10 +120,12 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[Any]] | None = None,
-        response_parser: Callable[[httpx.Response], Any] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
+        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        | typing.Callable[[str], typing.Any]
+        | None = None,
         streaming_response: bool = False,
-    ) -> Callable[[_F], _F]:
+    ) -> typing.Callable[[_F], _F]:
         return self._create_decorator(
             "POST",
             path,
@@ -134,10 +138,12 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[Any]] | None = None,
-        response_parser: Callable[[httpx.Response], Any] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
+        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        | typing.Callable[[str], typing.Any]
+        | None = None,
         streaming_response: bool = False,
-    ) -> Callable[[_F], _F]:
+    ) -> typing.Callable[[_F], _F]:
         return self._create_decorator(
             "PUT",
             path,
@@ -150,10 +156,12 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[Any]] | None = None,
-        response_parser: Callable[[httpx.Response], Any] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
+        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        | typing.Callable[[str], typing.Any]
+        | None = None,
         streaming_response: bool = False,
-    ) -> Callable[[_F], _F]:
+    ) -> typing.Callable[[_F], _F]:
         return self._create_decorator(
             "PATCH",
             path,
@@ -166,10 +174,12 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[Any]] | None = None,
-        response_parser: Callable[[httpx.Response], Any] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
+        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        | typing.Callable[[str], typing.Any]
+        | None = None,
         streaming_response: bool = False,
-    ) -> Callable[[_F], _F]:
+    ) -> typing.Callable[[_F], _F]:
         return self._create_decorator(
             "DELETE",
             path,
@@ -183,10 +193,12 @@ class APIClient:
         method: str,
         path: str,
         *,
-        response_map: dict[int, type[Any]] | None = None,
-        response_parser: Callable[[httpx.Response], Any] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
+        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        | typing.Callable[[str], typing.Any]
+        | None = None,
         streaming_response: bool = False,
-    ) -> Callable[[_F], _F]:
+    ) -> typing.Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
             context = requests.build_request_context(
                 method,
@@ -199,25 +211,25 @@ class APIClient:
 
             if inspect.iscoroutinefunction(func):
 
-                @wraps(func)
-                async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
+                @functools.wraps(func)
+                async def async_wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
                     if streaming_response:
                         return await self._execute_async_stream(context, args, kwargs)
                     return await self._execute_async(context, args, kwargs)
 
                 # Preserve the original signature for IDE support
                 async_wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-                return cast(_F, async_wrapper)
+                return typing.cast(_F, async_wrapper)
 
-            @wraps(func)
-            def wrapper(*args: Any, **kwargs: Any) -> Any:
+            @functools.wraps(func)
+            def wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
                 if streaming_response:
                     return self._execute_sync_stream(context, args, kwargs)
                 return self._execute_sync(context, args, kwargs)
 
             # Preserve the original signature for IDE support
             wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-            return cast(_F, wrapper)
+            return typing.cast(_F, wrapper)
 
         return decorator
 
@@ -228,7 +240,7 @@ class APIClient:
         return httpx.AsyncClient(**self.config.httpx_client_options())
 
     def _prepare_call(
-        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
+        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
     ) -> requests.PreparedCall:
         """
         Parse function arguments into an HTTP request specification.
@@ -255,7 +267,7 @@ class APIClient:
         request_arguments.pop("result", None)
         request_arguments.pop("response", None)
 
-        path_params: dict[str, Any] = {}
+        path_params: dict[str, typing.Any] = {}
         for name in _PATH_PARAM_PATTERN.findall(context.path_template):
             # Check request_arguments first, then fall back to extra_kwargs
             if name in request_arguments:
@@ -282,7 +294,7 @@ class APIClient:
         if query_params:
             query_params = {k: v for k, v in query_params.items() if v is not None}
 
-        data_payload: dict[str, Any] | None = None
+        data_payload: dict[str, typing.Any] | None = None
         if context.method in {"POST", "PUT", "PATCH", "DELETE"}:
             # Fetch 'data' payload for methods that support a body
             data_param = context.signature.parameters.get("data")
@@ -315,7 +327,9 @@ class APIClient:
             result_annotation=result_annotation,
         )
 
-    def _execute_sync(self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]) -> Any:
+    def _execute_sync(
+        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+    ) -> typing.Any:
         prepared = self._prepare_call(context, args, kwargs)
         response = self._send_request(
             method=context.method,
@@ -333,8 +347,8 @@ class APIClient:
         return result
 
     async def _execute_async(
-        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
-    ) -> Any:
+        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+    ) -> typing.Any:
         prepared = self._prepare_call(context, args, kwargs)
         response = await self._send_request_async(
             method=context.method,
@@ -348,8 +362,8 @@ class APIClient:
         return await result
 
     async def _execute_async_stream(
-        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
-    ) -> Any:
+        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+    ) -> typing.Any:
         """
         Execute an async streaming request (SSE).
 
@@ -373,7 +387,11 @@ class APIClient:
         inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
 
         # Create the async generator
-        stream_generator = stream.parse_sse_stream(response, inner_type)
+        stream_generator = stream.parse_sse_stream(
+            response,
+            inner_type,
+            context.response_parser,  # type: ignore[arg-type]
+        )
 
         # Inject the generator as 'result' and call the user's function
         prepared.call_arguments["result"] = stream_generator
@@ -390,8 +408,8 @@ class APIClient:
         return result
 
     def _execute_sync_stream(
-        self, context: requests.RequestContext, args: tuple[Any, ...], kwargs: dict[str, Any]
-    ) -> Any:
+        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+    ) -> typing.Any:
         """
         Execute a sync streaming request (SSE).
 
@@ -419,9 +437,11 @@ class APIClient:
                 if not line:
                     continue
 
-                yield stream.hydrate_content(line, inner_type)
+                if context.response_parser is not None:
+                    yield context.response_parser(line)  # type: ignore[arg-type]
+                else:
+                    yield stream.hydrate_content(line, inner_type)
 
-        # Inject and call
         prepared.call_arguments["result"] = stream_generator()
         if "response" in prepared.context.signature.parameters:
             prepared.call_arguments["response"] = response
@@ -436,8 +456,8 @@ class APIClient:
         return result
 
     def _prepare_body(
-        self, call_arguments: dict[str, Any], data_param: inspect.Parameter | None, data_annotation: Any
-    ) -> dict[str, Any] | None:
+        self, call_arguments: dict[str, typing.Any], data_param: inspect.Parameter | None, data_annotation: typing.Any
+    ) -> dict[str, typing.Any] | None:
         if data_param is None:
             return None
 
@@ -449,7 +469,7 @@ class APIClient:
         if annotation is inspect._empty:
             return payload
 
-        if isinstance(payload, BaseModel):
+        if isinstance(payload, pydantic.BaseModel):
             return payload.model_dump(mode="json")
 
         if type_utils.is_pydantic_model(annotation):
@@ -468,14 +488,14 @@ class APIClient:
         *,
         method: str,
         url: str,
-        query_params: dict[str, Any] | None,
-        data_payload: dict[str, Any] | None,
+        query_params: dict[str, typing.Any] | None,
+        data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type[Any]] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
-        request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
+        request_kwargs: dict[str, typing.Any] = {"params": query_params, "headers": headers}
         if data_payload is not None:
             request_kwargs["json"] = data_payload
 
@@ -491,14 +511,14 @@ class APIClient:
         *,
         method: str,
         url: str,
-        query_params: dict[str, Any] | None,
-        data_payload: dict[str, Any] | None,
+        query_params: dict[str, typing.Any] | None,
+        data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type[Any]] | None = None,
+        response_map: dict[int, type[typing.Any]] | None = None,
     ) -> httpx.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
-        request_kwargs: dict[str, Any] = {"params": query_params, "headers": headers}
+        request_kwargs: dict[str, typing.Any] = {"params": query_params, "headers": headers}
         if data_payload is not None:
             request_kwargs["json"] = data_payload
 
@@ -513,7 +533,7 @@ class APIClient:
         self,
         prepared: requests.PreparedCall,
         response: httpx.Response,
-    ) -> Any:
+    ) -> typing.Any:
         parsed_result = self._parse_response(
             response=response,
             annotation=prepared.result_annotation,
@@ -533,12 +553,14 @@ class APIClient:
     def _parse_response(
         self,
         response: httpx.Response,
-        annotation: Any,
-        response_map: dict[int, type[Any]] | None = None,
-        response_parser: Callable[[httpx.Response], Any] | None = None,
-    ) -> Any:
+        annotation: typing.Any,
+        response_map: dict[int, type[typing.Any]] | None = None,
+        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        | typing.Callable[[str], typing.Any]
+        | None = None,
+    ) -> typing.Any:
         # Extract payload from response
-        payload: Any
+        payload: typing.Any
         if not response.content:
             payload = None
         else:
@@ -557,7 +579,8 @@ class APIClient:
 
         if response_parser is not None:
             # If a custom response_parser is provided, use it directly
-            return response_parser(response)
+            # For non-streaming, parser accepts Response; for streaming it accepts str
+            return response_parser(response)  # type: ignore[arg-type]
 
         # If response_map is provided, use it to determine the response model
         if response_map is not None:
@@ -593,12 +616,12 @@ class APIClient:
         if type_utils.is_typeddict(annotation):
             return type_utils.validate_typeddict(annotation, payload)
 
-        adapter = TypeAdapter(annotation)
+        adapter = pydantic.TypeAdapter(annotation)
         return adapter.validate_python(payload)
 
-    def _substitute_path(self, path_template: str, values: dict[str, Any]) -> str:
+    def _substitute_path(self, path_template: str, values: dict[str, typing.Any]) -> str:
         def replacer(match: re.Match[str]) -> str:
             key = match.group(1)
-            return quote(str(values.get(key)), safe="")
+            return parse.quote(str(values.get(key)), safe="")
 
         return _PATH_PARAM_PATTERN.sub(replacer, path_template)
