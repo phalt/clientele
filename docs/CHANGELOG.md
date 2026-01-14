@@ -1,6 +1,6 @@
 # Change log
 
-## UNRELEASED 1.6.0
+## 1.6.0
 
 ### Streaming responses
 
