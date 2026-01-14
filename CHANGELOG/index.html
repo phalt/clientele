@@ -736,6 +736,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../api-stream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🌊 Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../exceptions/" class="md-nav__link">
         
   
@@ -800,6 +828,34 @@
     
   
     🧪 Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mypy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🥧 Mypy support
   
 
     
@@ -1449,6 +1505,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#160" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#streaming-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mypy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mypy support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#150" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1993,6 +2099,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#160" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.6.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#streaming-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Streaming responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mypy-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mypy support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#150" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2515,6 +2671,41 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="160">1.6.0</h2>
+<h3 id="streaming-responses">Streaming responses</h3>
+<ul>
+<li>Clientele now supports streaming responses via Server Sent Events.</li>
+<li>Streaming is controlled via the <code>streaming_response=True</code> parameter on all HTTP method decorators (<code>get</code>, <code>post</code>, <code>put</code>, <code>patch</code>, <code>delete</code>).</li>
+<li>Clientele will attempt to hydrate the response into the correct type supplied by the <code>result</code> parameter.</li>
+<li><code>response_parser</code> callbacks are supported and will be applied to each streamed item.</li>
+<li><code>response_map</code> is not currently supported for streaming endpoints.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIterator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000&quot;</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/events&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_events</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<p>Usage:</p>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="k">await</span> <span class="n">stream_events</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="mypy-support">Mypy support</h3>
+<ul>
+<li>A mypy plugin has been added that correctly handles Clientele. You will no longer see issues for the <code>result</code> and <code>response</code> arguments. Big shout out to <a href="https://github.com/chassing">Christian Assing</a> for this contribution.</li>
+</ul>
+<h3 id="other-changes">Other changes</h3>
+<ul>
+<li>The <code>scaffold-api</code> command now outputs a standard <code>pyproject.toml</code> into the client directory. It will not be overwritten on subsequent regenerations.</li>
+<li>Big code refactor - reorganising the <code>request</code> preparation and type handling into separate files.</li>
+</ul>
 <h2 id="150">1.5.0</h2>
 <ul>
 <li>Introduce <code>cache.memoize</code> decorator for sensible, http-specific caching of HTTP get requests.</li>
