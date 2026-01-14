@@ -32,6 +32,10 @@ async for event in await stream_events():
     print(event.text)
 ```
 
+### Mypy support
+
+- A mypy plugin has been added that correctly handles Clientele. You will no longer see issues for the `result` and `response` arguments. Big shout out to [Christian Assing](https://github.com/chassing) for this contribution.
+
 ### Other changes
 
 - The `scaffold-api` command now outputs a standard `pyproject.toml` into the client directory. It will not be overwritten on subsequent regenerations.
