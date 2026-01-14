@@ -90,9 +90,6 @@ class APIClient:
         self._sync_client = httpx_client or self._build_client()
         self._async_client = httpx_async_client or self._build_async_client()
 
-        # Create stream decorator instance
-        self._stream_decorators = stream.StreamDecorators(self)
-
     def close(self) -> None:
         """Close the synchronous HTTP client."""
         self._sync_client.close()
@@ -101,26 +98,21 @@ class APIClient:
         """Close the asynchronous HTTP client."""
         await self._async_client.aclose()
 
-    @property
-    def stream(self):
-        """
-        Access SSE (Server-Sent Events) streaming decorators.
-
-        Example:
-            @client.stream.get("/events")
-            async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
-                return result
-        """
-        return self._stream_decorators
-
     def get(
         self,
         path: str,
         *,
         response_map: dict[int, type[Any]] | None = None,
         response_parser: Callable[[httpx.Response], Any] | None = None,
+        streaming_response: bool = False,
     ) -> Callable[[_F], _F]:
-        return self._create_decorator("GET", path, response_map=response_map, response_parser=response_parser)
+        return self._create_decorator(
+            "GET",
+            path,
+            response_map=response_map,
+            response_parser=response_parser,
+            streaming_response=streaming_response,
+        )
 
     def post(
         self,
@@ -128,8 +120,15 @@ class APIClient:
         *,
         response_map: dict[int, type[Any]] | None = None,
         response_parser: Callable[[httpx.Response], Any] | None = None,
+        streaming_response: bool = False,
     ) -> Callable[[_F], _F]:
-        return self._create_decorator("POST", path, response_map=response_map, response_parser=response_parser)
+        return self._create_decorator(
+            "POST",
+            path,
+            response_map=response_map,
+            response_parser=response_parser,
+            streaming_response=streaming_response,
+        )
 
     def put(
         self,
@@ -137,8 +136,15 @@ class APIClient:
         *,
         response_map: dict[int, type[Any]] | None = None,
         response_parser: Callable[[httpx.Response], Any] | None = None,
+        streaming_response: bool = False,
     ) -> Callable[[_F], _F]:
-        return self._create_decorator("PUT", path, response_map=response_map, response_parser=response_parser)
+        return self._create_decorator(
+            "PUT",
+            path,
+            response_map=response_map,
+            response_parser=response_parser,
+            streaming_response=streaming_response,
+        )
 
     def patch(
         self,
@@ -146,8 +152,15 @@ class APIClient:
         *,
         response_map: dict[int, type[Any]] | None = None,
         response_parser: Callable[[httpx.Response], Any] | None = None,
+        streaming_response: bool = False,
     ) -> Callable[[_F], _F]:
-        return self._create_decorator("PATCH", path, response_map=response_map, response_parser=response_parser)
+        return self._create_decorator(
+            "PATCH",
+            path,
+            response_map=response_map,
+            response_parser=response_parser,
+            streaming_response=streaming_response,
+        )
 
     def delete(
         self,
@@ -155,8 +168,15 @@ class APIClient:
         *,
         response_map: dict[int, type[Any]] | None = None,
         response_parser: Callable[[httpx.Response], Any] | None = None,
+        streaming_response: bool = False,
     ) -> Callable[[_F], _F]:
-        return self._create_decorator("DELETE", path, response_map=response_map, response_parser=response_parser)
+        return self._create_decorator(
+            "DELETE",
+            path,
+            response_map=response_map,
+            response_parser=response_parser,
+            streaming_response=streaming_response,
+        )
 
     def _create_decorator(
         self,
@@ -165,16 +185,24 @@ class APIClient:
         *,
         response_map: dict[int, type[Any]] | None = None,
         response_parser: Callable[[httpx.Response], Any] | None = None,
+        streaming_response: bool = False,
     ) -> Callable[[_F], _F]:
         def decorator(func: _F) -> _F:
             context = requests.build_request_context(
-                method, path, func, response_map=response_map, response_parser=response_parser
+                method,
+                path,
+                func,
+                response_map=response_map,
+                response_parser=response_parser,
+                streaming=streaming_response,
             )
 
             if inspect.iscoroutinefunction(func):
 
                 @wraps(func)
                 async def async_wrapper(*args: Any, **kwargs: Any) -> Any:
+                    if streaming_response:
+                        return await self._execute_async_stream(context, args, kwargs)
                     return await self._execute_async(context, args, kwargs)
 
                 # Preserve the original signature for IDE support
@@ -183,6 +211,8 @@ class APIClient:
 
             @wraps(func)
             def wrapper(*args: Any, **kwargs: Any) -> Any:
+                if streaming_response:
+                    return self._execute_sync_stream(context, args, kwargs)
                 return self._execute_sync(context, args, kwargs)
 
             # Preserve the original signature for IDE support

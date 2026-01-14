@@ -5,10 +5,10 @@
 ### Streaming responses
 
 - Clientele now supports streaming responses via Server Sent Events.
-- HTTP GET, POST, PUT, PATCH and DELETE are supported.
+- Streaming is controlled via the `streaming_response=True` parameter on all HTTP method decorators (`get`, `post`, `put`, `patch`, `delete`).
 - Clientele will attempt to hydrate the response into the correct type supplied by the `result` parameter.
-- `response_map` is not currently supported but will be in future updates.
-- `response_parser` is not currently supported but will be in future updates.
+- `response_map` is not currently supported for streaming endpoints.
+- `response_parser` is not currently supported for streaming endpoints.
 
 ```python
 from typing import AsyncIterator
@@ -20,7 +20,7 @@ client = api.APIClient(base_url="http://localhost:8000")
 class Event(BaseModel):
     text: str
 
-@client.stream.get("/events")
+@client.get("/events", streaming_response=True)
 async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
 ```

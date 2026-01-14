@@ -1,6 +1,6 @@
 # 🌊 Streaming
 
-Clientele supports streaming responses using Server-Sent Events through the `client.stream` decorator interface.
+Clientele supports streaming responses using Server-Sent Events through the `streaming_response=True` parameter.
 
 ## Basic stream Example
 
@@ -14,13 +14,13 @@ client = api.APIClient(base_url="http://localhost:8000")
 class Event(BaseModel):
     text: str
 
-@client.stream.get("/events")
+@client.get("/events", streaming_response=True)
 async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
 ```
 
 ```python
-async for event in stream_events():
+async for event in await stream_events():
     print(event.text)
 ```
 
@@ -31,26 +31,26 @@ The type inside `AsyncIterator[T]` determines how responses are parsed:
 **String (no parsing)**:
 
 ```python
-@client.stream.get("/events")
+@client.get("/events", streaming_response=True)
 async def stream_text(*, result: AsyncIterator[str]) -> AsyncIterator[str]:
     return result
 ```
 
 ```python
-async for line in stream_text():
+async for line in await stream_text():
     print(line)  # Raw string
 ```
 
 **Dictionary (JSON parsing)**:
 
 ```python
-@client.stream.get("/events")
+@client.get("/events", streaming_response=True)
 async def stream_json(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
     return result
 ```
 
 ```python
-async for data in stream_json():
+async for data in await stream_json():
     print(data["field"])  # Parsed JSON as dict
 ```
 
@@ -61,13 +61,13 @@ class Token(BaseModel):
     text: str
     id: int
 
-@client.stream.get("/stream")
+@client.get("/stream", streaming_response=True)
 async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
     return result
 ```
 
 ```python
-async for token in stream_tokens():
+async for token in await stream_tokens():
     print(token.text, token.id)  # Validated Pydantic model
 ```
 
@@ -88,7 +88,7 @@ You can also use synchronous iterators for blocking SSE streams:
 ```python
 from typing import Iterator
 
-@client.stream.get("/events")
+@client.get("/events", streaming_response=True)
 def stream_events_sync(*, result: Iterator[Event]) -> Iterator[Event]:
     return result
 ```

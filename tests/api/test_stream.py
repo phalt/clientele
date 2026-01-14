@@ -39,7 +39,7 @@ class TestStreamDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
@@ -69,7 +69,7 @@ class TestStreamDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         async def stream_dicts(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
             return result
 
@@ -97,7 +97,7 @@ class TestStreamDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         async def stream_text(*, result: AsyncIterator[str]) -> AsyncIterator[str]:
             return result
 
@@ -116,7 +116,7 @@ class TestStreamDecorators:
 
         with pytest.raises(TypeError, match="must have a streaming result type"):
 
-            @client.stream.get("/events")
+            @client.get("/events", streaming_response=True)
             async def bad_stream(*, result: Token) -> Token:  # NOT AsyncIterator!
                 return result
 
@@ -126,7 +126,7 @@ class TestStreamDecorators:
 
         with pytest.raises(TypeError, match="no inner type specified"):
 
-            @client.stream.get("/events")
+            @client.get("/events", streaming_response=True)
             async def bad_stream(*, result: AsyncIterator) -> AsyncIterator:  # Missing [T]!
                 return result
 
@@ -136,7 +136,7 @@ class TestStreamDecorators:
 
         with pytest.raises(TypeError, match="must use AsyncIterator, not Iterator"):
 
-            @client.stream.get("/events")
+            @client.get("/events", streaming_response=True)
             async def bad_stream(*, result: Iterator[Token]) -> Iterator[Token]:  # Should be AsyncIterator!
                 return result
 
@@ -146,7 +146,7 @@ class TestStreamDecorators:
 
         with pytest.raises(TypeError, match="must use Iterator, not AsyncIterator"):
 
-            @client.stream.get("/events")
+            @client.get("/events", streaming_response=True)
             def bad_stream(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:  # Should be Iterator!
                 return result
 
@@ -167,7 +167,7 @@ class TestStreamDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
@@ -187,7 +187,7 @@ class TestStreamDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
@@ -211,7 +211,7 @@ class TestStreamDecorators:
 
         captured_response = None
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         async def stream_with_response(
             *, result: AsyncIterator[Token], response: httpx.Response
         ) -> AsyncIterator[Token]:
@@ -242,7 +242,7 @@ class TestStreamDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.post("/generate")
+        @client.post("/generate", streaming_response=True)
         async def generate_stream(*, data: RequestData, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
@@ -309,7 +309,7 @@ class TestSSESyncDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
             return result
 
@@ -336,7 +336,7 @@ class TestSSESyncDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         def stream_dicts(*, result: Iterator[dict]) -> Iterator[dict]:
             return result
 
@@ -363,7 +363,7 @@ class TestSSESyncDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         def stream_text(*, result: Iterator[str]) -> Iterator[str]:
             return result
 
@@ -383,7 +383,7 @@ class TestSSESyncDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
             return result
 
@@ -398,7 +398,7 @@ class TestSSESyncDecorators:
 
         client = APIClient(base_url="http://localhost:8000")
 
-        @client.stream.get("/events")
+        @client.get("/events", streaming_response=True)
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
             return result
 
