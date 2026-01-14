@@ -166,20 +166,8 @@ class TestBuildRequestContext:
         async def func(result: typing.AsyncIterator[str]) -> typing.AsyncIterator[str]:
             return result
 
-        with pytest.raises(TypeError, match="cannot use response_map or response_parser"):
+        with pytest.raises(TypeError, match="cannot use response_map"):
             requests.build_request_context("GET", "/stream", func, response_map={200: SampleModel}, streaming=True)
-
-    def test_build_request_context_streaming_with_response_parser_raises(self):
-        """Test that streaming with response_parser raises error."""
-
-        async def func(result: typing.AsyncIterator[str]) -> typing.AsyncIterator[str]:
-            return result
-
-        def parser(response: httpx.Response) -> str:
-            return "test"
-
-        with pytest.raises(TypeError, match="cannot use response_map or response_parser"):
-            requests.build_request_context("GET", "/stream", func, response_parser=parser, streaming=True)
 
     def test_build_request_context_both_response_map_and_parser_raises(self):
         """Test that having both response_map and response_parser raises error."""

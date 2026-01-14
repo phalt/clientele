@@ -7,8 +7,8 @@
 - Clientele now supports streaming responses via Server Sent Events.
 - Streaming is controlled via the `streaming_response=True` parameter on all HTTP method decorators (`get`, `post`, `put`, `patch`, `delete`).
 - Clientele will attempt to hydrate the response into the correct type supplied by the `result` parameter.
+- `response_parser` callbacks are supported and will be applied to each streamed item.
 - `response_map` is not currently supported for streaming endpoints.
-- `response_parser` is not currently supported for streaming endpoints.
 
 ```python
 from typing import AsyncIterator

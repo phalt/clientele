@@ -1,21 +1,16 @@
 from __future__ import annotations
 
 import inspect
-import re
 import types
 import typing
-from typing import Any, Callable, TypeVar, get_type_hints
 
 import httpx
-from pydantic import BaseModel
+import pydantic
 
 from clientele.api import http_status, type_utils
 
-_F = TypeVar("_F", bound=Callable[..., Any])
-_PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
 
-
-class PreparedCall(BaseModel):
+class PreparedCall(pydantic.BaseModel):
     """
     Encapsulates all data needed to execute an HTTP request.
 
@@ -27,15 +22,15 @@ class PreparedCall(BaseModel):
 
     context: RequestContext
     bound_arguments: inspect.BoundArguments
-    call_arguments: dict[str, Any]
+    call_arguments: dict[str, typing.Any]
     url_path: str
-    query_params: dict[str, Any] | None
-    data_payload: dict[str, Any] | None
+    query_params: dict[str, typing.Any] | None
+    data_payload: dict[str, typing.Any] | None
     headers_override: dict[str, str] | None
-    result_annotation: Any
+    result_annotation: typing.Any
 
 
-class RequestContext(BaseModel):
+class RequestContext(pydantic.BaseModel):
     """
     Captures metadata about a decorated HTTP method.
 
@@ -48,18 +43,18 @@ class RequestContext(BaseModel):
 
     method: str
     path_template: str
-    func: Callable[..., Any]
+    func: typing.Callable[..., typing.Any]
     signature: inspect.Signature
-    type_hints: dict[str, Any]
-    response_map: dict[int, type[Any]] | None = None
-    response_parser: Callable[[httpx.Response], Any] | None = None
+    type_hints: dict[str, typing.Any]
+    response_map: dict[int, type[typing.Any]] | None = None
+    response_parser: typing.Callable[[httpx.Response], typing.Any] | typing.Callable[[str], typing.Any] | None = None
     streaming: bool = False
 
 
 def validate_result_parameter(
-    func: Callable[..., Any],
+    func: typing.Callable[..., typing.Any],
     signature: inspect.Signature,
-    type_hints: dict[str, Any],
+    type_hints: dict[str, typing.Any],
     expect_streaming: bool = False,
 ) -> None:
     """
@@ -129,16 +124,16 @@ def validate_result_parameter(
 def build_request_context(
     method: str,
     path: str,
-    func: Callable[..., Any],
-    response_map: dict[int, type[Any]] | None = None,
-    response_parser: Callable[[httpx.Response], Any] | None = None,
+    func: typing.Callable[..., typing.Any],
+    response_map: dict[int, type[typing.Any]] | None = None,
+    response_parser: typing.Callable[[httpx.Response], typing.Any] | typing.Callable[[str], typing.Any] | None = None,
     streaming: bool = False,
 ) -> RequestContext:
     signature = inspect.signature(func)
     # Get type hints with proper handling of forward references
     # This follows the pattern used in FastAPI and other server frameworks
     try:
-        type_hints = get_type_hints(func, include_extras=True)
+        type_hints = typing.get_type_hints(func, include_extras=True)
     except NameError:
         # Forward references that can't be resolved - use raw annotations
         type_hints = func.__annotations__.copy()
@@ -146,10 +141,9 @@ def build_request_context(
     # Validate that the function has a 'result' parameter with a type annotation
     validate_result_parameter(func, signature, type_hints, expect_streaming=streaming)
 
-    if streaming and (response_map is not None or response_parser is not None):
+    if streaming and response_map is not None:
         raise TypeError(
-            f"Function '{getattr(func, '__name__', '<function>')}' with streaming=True "
-            "cannot use response_map or response_parser."
+            f"Function '{getattr(func, '__name__', '<function>')}' with streaming=True cannot use response_map."
         )
 
     if response_map is not None and response_parser is not None:
@@ -164,7 +158,7 @@ def build_request_context(
 
     if response_parser is not None:
         _validate_response_parser_return_type_matches_result_return_type(
-            response_parser=response_parser, func=func, type_hints=type_hints
+            response_parser=response_parser, func=func, type_hints=type_hints, streaming=streaming
         )
 
     return RequestContext(
@@ -180,7 +174,7 @@ def build_request_context(
 
 
 def _validate_response_map(
-    response_map: dict[int, type[Any]], func: Callable[..., Any], type_hints: dict[str, Any]
+    response_map: dict[int, type[typing.Any]], func: typing.Callable[..., typing.Any], type_hints: dict[str, typing.Any]
 ) -> None:
     """
     Validates that response_map contains valid status codes and Pydantic models or TypedDicts,
@@ -214,12 +208,14 @@ def _validate_response_map(
 
 
 def _validate_response_parser_return_type_matches_result_return_type(
-    response_parser: Callable[[httpx.Response], Any],
-    func: Callable[..., Any],
-    type_hints: dict[str, Any],
+    response_parser: typing.Callable[[httpx.Response], typing.Any] | typing.Callable[[str], typing.Any],
+    func: typing.Callable[..., typing.Any],
+    type_hints: dict[str, typing.Any],
+    streaming: bool = False,
 ) -> None:
     """
     Validates that the return type of the response_parser matches the type of the 'result' parameter.
+    For streaming, the parser should return the inner type (T from AsyncIterator[T]).
     """
     func_name = getattr(func, "__name__", "<function>")
 
@@ -230,16 +226,30 @@ def _validate_response_parser_return_type_matches_result_return_type(
     if parser_return_annotation is inspect._empty:
         raise TypeError(f"The response_parser provided for function '{func_name}' must have a return type annotation.")
 
-    parser_return_types: list[Any] = []
+    parser_return_types: list[typing.Any] = []
     origin = typing.get_origin(parser_return_annotation)
     if origin in [typing.Union, types.UnionType]:
         parser_return_types = list(typing.get_args(parser_return_annotation))
     else:
         parser_return_types = [parser_return_annotation]
 
-    result_types = _get_result_types_from_type_hints(type_hints)
+    # For streaming, get the inner type from AsyncIterator[T] or Iterator[T]
+    if streaming:
+        result_annotation = type_hints.get("result", inspect._empty)
+        if result_annotation is inspect._empty:
+            raise ValueError("Streaming function must have a 'result' parameter with a type annotation")
 
-    def _stringify_types(types_list: list[Any]) -> list[str]:
+        # Extract the inner type from AsyncIterator[T] or Iterator[T]
+        inner_type = type_utils.get_streaming_inner_type(result_annotation)
+        if inner_type is None:
+            raise TypeError(f"Could not extract inner type from streaming result type: {result_annotation}")
+
+        # For streaming, parser should return the inner type
+        result_types = [inner_type]
+    else:
+        result_types = _get_result_types_from_type_hints(type_hints)
+
+    def _stringify_types(types_list: list[typing.Any]) -> list[str]:
         return [t.__name__ if not isinstance(t, str) else t for t in types_list]
 
     stringified_parser_types = _stringify_types(parser_return_types)
@@ -254,8 +264,8 @@ def _validate_response_parser_return_type_matches_result_return_type(
 
 
 def _get_result_types_from_type_hints(
-    type_hints: dict[str, Any],
-) -> list[Any]:
+    type_hints: dict[str, typing.Any],
+) -> list[typing.Any]:
     """
     Extracts all types from the 'result' parameter annotation (handles Union types).
     """
@@ -265,7 +275,7 @@ def _get_result_types_from_type_hints(
         # This should not happen since we validate result parameter earlier, but defensive check
         raise ValueError("Function decorated with response_map must have a 'result' parameter with a type annotation")
 
-    result_types: list[Any] = []
+    result_types: list[typing.Any] = []
     origin = typing.get_origin(result_annotation)
     if origin in [typing.Union, types.UnionType]:
         result_types = list(typing.get_args(result_annotation))

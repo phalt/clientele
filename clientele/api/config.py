@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import Any
 
 import httpx
-from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+import pydantic
+import pydantic_settings
 
 
-class BaseConfig(BaseSettings):
+class BaseConfig(pydantic_settings.BaseSettings):
     """
     Runtime configuration for clientele clients.
 
@@ -32,7 +32,7 @@ class BaseConfig(BaseSettings):
         )
     """
 
-    model_config = SettingsConfigDict(
+    model_config = pydantic_settings.SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
@@ -40,7 +40,7 @@ class BaseConfig(BaseSettings):
     )
 
     base_url: str = "http://localhost"
-    headers: dict[str, str] = Field(default_factory=dict)
+    headers: dict[str, str] = pydantic.Field(default_factory=dict)
     timeout: float | None = 5.0
     follow_redirects: bool = False
     verify: bool | str = True
