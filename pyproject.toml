@@ -31,6 +31,9 @@ Issues = "https://github.com/phalt/clientele/issues"
 [project.scripts]
 clientele = "clientele.cli:cli_group"
 
+[project.entry-points.mypy]
+clientele = "clientele.mypy"
+
 [dependency-groups]
 dev = [
     "fastapi[standard]>=0.127.0",
