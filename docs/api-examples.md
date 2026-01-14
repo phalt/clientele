@@ -461,7 +461,7 @@ client = api.APIClient(base_url="http://localhost:8000")
 class Event(BaseModel):
     text: str
 
-@client.stream.get("/events")
+@client.get("/events", streaming_response=True)
 async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
 ```
