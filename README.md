@@ -8,8 +8,9 @@
 [![codecov](https://codecov.io/github/phalt/clientele/graph/badge.svg?token=7OH7QLCGBM)](https://codecov.io/github/phalt/clientele)
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads)](https://pepy.tech/projects/clientele)
 
-![Works with](https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green)
-![OpenAPI Compatibility](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json)
+![Pydantic Badge](https://img.shields.io/badge/Data_validation-pydantic-violet?style=flat)
+![Httpx Badge](https://img.shields.io/badge/Network-httpx-blue?style=flat)
+
 
 ## Example code
 

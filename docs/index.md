@@ -17,8 +17,8 @@
     </a>
 </p>
 <p>
-    <img alt="Works with" src="https://img.shields.io/badge/Works_with-FastAPI,_DRF,_Django_Ninja-green">
-    <img alt="OpenAPI Compatibility" src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/phalt/clientele/main/.github/compatibility.json">
+    <img alt="Pydantic Badge" src="https://img.shields.io/badge/Data_validation-pydantic-violet?style=flat">
+    <img alt="Httpx Badge" src="https://img.shields.io/badge/Network-httpx-blue?style=flat">
 </p>
 </div>
 
