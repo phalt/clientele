@@ -1,6 +1,6 @@
 # Change log
 
-## UNRELEASED 1.6.1
+## 1.6.1
 
 - `cache_backend` can now be set in the `BaseConfig`, and will be used if it is not None. This saves you having to anotate the cache backend repeatedly in decorators.
 

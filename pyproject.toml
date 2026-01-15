@@ -1,6 +1,6 @@
 [project]
 name = "clientele"
-version = "1.6.0"
+version = "1.6.1"
 description = "Clientele is a different way to build Python API Clients"
 authors = [{ name = "Paul Hallett", email = "paulandrewhallett@gmail.com" }]
 license = { text = "MIT" }
