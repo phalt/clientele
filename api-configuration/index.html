@@ -1700,6 +1700,7 @@
 <li><code>proxies: httpx.Proxy | None = None</code> - the <a href="https://www.python-httpx.org/advanced/proxies/">proxies</a> for the underlying client.</li>
 <li><code>transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None</code> - custom <a href="https://www.python-httpx.org/advanced/transports/">transport objects</a> for the underlying client.</li>
 <li><code>cookies: httpx.Cookies | None = None</code> - the <a href="https://www.python-httpx.org/quickstart/#cookies">cookies</a> you want to send with http requests.</li>
+<li><code>cache_backend</code> - the <a href="../api-cache/">cache backend</a> you want to use when caching results.</li>
 </ul>
 <h2 id="custom-httpx-client">Custom httpx client</h2>
 <p>You can supply your own <code>httpx.Client</code> and <code>httpx.AsyncClient</code> if you prefer full control:</p>
