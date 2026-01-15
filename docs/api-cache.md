@@ -99,7 +99,7 @@ Alternatively you can set it through the `BaseConfig` object to prevent constant
 ```python
 from clientele import api, cache
 
-client = apiAPIClient(config=api.BaseConfig(
+client = api.APIClient(config=api.BaseConfig(
     base_url="https://myapi.com/",
     # Set to your own backend here
     cache_backend=cache.MemoryBackend
