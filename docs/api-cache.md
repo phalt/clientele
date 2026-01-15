@@ -94,6 +94,24 @@ def get_item(id: int, result: dict) -> dict:
     return result
 ```
 
+Alternatively you can set it through the `BaseConfig` object to prevent constantly setting it through the decorator:
+
+```python
+from clientele import api, cache
+
+client = apiAPIClient(config=api.BaseConfig(
+    base_url="https://myapi.com/",
+    # Set to your own backend here
+    cache_backend=cache.MemoryBackend
+))
+
+@cache.memoize(ttl=300)
+@client.get("/items/{id}")
+def get_item(id: int, result: dict) -> dict:
+    return result
+```
+
+
 ## Async Support
 
 The `@memoize` decorator works seamlessly with async functions:

@@ -3,8 +3,15 @@ from __future__ import annotations
 import time
 from concurrent.futures import ThreadPoolExecutor
 
+import httpx
+import pytest
+import respx
+
 from clientele.cache.backends import MemoryBackend
 from clientele.cache.types import CacheEntry
+from tests.cache.fixtures import FakeCacheBackend
+
+BASE_URL = "http://localhost"
 
 
 class TestCacheEntry:
@@ -237,3 +244,34 @@ class TestMemoryBackend:
         # Should expire immediately
         time.sleep(0.01)
         assert backend.get("key1") is None
+
+
+class TestConfigBackend:
+    """Tests for custom backend configuration in BaseConfig."""
+
+    @pytest.mark.respx(base_url=BASE_URL)
+    def test_custom_backend_via_config(self, respx_mock: respx.MockRouter):
+        """Custom backend set in BaseConfig should be used by memoize decorator."""
+        from clientele import api, cache
+
+        custom_backend = FakeCacheBackend()
+        # Create APIClient with custom backend in config
+        client = api.APIClient(
+            config=api.BaseConfig(
+                base_url=BASE_URL,
+                cache_backend=custom_backend,
+            ),
+        )
+
+        return_json = {"data": "value"}
+        respx_mock.get("test/1").mock(return_value=httpx.Response(json=return_json, status_code=200))
+
+        @cache.memoize(ttl=300)
+        @client.get("/test/{id}")
+        def get_item(id: int, *, result: dict) -> dict:
+            return result
+
+        response1 = get_item(1)
+        assert response1 == return_json
+
+        assert custom_backend.store == {"GET:/test/{id}:id=1": {"data": "value"}}

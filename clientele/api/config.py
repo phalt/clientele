@@ -6,6 +6,8 @@ import httpx
 import pydantic
 import pydantic_settings
 
+from clientele.cache import types as cache_types
+
 
 class BaseConfig(pydantic_settings.BaseSettings):
     """
@@ -50,6 +52,8 @@ class BaseConfig(pydantic_settings.BaseSettings):
     proxies: httpx.Proxy | None = None
     transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
     cookies: httpx.Cookies | None = None
+    # Cache configuration
+    cache_backend: cache_types.CacheBackend | None = None
 
     def httpx_client_options(self) -> dict[str, Any]:
         """Create a dictionary of options suitable for ``httpx.Client``."""
@@ -94,4 +98,5 @@ def get_default_config(base_url: str) -> BaseConfig:
         proxies=None,
         transport=None,
         cookies=None,
+        cache_backend=None,
     )
