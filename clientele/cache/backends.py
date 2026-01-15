@@ -4,10 +4,10 @@ import collections
 import threading
 import typing
 
-from clientele.cache.types import CacheEntry
+from clientele.cache.types import CacheBackend, CacheEntry
 
 
-class MemoryBackend:
+class MemoryBackend(CacheBackend):
     """Thread-safe in-memory LRU cache backend.
 
     Uses an OrderedDict for LRU eviction when the cache reaches max_size.
@@ -79,7 +79,3 @@ class MemoryBackend:
         """Check if a key exists in the cache (thread-safe)."""
         with self._lock:
             return self._get_valid_entry(key) is not None
-
-
-# Note: RedisBackend can be added in a future version
-# For now, users needing distributed caching can implement their own CacheBackend

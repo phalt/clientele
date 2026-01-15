@@ -82,6 +82,7 @@ omit = [
     "clientele/generators/*/templates/*.jinja2",
     "server_examples/*",
     "homebrew/*",
+    "clientele/mypy.py",
 ]
 
 [tool.coverage.report]

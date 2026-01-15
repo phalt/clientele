@@ -4,6 +4,7 @@ import functools
 import inspect
 import typing
 
+from clientele import api
 from clientele.cache.backends import MemoryBackend
 from clientele.cache.key_generator import IGNORE_KEYS, generate_cache_key
 from clientele.cache.types import CacheBackend
@@ -62,7 +63,10 @@ def memoize(
     """
 
     def decorator(func: F) -> F:
-        cache_backend = backend or _default_backend
+        if not backend:
+            cache_backend = _extract_cache_backend(func)
+        else:
+            cache_backend = backend
 
         path_template, http_method = _extract_request_context(func)
 
@@ -176,3 +180,18 @@ def _extract_request_context(func: typing.Callable) -> tuple[typing.Optional[str
         return (None, None)
     except (AttributeError, TypeError):
         return (None, None)
+
+
+def _extract_cache_backend(func: typing.Callable) -> CacheBackend:
+    try:
+        if not hasattr(func, "__closure__") or func.__closure__ is None:
+            return _default_backend
+        for cell in func.__closure__:  # type: ignore[union-attr]
+            cell_contents = cell.cell_contents
+            if isinstance(cell_contents, api.APIClient):
+                backend = cell_contents.config.cache_backend
+                # Use config backend if it is set
+                return backend if backend is not None else _default_backend
+    except (AttributeError, TypeError):
+        return _default_backend
+    return _default_backend

@@ -1,16 +1,18 @@
 from __future__ import annotations
 
+import abc
 import time
 import typing
 
 
-class CacheBackend(typing.Protocol):
+class CacheBackend(abc.ABC):
     """Protocol for cache backend implementations.
 
     All cache backends must implement these methods.
     Thread-safe implementations are required for concurrent usage.
     """
 
+    @abc.abstractmethod
     def get(self, key: str) -> typing.Optional[typing.Any]:
         """Retrieve a value from the cache.
 
@@ -22,6 +24,7 @@ class CacheBackend(typing.Protocol):
         """
         ...
 
+    @abc.abstractmethod
     def set(self, key: str, value: typing.Any, ttl: typing.Optional[int | float] = None) -> None:
         """Store a value in the cache.
 
@@ -32,6 +35,7 @@ class CacheBackend(typing.Protocol):
         """
         ...
 
+    @abc.abstractmethod
     def delete(self, key: str) -> None:
         """Remove a value from the cache.
 
@@ -40,10 +44,12 @@ class CacheBackend(typing.Protocol):
         """
         ...
 
+    @abc.abstractmethod
     def clear(self) -> None:
         """Clear all values from the cache."""
         ...
 
+    @abc.abstractmethod
     def exists(self, key: str) -> bool:
         """Check if a key exists in the cache.
 
