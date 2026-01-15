@@ -40,6 +40,7 @@ The `BaseConfig` class is powered by [pydantic-settings](https://docs.pydantic.d
 - `proxies: httpx.Proxy | None = None` - the [proxies](https://www.python-httpx.org/advanced/proxies/) for the underlying client.
 - `transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None` - custom [transport objects](https://www.python-httpx.org/advanced/transports/) for the underlying client.
 - `cookies: httpx.Cookies | None = None` - the [cookies](https://www.python-httpx.org/quickstart/#cookies) you want to send with http requests.
+- `cache_backend` - the [cache backend](api-cache.md) you want to use when caching results.
 
 ## Custom httpx client
 
