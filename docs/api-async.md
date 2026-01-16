@@ -9,15 +9,15 @@ They can even be mixed in together if you prefer.
 ```python
 from clientele import api as clientele_api
 from .my_config import Config
-from .my_models import BookResponse, CreateBookReponse, CreateBookRequest
+from .my_models import BookResponse, CreateBookResponse, CreateBookRequest
 
 client = clientele_api.APIClient(config=Config())
 
 @client.post("/books")
 def create_user(
-    data: CreateBookReponse,
-    result: CreateBookReponse,
-) -> CreateBookReponse:
+    data: CreateBookResponse,
+    result: CreateBookResponse,
+) -> CreateBookResponse:
     return result
 
 

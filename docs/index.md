@@ -64,7 +64,7 @@ client = clientele_api.APIClient(base_url="http://localhost:8000")
 
 
 @client.post("/books")
-def create_book(data: CreateBookRequest, result: CreateBookReponse) -> CreateBookResponse:
+def create_book(data: CreateBookRequest, result: CreateBookResponse) -> CreateBookResponse:
     return result
 ```
 
