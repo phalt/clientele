@@ -3,11 +3,11 @@
 import inspect
 import typing
 
-import httpx
 import pytest
 from pydantic import BaseModel
 
 from clientele.api import requests
+from clientele.http import response as http_response
 
 
 class SampleModel(BaseModel):
@@ -175,7 +175,7 @@ class TestBuildRequestContext:
         def func(result: SampleModel) -> SampleModel:
             return result
 
-        def parser(response: httpx.Response) -> SampleModel:
+        def parser(response: http_response.Response) -> SampleModel:
             return SampleModel(name="test", value=1)
 
         with pytest.raises(TypeError, match="cannot have both"):
@@ -269,7 +269,7 @@ class TestValidateResponseParser:
         def func(result: SampleModel) -> SampleModel:
             return result
 
-        def parser(response: httpx.Response) -> SampleModel:
+        def parser(response: http_response.Response) -> SampleModel:
             return SampleModel(name="test", value=1)
 
         type_hints = typing.get_type_hints(func)
@@ -283,7 +283,7 @@ class TestValidateResponseParser:
         def func(result: SampleModel) -> SampleModel:
             return result
 
-        def parser(response: httpx.Response):  # No return annotation
+        def parser(response: http_response.Response):  # No return annotation
             return SampleModel(name="test", value=1)
 
         type_hints = typing.get_type_hints(func)
@@ -297,7 +297,7 @@ class TestValidateResponseParser:
         def func(result: SampleModel) -> SampleModel:
             return result
 
-        def parser(response: httpx.Response) -> ErrorModel:  # Different type
+        def parser(response: http_response.Response) -> ErrorModel:  # Different type
             return ErrorModel(error="test", code=1)
 
         type_hints = typing.get_type_hints(func)
@@ -311,7 +311,7 @@ class TestValidateResponseParser:
         def func(result: SampleModel | ErrorModel) -> SampleModel | ErrorModel:
             return result
 
-        def parser(response: httpx.Response) -> SampleModel | ErrorModel:
+        def parser(response: http_response.Response) -> SampleModel | ErrorModel:
             if response.status_code == 200:
                 return SampleModel(name="ok", value=1)
             return ErrorModel(error="fail", code=404)

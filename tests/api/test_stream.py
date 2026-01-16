@@ -9,6 +9,7 @@ from pydantic import BaseModel
 
 from clientele.api import requests
 from clientele.api.client import APIClient
+from clientele.api.exceptions import HTTPStatusError
 
 
 class Token(BaseModel):
@@ -191,7 +192,7 @@ class TestStreamDecorators:
         async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
-        with pytest.raises(httpx.HTTPStatusError):
+        with pytest.raises(HTTPStatusError):
             async for _ in await stream_tokens():
                 pass
 
@@ -438,7 +439,7 @@ class TestSSESyncDecorators:
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
             return result
 
-        with pytest.raises(httpx.HTTPStatusError):
+        with pytest.raises(HTTPStatusError):
             for _ in stream_tokens():
                 pass
 
@@ -453,6 +454,6 @@ class TestSSESyncDecorators:
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
             return result
 
-        with pytest.raises(httpx.HTTPStatusError):
+        with pytest.raises(HTTPStatusError):
             for _ in stream_tokens():
                 pass
