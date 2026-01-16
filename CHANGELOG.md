@@ -1,8 +1,19 @@
 # Change log
 
+## UNRELEASED 1.7.0
+
+### HTTP Backends
+
+- Clientele now supports configurable HTTP backends.
+- If you want to use `aiohttp`, `reqwests` or `niquests` you can write an `HTTPBackend` so Clientele can support it.
+- Clientele ships with a default `HttpxHTTPBackend` that will be used if no other is configured.
+- Introduces a new `clientele.http.Response` wrapper for generic handling of responses.
+- The `response_parser` callbacks now take the generic `clientele.http.Response` instead of `httpx.Response`.
+- Introduces a new `FakeHTTPBackend` that can be used for testing.
+
 ## 1.6.1
 
-- `cache_backend` can now be set in the `BaseConfig`, and will be used if it is not None. This saves you having to anotate the cache backend repeatedly in decorators.
+- `cache_backend` can now be set in the `BaseConfig`, and will be used if it is not None. This saves you having to annotate the cache backend repeatedly in decorators.
 
 ## 1.6.0
 
@@ -66,7 +77,7 @@ async for event in await stream_events():
 ## 1.4.0
 
 - You can now pass `TypedDict` instances for the `data` parameter on `post`, `put`, `patch` and `delete` methods.
-- Decoratored fucntions now accept a `response_parser` callback that will handle the response parsing. Use this to customise the `result` value that is sent back to the function.
+- Decorated functions now accept a `response_parser` callback that will handle the response parsing. Use this to customise the `result` value that is sent back to the function.
 
 ## 1.3.0
 
