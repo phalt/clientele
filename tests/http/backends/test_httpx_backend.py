@@ -6,7 +6,7 @@ from respx import MockRouter
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
-from clientele.http import httpx as httpx_backend
+from clientele.http import httpx_backend as httpx_backend
 
 BASE_URL = "https://api.example.com"
 

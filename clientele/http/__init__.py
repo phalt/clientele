@@ -1,6 +1,6 @@
 from .backends import HTTPBackend
-from .fake import FakeHTTPBackend
-from .httpx import HttpxHTTPBackend
+from .fake_backend import FakeHTTPBackend
+from .httpx_backend import HttpxHTTPBackend
 from .response import Response
 
 __all__ = [

@@ -4,17 +4,17 @@ import pytest
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
-from clientele.http import fake
+from clientele.http import fake_backend
 
 
 class TestFakeHTTPBackend:
     def test_basic_request_capture(self):
-        fake_backend = fake.FakeHTTPBackend(
+        backend = fake_backend.FakeHTTPBackend(
             default_content={"id": 1, "name": "Test"},
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
-            http_backend=fake_backend,
+            http_backend=backend,
         )
         client = api_client.APIClient(config=config)
 
@@ -29,17 +29,17 @@ class TestFakeHTTPBackend:
         assert result == {"id": 1, "name": "Test"}
 
         # Verify request was captured
-        assert len(fake_backend.requests) == 1
-        assert fake_backend.requests[0]["method"] == "GET"
-        assert "/users/123" in fake_backend.requests[0]["url"]
+        assert len(backend.requests) == 1
+        assert backend.requests[0]["method"] == "GET"
+        assert "/users/123" in backend.requests[0]["url"]
 
         client.close()
 
     def test_queued_responses(self):
-        fake_backend = fake.FakeHTTPBackend()
+        backend = fake_backend.FakeHTTPBackend()
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
-            http_backend=fake_backend,
+            http_backend=backend,
         )
         client = api_client.APIClient(config=config)
 
@@ -47,11 +47,11 @@ class TestFakeHTTPBackend:
         def get_resource(result: dict) -> dict:
             return result
 
-        fake_backend.queue_response(
+        backend.queue_response(
             status=200,
             content={"first": "response"},
         )
-        fake_backend.queue_response(
+        backend.queue_response(
             status=200,
             content={"second": "response"},
         )
@@ -66,12 +66,12 @@ class TestFakeHTTPBackend:
 
     def test_post_request_with_data(self):
         """Test POST request with data payload."""
-        fake_backend = fake.FakeHTTPBackend(
+        backend = fake_backend.FakeHTTPBackend(
             default_content={"id": 42, "created": True},
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
-            http_backend=fake_backend,
+            http_backend=backend,
         )
         client = api_client.APIClient(config=config)
 
@@ -86,9 +86,9 @@ class TestFakeHTTPBackend:
         assert result == {"id": 42, "created": True}
 
         # Verify payload was captured
-        assert len(fake_backend.requests) == 1
-        assert fake_backend.requests[0]["method"] == "POST"
-        assert fake_backend.requests[0]["kwargs"]["json"] == {
+        assert len(backend.requests) == 1
+        assert backend.requests[0]["method"] == "POST"
+        assert backend.requests[0]["kwargs"]["json"] == {
             "name": "Alice",
             "email": "alice@example.com",
         }
@@ -97,10 +97,10 @@ class TestFakeHTTPBackend:
 
     def test_reset(self):
         """Test resetting the fake backend."""
-        fake_backend = fake.FakeHTTPBackend()
+        backend = fake_backend.FakeHTTPBackend()
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
-            http_backend=fake_backend,
+            http_backend=backend,
         )
         client = api_client.APIClient(config=config)
 
@@ -111,28 +111,28 @@ class TestFakeHTTPBackend:
         # Make some requests
         test_endpoint()
         test_endpoint()
-        assert len(fake_backend.requests) == 2
+        assert len(backend.requests) == 2
 
         # Reset
-        fake_backend.reset()
-        assert len(fake_backend.requests) == 0
+        backend.reset()
+        assert len(backend.requests) == 0
 
         # Queue a response and reset
-        fake_backend.queue_response(status=200, content={"test": "data"})
-        fake_backend.reset()
-        assert len(fake_backend._response_queue) == 0
+        backend.queue_response(status=200, content={"test": "data"})
+        backend.reset()
+        assert len(backend._response_queue) == 0
 
         client.close()
 
     @pytest.mark.asyncio
     async def test_async_requests(self):
         """Test async request capture."""
-        fake_backend = fake.FakeHTTPBackend(
+        backend = fake_backend.FakeHTTPBackend(
             default_content={"async": True},
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
-            http_backend=fake_backend,
+            http_backend=backend,
         )
         client = api_client.APIClient(config=config)
 
@@ -144,7 +144,7 @@ class TestFakeHTTPBackend:
         result = await async_get()
 
         assert result == {"async": True}
-        assert len(fake_backend.requests) == 1
-        assert fake_backend.requests[0]["method"] == "GET"
+        assert len(backend.requests) == 1
+        assert backend.requests[0]["method"] == "GET"
 
         await client.aclose()
