@@ -66,7 +66,7 @@ async for event in await stream_events():
 ## 1.4.0
 
 - You can now pass `TypedDict` instances for the `data` parameter on `post`, `put`, `patch` and `delete` methods.
-- Decoratored fucntions now accept a `response_parser` callback that will handle the response parsing. Use this to customise the `result` value that is sent back to the function.
+- Decorated functions now accept a `response_parser` callback that will handle the response parsing. Use this to customise the `result` value that is sent back to the function.
 
 ## 1.3.0
 

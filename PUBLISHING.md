@@ -80,7 +80,7 @@ Copy and paste the correct version contents from CHANGELOG.md.
 
 Mark as the latest release.
 
-## Pubish documentation
+## Publish documentation
 
 Nice and easy
 

@@ -180,7 +180,7 @@ Despite a well-defined [specification](https://www.openapis.org/), we've discove
 **Recommendation:**
 
 - Report issues with specific schemas to help us improve
-- For FastAPI, DRF, and Django Ninja, compatibility is guarenteed
+- For FastAPI, DRF, and Django Ninja, compatibility is guaranteed
 
 ### OpenAPI 3.1 Caveats
 

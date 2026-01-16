@@ -37,7 +37,7 @@ def get_pokemon_info(pokemon_name: str, result: PokemonInfo) -> PokemonInfo:
 ```
 
 - Use Pydantic `BaseModel` to return only the data you want in the `result` parameter.
-- Pydantic's `model_validate` will be ran against the `reponse.json`.
+- Pydantic's `model_validate` will be ran against the `response.json`.
 - Only values explicitly declared in the `BaseModel` will be returned.
 
 ## Return specific data after result
@@ -152,7 +152,7 @@ def get_pokemon_info(pokemon_name: str, result: dict, response: httpx.Response) 
 
 ```
 
-- Pass the `response` parameter to the decorated function to recive the `httpx.Response` object.
+- Pass the `response` parameter to the decorated function to receive the `httpx.Response` object.
 
 ## Control response parsing
 
@@ -178,7 +178,7 @@ def get_pokemon_info(pokemon_name: str, result: dict) -> str:
 ```
 
 - Pass a callable to the `response_parser` parameter to control how http responses are parsed.
-- Clientele will no longer handle any data validation for you, but you have compelete control.
+- Clientele will no longer handle any data validation for you, but you have complete control.
 - The return type of this callback must match the type of the `result` parameter.
 
 ### Using strong types
@@ -244,12 +244,12 @@ from clientele import api
 client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 
-class OnlyErroResult(BaseModel):
+class OnlyErrorResult(BaseModel):
     name: str
 
 
-@client.get("/pokemon/{pokemon_name}", response_map={500: OnlyErroResult})
-def get_pokemon_info(pokemon_name: str, result: OnlyErroResult) -> str:
+@client.get("/pokemon/{pokemon_name}", response_map={500: OnlyErrorResult})
+def get_pokemon_info(pokemon_name: str, result: OnlyErrorResult) -> str:
     return result.name
 
 

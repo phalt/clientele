@@ -16,7 +16,7 @@ Every few years I check the HTTP API landscape to see what has changed, and what
 
 A big part of this research is seeing how far [OpenAPI client generators](https://www.openapis.org/) have come.  
 
-Despite the heavy adoption of OpenAPI _schema_ generators, the "last mile" (i.e. - generating, and using, a client library) still has a experience nowhere near the maturity as the schema generator landscape. The great thing about schema generators these days is they are seemlessly blended in - most API server frameworks, especially in the Python landscape, generate schemas as standard.
+Despite the heavy adoption of OpenAPI _schema_ generators, the "last mile" (i.e. - generating, and using, a client library) still has a experience nowhere near the maturity as the schema generator landscape. The great thing about schema generators these days is they are seamlessly blended in - most API server frameworks, especially in the Python landscape, generate schemas as standard.
 
 But my experience with most _client_ generators always falls into one of these buckets:
 
