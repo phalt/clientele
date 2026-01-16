@@ -12,7 +12,7 @@ import pydantic
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
 from clientele.api import requests, stream, type_utils
-from clientele.http import httpx as http_httpx
+from clientele.http import httpx_backend as http_httpx
 from clientele.http import response as http_response
 
 _F = typing.TypeVar("_F", bound=typing.Callable[..., typing.Any])

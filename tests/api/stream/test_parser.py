@@ -8,7 +8,7 @@ import pytest
 from pydantic import BaseModel
 
 from clientele.api.stream import parser
-from clientele.http import httpx as http_httpx
+from clientele.http import httpx_backend as http_httpx
 
 
 class Token(BaseModel):
