@@ -2267,7 +2267,7 @@
 </code></pre></div>
 <ul>
 <li>Use Pydantic <code>BaseModel</code> to return only the data you want in the <code>result</code> parameter.</li>
-<li>Pydantic's <code>model_validate</code> will be ran against the <code>reponse.json</code>.</li>
+<li>Pydantic's <code>model_validate</code> will be ran against the <code>response.json</code>.</li>
 <li>Only values explicitly declared in the <code>BaseModel</code> will be returned.</li>
 </ul>
 <h2 id="return-specific-data-after-result">Return specific data after result</h2>
@@ -2364,7 +2364,7 @@
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <ul>
-<li>Pass the <code>response</code> parameter to the decorated function to recive the <code>httpx.Response</code> object.</li>
+<li>Pass the <code>response</code> parameter to the decorated function to receive the <code>httpx.Response</code> object.</li>
 </ul>
 <h2 id="control-response-parsing">Control response parsing</h2>
 <h3 id="using-a-callback">Using a callback</h3>
@@ -2387,7 +2387,7 @@
 </code></pre></div>
 <ul>
 <li>Pass a callable to the <code>response_parser</code> parameter to control how http responses are parsed.</li>
-<li>Clientele will no longer handle any data validation for you, but you have compelete control.</li>
+<li>Clientele will no longer handle any data validation for you, but you have complete control.</li>
 <li>The return type of this callback must match the type of the <code>result</code> parameter.</li>
 </ul>
 <h3 id="using-strong-types">Using strong types</h3>
@@ -2446,12 +2446,12 @@
 <span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">OnlyErroResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OnlyErrorResult</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">500</span><span class="p">:</span> <span class="n">OnlyErroResult</span><span class="p">})</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">OnlyErroResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">500</span><span class="p">:</span> <span class="n">OnlyErrorResult</span><span class="p">})</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">OnlyErrorResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
 
 

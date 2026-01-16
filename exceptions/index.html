@@ -1735,7 +1735,7 @@
 
 
 <h1 id="exception-handling">🚨 Exception Handling</h1>
-<p>Clientele wll handle unexpected API responses by raising an <code>APIException</code>.</p>
+<p>Clientele will handle unexpected API responses by raising an <code>APIException</code>.</p>
 <h2 id="when-apiexception-is-raised">When APIException is Raised</h2>
 <p>The <code>APIException</code> is raised when the API returns a response code that doesn't match any of the expected response codes defined in the OpenAPI schema for that endpoint.</p>
 <p>Each API function has a mapping of expected response codes to response types. If the actual response code isn't in this mapping, Clientele raises an <code>APIException</code> instead of trying to parse the response.</p>
