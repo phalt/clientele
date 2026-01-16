@@ -18,7 +18,7 @@
 </p>
 <p>
     <img alt="Pydantic Badge" src="https://img.shields.io/badge/Data_validation-pydantic-violet?style=flat">
-    <img alt="Httpx Badge" src="https://img.shields.io/badge/Network-httpx-blue?style=flat">
+    <img alt="Http Badge" src="https://img.shields.io/badge/HTTP-Customisable-blue?style=flat">
 </p>
 </div>
 
@@ -39,11 +39,12 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 
 ## Why use Clientele?
 
-- **Just modern Python** - [Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and [HTTPX](https://www.python-httpx.org/), that's it.
+- **Modern Python** - [Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and any HTTP you want.
 - **Easy to learn** - Clientele is visually similar to popular python API server frameworks.
 - **Easy to test** - Works with existing tools like [respx](https://lundberg.github.io/respx/) and [pytest-httpx](https://pypi.org/project/pytest-httpx/).
 - **Easy to configure** - Clientele has sensible defaults and plenty of hooks for customisation.
 - **A comfortable abstraction** - Focus on the data and the functionality, not the connectivity.
+- **Bring your own HTTP** - Clientele can support all HTTP libraries.
 - **OpenAPI support** - Build your own client, or scaffold one from an OpenAPI schema.
 
 ## Async support
