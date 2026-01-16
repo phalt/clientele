@@ -26,9 +26,12 @@
 
 ```python
 from clientele import api
-from .schemas import Pokemon
+from pydantic import BaseModel
 
 client = api.APIClient(base_url="https://pokeapi.co/api/v2/")
+
+class Pokemon(BaseModel):
+    name: str
 
 @client.get("/pokemon/{id}")
 def get_pokemon_name(id: int, result: Pokemon) -> str:
@@ -73,16 +76,21 @@ def create_book(data: CreateBookRequest, result: CreateBookResponse) -> CreateBo
 
 ```python
 from typing import AsyncIterator
-from pydantic import BaseModel
-from clientele import api
 
-client = api.APIClient(base_url="http://localhost:8000")
+from clientele import api
+from pydantic import BaseModel
+
+
+client = api.APIClient(base_url="https://httpbin.org")
+
 
 class Event(BaseModel):
-    text: str
+    id: int
+    url: str
 
-@client.get("/events", streaming_response=True)
-async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+
+@client.get("/stream/{n}", streaming_response=True)
+async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
 ```
 
