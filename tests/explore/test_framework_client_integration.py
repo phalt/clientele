@@ -134,9 +134,14 @@ def test_executor_can_call_framework_operations(framework_client_dir):
     mock_response.status_code = 200
     mock_response.headers = {"content-type": "application/json"}
     mock_response.content = b'[{"id": 1, "name": "Alice", "email": "alice@example.com"}]'
+    mock_response.text = '[{"id": 1, "name": "Alice", "email": "alice@example.com"}]'
 
     # Patch the request method on the singleton httpx.Client instance
-    with patch.object(introspector.client_module.client._sync_client, "request", return_value=mock_response):  # type: ignore
+    with patch.object(
+        introspector.client_module.client.config.http_backend._sync_client,  # type: ignore
+        "request",
+        return_value=mock_response,
+    ):
         # Execute the operation
         result = executor.execute("list_users", {})
 
@@ -178,9 +183,14 @@ def test_executor_converts_dict_to_pydantic_model(framework_client_dir):
     mock_response.status_code = 200
     mock_response.headers = {"content-type": "application/json"}
     mock_response.content = b'{"id": 3, "name": "Charlie", "email": "charlie@test.com"}'
+    mock_response.text = '{"id": 3, "name": "Charlie", "email": "charlie@test.com"}'
 
     # Patch the request method on the singleton httpx.Client instance
-    with patch.object(introspector.client_module.client._sync_client, "request", return_value=mock_response):  # type: ignore
+    with patch.object(
+        introspector.client_module.client.config.http_backend._sync_client,  # type: ignore
+        "request",
+        return_value=mock_response,
+    ):
         # Pass data as dict - should be converted to CreateUserRequest
         result = executor.execute("create_user", {"data": {"name": "Charlie", "email": "charlie@test.com"}})
 
@@ -204,9 +214,14 @@ def test_framework_client_with_debug_mode(framework_client_dir):
     mock_response.status_code = 200
     mock_response.headers = {"content-type": "application/json"}
     mock_response.content = b"[]"
+    mock_response.text = "[]"
 
     # Patch the request method on the singleton httpx.Client instance
-    with patch.object(introspector.client_module.client._sync_client, "request", return_value=mock_response):  # type: ignore
+    with patch.object(
+        introspector.client_module.client.config.http_backend._sync_client,  # type: ignore
+        "request",
+        return_value=mock_response,
+    ):
         result = executor.execute("list_users", {})
 
         assert result.success is True
