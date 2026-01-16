@@ -82,12 +82,12 @@ class HTTPBackend(abc.ABC):
 The default backend using httpx:
 
 ```python
-from clientele.http import httpx as http_httpx
+from clientele.http import httpx_backend
 from clientele.api import config
 
 # Note: this will be configured by default,
 # this example is just a demonstration.
-backend = http_httpx.HttpxHTTPBackend(
+http_backend = httpx_backend.HttpxHTTPBackend(
     client_options={
         "timeout": 30.0,
         "http2": True,
@@ -96,7 +96,7 @@ backend = http_httpx.HttpxHTTPBackend(
 
 cfg = config.BaseConfig(
     base_url="https://api.example.com",
-    http_backend=backend,
+    http_backend=http_backend,
 )
 ```
 

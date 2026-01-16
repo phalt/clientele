@@ -2,7 +2,7 @@
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
-from clientele.http import fake, httpx
+from clientele.http import fake_backend, httpx_backend
 
 
 class TestBackendIntegration:
@@ -11,12 +11,12 @@ class TestBackendIntegration:
     def test_switching_backends(self):
         """Test switching between different backends."""
         # Start with fake backend
-        fake_backend = fake.FakeHTTPBackend(
+        fk_backend = fake_backend.FakeHTTPBackend(
             default_content={"backend": "fake"},
         )
         config_fake = api_config.BaseConfig(
             base_url="https://api.example.com",
-            http_backend=fake_backend,
+            http_backend=fk_backend,
         )
         client_fake = api_client.APIClient(config=config_fake)
 
@@ -26,15 +26,15 @@ class TestBackendIntegration:
 
         result = test_fake()
         assert result == {"backend": "fake"}
-        assert len(fake_backend.requests) == 1
+        assert len(fk_backend.requests) == 1
 
         client_fake.close()
 
         # Switch to httpx backend
-        httpx_backend = httpx.HttpxHTTPBackend(client_options={"base_url": "https://httpbin.org"})
+        hx_backend = httpx_backend.HttpxHTTPBackend(client_options={"base_url": "https://httpbin.org"})
         config_httpx = api_config.BaseConfig(
             base_url="https://httpbin.org",
-            http_backend=httpx_backend,
+            http_backend=hx_backend,
         )
         client_httpx = api_client.APIClient(config=config_httpx)
 
