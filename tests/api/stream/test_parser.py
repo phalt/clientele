@@ -8,6 +8,7 @@ import pytest
 from pydantic import BaseModel
 
 from clientele.api.stream import parser
+from clientele.http import httpx_backend as http_httpx
 
 
 class Token(BaseModel):
@@ -31,9 +32,12 @@ class TestParseSSEStream:
             yield b"test\n"
 
         response = httpx.Response(200, content=mock_response())
+        # Read all content from streaming response
+        await response.aread()
+        generic_response = http_httpx.HttpxHTTPBackend.convert_to_response(response)
 
         items = []
-        async for item in parser.parse_sse_stream(response, str):
+        async for item in parser.parse_sse_stream(generic_response, str):
             items.append(item)
 
         assert len(items) == 3
@@ -50,9 +54,11 @@ class TestParseSSEStream:
             yield b'{"key": "value2"}\n'
 
         response = httpx.Response(200, content=mock_response())
+        await response.aread()
+        generic_response = http_httpx.HttpxHTTPBackend.convert_to_response(response)
 
         items = []
-        async for item in parser.parse_sse_stream(response, dict):
+        async for item in parser.parse_sse_stream(generic_response, dict):
             items.append(item)
 
         assert len(items) == 2
@@ -68,9 +74,11 @@ class TestParseSSEStream:
             yield b'{"text": "world", "id": 2}\n'
 
         response = httpx.Response(200, content=mock_response())
+        await response.aread()
+        generic_response = http_httpx.HttpxHTTPBackend.convert_to_response(response)
 
         items = []
-        async for item in parser.parse_sse_stream(response, Token):
+        async for item in parser.parse_sse_stream(generic_response, Token):
             items.append(item)
 
         assert len(items) == 2
@@ -92,9 +100,11 @@ class TestParseSSEStream:
             yield b"line2\n"
 
         response = httpx.Response(200, content=mock_response())
+        await response.aread()
+        generic_response = http_httpx.HttpxHTTPBackend.convert_to_response(response)
 
         items = []
-        async for item in parser.parse_sse_stream(response, str):
+        async for item in parser.parse_sse_stream(generic_response, str):
             items.append(item)
 
         assert len(items) == 2

@@ -35,31 +35,34 @@ nav:
   - 🚀 Install:
     - Install: install.md
   - 📕 Documentation:
-    - 📕 Documentation: api-overview.md
+    - Documentation: api-overview.md
     - 🎪 Examples: api-examples.md
     - ⚙️ Configuration: api-configuration.md
     - 🔀 Async Support: api-async.md
     - 🔐 Authentication: api-authentication.md
+    - 🔌 HTTP Backends: api-http-backends.md
     - 💾 Caching: api-cache.md
     - 🌊 Streaming: api-stream.md
     - 🚨 Exception Handling: exceptions.md
     - 🔄 Retries: api-retries.md
     - 🧪 Testing: testing.md
+    - 🎯 Direct requests: api-direct-requests.md
     - 🥧 Mypy support: mypy.md
-  - 🏗️ Client Scaffolder:
-    - Usage & CLI: openapi-cli.md
-    - Regeneration: openapi-regeneration.md
-    - Barebones Configuration: openapi-configuration.md
-    - Barebones authentication: openapi-authentication.md
-    - Generated Client Tour: examples.md
-    - Compatibility & Limitations: compatibility.md
-    - References in OpenAPI: references.md
+  - 📟 Command line tools:
+    - 🏗️ Client Scaffolder:
+      - Usage & CLI: openapi-cli.md
+      - Regeneration: openapi-regeneration.md
+      - Barebones Configuration: openapi-configuration.md
+      - Barebones authentication: openapi-authentication.md
+      - Generated Client Tour: examples.md
+      - Compatibility & Limitations: compatibility.md
+      - References in OpenAPI: references.md
+    - 🗺️ API Explorer:
+      - Overview: explore.md
   - ⚡️ API Server Integrations:
     - ⚡️ FastAPI: server-fastapi.md
     - 🦄 Django REST Framework: server-drf.md
     - 🥷 Django Ninja: server-django-ninja.md
-  - 🗺️ API Explorer:
-    - Overview: explore.md
   - ❓About:
     - Background: design.md
     - Change Log: CHANGELOG.md

@@ -7,6 +7,7 @@ import pydantic
 import pydantic_settings
 
 from clientele.cache import types as cache_types
+from clientele.http import backends as http_backends
 
 
 class BaseConfig(pydantic_settings.BaseSettings):
@@ -54,6 +55,8 @@ class BaseConfig(pydantic_settings.BaseSettings):
     cookies: httpx.Cookies | None = None
     # Cache configuration
     cache_backend: cache_types.CacheBackend | None = None
+    # HTTP backend configuration
+    http_backend: http_backends.HTTPBackend | None = None
 
     def httpx_client_options(self) -> dict[str, Any]:
         """Create a dictionary of options suitable for ``httpx.Client``."""
@@ -99,4 +102,5 @@ def get_default_config(base_url: str) -> BaseConfig:
         transport=None,
         cookies=None,
         cache_backend=None,
+        http_backend=None,
     )

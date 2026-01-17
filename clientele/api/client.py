@@ -12,13 +12,15 @@ import pydantic
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
 from clientele.api import requests, stream, type_utils
+from clientele.http import httpx_backend as http_httpx
+from clientele.http import response as http_response
 
 _F = typing.TypeVar("_F", bound=typing.Callable[..., typing.Any])
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
 
 
 class APIClient:
-    """Clientele is a tool for building typed HTTP API clients.
+    """Clientele is a tool for building typed HTTP API clients with decorators.
 
     Supports common HTTP verbs (GET, POST, PUT, PATCH, DELETE) and works with
     both synchronous and ``async`` functions.
@@ -26,43 +28,17 @@ class APIClient:
     Args:
         config: Optional BaseConfig instance for configuring the client.
         base_url: Optional base URL for the API. Required if config is not provided.
-        httpx_client: Optional pre-configured httpx.Client instance. If not provided,
-            a new client will be created using the config values.
-            The client is reused across all synchronous requests for connection pooling.
-        httpx_async_client: Optional pre-configured httpx.AsyncClient instance. If not
-            provided, a new async client will be created using the config values.
-            The client is reused across all asynchronous requests for connection pooling.
 
     Basic example:
-    ```
-    from clientele import api as clientele_api
-    from my_api_client import config, schemas
+    ```python
+    from clientele import api
+    from .schemas import Pokemon
 
-    api_client = clientele_api.APIClient(config=config.Config())
+    client = api.APIClient(base_url="https://pokeapi.co/api/v2/")
 
-    @api_client.get("/users")
-    def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
-        return result
-    ```
-
-    Custom httpx client example:
-
-    ```
-    import httpx
-    from clientele import api as clientele_api
-
-    # Your custom httpx client with specific settings
-    custom_client = httpx.Client(
-        timeout=30.0,
-        limits=httpx.Limits(max_connections=100)
-    )
-
-    api_client = clientele_api.APIClient(
-        base_url="https://api.example.com",
-        httpx_client=custom_client
-    )
-
-    ... use the client as normal ...
+    @client.get("/pokemon/{id}")
+    def get_pokemon_name(id: int, result: Pokemon) -> str:
+        return result.name
     ```
 
     See https://phalt.github.io/clientele for full documentation.
@@ -86,24 +62,120 @@ class APIClient:
             config = api_config.get_default_config(base_url=base_url)
         self.config = config
 
-        # Create or use provided singleton clients for connection pooling
-        self._sync_client = httpx_client or self._build_client()
-        self._async_client = httpx_async_client or self._build_async_client()
+        # Set http_backend if not already set
+        if self.config.http_backend is None:
+            self.config.http_backend = http_httpx.HttpxHTTPBackend(
+                client_options=self.config.httpx_client_options(),
+                sync=httpx_client,
+                async_client=httpx_async_client,
+            )
 
     def close(self) -> None:
         """Close the synchronous HTTP client."""
-        self._sync_client.close()
+        if self.config.http_backend is not None:
+            self.config.http_backend.close()
 
     async def aclose(self) -> None:
         """Close the asynchronous HTTP client."""
-        await self._async_client.aclose()
+        if self.config.http_backend is not None:
+            await self.config.http_backend.aclose()
+
+    def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        response_map: dict[int, type[typing.Any]],
+        data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
+        query: dict[str, typing.Any] | None = None,
+        headers: dict[str, str] | None = None,
+        **path_params: typing.Any,
+    ) -> typing.Any:
+        """
+        Execute an HTTP request and hydrate the response according to the provided response_map.
+
+        This method can be used for making requests without decorating a function.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            path: URL path (appended to base_url)
+            response_map: Mapping of status codes to response models
+            data: Request body payload (for POST, PUT, etc.)
+            query: Query parameters (optional)
+            headers: Additional request headers (optional)
+            **path_params: Path parameters to substitute in the URL path
+        """
+        url_path = self._substitute_path(path, path_params)
+        data_payload = self._prepare_data_payload(data)
+        response = self._send_request(
+            method=method,
+            url=url_path,
+            query_params=query,
+            data_payload=data_payload,
+            headers_override=headers,
+            response_map=response_map,
+        )
+        return self._parse_response(
+            response=response,
+            annotation=inspect._empty,
+            response_map=response_map,
+        )
+
+    async def arequest(
+        self,
+        method: str,
+        path: str,
+        *,
+        response_map: dict[int, type[typing.Any]],
+        data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
+        query: dict[str, typing.Any] | None = None,
+        headers: dict[str, str] | None = None,
+        **path_params: typing.Any,
+    ) -> typing.Any:
+        """
+        Execute an async HTTP request and hydrate the response according to the provided response_map.
+
+        This method can be used for making requests without decorating a function.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            path: URL path (appended to base_url)
+            response_map: Mapping of status codes to response models
+            data: Request body payload (for POST, PUT, etc.)
+            query: Query parameters (optional)
+            headers: Additional request headers (optional)
+            **path_params: Path parameters to substitute in the URL path
+        """
+        url_path = self._substitute_path(path, path_params)
+        data_payload = self._prepare_data_payload(data)
+        response = await self._send_request_async(
+            method=method,
+            url=url_path,
+            query_params=query,
+            data_payload=data_payload,
+            headers_override=headers,
+            response_map=response_map,
+        )
+        return self._parse_response(
+            response=response,
+            annotation=inspect._empty,
+            response_map=response_map,
+        )
+
+    def _prepare_data_payload(
+        self, data: dict[str, typing.Any] | pydantic.BaseModel | None
+    ) -> dict[str, typing.Any] | None:
+        if isinstance(data, pydantic.BaseModel):
+            return data.model_dump(mode="json")
+
+        return data
 
     def get(
         self,
         path: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
@@ -121,7 +193,7 @@ class APIClient:
         path: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
@@ -139,7 +211,7 @@ class APIClient:
         path: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
@@ -157,7 +229,7 @@ class APIClient:
         path: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
@@ -175,7 +247,7 @@ class APIClient:
         path: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
@@ -194,7 +266,7 @@ class APIClient:
         path: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
@@ -232,12 +304,6 @@ class APIClient:
             return typing.cast(_F, wrapper)
 
         return decorator
-
-    def _build_client(self) -> httpx.Client:
-        return httpx.Client(**self.config.httpx_client_options())
-
-    def _build_async_client(self) -> httpx.AsyncClient:
-        return httpx.AsyncClient(**self.config.httpx_client_options())
 
     def _prepare_call(
         self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
@@ -492,14 +558,16 @@ class APIClient:
         data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
         response_map: dict[int, type[typing.Any]] | None = None,
-    ) -> httpx.Response:
+    ) -> http_response.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
         request_kwargs: dict[str, typing.Any] = {"params": query_params, "headers": headers}
         if data_payload is not None:
             request_kwargs["json"] = data_payload
 
-        response = self._sync_client.request(method, url, **request_kwargs)
+        if self.config.http_backend is None:
+            raise RuntimeError("HTTP backend is not configured.")
+        response = self.config.http_backend.send_sync_request(method, url, **request_kwargs)
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
         if response_map is None:
@@ -515,14 +583,16 @@ class APIClient:
         data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
         response_map: dict[int, type[typing.Any]] | None = None,
-    ) -> httpx.Response:
+    ) -> http_response.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
         request_kwargs: dict[str, typing.Any] = {"params": query_params, "headers": headers}
         if data_payload is not None:
             request_kwargs["json"] = data_payload
 
-        response = await self._async_client.request(method, url, **request_kwargs)
+        if self.config.http_backend is None:
+            raise RuntimeError("HTTP backend is not configured.")
+        response = await self.config.http_backend.send_async_request(method, url, **request_kwargs)
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
         if response_map is None:
@@ -532,7 +602,7 @@ class APIClient:
     def _finalise_call(
         self,
         prepared: requests.PreparedCall,
-        response: httpx.Response,
+        response: http_response.Response,
     ) -> typing.Any:
         parsed_result = self._parse_response(
             response=response,
@@ -552,10 +622,10 @@ class APIClient:
 
     def _parse_response(
         self,
-        response: httpx.Response,
+        response: http_response.Response,
         annotation: typing.Any,
         response_map: dict[int, type[typing.Any]] | None = None,
-        response_parser: typing.Callable[[httpx.Response], typing.Any]
+        response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
     ) -> typing.Any:
@@ -600,8 +670,9 @@ class APIClient:
             elif type_utils.is_typeddict(model_class):
                 return type_utils.validate_typeddict(model_class, payload)
             else:
-                # Fallback to returning payload as-is
-                return payload
+                # Use TypeAdapter for complex types like list[Model], dict, etc.
+                adapter = pydantic.TypeAdapter(model_class)
+                return adapter.validate_python(payload)
 
         # Standard parsing logic when no response_map
         if annotation is inspect._empty:

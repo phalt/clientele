@@ -9,16 +9,18 @@
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/clientele?period=total&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=Downloads)](https://pepy.tech/projects/clientele)
 
 ![Pydantic Badge](https://img.shields.io/badge/Data_validation-pydantic-violet?style=flat)
-![Httpx Badge](https://img.shields.io/badge/Network-httpx-blue?style=flat)
-
+![Http Badge](https://img.shields.io/badge/HTTP-Customisable-blue?style=flat)
 
 ## Example code
 
 ```python
 from clientele import api
-from .schemas import Pokemon
+from pydantic import BaseModel
 
 client = api.APIClient(base_url="https://pokeapi.co/api/v2/")
+
+class Pokemon(BaseModel):
+    name: str
 
 @client.get("/pokemon/{id}")
 def get_pokemon_name(id: int, result: Pokemon) -> str:
@@ -29,11 +31,12 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 
 ## Why use Clientele?
 
-- **Just modern Python** - [Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and [HTTPX](https://www.python-httpx.org/), that's it.
+- **Modern Python** - [Types](https://fastapi.tiangolo.com/python-types/), [Pydantic](https://docs.pydantic.dev/latest/), and any HTTP you want.
 - **Easy to learn** - Clientele is visually similar to popular python API server frameworks.
 - **Easy to test** - Works with existing tools like [respx](https://lundberg.github.io/respx/) and [pytest-httpx](https://pypi.org/project/pytest-httpx/).
 - **Easy to configure** - Clientele has sensible defaults and plenty of hooks for customisation.
 - **A comfortable abstraction** - Focus on the data and the functionality, not the connectivity.
+- **Bring your own HTTP** - Clientele can support all HTTP libraries.
 - **OpenAPI support** - Build your own client, or scaffold one from an OpenAPI schema.
 
 ## Async support
@@ -62,17 +65,33 @@ def create_book(data: CreateBookRequest, result: CreateBookResponse) -> CreateBo
 
 ```python
 from typing import AsyncIterator
-from pydantic import BaseModel
-from clientele import api
 
-client = api.APIClient(base_url="http://localhost:8000")
+from clientele import api
+from pydantic import BaseModel
+
+
+client = api.APIClient(base_url="https://httpbin.org")
+
 
 class Event(BaseModel):
-    text: str
+    id: int
+    url: str
 
-@client.get("/events", streaming_response=True)
-async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+
+@client.get("/stream/{n}", streaming_response=True)
+async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
+```
+
+## Direct requests
+
+```python
+result = client.request(
+    "GET", 
+    "pokemon/{pokemon_id}", 
+    response_map={200: Pokemon}, 
+    pokemon_id=1
+)
 ```
 
 ## Works with Python API frameworks
@@ -90,7 +109,7 @@ See the working demos in our [`server_examples/`](https://github.com/phalt/clien
 Clientele can create scaffolding for an API client from an OpenAPI schema with:
 
 - **Pydantic models** generated from the schema objects.
-- **Smart function signatures** generated from schema operations.
+- **Decorated function signatures** generated from schema operations.
 - **Async support** if you want a client with concurrency.
 - **A tiny output** that is only 3 files big.
 - **Regeneration-friendly** - update your API, regenerate, review the git diff, then ship it!

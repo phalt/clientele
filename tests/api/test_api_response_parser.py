@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from respx import MockRouter
 
 from clientele.api import APIClient
+from clientele.http import response as http_response
 
 BASE_URL = "https://api.example.com"
 
@@ -28,7 +29,7 @@ def test_accepts_response_parser_and_uses_it_to_return_response(respx_mock: Mock
         return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}, headers={"x-source": "mock"})
     )
 
-    def my_response_parser(response: httpx.Response) -> CustomResponseParserResponse:
+    def my_response_parser(response: http_response.Response) -> CustomResponseParserResponse:
         data = response.json()
         return CustomResponseParserResponse(name=data["name"], other_value="other value")
 
@@ -51,7 +52,7 @@ def test_response_parser_handles_simple_response_types(respx_mock: MockRouter) -
         return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}, headers={"x-source": "mock"})
     )
 
-    def my_response_parser(response: httpx.Response) -> dict:
+    def my_response_parser(response: http_response.Response) -> dict:
         return {"other_value": "other value"}
 
     @client.get("/users/{user_id}", response_parser=my_response_parser)
@@ -68,7 +69,7 @@ def test_response_parser_handles_simple_response_types(respx_mock: MockRouter) -
 def test_errors_when_parser_return_types_do_not_match_result_types(respx_mock: MockRouter) -> None:
     client = APIClient(base_url=BASE_URL)
 
-    def my_response_parser(response: httpx.Response) -> CustomResponseParserResponse:
+    def my_response_parser(response: http_response.Response) -> CustomResponseParserResponse:
         data = response.json()
         return CustomResponseParserResponse(name=data["name"], other_value="other value")
 
@@ -87,7 +88,7 @@ def test_errors_when_parser_return_types_do_not_match_result_types(respx_mock: M
 def test_raises_when_both_response_map_and_response_parser_are_provided(respx_mock: MockRouter) -> None:
     client = APIClient(base_url=BASE_URL)
 
-    def my_response_parser(response: httpx.Response) -> CustomResponseParserResponse:
+    def my_response_parser(response: http_response.Response) -> CustomResponseParserResponse:
         return CustomResponseParserResponse(name="name", other_value="other value")
 
     with pytest.raises(

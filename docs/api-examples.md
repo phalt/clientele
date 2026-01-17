@@ -453,22 +453,51 @@ for _ in range(100):
 
 ```python
 from typing import AsyncIterator
-from pydantic import BaseModel
-from clientele import api
 
-client = api.APIClient(base_url="http://localhost:8000")
+from clientele import api
+from pydantic import BaseModel
+
+
+client = api.APIClient(base_url="https://httpbin.org")
+
 
 class Event(BaseModel):
-    text: str
+    id: int
+    url: str
 
-@client.get("/events", streaming_response=True)
-async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+
+@client.get("/stream/{n}", streaming_response=True)
+async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
 ```
 
 ```python
-async for event in await stream_events():
-    print(event.text)
+async for event in await stream_events(n=4):
+    print(event)
 ```
 
-See [Stream](api-stream.md) for more.
+See [Streaming](api-stream.md) for more.
+
+## Direct requests
+
+```python
+from clientele import api
+from pydantic import BaseModel
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+class Pokemon(BaseModel):
+    name: str
+    height: int
+    weight: int
+
+# Direct GET request
+result = client.request(
+    "GET",
+    "/pokemon/{pokemon_id}",
+    response_map={200: Pokemon},
+    pokemon_id=1
+)
+```
+
+See [direct requests](api-direct-requests.md) for more.

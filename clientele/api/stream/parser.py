@@ -3,13 +3,12 @@ from __future__ import annotations
 import json
 import typing
 
-import httpx
-
 from clientele.api import type_utils
+from clientele.http import response as http_response
 
 
 async def parse_sse_stream(
-    response: httpx.Response,
+    response: http_response.Response,
     inner_type: typing.Any,
     response_parser: typing.Callable[[str], typing.Any] | None = None,
 ) -> typing.AsyncIterator[typing.Any]:
@@ -17,7 +16,7 @@ async def parse_sse_stream(
     Parse SSE stream and yield items based on inner_type.
 
     Args:
-        response: The httpx Response object with streaming content
+        response: The Response object with streaming content
         inner_type: The type extracted from AsyncIterator[T] - determines hydration
         response_parser: Optional callback to parse each streamed item
 

@@ -54,7 +54,7 @@ def test_generated_client_singleton_reuses_connections(respx_mock: MockRouter) -
     client = clientele_api.APIClient(base_url=BASE_URL)
 
     # Store reference to verify singleton behavior
-    original_sync_client = client._sync_client
+    original_sync_client = client.config.http_backend._sync_client  # type: ignore
 
     # Define decorated functions like the generator does
     @client.get("/users/{user_id}")
@@ -71,7 +71,7 @@ def test_generated_client_singleton_reuses_connections(respx_mock: MockRouter) -
     new_user = create_user(data={"name": "Charlie"})
 
     # Verify all calls used the same httpx.Client instance (connection pooling)
-    assert client._sync_client is original_sync_client
+    assert client.config.http_backend._sync_client is original_sync_client  # type: ignore
     assert user1.id == 1
     assert user2.id == 2
     assert new_user.id == 3
@@ -105,8 +105,5 @@ def test_custom_httpx_client_with_generated_pattern(respx_mock: MockRouter) -> N
     user = get_user(1)
 
     # Verify the custom client is used
-    assert client._sync_client is custom_client
+    assert client.config.http_backend._sync_client is custom_client  # type: ignore
     assert user.id == 1
-
-    # User is responsible for closing their custom client
-    custom_client.close()

@@ -6,22 +6,27 @@ Clientele supports streaming responses using Server-Sent Events through the `str
 
 ```python
 from typing import AsyncIterator
-from pydantic import BaseModel
-from clientele import api
 
-client = api.APIClient(base_url="http://localhost:8000")
+from clientele import api
+from pydantic import BaseModel
+
+
+client = api.APIClient(base_url="https://httpbin.org")
+
 
 class Event(BaseModel):
-    text: str
+    id: int
+    url: str
 
-@client.get("/events", streaming_response=True)
-async def stream_events(*, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+
+@client.get("/stream/{n}", streaming_response=True)
+async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
     return result
 ```
 
 ```python
-async for event in await stream_events():
-    print(event.text)
+async for event in await stream_events(n=4):
+    print(event)
 ```
 
 ## Type-Based Hydration

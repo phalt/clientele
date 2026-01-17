@@ -4,10 +4,10 @@ import inspect
 import types
 import typing
 
-import httpx
 import pydantic
 
 from clientele.api import http_status, type_utils
+from clientele.http import response as http_response
 
 
 class PreparedCall(pydantic.BaseModel):
@@ -47,7 +47,9 @@ class RequestContext(pydantic.BaseModel):
     signature: inspect.Signature
     type_hints: dict[str, typing.Any]
     response_map: dict[int, type[typing.Any]] | None = None
-    response_parser: typing.Callable[[httpx.Response], typing.Any] | typing.Callable[[str], typing.Any] | None = None
+    response_parser: (
+        typing.Callable[[http_response.Response], typing.Any] | typing.Callable[[str], typing.Any] | None
+    ) = None
     streaming: bool = False
 
 
@@ -126,7 +128,9 @@ def build_request_context(
     path: str,
     func: typing.Callable[..., typing.Any],
     response_map: dict[int, type[typing.Any]] | None = None,
-    response_parser: typing.Callable[[httpx.Response], typing.Any] | typing.Callable[[str], typing.Any] | None = None,
+    response_parser: typing.Callable[[http_response.Response], typing.Any]
+    | typing.Callable[[str], typing.Any]
+    | None = None,
     streaming: bool = False,
 ) -> RequestContext:
     signature = inspect.signature(func)
@@ -208,7 +212,7 @@ def _validate_response_map(
 
 
 def _validate_response_parser_return_type_matches_result_return_type(
-    response_parser: typing.Callable[[httpx.Response], typing.Any] | typing.Callable[[str], typing.Any],
+    response_parser: typing.Callable[[http_response.Response], typing.Any] | typing.Callable[[str], typing.Any],
     func: typing.Callable[..., typing.Any],
     type_hints: dict[str, typing.Any],
     streaming: bool = False,
