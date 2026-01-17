@@ -476,4 +476,28 @@ async for event in await stream_events(n=4):
     print(event)
 ```
 
-See [Stream](api-stream.md) for more.
+See [Streaming](api-stream.md) for more.
+
+## Direct requests
+
+```python
+from clientele import api
+from pydantic import BaseModel
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+class Pokemon(BaseModel):
+    name: str
+    height: int
+    weight: int
+
+# Direct GET request
+result = client.request(
+    "GET",
+    "/pokemon/{pokemon_id}",
+    response_map={200: Pokemon},
+    pokemon_id=1
+)
+```
+
+See [direct requests](api-direct-requests.md) for more.

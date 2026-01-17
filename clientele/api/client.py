@@ -80,6 +80,96 @@ class APIClient:
         if self.config.http_backend is not None:
             await self.config.http_backend.aclose()
 
+    def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        response_map: dict[int, type[typing.Any]],
+        data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
+        query: dict[str, typing.Any] | None = None,
+        headers: dict[str, str] | None = None,
+        **path_params: typing.Any,
+    ) -> typing.Any:
+        """
+        Execute an HTTP request and hydrate the response according to the provided response_map.
+
+        This method can be used for making requests without decorating a function.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            path: URL path (appended to base_url)
+            response_map: Mapping of status codes to response models
+            data: Request body payload (for POST, PUT, etc.)
+            query: Query parameters (optional)
+            headers: Additional request headers (optional)
+            **path_params: Path parameters to substitute in the URL path
+        """
+        url_path = self._substitute_path(path, path_params)
+        data_payload = self._prepare_data_payload(data)
+        response = self._send_request(
+            method=method,
+            url=url_path,
+            query_params=query,
+            data_payload=data_payload,
+            headers_override=headers,
+            response_map=response_map,
+        )
+        return self._parse_response(
+            response=response,
+            annotation=inspect._empty,
+            response_map=response_map,
+        )
+
+    async def arequest(
+        self,
+        method: str,
+        path: str,
+        *,
+        response_map: dict[int, type[typing.Any]],
+        data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
+        query: dict[str, typing.Any] | None = None,
+        headers: dict[str, str] | None = None,
+        **path_params: typing.Any,
+    ) -> typing.Any:
+        """
+        Execute an async HTTP request and hydrate the response according to the provided response_map.
+
+        This method can be used for making requests without decorating a function.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            path: URL path (appended to base_url)
+            response_map: Mapping of status codes to response models
+            data: Request body payload (for POST, PUT, etc.)
+            query: Query parameters (optional)
+            headers: Additional request headers (optional)
+            **path_params: Path parameters to substitute in the URL path
+        """
+        url_path = self._substitute_path(path, path_params)
+        data_payload = self._prepare_data_payload(data)
+        response = await self._send_request_async(
+            method=method,
+            url=url_path,
+            query_params=query,
+            data_payload=data_payload,
+            headers_override=headers,
+            response_map=response_map,
+        )
+        return self._parse_response(
+            response=response,
+            annotation=inspect._empty,
+            response_map=response_map,
+        )
+
+    def _prepare_data_payload(
+        self, data: dict[str, typing.Any] | pydantic.BaseModel | None
+    ) -> dict[str, typing.Any] | None:
+        if isinstance(data, pydantic.BaseModel):
+            return data.model_dump(mode="json")
+
+        return data
+
     def get(
         self,
         path: str,
@@ -580,8 +670,9 @@ class APIClient:
             elif type_utils.is_typeddict(model_class):
                 return type_utils.validate_typeddict(model_class, payload)
             else:
-                # Fallback to returning payload as-is
-                return payload
+                # Use TypeAdapter for complex types like list[Model], dict, etc.
+                adapter = pydantic.TypeAdapter(model_class)
+                return adapter.validate_python(payload)
 
         # Standard parsing logic when no response_map
         if annotation is inspect._empty:
