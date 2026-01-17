@@ -123,12 +123,7 @@ class APIClient:
         url_path = self._substitute_path(path, path_params)
 
         # Prepare data payload
-        data_payload: dict[str, typing.Any] | None = None
-        if data is not None and method in {"POST", "PUT", "PATCH", "DELETE"}:
-            if isinstance(data, pydantic.BaseModel):
-                data_payload = data.model_dump(mode="json")
-            else:
-                data_payload = data
+        data_payload = self._prepare_data_payload(data, method)
 
         # Send request
         response = self._send_request(
@@ -194,12 +189,7 @@ class APIClient:
         url_path = self._substitute_path(path, path_params)
 
         # Prepare data payload
-        data_payload: dict[str, typing.Any] | None = None
-        if data is not None and method in {"POST", "PUT", "PATCH", "DELETE"}:
-            if isinstance(data, pydantic.BaseModel):
-                data_payload = data.model_dump(mode="json")
-            else:
-                data_payload = data
+        data_payload = self._prepare_data_payload(data, method)
 
         # Send request
         response = await self._send_request_async(
@@ -601,6 +591,26 @@ class APIClient:
             return payload
 
         return payload
+
+    def _prepare_data_payload(
+        self, data: dict[str, typing.Any] | pydantic.BaseModel | None, method: str
+    ) -> dict[str, typing.Any] | None:
+        """Prepare data payload for direct request() and arequest() methods.
+
+        Args:
+            data: Data to prepare (dict or Pydantic model)
+            method: HTTP method
+
+        Returns:
+            Prepared data payload or None
+        """
+        if data is None or method not in {"POST", "PUT", "PATCH", "DELETE"}:
+            return None
+
+        if isinstance(data, pydantic.BaseModel):
+            return data.model_dump(mode="json")
+
+        return data
 
     def _send_request(
         self,
