@@ -11,6 +11,13 @@
 - The `response_parser` callbacks now take the generic `clientele.http.Response` instead of `httpx.Response`.
 - Introduces a new `FakeHTTPBackend` that can be used for testing.
 
+### Direct requests
+
+- An optional approach for making requests with Clientele is now available.
+- This approach does not enforce the decorator pattern.
+- But still offers smart data hydration and response mapping.
+- Support for both async and sync.
+
 ## 1.6.1
 
 - `cache_backend` can now be set in the `BaseConfig`, and will be used if it is not None. This saves you having to annotate the cache backend repeatedly in decorators.

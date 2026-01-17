@@ -46,6 +46,7 @@ nav:
     - 🚨 Exception Handling: exceptions.md
     - 🔄 Retries: api-retries.md
     - 🧪 Testing: testing.md
+    - 🎯 Direct requests: api-direct-requests.md
     - 🥧 Mypy support: mypy.md
   - 📟 Command line tools:
     - 🏗️ Client Scaffolder:
