@@ -37,6 +37,7 @@ nav:
   - 📕 Documentation:
     - Documentation: api-overview.md
     - 🎪 Examples: api-examples.md
+    - 🎯 Direct Requests: api-direct-request.md
     - ⚙️ Configuration: api-configuration.md
     - 🔀 Async Support: api-async.md
     - 🔐 Authentication: api-authentication.md
