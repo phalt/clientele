@@ -83,6 +83,17 @@ async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[E
     return result
 ```
 
+## Direct requests
+
+```python
+result = client.request(
+    "GET", 
+    "pokemon/{pokemon_id}", 
+    response_map={200: Pokemon}, 
+    pokemon_id=1
+)
+```
+
 ## Works with Python API frameworks
 
 Built and tested to be 100% compatible with the OpenAPI schemas generated from:
@@ -98,7 +109,7 @@ See the working demos in our [`server_examples/`](https://github.com/phalt/clien
 Clientele can create scaffolding for an API client from an OpenAPI schema with:
 
 - **Pydantic models** generated from the schema objects.
-- **Smart function signatures** generated from schema operations.
+- **Decorated function signatures** generated from schema operations.
 - **Async support** if you want a client with concurrency.
 - **A tiny output** that is only 3 files big.
 - **Regeneration-friendly** - update your API, regenerate, review the git diff, then ship it!
