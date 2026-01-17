@@ -127,8 +127,6 @@ class APIClient:
         if data is not None and method in {"POST", "PUT", "PATCH", "DELETE"}:
             if isinstance(data, pydantic.BaseModel):
                 data_payload = data.model_dump(mode="json")
-            elif isinstance(data, dict):
-                data_payload = data
             else:
                 data_payload = data
 
@@ -200,8 +198,6 @@ class APIClient:
         if data is not None and method in {"POST", "PUT", "PATCH", "DELETE"}:
             if isinstance(data, pydantic.BaseModel):
                 data_payload = data.model_dump(mode="json")
-            elif isinstance(data, dict):
-                data_payload = data
             else:
                 data_payload = data
 
