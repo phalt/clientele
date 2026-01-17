@@ -80,6 +80,153 @@ class APIClient:
         if self.config.http_backend is not None:
             await self.config.http_backend.aclose()
 
+    def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        response_map: dict[int, type[typing.Any]],
+        data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
+        query: dict[str, typing.Any] | None = None,
+        headers: dict[str, str] | None = None,
+        **path_params: typing.Any,
+    ) -> typing.Any:
+        """Execute a direct HTTP request without using decorators.
+
+        This method allows making HTTP requests without defining decorated functions,
+        while still leveraging response hydration and validation via response_map.
+
+        Args:
+            method: HTTP method (GET, POST, PUT, PATCH, DELETE)
+            path: URL path template (e.g., "/users/{user_id}")
+            response_map: Mapping of status codes to response models
+            data: Optional request body (for POST, PUT, PATCH, DELETE)
+            query: Optional query parameters
+            headers: Optional request headers
+            **path_params: Path parameters to substitute in the path template
+
+        Returns:
+            Parsed response object according to the response_map
+
+        Example:
+            ```python
+            client = APIClient(base_url="https://api.example.com")
+            result = client.request(
+                "GET",
+                "/pokemon/{id}",
+                response_map={200: Pokemon},
+                id=1
+            )
+            ```
+        """
+        # Substitute path parameters
+        url_path = self._substitute_path(path, path_params)
+
+        # Prepare data payload
+        data_payload: dict[str, typing.Any] | None = None
+        if data is not None and method in {"POST", "PUT", "PATCH", "DELETE"}:
+            if isinstance(data, pydantic.BaseModel):
+                data_payload = data.model_dump(mode="json")
+            elif isinstance(data, dict):
+                data_payload = data
+            else:
+                data_payload = data
+
+        # Send request
+        response = self._send_request(
+            method=method,
+            url=url_path,
+            query_params=query,
+            data_payload=data_payload,
+            headers_override=headers,
+            response_map=response_map,
+        )
+
+        # Parse and return response
+        # We need to determine the annotation from response_map
+        # For a direct call, we return a union of all response types
+        if response_map:
+            return self._parse_response(
+                response=response,
+                annotation=inspect._empty,
+                response_map=response_map,
+                response_parser=None,
+            )
+        return response
+
+    async def arequest(
+        self,
+        method: str,
+        path: str,
+        *,
+        response_map: dict[int, type[typing.Any]],
+        data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
+        query: dict[str, typing.Any] | None = None,
+        headers: dict[str, str] | None = None,
+        **path_params: typing.Any,
+    ) -> typing.Any:
+        """Execute a direct asynchronous HTTP request without using decorators.
+
+        Async version of request(). See request() for full documentation.
+
+        Args:
+            method: HTTP method (GET, POST, PUT, PATCH, DELETE)
+            path: URL path template (e.g., "/users/{user_id}")
+            response_map: Mapping of status codes to response models
+            data: Optional request body (for POST, PUT, PATCH, DELETE)
+            query: Optional query parameters
+            headers: Optional request headers
+            **path_params: Path parameters to substitute in the path template
+
+        Returns:
+            Parsed response object according to the response_map
+
+        Example:
+            ```python
+            client = APIClient(base_url="https://api.example.com")
+            result = await client.arequest(
+                "GET",
+                "/pokemon/{id}",
+                response_map={200: Pokemon},
+                id=1
+            )
+            ```
+        """
+        # Substitute path parameters
+        url_path = self._substitute_path(path, path_params)
+
+        # Prepare data payload
+        data_payload: dict[str, typing.Any] | None = None
+        if data is not None and method in {"POST", "PUT", "PATCH", "DELETE"}:
+            if isinstance(data, pydantic.BaseModel):
+                data_payload = data.model_dump(mode="json")
+            elif isinstance(data, dict):
+                data_payload = data
+            else:
+                data_payload = data
+
+        # Send request
+        response = await self._send_request_async(
+            method=method,
+            url=url_path,
+            query_params=query,
+            data_payload=data_payload,
+            headers_override=headers,
+            response_map=response_map,
+        )
+
+        # Parse and return response
+        # We need to determine the annotation from response_map
+        # For a direct call, we return a union of all response types
+        if response_map:
+            return self._parse_response(
+                response=response,
+                annotation=inspect._empty,
+                response_map=response_map,
+                response_parser=None,
+            )
+        return response
+
     def get(
         self,
         path: str,
