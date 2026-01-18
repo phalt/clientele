@@ -1,6 +1,6 @@
 # Change log
 
-## UNRELEASED 1.7.0
+## 1.7.0
 
 ### HTTP Backends
 
