@@ -1810,6 +1810,11 @@
 </ul>
 <h2 id="custom-httpx-client">Custom httpx client</h2>
 <p>You can supply your own <code>httpx.Client</code> and <code>httpx.AsyncClient</code> if you prefer full control:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These options are considered deprecated from clientele version 2.0.0 and will not be supported in future versions.</p>
+<p>Use <a href="../api-http-backends/">http backends</a> instead.</p>
+</div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
 
