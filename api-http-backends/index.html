@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.clientele.dev/api-async/">
+        <link rel="canonical" href="https://docs.clientele.dev/api-http-backends/">
       
       
-        <link rel="prev" href="../api-configuration/">
+        <link rel="prev" href="../api-authentication/">
       
       
-        <link rel="next" href="../api-authentication/">
+        <link rel="next" href="../api-cache/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>🔀 Async Support - Clientele</title>
+        <title>🔌 HTTP Backends - Clientele</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#async-support" class="md-skip">
+        <a href="#http-backends" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🔀 Async Support
+              🔌 HTTP Backends
             
           </span>
         </div>
@@ -646,37 +646,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🔀 Async Support
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../api-async/" class="md-nav__link">
         
   
   
@@ -692,48 +665,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#async-and-sync-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async and sync example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-and-sync-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async and sync usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -771,10 +702,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../api-http-backends/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔌 HTTP Backends
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -790,6 +748,165 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generic-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generic Response
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#httpbackend-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTPBackend Interface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Backends
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Backends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#httpxhttpbackend-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HttpxHTTPBackend (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fakehttpbackend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FakeHTTPBackend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Custom Backends
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Custom Backends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1676,10 +1793,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#async-and-sync-example" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async and sync example
+        Overview
       
     </span>
   </a>
@@ -1687,13 +1804,130 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#async-and-sync-usage" class="md-nav__link">
+  <a href="#architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async and sync usage
+        Architecture
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#generic-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generic Response
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#httpbackend-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTPBackend Interface
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#built-in-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-in Backends
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Built-in Backends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#httpxhttpbackend-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HttpxHTTPBackend (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fakehttpbackend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FakeHTTPBackend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-custom-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Custom Backends
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Custom Backends">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#default-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Behavior
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1717,45 +1951,168 @@
   
 
 
-<h1 id="async-support">🔀 Async support</h1>
-<p>Clientele API supports both async and sync functions.</p>
-<p>They can even be mixed in together if you prefer.</p>
-<h2 id="async-and-sync-example">Async and sync example</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.my_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.my_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BookResponse</span><span class="p">,</span> <span class="n">CreateBookResponse</span><span class="p">,</span> <span class="n">CreateBookRequest</span>
+<h1 id="http-backends">HTTP Backends</h1>
+<h2 id="overview">Overview</h2>
+<p>Clientele supports pluggable HTTP backends.</p>
+<h2 id="architecture">Architecture</h2>
+<h3 id="core-components">Core Components</h3>
+<ol>
+<li><strong><code>clientele.http.response.Response</code></strong> - Generic HTTP response abstraction</li>
+<li><strong><code>clientele.http.backends.HTTPBackend</code></strong> - Abstract base class for backends</li>
+<li><strong><code>clientele.http.httpx.HttpxHTTPBackend</code></strong> - Default httpx implementation</li>
+<li><strong><code>clientele.http.fake.FakeHTTPBackend</code></strong> - Testing/mocking backend</li>
+</ol>
+<h3 id="design-principles">Design Principles</h3>
+<p>The backend abstraction follows these key principles:</p>
+<ol>
+<li><strong>Library Agnostic</strong>: The core APIClient doesn't depend on any library-specific implementation.</li>
+<li><strong>Generic Response</strong>: All backends return <code>clientele.http.Response</code>, not library-specific responses.</li>
+<li><strong>Simple Interface</strong>: Backends only need to implement 6 methods.</li>
+<li><strong>Conversion Layer</strong>: Each backend converts its native response to the generic format.</li>
+</ol>
+<h2 id="generic-response">Generic Response</h2>
+<p>The <code>clientele.http.response.Response</code> class provides a library-agnostic interface:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Response</span><span class="p">:</span>
+    <span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">headers</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">())</span>
-
-<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/books&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span>
-    <span class="n">result</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookResponse</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">result</span>
-
-
-<span class="c1"># Mix sync and async functions in the same client</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/book/</span><span class="si">{book_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">BookResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BookResponse</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">result</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">json</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">raise_for_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">iter_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">aiter_lines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
 </code></pre></div>
-<h2 id="async-and-sync-usage">Async and sync usage</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_clientele_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
+<h2 id="httpbackend-interface">HTTPBackend Interface</h2>
+<p>All backends must implement:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HTTPBackend</span><span class="p">(</span><span class="n">abc</span><span class="o">.</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build synchronous HTTP client&quot;&quot;&quot;</span>
 
-<span class="c1"># handle sync requests</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_book</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookRequest</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My awesome book&quot;</span><span class="p">)</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_async_client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build asynchronous HTTP client&quot;&quot;&quot;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_sync_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send sync request&quot;&quot;&quot;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_async_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send async request&quot;&quot;&quot;</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_response</span><span class="p">(</span><span class="n">native_response</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a native HTTP response to a generic clientele Response.&quot;&quot;&quot;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close sync resources&quot;&quot;&quot;</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">aclose</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Close async resources&quot;&quot;&quot;</span>
+</code></pre></div>
+<h2 id="built-in-backends">Built-in Backends</h2>
+<h3 id="httpxhttpbackend-default">HttpxHTTPBackend (Default)</h3>
+<p>The default backend using httpx:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">httpx_backend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+<span class="c1"># Note: this will be configured by default,</span>
+<span class="c1"># this example is just a demonstration.</span>
+<span class="n">http_backend</span> <span class="o">=</span> <span class="n">httpx_backend</span><span class="o">.</span><span class="n">HttpxHTTPBackend</span><span class="p">(</span>
+    <span class="n">client_options</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;timeout&quot;</span><span class="p">:</span> <span class="mf">30.0</span><span class="p">,</span>
+        <span class="s2">&quot;http2&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">}</span>
 <span class="p">)</span>
 
-<span class="k">match</span> <span class="n">response</span><span class="p">:</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookResponse</span><span class="p">():</span>
-        <span class="c1"># handle valid response</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
-        <span class="c1"># handle errors</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span>
+    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
+    <span class="n">http_backend</span><span class="o">=</span><span class="n">http_backend</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="fakehttpbackend">FakeHTTPBackend</h3>
+<p>A testing backend that captures requests and returns fake responses:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">fake</span>
 
-<span class="c1"># Handle async requests</span>
-<span class="n">book_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">backend</span> <span class="o">=</span> <span class="n">fake</span><span class="o">.</span><span class="n">FakeHTTPBackend</span><span class="p">(</span>
+    <span class="n">default_status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">default_content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># Queue specific responses</span>
+<span class="n">backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
+    <span class="n">status</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">123</span><span class="p">,</span> <span class="s2">&quot;created&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># All requests are captured</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">backend</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span>  <span class="c1"># [{&quot;method&quot;: &quot;POST&quot;, &quot;url&quot;: &quot;...&quot;, &quot;kwargs&quot;: {...}}]</span>
+
+<span class="c1"># Reset for next test</span>
+<span class="n">backend</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Use cases:</strong></p>
+<ul>
+<li>Unit testing without network calls</li>
+<li>Integration tests with predictable responses</li>
+<li>Demonstrations and examples</li>
+<li>Development mode with fake data</li>
+</ul>
+<h2 id="creating-custom-backends">Creating Custom Backends</h2>
+<p>Example: psuedocode <code>aiohttp</code> async HTTP backend</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">backends</span><span class="p">,</span> <span class="n">response</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">aiohttp</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AiohttpHTTPBackend</span><span class="p">(</span><span class="n">backends</span><span class="o">.</span><span class="n">HTTPBackend</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># For sync, return a placeholder or raise NotImplementedError</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use async_client for aiohttp&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">build_async_client</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientSession</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">convert_to_response</span><span class="p">(</span><span class="n">native_response</span><span class="p">:</span> <span class="n">aiohttp</span><span class="o">.</span><span class="n">ClientResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">response</span><span class="o">.</span><span class="n">Response</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert aiohttp.ClientResponse to generic Response&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="n">native_response</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">native_response</span><span class="o">.</span><span class="n">headers</span><span class="p">),</span>
+            <span class="n">content</span><span class="o">=</span><span class="n">native_response</span><span class="o">.</span><span class="n">_body</span><span class="p">,</span>
+            <span class="n">text</span><span class="o">=</span><span class="n">native_response</span><span class="o">.</span><span class="n">_body</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span>
+            <span class="n">request_method</span><span class="o">=</span><span class="n">native_response</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">request_url</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">native_response</span><span class="o">.</span><span class="n">url</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">send_sync_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Use async backend&quot;</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">send_async_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="k">as</span> <span class="n">resp</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">resp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_to_response</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>  <span class="c1"># aiohttp doesn&#39;t need sync close</span>
+
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">aclose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="p">:</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="default-behavior">Default Behavior</h3>
+<p>If no backend is provided, clientele uses httpx as the backend:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># This still works and uses httpx internally</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
+<span class="n">api_client</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -1786,7 +2143,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../api-configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: ⚙️ Configuration">
+          <a href="../api-authentication/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🔐 Authentication">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1796,20 +2153,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                ⚙️ Configuration
+                🔐 Authentication
               </div>
             </div>
           </a>
         
         
           
-          <a href="../api-authentication/" class="md-footer__link md-footer__link--next" aria-label="Next: 🔐 Authentication">
+          <a href="../api-cache/" class="md-footer__link md-footer__link--next" aria-label="Next: 💾 Caching">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                🔐 Authentication
+                💾 Caching
               </div>
             </div>
             <div class="md-footer__button md-icon">

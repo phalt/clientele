@@ -2,106 +2,114 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://docs.clientele.dev/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/CHANGELOG/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-async/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-authentication/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-cache/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-configuration/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.clientele.dev/api-direct-requests/</loc>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-examples/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
+    </url>
+    <url>
+         <loc>https://docs.clientele.dev/api-http-backends/</loc>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-overview/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-retries/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/api-stream/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/compatibility/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/design/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/examples/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/exceptions/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/explore/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/install/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/mypy/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/openapi-authentication/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/openapi-cli/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/openapi-configuration/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/openapi-regeneration/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/references/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/server-django-ninja/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/server-drf/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/server-fastapi/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
     <url>
          <loc>https://docs.clientele.dev/testing/</loc>
-         <lastmod>2026-01-16</lastmod>
+         <lastmod>2026-01-18</lastmod>
     </url>
 </urlset>

@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.clientele.dev/api-async/">
+        <link rel="canonical" href="https://docs.clientele.dev/api-direct-requests/">
       
       
-        <link rel="prev" href="../api-configuration/">
+        <link rel="prev" href="../testing/">
       
       
-        <link rel="next" href="../api-authentication/">
+        <link rel="next" href="../mypy/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>🔀 Async Support - Clientele</title>
+        <title>🎯 Direct requests - Clientele</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#async-support" class="md-skip">
+        <a href="#direct-requests" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🔀 Async Support
+              🎯 Direct requests
             
           </span>
         </div>
@@ -646,37 +646,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🔀 Async Support
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../api-async/" class="md-nav__link">
         
   
   
@@ -692,48 +665,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#async-and-sync-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async and sync example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#async-and-sync-usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Async and sync usage
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -939,10 +870,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../api-direct-requests/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🎯 Direct requests
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -958,6 +916,70 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#get-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GET requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#post-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        POST requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1676,10 +1698,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#async-and-sync-example" class="md-nav__link">
+  <a href="#get-requests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async and sync example
+        GET requests
       
     </span>
   </a>
@@ -1687,10 +1709,32 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#async-and-sync-usage" class="md-nav__link">
+  <a href="#post-requests" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Async and sync usage
+        POST requests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#async" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Async
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-offs
       
     </span>
   </a>
@@ -1717,46 +1761,55 @@
   
 
 
-<h1 id="async-support">🔀 Async support</h1>
-<p>Clientele API supports both async and sync functions.</p>
-<p>They can even be mixed in together if you prefer.</p>
-<h2 id="async-and-sync-example">Async and sync example</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.my_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.my_models</span><span class="w"> </span><span class="kn">import</span> <span class="n">BookResponse</span><span class="p">,</span> <span class="n">CreateBookResponse</span><span class="p">,</span> <span class="n">CreateBookRequest</span>
+<h1 id="direct-requests">🎯 Direct requests</h1>
+<p>Clientele allows you to make direct requests without decorating functions.</p>
+<p>This approach is useful if you want to make ad-hoc requests but still want the data validation and response hydration.</p>
+<h2 id="get-requests">GET requests</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Config</span><span class="p">())</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/books&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span>
-    <span class="n">result</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookResponse</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">result</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Pokemon</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">weight</span><span class="p">:</span> <span class="nb">int</span>
 
-
-<span class="c1"># Mix sync and async functions in the same client</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/book/</span><span class="si">{book_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">BookResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BookResponse</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">result</span>
-</code></pre></div>
-<h2 id="async-and-sync-usage">Async and sync usage</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_clientele_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
-
-<span class="c1"># handle sync requests</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_book</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookRequest</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;My awesome book&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+    <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">200</span><span class="p">:</span> <span class="n">Pokemon</span><span class="p">},</span>
+    <span class="n">pokemon_id</span><span class="o">=</span><span class="mi">1</span>
 <span class="p">)</span>
-
-<span class="k">match</span> <span class="n">response</span><span class="p">:</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">CreateBookResponse</span><span class="p">():</span>
-        <span class="c1"># handle valid response</span>
-    <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
-        <span class="c1"># handle errors</span>
-
-<span class="c1"># Handle async requests</span>
-<span class="n">book_response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 </code></pre></div>
+<ul>
+<li>The <code>response_map</code> parameter is required</li>
+<li>Additional kwargs are mapped to the path parameter</li>
+</ul>
+<h2 id="post-requests">POST requests</h2>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
+    <span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;/pokemon&quot;</span><span class="p">,</span>
+    <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">201</span><span class="p">:</span> <span class="n">Pokemon</span><span class="p">},</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">CreatePokemonRequest</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;PikachuTew&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</code></pre></div>
+<h2 id="async">Async</h2>
+<p>The <code>arequest</code> method provides an identical interface but in an async context.</p>
+<h2 id="trade-offs">Trade-offs</h2>
+<p>This approach is intended for smaller ad-hoc requests.</p>
+<p>This approach misses all of the benefits of binding to a decorated function:</p>
+<ul>
+<li>Strongly typed inputs for input parameters</li>
+<li>An abstract functional interface to the API</li>
+<li>Streaming responses are not supported</li>
+</ul>
+<p>This approach still retains:</p>
+<ul>
+<li>Strongly typed responses</li>
+<li>Data validation on the responses</li>
+<li>Hydration of the responses</li>
+</ul>
 
 
 
@@ -1786,7 +1839,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../api-configuration/" class="md-footer__link md-footer__link--prev" aria-label="Previous: ⚙️ Configuration">
+          <a href="../testing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🧪 Testing">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1796,20 +1849,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                ⚙️ Configuration
+                🧪 Testing
               </div>
             </div>
           </a>
         
         
           
-          <a href="../api-authentication/" class="md-footer__link md-footer__link--next" aria-label="Next: 🔐 Authentication">
+          <a href="../mypy/" class="md-footer__link md-footer__link--next" aria-label="Next: 🥧 Mypy support">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                🔐 Authentication
+                🥧 Mypy support
               </div>
             </div>
             <div class="md-footer__button md-icon">
