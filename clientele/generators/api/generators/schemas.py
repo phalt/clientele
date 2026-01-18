@@ -125,15 +125,18 @@ class SchemasGenerator:
                 output_dir=self.output_dir,
             )
 
-    def _create_union_type_alias(self, schema_key: str, schema_options: list[dict]) -> None:
+    def _create_union_type_alias(
+        self, schema_key: str, schema_options: list[dict], discriminator: typing.Optional[str] = None
+    ) -> None:
         """
         Create a type alias for oneOf or anyOf schemas.
 
         Args:
             schema_key: Name of the schema
             schema_options: List of schema options from oneOf or anyOf
+            discriminator: Optional discriminator property name for discriminated unions
         """
-        union_type = schema_utils.build_union_type_string(schema_options)
+        union_type = schema_utils.build_union_type_string(schema_options, discriminator=discriminator)
         template = writer.templates.get_template("schema_type_alias.jinja2")
         content = template.render(class_name=schema_key, union_type=union_type)
         writer.write_to_schemas(
@@ -147,9 +150,13 @@ class SchemasGenerator:
         enum = False
         properties: str = ""
 
-        # Handle oneOf - create a type alias
+        # Handle oneOf - create a type alias (with optional discriminator)
         if one_of := schema.get("oneOf"):
-            self._create_union_type_alias(schema_key, one_of)
+            # Extract discriminator propertyName if present
+            discriminator = None
+            if disc := schema.get("discriminator"):
+                discriminator = disc.get("propertyName")
+            self._create_union_type_alias(schema_key, one_of, discriminator=discriminator)
             return
 
         # Handle anyOf - create a type alias
