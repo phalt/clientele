@@ -5,15 +5,21 @@ import typing
 from clientele.generators.standard import utils
 
 
-def build_union_type_string(schema_options: list[typing.Dict[str, typing.Any]]) -> str:
+def build_union_type_string(
+    schema_options: list[typing.Dict[str, typing.Any]],
+    discriminator: typing.Optional[str] = None,
+) -> str:
     """
     Build a union type string from a list of schema options (for oneOf or anyOf).
 
     Args:
         schema_options: List of schema option dictionaries from oneOf or anyOf
+        discriminator: Optional discriminator property name for discriminated unions
 
     Returns:
         A union type string (e.g., "Cat | Dog" or "typing.Union[Cat, Dog]")
+        When discriminator is provided, returns:
+        "typing.Annotated[Cat | Dog, pydantic.Field(discriminator='type')]"
     """
     union_types = []
     for schema_option in schema_options:
@@ -27,4 +33,10 @@ def build_union_type_string(schema_options: list[typing.Dict[str, typing.Any]]) 
             type_str = utils.remove_forward_ref_quotes(type_str)
             union_types.append(type_str)
 
-    return utils.union_for_py_ver(union_types)
+    union_str = utils.union_for_py_ver(union_types)
+
+    # Wrap with Annotated + Field(discriminator=...) if discriminator is present
+    if discriminator:
+        return f'typing.Annotated[{union_str}, pydantic.Field(discriminator="{discriminator}")]'
+
+    return union_str

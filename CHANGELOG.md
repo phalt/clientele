@@ -1,5 +1,9 @@
 # Change log
 
+## 1.7.1
+
+- Support for OpenAPI discriminated unions (`oneOf` + `discriminator`). Schemas with discriminators now generate proper Pydantic discriminated unions using `typing.Annotated[..., pydantic.Field(discriminator="...")]`.
+
 ## 1.7.0
 
 ### HTTP Backends
@@ -210,7 +214,7 @@ The productivity boost has been immense and has helped me to realise the goals a
 - Generator files have been reorganised in clientele to support future templates.
 - `constants.py` has been renamed to `config.py` to better reflect how it is used. It is not generated from a template like the other files.
 - If you are using Python 3.10 or later, the `typing.Unions` types will generate as the short hand `|` instead.
-- To regenerate a client (and to prevent accidental overrides) you must now pass `--regen t` or `-r t` to the `generate` command. This is automatically added to the line in `MANIFEST.md` to  help.
+- To regenerate a client (and to prevent accidental overrides) you must now pass `--regen t` or `-r t` to the `generate` command. This is automatically added to the line in `MANIFEST.md` to help.
 - Clientele will now automatically run [black](https://black.readthedocs.io/en/stable/) code formatter once a client is generated or regenerated.
 - Clientele will now generate absolute paths to refer to adjacent files in the generated client, instead of relative paths. This assumes you are running the `clientele` command in the root directory of your project.
 - A lot of documentation and docs strings updates so that code in the generated client is easier to understand.
@@ -329,7 +333,7 @@ A huge test suite has been added to the CI pipeline for this project using a cop
 - Improved CLI output
 - Code organisation is now sensible and not just one giant file
 - Now supports an openapi spec generated from a dotnet project (`Microsoft.OpenApi.Models`)
-- async client support  fully working
+- async client support fully working
 - HTTP Bearer support
 - HTTP Basic support
 

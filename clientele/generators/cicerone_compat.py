@@ -182,6 +182,11 @@ def schema_to_dict(schema) -> dict:
     if hasattr(schema, "any_of") and schema.any_of:
         result["anyOf"] = [schema_to_dict(s) for s in schema.any_of]
 
+    # Handle discriminator (for oneOf schemas) - it's in the extra fields
+    if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__:
+        if discriminator := schema.__pydantic_extra__.get("discriminator"):
+            result["discriminator"] = discriminator
+
     # Handle enum - it's in the extra fields
     if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "enum" in schema.__pydantic_extra__:
         result["enum"] = schema.__pydantic_extra__["enum"]

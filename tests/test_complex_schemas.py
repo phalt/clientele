@@ -46,7 +46,7 @@ class TestOneOfSchemas:
 
     @pytest.mark.parametrize("client_generator", [StandardGenerator, ClassbaseGenerator, APIGenerator])
     def test_oneof_at_schema_level(self, tmp_path, client_generator):
-        """Test that oneOf at schema level generates a type alias."""
+        """Test that oneOf at schema level generates a type alias with discriminator."""
         spec = load_spec("complex_schemas.json")
         spec_path = get_spec_path("complex_schemas.json")
         generator = client_generator(
@@ -62,14 +62,14 @@ class TestOneOfSchemas:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        # Verify oneOf creates a type alias with pipe syntax (Python 3.10+)
-        assert "PetRequest = Cat | Dog" in schemas_content
+        # Verify oneOf with discriminator creates Annotated type alias
+        assert 'PetRequest = typing.Annotated[Cat | Dog, pydantic.Field(discriminator="type")]' in schemas_content
         assert "class Cat(pydantic.BaseModel):" in schemas_content
         assert "class Dog(pydantic.BaseModel):" in schemas_content
 
     @pytest.mark.parametrize("client_generator", [StandardGenerator, ClassbaseGenerator, APIGenerator])
     def test_oneof_with_multiple_types(self, tmp_path, client_generator):
-        """Test oneOf with three or more schema options."""
+        """Test oneOf with three or more schema options and discriminator."""
         spec = load_spec("complex_schemas.json")
         spec_path = get_spec_path("complex_schemas.json")
         generator = client_generator(
@@ -85,8 +85,11 @@ class TestOneOfSchemas:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        # Verify PaymentMethodRequest with three options (pipe syntax)
-        assert "PaymentMethodRequest = CreditCard | BankTransfer | PayPal" in schemas_content
+        # Verify PaymentMethodRequest with discriminator (pipe syntax with Annotated)
+        assert (
+            "PaymentMethodRequest = typing.Annotated[CreditCard | BankTransfer | PayPal, "
+            'pydantic.Field(discriminator="method")]'
+        ) in schemas_content
         assert "class CreditCard(pydantic.BaseModel):" in schemas_content
         assert "class BankTransfer(pydantic.BaseModel):" in schemas_content
         assert "class PayPal(pydantic.BaseModel):" in schemas_content
