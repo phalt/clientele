@@ -101,16 +101,22 @@ def get_type(t):
     t_format = t.get("format")
     t_nullable = t.get("nullable", False)
 
-    # Handle oneOf - creates a union type
+    # Handle oneOf - creates a union type (with optional discriminator support)
     if one_of := t.get("oneOf"):
         union_types = [get_type(schema) for schema in one_of]
         result = union_for_py_ver(union_types)
+
+        # Check for discriminator and wrap with Annotated if present
+        if discriminator := t.get("discriminator"):
+            if property_name := discriminator.get("propertyName"):
+                result = f'typing.Annotated[{result}, pydantic.Field(discriminator="{property_name}")]'
+
         # Apply nullable wrapper if needed
         if t_nullable:
             return f"typing.Optional[{result}]"
         return result
 
-    # Handle anyOf - creates a union type
+    # Handle anyOf - creates a union type (no discriminator support per OpenAPI spec)
     if any_of := t.get("anyOf"):
         union_types = [get_type(schema) for schema in any_of]
         result = union_for_py_ver(union_types)
