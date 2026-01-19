@@ -76,10 +76,6 @@ class BaseConfig(pydantic_settings.BaseSettings):
     # Logging configuration
     logger: Logger | None = None
 
-    @property
-    def is_logging_enabled(self) -> bool:
-        return self.logger is not None
-
     def httpx_client_options(self) -> dict[str, Any]:
         """Create a dictionary of options suitable for ``httpx.Client``."""
 
