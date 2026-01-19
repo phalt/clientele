@@ -1,5 +1,12 @@
 # Change log
 
+## 1.8.0
+
+### Request Logging
+
+- Added optional request/response logging to `APIClient` via the `logger` parameter in `BaseConfig`. Logs include method, URL, status code, and elapsed time in seconds.
+- Uses a `Logger` Protocol with `@runtime_checkable` for flexibility.
+
 ## 1.7.1
 
 - Support for OpenAPI discriminated unions (`oneOf` + `discriminator`). Schemas with discriminators now generate proper Pydantic discriminated unions using `typing.Annotated[..., pydantic.Field(discriminator="...")]`.

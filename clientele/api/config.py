@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Protocol, runtime_checkable
 
 import httpx
 import pydantic
@@ -8,6 +8,21 @@ import pydantic_settings
 
 from clientele.cache import types as cache_types
 from clientele.http import backends as http_backends
+
+
+@runtime_checkable
+class Logger(Protocol):
+    """Protocol for logger implementations.
+
+    Compatible with Python's standard logging.Logger interface.
+    Users can pass any logging.getLogger() instance or custom logger
+    that implements these methods.
+    """
+
+    def debug(self, msg: Any, *args: Any) -> None: ...
+    def info(self, msg: Any, *args: Any) -> None: ...
+    def warning(self, msg: Any, *args: Any) -> None: ...
+    def error(self, msg: Any, *args: Any) -> None: ...
 
 
 class BaseConfig(pydantic_settings.BaseSettings):
@@ -40,6 +55,7 @@ class BaseConfig(pydantic_settings.BaseSettings):
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
+        arbitrary_types_allowed=True,
     )
 
     base_url: str = "http://localhost"
@@ -57,6 +73,12 @@ class BaseConfig(pydantic_settings.BaseSettings):
     cache_backend: cache_types.CacheBackend | None = None
     # HTTP backend configuration
     http_backend: http_backends.HTTPBackend | None = None
+    # Logging configuration
+    logger: Logger | None = None
+
+    @property
+    def is_logging_enabled(self) -> bool:
+        return self.logger is not None
 
     def httpx_client_options(self) -> dict[str, Any]:
         """Create a dictionary of options suitable for ``httpx.Client``."""
@@ -103,4 +125,5 @@ def get_default_config(base_url: str) -> BaseConfig:
         cookies=None,
         cache_backend=None,
         http_backend=None,
+        logger=None,
     )
