@@ -3,6 +3,7 @@
 ## 1.7.1
 
 - Support for OpenAPI discriminated unions (`oneOf` + `discriminator`). Schemas with discriminators now generate proper Pydantic discriminated unions using `typing.Annotated[..., pydantic.Field(discriminator="...")]`.
+- `scaffold-api` now adds mypy configuration to the `pyproject.toml` that is produced with a scaffolded client.
 
 ## 1.7.0
 
