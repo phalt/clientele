@@ -140,3 +140,25 @@ def test_response_logs_include_timing(respx_mock: MockRouter, caplog: pytest.Log
     assert any("s)" in m and "Response:" in m for m in messages)
 
     client.close()
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_response_logs_include_content(respx_mock: MockRouter, caplog: pytest.LogCaptureFixture) -> None:
+    """Test that response logs include the response content."""
+    logger = logging.getLogger("test_content")
+    config = BaseConfig(base_url=BASE_URL, logger=logger)
+    client = APIClient(config=config)
+
+    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Alice"}))
+
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User) -> User:
+        return result
+
+    with caplog.at_level(logging.DEBUG, logger="test_content"):
+        get_user(1)
+
+    messages = [r.message for r in caplog.records]
+    assert any("Content:" in m and '{"id":1,"name":"Alice"}' in m for m in messages)
+
+    client.close()
