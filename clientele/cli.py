@@ -121,7 +121,7 @@ cli_group.help = textwrap.dedent(f"""\
 
 🔢 Version {settings.VERSION}
 
-📚 Read the docs: https://github.com/phalt/clientele
+📚 Read the docs: https://docs.clientele.dev
 
 🐙 Contribute on GitHub: https://github.com/phalt/clientele
 
