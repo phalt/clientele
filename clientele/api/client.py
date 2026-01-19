@@ -3,6 +3,7 @@ from __future__ import annotations
 import functools
 import inspect
 import re
+import time
 import typing
 from urllib import parse
 
@@ -567,7 +568,17 @@ class APIClient:
 
         if self.config.http_backend is None:
             raise RuntimeError("HTTP backend is not configured.")
+
+        if self.config.logger:
+            self.config.logger.debug(f"HTTP Request: {method} {url}")
+
+        start_time = time.perf_counter()
         response = self.config.http_backend.send_sync_request(method, url, **request_kwargs)
+        elapsed_time = time.perf_counter() - start_time
+
+        if self.config.logger:
+            self.config.logger.debug(f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)")
+
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
         if response_map is None:
@@ -592,7 +603,17 @@ class APIClient:
 
         if self.config.http_backend is None:
             raise RuntimeError("HTTP backend is not configured.")
+
+        if self.config.logger is not None:
+            self.config.logger.debug(f"HTTP Request: {method} {url}")
+
+        start_time = time.perf_counter()
         response = await self.config.http_backend.send_async_request(method, url, **request_kwargs)
+        elapsed_time = time.perf_counter() - start_time
+
+        if self.config.logger:
+            self.config.logger.debug(f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)")
+
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
         if response_map is None:
