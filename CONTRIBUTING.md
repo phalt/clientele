@@ -2,6 +2,12 @@
 
 First things first: thank you for contributing! This project will be successful thanks to everyone who contributes, and we're happy to have you.
 
+## AI disclosure
+
+Within Clientele we use coding agents to prototype and test out ideas, and then take the idea to fruition using human-crafted code.
+
+You, the human and the author of changes are responsible for the contributions, and if you cannot confidently explain or demonstrate understanding of the changes you are contributing, then they will not be accepted.
+
 ## Bug or issue?
 
 To raise a bug or issue please use [our GitHub](https://github.com/phalt/clientele/issues).
