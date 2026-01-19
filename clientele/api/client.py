@@ -577,7 +577,10 @@ class APIClient:
         elapsed_time = time.perf_counter() - start_time
 
         if self.config.logger:
-            self.config.logger.debug(f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)")
+            self.config.logger.debug(
+                f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)\n"
+                f"Content: {response.text}"
+            )
 
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
@@ -612,7 +615,10 @@ class APIClient:
         elapsed_time = time.perf_counter() - start_time
 
         if self.config.logger:
-            self.config.logger.debug(f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)")
+            self.config.logger.debug(
+                f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)\n"
+                f"Content: {response.text}"
+            )
 
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
