@@ -8,3 +8,6 @@ version = "0.1.0"
 dependencies = [
     "clientele",
 ]
+
+[tool.mypy]
+plugins = ["clientele.mypy"]
