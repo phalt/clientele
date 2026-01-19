@@ -1610,6 +1610,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#171" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#170" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2254,6 +2265,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#171" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#170" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2876,6 +2898,11 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="171">1.7.1</h2>
+<ul>
+<li>Support for OpenAPI discriminated unions (<code>oneOf</code> + <code>discriminator</code>). Schemas with discriminators now generate proper Pydantic discriminated unions using <code>typing.Annotated[..., pydantic.Field(discriminator="...")]</code>.</li>
+<li><code>scaffold-api</code> now adds mypy configuration to the <code>pyproject.toml</code> that is produced with a scaffolded client.</li>
+</ul>
 <h2 id="170">1.7.0</h2>
 <h3 id="http-backends">HTTP Backends</h3>
 <ul>
@@ -3073,7 +3100,7 @@
 <li>Generator files have been reorganised in clientele to support future templates.</li>
 <li><code>constants.py</code> has been renamed to <code>config.py</code> to better reflect how it is used. It is not generated from a template like the other files.</li>
 <li>If you are using Python 3.10 or later, the <code>typing.Unions</code> types will generate as the short hand <code>|</code> instead.</li>
-<li>To regenerate a client (and to prevent accidental overrides) you must now pass <code>--regen t</code> or <code>-r t</code> to the <code>generate</code> command. This is automatically added to the line in <code>MANIFEST.md</code> to  help.</li>
+<li>To regenerate a client (and to prevent accidental overrides) you must now pass <code>--regen t</code> or <code>-r t</code> to the <code>generate</code> command. This is automatically added to the line in <code>MANIFEST.md</code> to help.</li>
 <li>Clientele will now automatically run <a href="https://black.readthedocs.io/en/stable/">black</a> code formatter once a client is generated or regenerated.</li>
 <li>Clientele will now generate absolute paths to refer to adjacent files in the generated client, instead of relative paths. This assumes you are running the <code>clientele</code> command in the root directory of your project.</li>
 <li>A lot of documentation and docs strings updates so that code in the generated client is easier to understand.</li>
@@ -3188,7 +3215,7 @@
 <li>Improved CLI output</li>
 <li>Code organisation is now sensible and not just one giant file</li>
 <li>Now supports an openapi spec generated from a dotnet project (<code>Microsoft.OpenApi.Models</code>)</li>
-<li>async client support  fully working</li>
+<li>async client support fully working</li>
 <li>HTTP Bearer support</li>
 <li>HTTP Basic support</li>
 </ul>
