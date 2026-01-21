@@ -1,6 +1,6 @@
 import platform
 
-VERSION = "1.7.1"
+VERSION = "1.8.0"
 
 
 def split_ver():

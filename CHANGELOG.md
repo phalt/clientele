@@ -1,6 +1,6 @@
 # Change log
 
-## UNRELEASED 1.8.0
+## 1.8.0
 
 ### Request Logging
 
