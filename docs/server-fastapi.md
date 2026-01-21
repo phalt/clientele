@@ -133,10 +133,6 @@ This generates:
 
 See [api authentication](api-authentication.md).
 
-## Regenerating the Client
-
-See [regeneration](openapi-regeneration.md).
-
 ## Path and Query Parameters
 
 FastAPI's path and query parameters are automatically converted to function arguments:
@@ -196,6 +192,5 @@ print(response.name)
 
 ## Next Steps
 
-- [Learn about regeneration workflow](openapi-regeneration.md)
 - [Configure authentication](api-authentication.md)
-- [Set up testing with respx](testing.md)
+- [Set up testing with respx](api-testing.md)

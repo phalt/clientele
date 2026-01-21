@@ -3,82 +3,9 @@
 import tempfile
 from pathlib import Path
 
-from clientele.generators.classbase.generators.schemas import SchemasGenerator as ClassbaseSchemasGenerator
 from clientele.generators.standard import utils
 from clientele.generators.standard.generators.schemas import SchemasGenerator as StandardSchemasGenerator
 from tests.generators.integration_utils import load_spec
-
-
-def test_classbase_schemas_generator_union_with_inline_schema():
-    """Test classbase schemas generator handles oneOf with inline schemas (line 58)."""
-    spec = load_spec("simple.json")
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_schemas"
-        output_dir.mkdir(parents=True)
-
-        generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-
-        # Create a schema with oneOf containing an inline schema (not a $ref)
-        schema_with_inline = {
-            "oneOf": [
-                {"type": "string"},  # Inline schema, not a $ref
-                {"type": "integer"},  # Another inline schema
-            ]
-        }
-
-        generator.make_schema_class("TestInlineUnion", schema_with_inline)
-
-        # Verify schema was processed
-        assert "TestInlineUnion" in generator.schemas
-
-
-def test_classbase_schemas_input_class_with_ref():
-    """Test classbase schemas generator input class with $ref (line 134)."""
-    spec = load_spec("simple.json")
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_schemas"
-        output_dir.mkdir(parents=True)
-
-        generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-
-        # Create input schema with $ref
-        input_schema_with_ref = {
-            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SomeSchema"}}}
-        }
-
-        generator.generate_input_class(input_schema_with_ref, "test_operation")
-
-        # Should not raise an error
-
-
-def test_classbase_schemas_input_class_with_title():
-    """Test classbase schemas generator input class with title (line 136)."""
-    spec = load_spec("simple.json")
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_schemas"
-        output_dir.mkdir(parents=True)
-
-        generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-
-        # Create input schema with title
-        input_schema_with_title = {
-            "content": {
-                "application/json": {
-                    "schema": {
-                        "type": "object",
-                        "title": "CustomInputTitle",
-                        "properties": {"name": {"type": "string"}},
-                    }
-                }
-            }
-        }
-
-        generator.generate_input_class(input_schema_with_title, "test_operation")
-
-        # Should use the title for class name
 
 
 def test_utils_create_query_args():

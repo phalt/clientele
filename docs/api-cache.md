@@ -221,4 +221,4 @@ def get_user(id: int, result: dict) -> dict:
 
 - [API Configuration](api-configuration.md) - General API client configuration
 - [Async Support](api-async.md) - Using async/await with Clientele
-- [Testing](testing.md) - How to test code that uses caching
+- [Testing](api-testing.md) - How to test code that uses caching

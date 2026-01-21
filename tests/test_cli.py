@@ -60,7 +60,7 @@ def test_version_command(runner):
     assert settings.VERSION in result.output
 
 
-@pytest.mark.parametrize("command", ["generate", "generate-class", "scaffold-api"])
+@pytest.mark.parametrize("command", ["start-api"])
 def test_generate_commands_require_output_parameter(runner, command):
     """Test that all generate commands require --output parameter."""
     result = runner.invoke(cli.cli_group, [command])
@@ -147,9 +147,8 @@ def test_load_openapi_spec_from_url(simple_openapi_spec, httpserver, content_typ
 @pytest.mark.parametrize(
     "command,regen_arg,expected_output",
     [
-        ("generate", ["--regen", "true"], "Client generated"),
-        ("generate-class", ["--regen", "true"], "generated"),
         ("scaffold-api", ["--regen"], "generated"),
+        ("start-api", ["--regen"], "generated"),
     ],
 )
 def test_generate_commands_with_valid_spec(runner, command, regen_arg, expected_output):

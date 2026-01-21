@@ -7,6 +7,19 @@
 - Added optional request/response logging to `APIClient` via the `logger` parameter in `BaseConfig`. Logs include method, URL, status code, and elapsed time in seconds.
 - Uses a `Logger` Protocol with `@runtime_checkable` for flexibility.
 
+### CLI commands update
+
+- A new command `start-api` has been introduced.
+- The new command will replace `scaffold-api` and `generate-basic` in 2.0.0
+- Currently it behaves as an alias for both.
+- If not url or file is provided, will call `generate-basic`, otherwise it calls `scaffold-api`.
+
+Start a basic client with one command:
+
+```sh
+uvx clientele start-api -o /path/to/my_client
+```
+
 ## 1.7.1
 
 - Support for OpenAPI discriminated unions (`oneOf` + `discriminator`). Schemas with discriminators now generate proper Pydantic discriminated unions using `typing.Annotated[..., pydantic.Field(discriminator="...")]`.

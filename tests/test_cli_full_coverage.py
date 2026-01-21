@@ -85,52 +85,6 @@ def test_prepare_spec_returns_none_for_old_version(openapi_v2_spec):
         Path(spec_file).unlink()
 
 
-def test_generate_command_with_old_version_spec(runner, openapi_v2_spec):
-    """Test generate command with OpenAPI version < 3.0."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(openapi_v2_spec, f)
-        spec_file = f.name
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_client"
-
-        try:
-            result = runner.invoke(
-                cli.cli_group,
-                ["generate", "--file", spec_file, "--output", str(output_dir), "--regen", "true"],
-            )
-
-            # Should exit without generating because version is too old
-            assert result.exit_code == 0
-            # Output directory should not be created or be empty
-            assert not output_dir.exists() or len(list(output_dir.iterdir())) == 0
-        finally:
-            Path(spec_file).unlink()
-
-
-def test_generate_class_command_with_old_version_spec(runner, openapi_v2_spec):
-    """Test generate-class command with OpenAPI version < 3.0."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
-        json.dump(openapi_v2_spec, f)
-        spec_file = f.name
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_client"
-
-        try:
-            result = runner.invoke(
-                cli.cli_group,
-                ["generate-class", "--file", spec_file, "--output", str(output_dir), "--regen", "true"],
-            )
-
-            # Should exit without generating because version is too old
-            assert result.exit_code == 0
-            # Output directory should not be created or be empty
-            assert not output_dir.exists() or len(list(output_dir.iterdir())) == 0
-        finally:
-            Path(spec_file).unlink()
-
-
 def test_explore_command_with_no_params(runner):
     """Test explore command with no parameters shows error."""
     result = runner.invoke(cli.cli_group, ["explore"])

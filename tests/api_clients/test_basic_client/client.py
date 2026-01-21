@@ -5,9 +5,7 @@ API Client functions.
 from __future__ import annotations
 
 from clientele import api
-{% if client_project_directory_path %}from {{client_project_directory_path}}.config import config
-{% else %}from .config import config
-{% endif %}
+from tests.api_clients.test_basic_client.config import config
 
 client = api.APIClient(config=config)
 

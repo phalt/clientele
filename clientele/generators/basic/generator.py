@@ -22,7 +22,6 @@ class BasicGenerator(generators.Generator):
         self.file_name_writer_tuple = (
             ("config.py", "config_py.jinja2", writer.write_to_config),
             ("client.py", "client_py.jinja2", writer.write_to_client),
-            ("http.py", "http_py.jinja2", writer.write_to_http),
             ("schemas.py", "schemas_py.jinja2", writer.write_to_schemas),
         )
 

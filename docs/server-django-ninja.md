@@ -162,10 +162,6 @@ This generates:
 
 See [api authentication](api-authentication.md).
 
-## Regenerating the Client
-
-See [regeneration](openapi-regeneration.md).
-
 ## Schemas and Pydantic
 
 Django Ninja uses Pydantic for schemas, which aligns perfectly with Clientele!
@@ -292,6 +288,5 @@ print(response.username)
 
 ## Next Steps
 
-- [Learn about regeneration workflow](openapi-regeneration.md)
 - [Configure authentication](api-authentication.md)
-- [Set up testing with respx](testing.md)
+- [Set up testing with respx](api-testing.md)
