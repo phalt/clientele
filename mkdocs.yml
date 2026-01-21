@@ -45,6 +45,7 @@ nav:
     - 🌊 Streaming: api-stream.md
     - 🚨 Exception Handling: exceptions.md
     - 🔄 Retries: api-retries.md
+    - 🪵 Logging: api-logging.md
     - 🧪 Testing: testing.md
     - 🎯 Direct requests: api-direct-requests.md
     - 🥧 Mypy support: mypy.md

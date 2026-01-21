@@ -571,16 +571,18 @@ class APIClient:
 
         if self.config.logger:
             self.config.logger.debug(f"HTTP Request: {method} {url}")
+            self.config.logger.debug(f"Request Query Params: {query_params}")
+            self.config.logger.debug(f"Request Payload: {data_payload}")
+            self.config.logger.debug(f"Request Headers: {headers}")
 
         start_time = time.perf_counter()
         response = self.config.http_backend.send_sync_request(method, url, **request_kwargs)
         elapsed_time = time.perf_counter() - start_time
 
         if self.config.logger:
-            self.config.logger.debug(
-                f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)\n"
-                f"Content: {response.text}"
-            )
+            self.config.logger.debug(f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)")
+            self.config.logger.debug(f"Response Content: {response.text}")
+            self.config.logger.debug(f"Response Headers: {response.headers}")
 
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
