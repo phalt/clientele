@@ -20,6 +20,8 @@ Start a basic client with one command:
 uvx clientele start-api -o /path/to/my_client
 ```
 
+- Dropped the `generate` and `generate-class` commands from the CLI.
+
 ## 1.7.1
 
 - Support for OpenAPI discriminated unions (`oneOf` + `discriminator`). Schemas with discriminators now generate proper Pydantic discriminated unions using `typing.Annotated[..., pydantic.Field(discriminator="...")]`.
