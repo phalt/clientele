@@ -13,7 +13,6 @@ import pytest
 from respx import MockRouter
 
 from clientele.generators.api.generator import APIGenerator
-from clientele.generators.classbase.generator import ClassbaseGenerator
 from clientele.generators.standard.generator import StandardGenerator
 from tests.generators.integration_utils import get_spec_path, load_spec
 
@@ -44,7 +43,7 @@ def import_generated_schemas(tmp_path):
 class TestOneOfSchemas:
     """Test oneOf schema handling - discriminated unions."""
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, ClassbaseGenerator, APIGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_oneof_at_schema_level(self, tmp_path, client_generator):
         """Test that oneOf at schema level generates a type alias with discriminator."""
         spec = load_spec("complex_schemas.json")
@@ -67,7 +66,7 @@ class TestOneOfSchemas:
         assert "class Cat(pydantic.BaseModel):" in schemas_content
         assert "class Dog(pydantic.BaseModel):" in schemas_content
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, ClassbaseGenerator, APIGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_oneof_with_multiple_types(self, tmp_path, client_generator):
         """Test oneOf with three or more schema options and discriminator."""
         spec = load_spec("complex_schemas.json")
@@ -98,7 +97,7 @@ class TestOneOfSchemas:
 class TestAnyOfSchemas:
     """Test anyOf schema handling - flexible unions."""
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_anyof_in_property(self, tmp_path, client_generator):
         """Test that anyOf in property generates union types."""
         spec = load_spec("complex_schemas.json")
@@ -120,7 +119,7 @@ class TestAnyOfSchemas:
         assert "id: str | int" in schemas_content
         assert "class FlexibleIdResponse(pydantic.BaseModel):" in schemas_content
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_anyof_existing_validation_error(self, tmp_path, client_generator):
         """Test that existing ValidationError uses anyOf correctly."""
         spec = load_spec("best.json")
@@ -146,7 +145,7 @@ class TestAnyOfSchemas:
 class TestNullableFields:
     """Test nullable field handling."""
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_nullable_string(self, tmp_path, client_generator):
         """Test that nullable fields generate Optional types."""
         spec = load_spec("complex_schemas.json")
@@ -168,7 +167,7 @@ class TestNullableFields:
         assert "optional_nullable_field: typing.Optional[str]" in schemas_content
         assert "nullable_number: typing.Optional[int]" in schemas_content
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_nullable_no_double_wrapping(self, tmp_path, client_generator):
         """Test that nullable fields don't get double-wrapped in Optional."""
         spec = load_spec("complex_schemas.json")
@@ -193,7 +192,7 @@ class TestNullableFields:
 class TestRuntimeBehavior:
     """Test that generated code with oneOf/anyOf/nullable works at runtime."""
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_generated_code_imports(self, tmp_path, client_generator):
         """Test that generated code can be imported without errors."""
         spec = load_spec("complex_schemas.json")
@@ -217,7 +216,7 @@ class TestRuntimeBehavior:
             assert hasattr(schemas, "FlexibleIdResponse")
             assert hasattr(schemas, "NullableFieldsResponse")
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_create_instances_with_union_types(self, tmp_path, client_generator):
         """Test creating instances with union types."""
         spec = load_spec("complex_schemas.json")
@@ -248,7 +247,7 @@ class TestRuntimeBehavior:
             resp2 = schemas.FlexibleIdResponse(id=12345, data="test")
             assert resp2.id == 12345
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_nullable_field_instances(self, tmp_path, client_generator):
         """Test creating instances with nullable fields."""
         spec = load_spec("complex_schemas.json")
@@ -282,7 +281,7 @@ class TestRuntimeBehavior:
 class TestEdgeCases:
     """Test edge cases and complex combinations."""
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_multiple_schemas_same_type(self, tmp_path, client_generator):
         """Test that schemas defining the same union types work."""
         spec = load_spec("complex_schemas.json")
@@ -312,7 +311,7 @@ class TestEdgeCases:
 class TestArrayResponses:
     """Test top-level array response handling."""
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_array_response_generates_type_alias(self, tmp_path, client_generator):
         """Test that top-level array responses generate type aliases, not empty classes."""
         spec = load_spec("complex_schemas.json")
@@ -342,7 +341,7 @@ class TestArrayResponses:
         assert "name: str" in schemas_content
         assert "email: str" in schemas_content
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_array_response_without_title_generates_type_alias(self, tmp_path, client_generator):
         """Test that array responses without title also generate type aliases correctly."""
         spec = load_spec("complex_schemas.json")
@@ -371,7 +370,7 @@ class TestArrayResponses:
 class TestNoContentResponses:
     """Test 204 No Content response handling."""
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, ClassbaseGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator])
     def test_204_response_is_included_in_status_code_map(self, tmp_path, client_generator):
         """Test that 204 No Content responses are included in func_response_code_maps."""
         spec = load_spec("complex_schemas.json")
@@ -398,7 +397,7 @@ class TestNoContentResponses:
         # Verify it has the 204 status code mapped
         assert '"204":' in http_content
 
-    @pytest.mark.parametrize("client_generator", [StandardGenerator, ClassbaseGenerator, APIGenerator])
+    @pytest.mark.parametrize("client_generator", [StandardGenerator, APIGenerator])
     def test_array_response_client_function(self, tmp_path, client_generator):
         """Test that client functions use array type aliases correctly."""
         spec = load_spec("complex_schemas.json")

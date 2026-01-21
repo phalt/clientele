@@ -8,7 +8,6 @@ import pytest
 
 from clientele.generators.api.generator import APIGenerator
 from clientele.generators.cicerone_compat import normalize_openapi_31_schema, normalize_openapi_31_spec
-from clientele.generators.classbase.generator import ClassbaseGenerator
 from clientele.generators.standard.generator import StandardGenerator
 
 
@@ -177,7 +176,7 @@ def test_normalize_openapi_31_spec_non_dict_parameter():
 class TestGeneratorCoverage:
     """Tests for generator module coverage."""
 
-    @pytest.mark.parametrize("generator_class", [StandardGenerator, ClassbaseGenerator, APIGenerator])
+    @pytest.mark.parametrize("generator_class", [StandardGenerator, APIGenerator])
     def test_generator_removes_existing_file(self, generator_class):
         """Test that generators removes existing files before regenerating."""
 
@@ -232,7 +231,7 @@ class TestGeneratorCoverage:
             finally:
                 Path(spec_file).unlink()
 
-    @pytest.mark.parametrize("generator_class", [StandardGenerator, ClassbaseGenerator, APIGenerator])
+    @pytest.mark.parametrize("generator_class", [StandardGenerator, APIGenerator])
     def test_generator_with_servers(self, generator_class):
         """Test generator with servers in spec."""
 

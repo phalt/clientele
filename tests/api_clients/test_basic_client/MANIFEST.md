@@ -2,26 +2,26 @@
 
 Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
 
-Install with pipx:
+Install with pip:
 
 ```sh
-pipx install clientele
+pip install clientele
 ```
 
 Or with uv:
 
 ```sh
-uv tool install clientele
+uv add clientele
 ```
 
-API VERSION: {{api_version}}
-OPENAPI VERSION: {{openapi_version}}
-CLIENTELE VERSION: {{clientele_version}}
+API VERSION: 
+OPENAPI VERSION: 
+CLIENTELE VERSION: 1.7.1
 
 Regenerate using this command:
 
 ```sh
-clientele {{generator_type}} {{command}}
+clientele start-api -o tests/api_clients/test_basic_client/
 ```
 
 Explore this API interactively:

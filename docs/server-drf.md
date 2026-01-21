@@ -206,10 +206,6 @@ def user_stats(request, user_id):
 
 See [api authentication](api-authentication.md).
 
-## Regenerating the Client
-
-See [regeneration](openapi-regeneration.md).
-
 ## Serializers and Schemas
 
 DRF serializers become Pydantic models in the generated client:
@@ -307,6 +303,5 @@ print(response.username)
 
 ## Next Steps
 
-- [Learn about regeneration workflow](openapi-regeneration.md)
 - [Configure authentication](api-authentication.md)
-- [Set up testing with respx](testing.md)
+- [Set up testing with respx](api-testing.md)

@@ -2,16 +2,16 @@
 
 Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
 
-Install with pipx:
+Install with pip:
 
 ```sh
-pipx install clientele
+pip install clientele
 ```
 
 Or with uv:
 
 ```sh
-uv tool install clientele
+uv add clientele
 ```
 
 API VERSION: 0.1.0
@@ -21,7 +21,7 @@ CLIENTELE VERSION: 1.7.1
 Regenerate using this command:
 
 ```sh
-clientele scaffold-api -f example_openapi_specs/best.json -o tests/api_clients/async_test_client/ --asyncio --regen
+clientele start-api -f example_openapi_specs/best.json -o tests/api_clients/async_test_client/ --asyncio --regen
 ```
 
 Explore this API interactively:

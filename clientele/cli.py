@@ -131,7 +131,7 @@ cli_group.help = textwrap.dedent(f"""\
 @click.command()
 def version():
     """
-    🔢 Print the current version of clientele
+    Print the current version of Clientele
     """
     from clientele import settings
 
@@ -139,35 +139,11 @@ def version():
 
 
 @click.command()
-@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
-@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
-@click.option("-o", "--output", help="Directory for the generated client", required=True)
-@click.option("-a", "--asyncio", help="Generate async client", required=False)
-@click.option("-r", "--regen", help="Regenerate client", required=False)
-def generate(url, file, output, asyncio, regen):
-    """
-    DEPRECATED - Generate a new client from an OpenAPI schema
-    """
-    from rich.console import Console
-
-    console = Console()
-
-    from clientele.generators.standard.generator import StandardGenerator
-
-    spec = _prepare_spec(console=console, url=url, file=file)
-    if not spec:
-        return
-    generator = StandardGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
-    if generator.prevent_accidental_regens():
-        generator.generate()
-        console.log("\n[green]Client generated! ⚜️ \n")
-        _print_dependency_instructions(console)
-
-
-@click.command()
 @click.option("-o", "--output", help="Directory for the generated client", required=True)
 def generate_basic(output):
     """
+    DEPRECATED - use start-api
+
     Generate a "basic" file structure, no code.
     """
     from rich.console import Console
@@ -187,36 +163,12 @@ def generate_basic(output):
 @click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
 @click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
 @click.option("-o", "--output", help="Directory for the generated client", required=True)
-@click.option("-a", "--asyncio", help="Generate async client", required=False)
-@click.option("-r", "--regen", help="Regenerate client", required=False)
-def generate_class(url, file, output, asyncio, regen):
-    """
-    DEPRECATED - Generate a class-based client from an OpenAPI schema
-    """
-    from rich.console import Console
-
-    console = Console()
-
-    from clientele.generators.classbase.generator import ClassbaseGenerator
-
-    spec = _prepare_spec(console=console, url=url, file=file)
-    if not spec:
-        return
-    generator = ClassbaseGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
-    if generator.prevent_accidental_regens():
-        generator.generate()
-        console.log("\n[green]⚜️ Class-based client generated! ⚜️ \n")
-        _print_dependency_instructions(console)
-
-
-@click.command()
-@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
-@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
-@click.option("-o", "--output", help="Directory for the generated client", required=True)
 @click.option("-a", "--asyncio", is_flag=True, help="Generate async client")
 @click.option("-r", "--regen", is_flag=True, help="Regenerate client")
 def scaffold_api(url, file, output, asyncio=False, regen=False):
     """
+    DEPRECATED - use start-api
+
     Scaffold an API client from an OpenAPI schema.
     """
     from rich.console import Console
@@ -232,6 +184,33 @@ def scaffold_api(url, file, output, asyncio=False, regen=False):
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ client generated! ⚜️ \n")
+
+
+@click.command()
+@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
+@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
+@click.option("-o", "--output", help="Directory for the generated client", required=True)
+@click.option("-a", "--asyncio", is_flag=True, help="Generate async client")
+@click.option("-r", "--regen", is_flag=True, help="Regenerate client")
+def start_api(url, file, output, asyncio=False, regen=False):
+    """
+    Set up a new API Client
+
+    -o / --output: Directory for the generated client
+
+    If -u / --url or -f / --file is provided, generates the client from the OpenAPI schema.
+    Otherwise, creates a basic scaffold.
+
+    if -a / --asyncio is provided, generates an async client.
+
+    if -r / --regen is provided, regenerates the client even if files exist.
+    """
+    if not url and not file:
+        # No schema provided, generate basic scaffold
+        generate_basic.callback(output=output)  # type: ignore
+    else:
+        # Schema provided, generate full client
+        scaffold_api.callback(url=url, file=file, output=output, asyncio=asyncio, regen=regen)  # type: ignore
 
 
 @click.command()
@@ -321,12 +300,11 @@ def explore(client, file, url):
                 pass  # Ignore cleanup errors
 
 
-cli_group.add_command(generate)
 cli_group.add_command(generate_basic)
-cli_group.add_command(generate_class)
 cli_group.add_command(scaffold_api)
 cli_group.add_command(version)
 cli_group.add_command(explore)
+cli_group.add_command(start_api)
 
 if __name__ == "__main__":
     cli_group()

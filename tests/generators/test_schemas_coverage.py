@@ -3,82 +3,8 @@
 import tempfile
 from pathlib import Path
 
-from clientele.generators.classbase.generators.schemas import SchemasGenerator as ClassbaseSchemasGenerator
 from clientele.generators.standard.generators.schemas import SchemasGenerator as StandardSchemasGenerator
 from tests.generators.integration_utils import load_spec
-
-
-def test_classbase_schemas_generator_handles_anyof():
-    """Test classbase schemas generator handles anyOf schemas (lines 83-84)."""
-    spec = load_spec("simple.json")
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_schemas"
-        output_dir.mkdir(parents=True)
-
-        generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-
-        # Create a schema with anyOf
-        schema_with_anyof = {
-            "anyOf": [
-                {"$ref": "#/components/schemas/String"},
-                {"$ref": "#/components/schemas/Integer"},
-            ]
-        }
-
-        generator.make_schema_class("TestAnyOf", schema_with_anyof)
-
-        # Verify schema was processed (marked as processed in schemas dict)
-        assert "TestAnyOf" in generator.schemas
-
-
-def test_classbase_schemas_generator_handles_allof_with_non_ref_object():
-    """Test classbase schemas generator handles allOf with non-ref object types (lines 106-107)."""
-    spec = load_spec("simple.json")
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_schemas"
-        output_dir.mkdir(parents=True)
-
-        generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-
-        # Create a schema with allOf containing non-ref object
-        schema_with_allof = {
-            "allOf": [
-                {
-                    "type": "object",
-                    "properties": {"name": {"type": "string"}, "age": {"type": "integer"}},
-                    "required": ["name"],
-                }
-            ]
-        }
-
-        generator.make_schema_class("TestAllOf", schema_with_allof)
-
-        # Verify schema was processed
-        assert "TestAllOf" in generator.schemas
-
-
-def test_classbase_schemas_generator_handles_inline_schema_in_input():
-    """Test classbase schemas generator handles inline schemas in input (lines 130-146)."""
-    spec = load_spec("simple.json")
-
-    with tempfile.TemporaryDirectory() as tmpdir:
-        output_dir = Path(tmpdir) / "test_schemas"
-        output_dir.mkdir(parents=True)
-
-        generator = ClassbaseSchemasGenerator(spec=spec, output_dir=str(output_dir))
-
-        # Create input schema without $ref or title (uses func_name + encoding)
-        input_schema = {
-            "content": {"application/json": {"schema": {"type": "object", "properties": {"data": {"type": "string"}}}}}
-        }
-
-        generator.generate_input_class(input_schema, "create_user")
-
-        # Verify the generated file exists
-        schemas_file = output_dir / "schemas.py"
-        assert schemas_file.exists()
 
 
 def test_standard_schemas_generator_handles_anyof():
