@@ -127,23 +127,3 @@ Clientele can create scaffolding for an API client from an OpenAPI schema with:
 - **Formatted code** thanks to [Ruff](https://docs.astral.sh/ruff/).
 
 ![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
-
-## API Client explorer
-
-Clientele has an `explore` mode for quickly testing and debugging APIs through an interactive REPL:
-
-```sh
-# Explore an existing clientele-compatible client
-uvx clientele explore -c my_clientele_client/
-
-# Or generate a temporary client from any OpenAPI service on the web
-uvx clientele explore -u https://raw.githubusercontent.com/PokeAPI/pokeapi/master/openapi.yml
-# 🤫 Pssst! Copy and paste this right now to try it!
-```
-
-![repl demo](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele.gif)
-
-- **Autocomplete** for operations and schemas.
-- **Execute API operations** to test the API.
-- **Inspect schemas** to see what the objects look like.
-- **Modify configuration** within the REPL as you're testing.
