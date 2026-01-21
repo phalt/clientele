@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.clientele.dev/exceptions/">
+        <link rel="canonical" href="https://docs.clientele.dev/api-logging/">
       
       
-        <link rel="prev" href="../api-stream/">
+        <link rel="prev" href="../api-retries/">
       
       
-        <link rel="next" href="../api-retries/">
+        <link rel="next" href="../api-testing/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>🚨 Exception Handling - Clientele</title>
+        <title>🪵 Logging - Clientele</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#exception-handling" class="md-skip">
+        <a href="#logging" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🚨 Exception Handling
+              🪵 Logging
             
           </span>
         </div>
@@ -284,13 +284,6 @@
   
     
     
-      
-  
-  
-  
-  
-    
-    
       <li class="md-tabs__item">
         <a href="../openapi-cli/" class="md-tabs__link">
           
@@ -300,9 +293,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -332,18 +322,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href="../design/" class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href="../CHANGELOG/" class="md-tabs__link">
+        
   
   
-  ❓About
+    
+  
+  📝 Change Log
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -786,37 +775,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🚨 Exception Handling
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../api-exceptions/" class="md-nav__link">
         
   
   
@@ -832,109 +794,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#when-apiexception-is-raised" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        When APIException is Raised
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#catching-apiexception" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Catching APIException
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#exception-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exception Attributes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-scenarios" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Scenarios
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Scenarios">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#server-error-500" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server Error (500)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unexpected-client-error" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unexpected Client Error
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -972,10 +831,96 @@
                 
   
   
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🪵 Logging
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🪵 Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
+      <a href="../api-testing/" class="md-nav__link">
         
   
   
@@ -1115,56 +1060,6 @@
   
   
   
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🏗️ Client Scaffolder
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    🏗️ Client Scaffolder
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href="../openapi-cli/" class="md-nav__link">
         
@@ -1173,7 +1068,7 @@
   <span class="md-ellipsis">
     
   
-    Usage & CLI
+    🏗️ Client creator
   
 
     
@@ -1186,232 +1081,6 @@
   
 
               
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openapi-regeneration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Regeneration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openapi-configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Barebones Configuration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openapi-authentication/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Barebones authentication
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Generated Client Tour
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../compatibility/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Compatibility & Limitations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../references/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    References in OpenAPI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🗺️ API Explorer
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    🗺️ API Explorer
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1427,7 +1096,7 @@
   <span class="md-ellipsis">
     
   
-    Overview
+    🗺️ API Explorer
   
 
     
@@ -1436,14 +1105,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1603,84 +1264,6 @@
   
   
   
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ❓About
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    ❓About
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Background
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href="../CHANGELOG/" class="md-nav__link">
         
@@ -1689,7 +1272,7 @@
   <span class="md-ellipsis">
     
   
-    Change Log
+    📝 Change Log
   
 
     
@@ -1698,14 +1281,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1737,82 +1312,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#when-apiexception-is-raised" class="md-nav__link">
+  <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When APIException is Raised
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#catching-apiexception" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Catching APIException
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#exception-attributes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exception Attributes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-scenarios" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Scenarios
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Common Scenarios">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#server-error-500" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server Error (500)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#unexpected-client-error" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unexpected Client Error
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#best-practices" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Best Practices
+        Example
       
     </span>
   </a>
@@ -1839,74 +1342,47 @@
   
 
 
-<h1 id="exception-handling">🚨 Exception Handling</h1>
-<p>Clientele will handle unexpected API responses by raising an <code>APIException</code>.</p>
-<h2 id="when-apiexception-is-raised">When APIException is Raised</h2>
-<p>The <code>APIException</code> is raised when the API returns a response code that doesn't match any of the expected response codes defined in the OpenAPI schema for that endpoint.</p>
-<p>Each API function has a mapping of expected response codes to response types. If the actual response code isn't in this mapping, Clientele raises an <code>APIException</code> instead of trying to parse the response.</p>
-<h2 id="catching-apiexception">Catching APIException</h2>
-<p>Import <code>APIException</code> from your client's <code>http</code> module:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">http</span>
+<h1 id="logging">🪵 Logging</h1>
+<p>Clientele supports debug logging.</p>
+<h2 id="example">Example</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">http</span><span class="o">.</span><span class="n">APIException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="c1"># Handle unexpected response</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected status: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response body: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;my_pokeapi_client&quot;</span><span class="p">))</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InputData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/anything&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">send_post_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">InputData</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;json&quot;</span><span class="p">]</span>
 </code></pre></div>
-<h2 id="exception-attributes">Exception Attributes</h2>
-<p>The <code>APIException</code> provides access to:</p>
 <ul>
-<li><code>response</code>: The raw <code>httpx.Response</code> object for debugging</li>
-<li><code>reason</code>: A string explaining why the exception was raised</li>
+<li>With the logger set you will see debug information about the prepared request and the response.</li>
+<li>The time it took for a request to return will also be printed.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="n">user</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">http</span><span class="o">.</span><span class="n">APIException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reason: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Headers: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Body: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="common-scenarios">Common Scenarios</h2>
-<h3 id="server-error-500">Server Error (500)</h3>
-<p>If the API returns a 500 error and it's not defined in the schema:</p>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">user_data</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">http</span><span class="o">.</span><span class="n">APIException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">&gt;=</span> <span class="mi">500</span><span class="p">:</span>
-        <span class="c1"># Server error - retry logic</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Server error: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h3 id="unexpected-client-error">Unexpected Client Error</h3>
-<p>If the API returns an error code you didn't expect:</p>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">delete_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">http</span><span class="o">.</span><span class="n">APIException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">403</span><span class="p">:</span>
-        <span class="c1"># Not defined in schema, but API returned it</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Permission denied&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">404</span><span class="p">:</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;User not found&quot;</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="best-practices">Best Practices</h2>
-<ol>
-<li><strong>Always catch APIException</strong> when calling API functions that might return unexpected responses</li>
-<li><strong>Log the full response</strong> for debugging - it contains valuable information</li>
-<li><strong>Check the OpenAPI schema</strong> if you consistently get <code>APIException</code> for a specific endpoint - the schema might be incomplete</li>
-<li><strong>Use pattern matching</strong> (Python 3.10+) for clean error handling:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
-<span class="k">except</span> <span class="n">http</span><span class="o">.</span><span class="n">APIException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="k">match</span> <span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">:</span>
-        <span class="k">case</span> <span class="mi">404</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;User not found&quot;</span><span class="p">)</span>
-        <span class="k">case</span> <span class="mi">500</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Server error&quot;</span><span class="p">)</span>
-        <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">send_post_data</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;hello!&quot;</span><span class="p">})</span>
+<span class="n">DEBUG</span><span class="p">:</span><span class="n">my_pokeapi_client</span><span class="p">:</span><span class="n">HTTP</span> <span class="n">Request</span><span class="p">:</span> <span class="n">POST</span> <span class="o">/</span><span class="n">anything</span>
+<span class="n">DEBUG</span><span class="p">:</span><span class="n">my_pokeapi_client</span><span class="p">:</span><span class="n">Request</span> <span class="n">Query</span> <span class="n">Params</span><span class="p">:</span> <span class="p">{}</span>
+<span class="n">DEBUG</span><span class="p">:</span><span class="n">my_pokeapi_client</span><span class="p">:</span><span class="n">Request</span> <span class="n">Payload</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;hello!&#39;</span><span class="p">}</span>
+<span class="n">DEBUG</span><span class="p">:</span><span class="n">my_pokeapi_client</span><span class="p">:</span><span class="n">Request</span> <span class="n">Headers</span><span class="p">:</span> <span class="p">{}</span>
+<span class="n">DEBUG</span><span class="p">:</span><span class="n">my_pokeapi_client</span><span class="p">:</span><span class="n">HTTP</span> <span class="n">Response</span><span class="p">:</span> <span class="n">POST</span> <span class="o">/</span><span class="n">anything</span> <span class="o">-&gt;</span> <span class="mi">200</span> <span class="p">(</span><span class="mf">0.567</span><span class="n">s</span><span class="p">)</span>
+<span class="n">DEBUG</span><span class="p">:</span><span class="n">my_pokeapi_client</span><span class="p">:</span><span class="n">Response</span> <span class="n">Content</span><span class="p">:</span> <span class="p">{</span>
+  <span class="o">...</span><span class="p">,</span>
+  <span class="s2">&quot;json&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;hello!&quot;</span>
+  <span class="p">},</span> 
+<span class="p">}</span>
+<span class="n">DEBUG</span><span class="p">:</span><span class="n">my_pokeapi_client</span><span class="p">:</span><span class="n">Response</span> <span class="n">Headers</span><span class="p">:</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;hello!&#39;</span><span class="p">}</span>
 </code></pre></div>
 
 
@@ -1937,7 +1413,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../api-stream/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🌊 Streaming">
+          <a href="../api-retries/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🔄 Retries">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1947,20 +1423,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                🌊 Streaming
+                🔄 Retries
               </div>
             </div>
           </a>
         
         
           
-          <a href="../api-retries/" class="md-footer__link md-footer__link--next" aria-label="Next: 🔄 Retries">
+          <a href="../api-testing/" class="md-footer__link md-footer__link--next" aria-label="Next: 🧪 Testing">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                🔄 Retries
+                🧪 Testing
               </div>
             </div>
             <div class="md-footer__button md-icon">

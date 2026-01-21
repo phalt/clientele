@@ -8,13 +8,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.clientele.dev/openapi-regeneration/">
+        <link rel="canonical" href="https://docs.clientele.dev/api-testing/">
       
       
-        <link rel="prev" href="../openapi-cli/">
+        <link rel="prev" href="../api-logging/">
       
       
-        <link rel="next" href="../openapi-configuration/">
+        <link rel="next" href="../api-direct-requests/">
       
       
         
@@ -25,7 +25,7 @@
     
     
       
-        <title>Regeneration - Clientele</title>
+        <title>🧪 Testing - Clientele</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#regeneration" class="md-skip">
+        <a href="#testing" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Regeneration
+              🧪 Testing
             
           </span>
         </div>
@@ -259,10 +259,12 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
+      <li class="md-tabs__item md-tabs__item--active">
         <a href="../api-overview/" class="md-tabs__link">
           
   
@@ -279,21 +281,10 @@
   
   
   
-    
-  
   
     
     
-      
-  
-  
-  
-    
-  
-  
-    
-    
-      <li class="md-tabs__item md-tabs__item--active">
+      <li class="md-tabs__item">
         <a href="../openapi-cli/" class="md-tabs__link">
           
   
@@ -302,9 +293,6 @@
 
         </a>
       </li>
-    
-  
-
     
   
 
@@ -334,18 +322,17 @@
   
   
   
-    
-    
-      <li class="md-tabs__item">
-        <a href="../design/" class="md-tabs__link">
-          
+    <li class="md-tabs__item">
+      <a href="../CHANGELOG/" class="md-tabs__link">
+        
   
   
-  ❓About
+    
+  
+  📝 Change Log
 
-        </a>
-      </li>
-    
+      </a>
+    </li>
   
 
       
@@ -509,24 +496,29 @@
       
   
   
+    
   
   
+  
     
     
     
     
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -544,7 +536,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
@@ -786,7 +778,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../exceptions/" class="md-nav__link">
+      <a href="../api-exceptions/" class="md-nav__link">
         
   
   
@@ -842,7 +834,62 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
+      <a href="../api-logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🪵 Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧪 Testing
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -858,6 +905,87 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#fakehttpbackend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FakeHTTPBackend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FakeHTTPBackend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#queuing-different-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queuing Different Responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-responses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Responses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#respx" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESPX
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -930,29 +1058,24 @@
       
   
   
-    
   
   
-  
     
     
     
     
       
-        
-        
-      
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
             
   
   
@@ -970,64 +1093,12 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
     📟 Command line tools
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🏗️ Client Scaffolder
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4_1">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    🏗️ Client Scaffolder
   
 
           </label>
@@ -1047,7 +1118,7 @@
   <span class="md-ellipsis">
     
   
-    Usage & CLI
+    🏗️ Client creator
   
 
     
@@ -1060,334 +1131,6 @@
   
 
               
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Regeneration
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Regeneration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#understanding-regeneration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Understanding Regeneration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#the-manifestmd-file" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        The MANIFEST.md File
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommended-workflow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommended Workflow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Handling Breaking Changes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-cicd" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration with CI/CD
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openapi-configuration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Barebones Configuration
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openapi-authentication/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Barebones authentication
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Generated Client Tour
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../compatibility/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Compatibility & Limitations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../references/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    References in OpenAPI
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
-        
-          
-          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🗺️ API Explorer
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4_2">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    🗺️ API Explorer
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -1403,7 +1146,7 @@
   <span class="md-ellipsis">
     
   
-    Overview
+    🗺️ API Explorer
   
 
     
@@ -1412,14 +1155,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1579,84 +1314,6 @@
   
   
   
-    
-    
-    
-    
-      
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    ❓About
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    ❓About
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../design/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Background
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
       <a href="../CHANGELOG/" class="md-nav__link">
         
@@ -1665,7 +1322,7 @@
   <span class="md-ellipsis">
     
   
-    Change Log
+    📝 Change Log
   
 
     
@@ -1674,14 +1331,6 @@
   
 
       </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1713,54 +1362,60 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#understanding-regeneration" class="md-nav__link">
+  <a href="#fakehttpbackend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Understanding Regeneration
+        FakeHTTPBackend
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FakeHTTPBackend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Example
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#the-manifestmd-file" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#queuing-different-responses" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The MANIFEST.md File
+        Queuing Different Responses
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#recommended-workflow" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#error-responses" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Recommended Workflow
+        Error Responses
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#handling-breaking-changes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Handling Breaking Changes
-      
-    </span>
-  </a>
+        
+      </ul>
+    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#integration-with-cicd" class="md-nav__link">
+  <a href="#respx" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Integration with CI/CD
+        RESPX
       
     </span>
   </a>
@@ -1787,110 +1442,115 @@
   
 
 
-<h1 id="regeneration">Regeneration</h1>
-<p>At times you may wish to regenerate a client.</p>
-<p>This could be because the API has updated or you just want to use a newer version of Clientele.</p>
-<p>To force a regeneration you must pass the <code>--regen</code> or <code>-r</code> argument, for example:</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w">  </span>--regen
+<h1 id="testing">🧪 Testing</h1>
+<p>Clientele is designed for easy testing with our built-in fake backends or with existing third party tools.</p>
+<h2 id="fakehttpbackend">FakeHTTPBackend</h2>
+<p>The <code>FakeHTTPBackend</code> allows you to test your API client without making real HTTP requests.</p>
+<p>Instead of making real network calls, the fake backend captures all requests and returns configurable responses. You can swap out the HTTP backend on an existing client by replacing <code>client.config.http_backend</code>.</p>
+<h3 id="basic-example">Basic Example</h3>
+<p>Assuming you have a pre-written client:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="c1"># Create a fake backend with default response</span>
+<span class="n">fake_backend</span> <span class="o">=</span> <span class="n">FakeHTTPBackend</span><span class="p">(</span>
+    <span class="n">default_content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">},</span>
+    <span class="n">default_status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Replace the client&#39;s HTTP backend</span>
+<span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">http_backend</span> <span class="o">=</span> <span class="n">fake_backend</span>
+
+<span class="c1"># Call your API method</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="c1"># Verify the response</span>
+<span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Alice&quot;</span>
+
+<span class="c1"># Verify what was requested</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span>
+<span class="k">assert</span> <span class="s2">&quot;/users/123&quot;</span> <span class="ow">in</span> <span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>You can copy and paste the command from the <code>MANIFEST.md</code> file in your previously-generated client for a quick and easy regeneration.</p>
-</div>
-<h2 id="understanding-regeneration">Understanding Regeneration</h2>
-<p>When you regenerate a client with <code>--regen</code>, Clientele follows these rules:</p>
-<p><strong>Files that WILL be overwritten:</strong></p>
-<ul>
-<li><code>client.py</code> - Your API client functions/class</li>
-<li><code>schemas.py</code> - Pydantic models for request/response data</li>
-<li><code>MANIFEST.md</code> - Metadata about the generated client</li>
-</ul>
-<p><strong>Files that will NOT be overwritten:</strong></p>
-<ul>
-<li><code>config.py</code> - Your custom configuration (API URL, auth tokens, headers)</li>
-</ul>
-<p>This design ensures your customizations in <code>config.py</code> are preserved while keeping the client code in sync with the latest API schema.</p>
-<h2 id="the-manifestmd-file">The MANIFEST.md File</h2>
-<p>Every generated client includes a <code>MANIFEST.md</code> file that records:</p>
-<ul>
-<li>The exact command used to generate the client</li>
-<li>The OpenAPI version of the source schema</li>
-<li>The Clientele version used</li>
-<li>Generation timestamp</li>
-</ul>
-<p>Example <code>MANIFEST.md</code>:</p>
-<div class="highlight"><pre><span></span><code># Manifest
+<h3 id="queuing-different-responses">Queuing Different Responses</h3>
+<p>You can queue different responses for multiple requests:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span>
 
-Generated with [https://github.com/phalt/clientele](https://github.com/phalt/clientele)
-Install with pipx:
+<span class="c1"># Replace the HTTP backend</span>
+<span class="n">fake_backend</span> <span class="o">=</span> <span class="n">FakeHTTPBackend</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">http_backend</span> <span class="o">=</span> <span class="n">fake_backend</span>
 
-```sh
-pipx install clientele
-```
+<span class="c1"># Queue responses in order</span>
+<span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
+    <span class="n">status</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
+    <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">},</span>
+<span class="p">)</span>
 
-API VERSION: 0.1.0
-OPENAPI VERSION: 3.0.2
-CLIENTELE VERSION: 1.7.1
+<span class="c1"># First request gets the 201 response</span>
+<span class="n">created</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;bob@example.com&quot;</span><span class="p">})</span>
+<span class="k">assert</span> <span class="n">created</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">10</span>
 
-Regenerate using this command:
-
-```sh
-clientele scaffold-api -f example_openapi_specs/best.json -o tests/async_test_client/ --asyncio --regen
-```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```
+<span class="c1"># Second request gets the 200 response</span>
+<span class="n">fetched</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">fetched</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Bob&quot;</span>
 </code></pre></div>
-<h2 id="recommended-workflow">Recommended Workflow</h2>
-<p>Here's the recommended workflow for keeping your client in sync:</p>
-<ol>
-<li><strong>API Updated</strong>: Your API has new endpoints or changed schemas</li>
-<li><strong>Regenerate</strong>: Run <code>clientele generate</code> with <code>--regen t</code>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen
-</code></pre></div></li>
-<li><strong>Review Changes</strong>: Use git to see what changed
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>diff<span class="w"> </span>my_client/
-</code></pre></div></li>
-<li><strong>Inspect</strong> the changes.</li>
-<li><strong>Test</strong>: Run your test suite to catch breaking changes
-<div class="highlight"><pre><span></span><code>pytest<span class="w"> </span>tests/
-</code></pre></div></li>
-<li><strong>Commit</strong>: Add the changes to git
-<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>my_client/
-git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Regenerated client for API v2.1&quot;</span>
-</code></pre></div></li>
-</ol>
-<h2 id="handling-breaking-changes">Handling Breaking Changes</h2>
-<p>When the API introduces breaking changes, regeneration will reflect them:</p>
-<ul>
-<li><strong>Removed endpoints</strong> → Functions deleted from <code>client.py</code></li>
-<li><strong>Renamed fields</strong> → Schema properties change</li>
-<li><strong>New required fields</strong> → Function signatures updated</li>
-<li><strong>Changed response types</strong> → Schema unions modified</li>
-</ul>
-<p>You should have tests to catch these issues.</p>
-<p>If you need to support multiple API versions, consider generating separate clients for each version sing version-specific directories (e.g., <code>my_client_v1/</code>, <code>my_client_v2/</code>).</p>
-<h2 id="integration-with-cicd">Integration with CI/CD</h2>
-<p>You can automate regeneration in CI/CD:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Example GitHub Actions workflow</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regenerate API client</span>
-<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">clientele scaffold-api \</span>
-<span class="w">      </span><span class="no">-u http://api:8000/openapi.json \</span>
-<span class="w">      </span><span class="no">-o clients/my_api/ \</span>
-<span class="w">      </span><span class="no">--regen</span>
+<h3 id="error-responses">Error Responses</h3>
+<p>You can also simulate error responses:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span>
 
-<span class="w">    </span><span class="no"># Check if client changed</span>
-<span class="w">    </span><span class="no">if ! git diff --quiet clients/my_api/; then</span>
-<span class="w">      </span><span class="no">echo &quot;API client changed - review required&quot;</span>
-<span class="w">      </span><span class="no">git diff clients/my_api/</span>
-<span class="w">      </span><span class="no">exit 1</span>
-<span class="w">    </span><span class="no">fi</span>
+<span class="c1"># Replace the HTTP backend</span>
+<span class="n">fake_backend</span> <span class="o">=</span> <span class="n">FakeHTTPBackend</span><span class="p">()</span>
+<span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">http_backend</span> <span class="o">=</span> <span class="n">fake_backend</span>
+
+<span class="c1"># Queue a 404 error response</span>
+<span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
+    <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span>
+    <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;User not found&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">404</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">error</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">error</span><span class="o">.</span><span class="n">error</span> <span class="o">==</span> <span class="s2">&quot;User not found&quot;</span>
 </code></pre></div>
-<p>This keeps your client in sync with the API schema.</p>
+<h2 id="respx">RESPX</h2>
+<p>You can use <a href="https://lundberg.github.io/respx/">respx</a> for easy testing if you have the default <a href="../api-http-backends/">httpx backend</a> installed.</p>
+<p>Our <a href="https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py">own test suite</a> shows how you can write mock tests for your API client.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">httpx</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">respx</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockRouter</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.test_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">schemas</span>
+
+<span class="n">BASE_URL</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">api_base_url</span><span class="p">()</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">respx</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">BASE_URL</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_simple_request_simple_request_get</span><span class="p">(</span><span class="n">respx_mock</span><span class="p">:</span> <span class="n">MockRouter</span><span class="p">):</span>
+    <span class="c1"># Given</span>
+    <span class="n">mocked_response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;hello world&quot;</span><span class="p">}</span>
+    <span class="n">mock_path</span> <span class="o">=</span> <span class="s2">&quot;/simple-request&quot;</span>
+    <span class="n">respx_mock</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mock_path</span><span class="p">)</span><span class="o">.</span><span class="n">mock</span><span class="p">(</span>
+        <span class="n">return_value</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">=</span><span class="n">mocked_response</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="c1"># When</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
+    <span class="c1"># Then</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">SimpleResponse</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">call</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="n">mock_path</span>
+</code></pre></div>
 
 
 
@@ -1920,7 +1580,7 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../openapi-cli/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Usage &amp; CLI">
+          <a href="../api-logging/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🪵 Logging">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1930,20 +1590,20 @@ git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </sp
                 Previous
               </span>
               <div class="md-ellipsis">
-                Usage & CLI
+                🪵 Logging
               </div>
             </div>
           </a>
         
         
           
-          <a href="../openapi-configuration/" class="md-footer__link md-footer__link--next" aria-label="Next: Barebones Configuration">
+          <a href="../api-direct-requests/" class="md-footer__link md-footer__link--next" aria-label="Next: 🎯 Direct requests">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Barebones Configuration
+                🎯 Direct requests
               </div>
             </div>
             <div class="md-footer__button md-icon">
