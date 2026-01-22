@@ -6,9 +6,6 @@ import stamina
 
 from clientele.api import exceptions as api_exceptions
 
-# Type variable for generic function decoration
-F = typing.TypeVar("F", bound=typing.Callable[..., typing.Any])
-
 
 def retry(
     *,
