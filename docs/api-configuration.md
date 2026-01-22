@@ -60,7 +60,53 @@ import httpx
 
 client = clientele_api.APIClient(
     base_url="https://api.example.com",
-    httpx_client=httpx.Client(), 
+    httpx_client=httpx.Client(),
     httpx_async_client=httpx.AsyncClient()
 )
 ```
+
+## Reconfiguration
+
+You can reconfigure an existing client (`APIClient`) at any time using the `configure` method. This is useful when you want to change options at runtime based on application specific configuration or logic:
+
+```python
+from clientele import api as clientele_api
+from application.config import app_config
+
+# standard configuration
+base_config = clientele_api.BaseConfig(
+    base_url="https://api.example.com",
+    timeout=10.0,
+)
+client = clientele_api.APIClient(config=base_config)
+
+@client.get("/users/{user_id}")
+def get_user(user_id: int, result: User) -> User:
+    return result
+
+class MyApplication:
+    def __init__(self, api_client: clientele_api.APIClient):
+        self.api_client = api_client
+
+    def run(self):
+        # get configuration from application settings
+        url = app_config.url
+        token = app_config.token
+
+        # reconfigure the client with new settings
+        self.api_client.configure(
+            clientele_api.BaseConfig(
+                base_url=url,
+                headers={"Authorization": f"Bearer {token}"},
+            )
+        )
+        # proceed with using the api client as usual after reconfiguration
+        get_user(user_id=123)
+
+
+if __name__ == "__main__":
+    app = MyApplication(api_client=client)
+    app.run()
+```
+
+The `configure` method accepts the same parameters as the `APIClient` constructor.
