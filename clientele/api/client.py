@@ -53,18 +53,36 @@ class APIClient:
         httpx_client: httpx.Client | None = None,
         httpx_async_client: httpx.AsyncClient | None = None,
     ) -> None:
-        if config and (httpx_client or httpx_async_client):
-            raise ValueError("Cannot provide both 'config' and custom httpx clients")
         if config is None:
             # Enforce base_url when no config is provided
             if base_url is None:
-                raise ValueError("Cannot provide both 'config' and 'base_url'.")
+                raise ValueError("Must provide either 'config' or 'base_url'.")
+        self.configure(
+            config=config,
+            base_url=base_url,
+            httpx_client=httpx_client,
+            httpx_async_client=httpx_async_client,
+        )
 
-            config = api_config.get_default_config(base_url=base_url)
-        self.config = config
+    def configure(
+        self,
+        *,
+        config: api_config.BaseConfig | None = None,
+        base_url: str | None = None,
+        httpx_client: httpx.Client | None = None,
+        httpx_async_client: httpx.AsyncClient | None = None,
+    ) -> None:
+        """Reconfigure the API client with a new configuration."""
+        if config and (httpx_client or httpx_async_client):
+            raise ValueError("Cannot provide both 'config' and custom httpx clients")
+
+        if config:
+            self.config = config
+        elif base_url:
+            self.config = api_config.get_default_config(base_url=base_url)
 
         # Set http_backend if not already set
-        if self.config.http_backend is None:
+        if self.config.http_backend is None or httpx_client is not None or httpx_async_client is not None:
             self.config.http_backend = http_httpx.HttpxHTTPBackend(
                 client_options=self.config.httpx_client_options(),
                 sync=httpx_client,
