@@ -1,5 +1,11 @@
 # Change log
 
+## UNRELEASED 1.9.0
+
+- Built-in `retries.retry` decorator for handling retry logic.
+- This is built on top of `stamina` - a popular and reliable retry package.
+- Customised to suit Clientele's exception handling.
+
 ## 1.8.1
 
 - Add `configure` method to `APIClient` - enabling reconfiguration of clients. Thank you [Christian Assing](https://github.com/chassing) for the contribution.
