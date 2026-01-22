@@ -20,6 +20,7 @@ dependencies = [
     "cli-helpers>=2.4.0",
     "pygments>=2.19.2",
     "pydantic-settings>=2.12.0",
+    "stamina>=25.2.0",
 ]
 
 [project.urls]

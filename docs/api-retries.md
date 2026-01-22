@@ -1,53 +1,36 @@
 # 🔄 Retries
 
-In reality, networks can fail. Sometimes we want to be able to apply retry logic to handle this.
+Clientele provides a built-in decorator for handling HTTP request retries.
 
-Clientele does not have any built-in retry logic because there are many well tested options available that already work well. 
-
-However, we are considering introducing a comfortable abstraction, [add your opinion here](https://github.com/phalt/clientele/issues/158).
-
-## Transport configuration
-
-You can set a retry transport, such as [httpx-retries](https://will-ockmore.github.io/httpx-retries/), using Clientele's configuration:
+## Example
 
 ```python
-from clientele import api
-from httpx_retries import RetryTransport
+from clientele import api, retries
 
-config = api.BaseConfig(base_url="https://myapi.com", transport=RetryTransport())
+client = api.APIClient(api.BaseConfig(base_url="https://httpbin.org/"))
 
-client = api.APIClient(config=config)
-```
-
-## Custom HTTPX Client
-
-Alternatively you can use a retry transport with a custom `httpx.Client`:
-
-```python
-import httpx
-from clientele import api
-from httpx_retries import RetryTransport
-
-httpx_client = httpx.Client(transport=RetryTransport())
-
-client = api.APIClient(base_url="https://myapi.com", httpx_client=httpx_client)
-```
-
-## Decorator
-
-A good alternative approach is to use [stamina](https://stamina.hynek.me/en/stable/), a popular and versatile retry logic decorator.
-
-Stamina "just works" with Clientele:
-
-```python
-from clientele import api
-import stamina
-import httpx
-
-client = api.APIClient(base_url="https://httpbin.org/")
-
-@stamina.retry(on=httpx.HTTPError, attempts=3)
+@retries.retry(attempts=3)
 @client.get("/status/{status_code}")
 def get_status(status_code: int, result: dict) -> dict:
     return result
 ```
+
+## Declare status codes to retry
+
+```python
+from clientele import api, retries
+
+client = api.APIClient(api.BaseConfig(base_url="https://httpbin.org/"))
+
+@retries.retry(attempts=3, on_status=[400, 403, 500])
+@client.get("/status/{status_code}")
+def get_status(status_code: int, result: dict) -> dict:
+    return result
+```
+
+## How it works
+
+- Clientele's decorator is a small wrapper for [stamina](https://stamina.hynek.me/en/stable/), a popular and versatile retry logic decorator.
+- We have configured the `retries.retry` decorator to work with Clientele specific exception behaviour.
+- A default status that is 500 or higher will be retried using Stamina's [backoff and jitter](https://stamina.hynek.me/en/stable/motivation.html) approach.
+- If you supply `on_status` then it will only retry for those specific statuses.
