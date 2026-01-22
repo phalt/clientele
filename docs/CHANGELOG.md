@@ -1,11 +1,16 @@
 # Change log
 
+## 1.8.1
+
+- Add `configure` method to `APIClient` - enabling reconfiguration of clients. Thank you [Christian Assing](https://github.com/chassing) for the contribution.
+
 ## 1.8.0
 
 ### Request Logging
 
 - Added optional request/response logging to `APIClient` via the `logger` parameter in `BaseConfig`. Logs include method, URL, status code, and elapsed time in seconds.
 - Uses a `Logger` Protocol with `@runtime_checkable` for flexibility.
+- Thank you [Matías Giménez](https://github.com/justmatias) for the contribution.
 
 ### CLI commands update
 
