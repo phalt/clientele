@@ -77,3 +77,39 @@ async def test_aclose_method_closes_owned_async_client() -> None:
 
     # After closing, the async client should be closed
     assert client.config.http_backend._async_client.is_closed  # type: ignore
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_can_reconfigure_with_base_url(respx_mock: MockRouter) -> None:
+    """Test that a custom httpx.Client can be provided to the APIClient."""
+    client = APIClient(base_url="whatver")
+    client.configure(base_url=BASE_URL)
+
+    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User) -> User:
+        return result
+
+    user = get_user(1)
+    assert user.id == 1
+
+
+@pytest.mark.respx(base_url=BASE_URL)
+def test_can_reconfigure_with_custom_httpx_client(respx_mock: MockRouter) -> None:
+    """Test that a custom httpx.Client can be provided to the APIClient."""
+    custom_httpx_client = httpx.Client(base_url=BASE_URL, timeout=30.0)
+    client = APIClient(base_url=BASE_URL)
+    client.configure(httpx_client=custom_httpx_client)
+
+    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+
+    @client.get("/users/{user_id}")
+    def get_user(user_id: int, result: User) -> User:
+        return result
+
+    user = get_user(1)
+
+    # Verify the custom client is used
+    assert client.config.http_backend._sync_client is custom_httpx_client  # type: ignore
+    assert user.id == 1
