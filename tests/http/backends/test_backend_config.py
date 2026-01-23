@@ -1,14 +1,21 @@
 """Tests for HTTP backend support."""
 
+import httpx
+import pytest
+from respx import MockRouter
+
 from clientele.api import client as api_client
 from clientele.api import config as api_config
 from clientele.http import Response, fake_backend, httpx_backend
+
+BASE_URL = "https://api.example.com"
 
 
 class TestBackendIntegration:
     """Test integration between backends and API client."""
 
-    def test_switching_backends(self):
+    @pytest.mark.respx(base_url=BASE_URL)
+    def test_switching_backends(self, respx_mock: MockRouter):
         """Test switching between different backends."""
         # Start with fake backend
         fk_backend = fake_backend.FakeHTTPBackend(
@@ -35,9 +42,9 @@ class TestBackendIntegration:
         client_fake.close()
 
         # Switch to httpx backend
-        hx_backend = httpx_backend.HttpxHTTPBackend(client_options={"base_url": "https://httpbin.org"})
+        hx_backend = httpx_backend.HttpxHTTPBackend(client_options={"base_url": BASE_URL})
         config_httpx = api_config.BaseConfig(
-            base_url="https://httpbin.org",
+            base_url=BASE_URL,
             http_backend=hx_backend,
         )
         client_httpx = api_client.APIClient(config=config_httpx)
@@ -46,15 +53,20 @@ class TestBackendIntegration:
         def test_httpx(result: dict) -> dict:
             return result
 
+        respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
+
         result = test_httpx()
-        assert "headers" in result  # Real response from httpbin
+        assert "headers" in result
 
         client_httpx.close()
 
-    def test_no_backend_uses_default_httpx(self):
+    @pytest.mark.respx(base_url=BASE_URL)
+    def test_no_backend_uses_default_httpx(self, respx_mock: MockRouter):
         """Test that not providing a backend uses httpx by default."""
-        config = api_config.BaseConfig(base_url="https://httpbin.org")
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
+
+        respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
 
         @client.get("/get")
         def test_get(result: dict) -> dict:
