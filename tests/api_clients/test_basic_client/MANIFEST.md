@@ -23,9 +23,3 @@ Regenerate using this command:
 ```sh
 clientele start-api -o tests/api_clients/test_basic_client/
 ```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```

@@ -2,9 +2,15 @@
 
 ## UNRELEASED 1.9.0
 
+### Retry support
+
 - Built-in `retries.retry` decorator for handling retry logic.
 - This is built on top of `stamina` - a popular and reliable retry package.
 - Customised to suit Clientele's exception handling.
+
+### Dropped `explore` command
+
+- While it is a cool feature, it distracts from the purpose of Clientele, so it is being removed.
 
 ## 1.8.1
 

@@ -23,9 +23,3 @@ Regenerate using this command:
 ```sh
 clientele start-api -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/  --regen
 ```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```

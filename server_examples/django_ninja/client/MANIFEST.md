@@ -23,9 +23,3 @@ Regenerate using this command:
 ```sh
 clientele start-api -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/  --regen
 ```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```
