@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import typing
 
 from clientele.http import backends, response
@@ -18,14 +17,16 @@ class FakeHTTPBackend(backends.HTTPBackend):
     - Unit testing API clients
 
     Args:
-        default_status: Default HTTP status code for responses (default: 200)
-        default_content: Default response content as bytes or dict (default: {})
-        default_headers: Default response headers (default: {})
+        default_response: Default Response object to return if no queued response matches.
+                          If not provided, returns a 200 OK with empty content.
 
     Example:
         >>> fake_backend = FakeHTTPBackend(
-        ...     default_content={"message": "success"},
-        ...     default_status=200
+        ...     default_response=Response(
+        ...         status_code=200,
+        ...         content=b'{"message": "success"}',
+        ...         headers={"content-type": "application/json"},
+        ...     )
         ... )
         >>> config = Config(http_backend=fake_backend)
         >>> client = APIClient(config=config)
@@ -36,19 +37,21 @@ class FakeHTTPBackend(backends.HTTPBackend):
 
     def __init__(
         self,
-        default_status: int = 200,
-        default_content: bytes | dict[str, typing.Any] | None = None,
-        default_headers: dict[str, str] | None = None,
+        default_response: response.Response | None = None,
     ) -> None:
-        self.default_status = default_status
-        self.default_content = default_content or {}
-        self.default_headers = default_headers or {"content-type": "application/json"}
+        if default_response is None:
+            default_response = response.Response(
+                status_code=200,
+                content=b"",
+                headers={"content-type": "application/json"},
+            )
+        self.default_response = default_response
 
         # Storage for captured requests
         self.requests: list[dict[str, typing.Any]] = []
 
-        # Allow configuring responses per request
-        self._response_queue: list[tuple[int, typing.Any, dict[str, str]]] = []
+        # Map request paths to lists of Response objects (FIFO queue per path)
+        self._response_map: dict[str, list[response.Response]] = {}
 
     def build_client(self) -> None:
         """Return None as no real client is needed."""
@@ -77,33 +80,37 @@ class FakeHTTPBackend(backends.HTTPBackend):
 
     def queue_response(
         self,
-        status: int = 200,
-        content: bytes | dict[str, typing.Any] | None = None,
-        headers: dict[str, str] | None = None,
+        path: str,
+        response_obj: response.Response,
     ) -> None:
-        """Queue a specific response for the next request.
+        """Queue a specific response for a request path.
 
-        Responses are consumed in FIFO order. If queue is empty,
-        default response is used.
+        Responses are consumed in FIFO order for each path.
 
         Args:
-            status: HTTP status code
-            content: Response content (dict will be JSON-encoded)
-            headers: Response headers
+            path: The request path (e.g., "/users/{user_id}")
+            response_obj: A Response object to queue
         """
-        self._response_queue.append(
-            (
-                status,
-                content if content is not None else self.default_content,
-                headers if headers is not None else self.default_headers,
-            )
-        )
+        if path not in self._response_map:
+            self._response_map[path] = []
+        self._response_map[path].append(response_obj)
 
-    def _get_next_response(self) -> tuple[int, typing.Any, dict[str, str]]:
-        """Get the next response from queue or use defaults."""
-        if self._response_queue:
-            return self._response_queue.pop(0)
-        return (self.default_status, self.default_content, self.default_headers)
+    def _get_next_response(self, url: str) -> response.Response | None:
+        """Get the next response for the given URL path or None if no queued responses.
+
+        Args:
+            url: The request URL
+
+        Returns:
+            A Response object if one is queued for this URL, otherwise None
+        """
+        # Try to find a matching path in the response map
+        for path in self._response_map:
+            if path in url:
+                responses = self._response_map[path]
+                if responses:
+                    return responses.pop(0)
+        return None
 
     def _create_response(
         self,
@@ -113,35 +120,30 @@ class FakeHTTPBackend(backends.HTTPBackend):
     ) -> response.Response:
         """Create a fake generic Response object."""
         # Capture the request
-        self.requests.append(
-            {
-                "method": method,
-                "url": url,
-                "kwargs": kwargs,
-            }
-        )
+        request_details = {
+            "method": method,
+            "url": url,
+            "kwargs": kwargs,
+        }
 
-        # Get response configuration
-        status, content, headers = self._get_next_response()
+        # Try to get a queued response for this URL
+        queued_response = self._get_next_response(url)
+        if queued_response is not None:
+            request_details["response"] = queued_response
+            self.requests.append(request_details)
+            return queued_response
 
-        # Convert dict content to JSON bytes
-        if isinstance(content, dict):
-            content_bytes = json.dumps(content).encode("utf-8")
-            if "content-type" not in headers:
-                headers["content-type"] = "application/json"
-        elif isinstance(content, str):
-            content_bytes = content.encode("utf-8")
-        else:
-            content_bytes = content or b""
-
-        # Create a generic clientele Response
-        return response.Response(
-            status_code=status,
-            content=content_bytes,
-            headers=headers,
+        # Return the default response
+        resp = response.Response(
+            status_code=self.default_response.status_code,
+            content=self.default_response.content,
+            headers=self.default_response.headers.copy(),
             request_method=method,
             request_url=url,
         )
+        request_details["response"] = resp
+        self.requests.append(request_details)
+        return resp
 
     def send_sync_request(
         self,
@@ -190,6 +192,4 @@ class FakeHTTPBackend(backends.HTTPBackend):
     def reset(self) -> None:
         """Clear all captured requests and queued responses."""
         self.requests.clear()
-        self._response_queue.clear()
-
-        self._response_queue.clear()
+        self._response_map.clear()

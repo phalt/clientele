@@ -2,7 +2,7 @@
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
-from clientele.http import fake_backend, httpx_backend
+from clientele.http import Response, fake_backend, httpx_backend
 
 
 class TestBackendIntegration:
@@ -12,7 +12,11 @@ class TestBackendIntegration:
         """Test switching between different backends."""
         # Start with fake backend
         fk_backend = fake_backend.FakeHTTPBackend(
-            default_content={"backend": "fake"},
+            default_response=Response(
+                status_code=200,
+                content=b'{"backend": "fake"}',
+                headers={"content-type": "application/json"},
+            ),
         )
         config_fake = api_config.BaseConfig(
             base_url="https://api.example.com",

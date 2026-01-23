@@ -1,20 +1,30 @@
 import pytest
 
-from clientele import api, http, retries
+from clientele import api, http, retries, testing
+
+client = api.APIClient(config=api.BaseConfig(base_url="http://fake.api"))
 
 
 def test_retries_retry_default_behaviour():
-    fake_backend = http.FakeHTTPBackend()
-    client = api.APIClient(
-        config=api.BaseConfig(
-            base_url="http://fake.api",
-            http_backend=fake_backend,
-        )
-    )
+    fake_backend = testing.configure_client_for_testing(client)
 
     # Configure fake responses: first a 500 error, then a 200 success
-    fake_backend.queue_response(status=500, content={"error": "Server error"})
-    fake_backend.queue_response(status=200, content={"data": "Success"})
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=500,
+            content=b'{"error": "Server error"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=200,
+            content=b'{"data": "Success"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @retries.retry(attempts=3)
     @client.get("/test-endpoint")
@@ -28,18 +38,33 @@ def test_retries_retry_default_behaviour():
 
 
 def test_retries_retry_with_explicit_statuses():
-    fake_backend = http.FakeHTTPBackend()
-    client = api.APIClient(
-        config=api.BaseConfig(
-            base_url="http://fake.api",
-            http_backend=fake_backend,
-        )
-    )
+    fake_backend = testing.configure_client_for_testing(client)
 
     # Configure fake responses: first a 500 error, then a 400 error, then a 200 success
-    fake_backend.queue_response(status=500, content={"error": "Server error"})
-    fake_backend.queue_response(status=400, content={"error": "Bad request"})
-    fake_backend.queue_response(status=200, content={"data": "Success"})
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=500,
+            content=b'{"error": "Server error"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=400,
+            content=b'{"error": "Bad request"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=200,
+            content=b'{"data": "Success"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @retries.retry(attempts=3, on_status=[500, 400])
     @client.get("/test-endpoint")
@@ -53,17 +78,25 @@ def test_retries_retry_with_explicit_statuses():
 
 
 def test_retries_do_not_block_other_statuses_from_raising_properly():
-    fake_backend = http.FakeHTTPBackend()
-    client = api.APIClient(
-        config=api.BaseConfig(
-            base_url="http://fake.api",
-            http_backend=fake_backend,
-        )
-    )
+    fake_backend = testing.configure_client_for_testing(client)
 
     # Configure fake responses: first a 500 error, then a 400 error which should raise
-    fake_backend.queue_response(status=500, content={"error": "Server error"})
-    fake_backend.queue_response(status=400, content={"error": "Bad request"})
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=500,
+            content=b'{"error": "Server error"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=400,
+            content=b'{"error": "Bad request"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @retries.retry(attempts=3, on_status=[500])
     @client.get("/test-endpoint")
@@ -77,14 +110,15 @@ def test_retries_do_not_block_other_statuses_from_raising_properly():
 
 
 def test_retries_do_not_block_other_exceptions():
-    fake_backend = http.FakeHTTPBackend()
-    client = api.APIClient(
-        config=api.BaseConfig(
-            base_url="http://fake.api",
-            http_backend=fake_backend,
-        )
+    fake_backend = testing.configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/test-endpoint",
+        response_obj=http.Response(
+            status_code=200,
+            content=b'{"error": "Server error"}',
+            headers={"content-type": "application/json"},
+        ),
     )
-    fake_backend.queue_response(status=200, content={"error": "Server error"})
 
     @retries.retry(attempts=3)
     @client.get("/test-endpoint")
