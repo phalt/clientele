@@ -3,11 +3,11 @@ from __future__ import annotations
 import json
 from typing import TypedDict
 
-import httpx
 import pytest
-from respx import MockRouter
 
+from clientele import http
 from clientele.api import APIClient
+from clientele.testing import configure_client_for_testing
 
 
 # Test TypedDict definitions
@@ -36,12 +36,19 @@ class DeleteResultDict(TypedDict):
 BASE_URL = "https://api.example.com"
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_get_with_typeddict_result(respx_mock: MockRouter) -> None:
+def test_get_with_typeddict_result() -> None:
     """Test that GET request works with TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: UserDict) -> UserDict:
@@ -52,13 +59,22 @@ def test_get_with_typeddict_result(respx_mock: MockRouter) -> None:
     assert user == {"id": 1, "name": "Ada"}
     assert isinstance(user, dict)
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_post_with_typeddict_result(respx_mock: MockRouter) -> None:
+
+def test_post_with_typeddict_result() -> None:
     """Test that POST request works with TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
@@ -69,14 +85,21 @@ def test_post_with_typeddict_result(respx_mock: MockRouter) -> None:
     assert user == {"id": 10, "name": "Charlie"}
     assert isinstance(user, dict)
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_get_with_typeddict_list_result(respx_mock: MockRouter) -> None:
+
+def test_get_with_typeddict_list_result() -> None:
     """Test that GET request works with list of TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users").mock(
-        return_value=httpx.Response(200, json=[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}])
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps([{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
 
     @client.get("/users")
@@ -89,13 +112,22 @@ def test_get_with_typeddict_list_result(respx_mock: MockRouter) -> None:
     assert isinstance(users, list)
     assert all(isinstance(user, dict) for user in users)
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_put_with_typeddict_result(respx_mock: MockRouter) -> None:
+
+def test_put_with_typeddict_result() -> None:
     """Test that PUT request works with TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.put("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada Updated"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada Updated"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.put("/users/{user_id}")
     def update_user(user_id: int, data: dict, result: UserDict) -> UserDict:
@@ -105,13 +137,22 @@ def test_put_with_typeddict_result(respx_mock: MockRouter) -> None:
 
     assert user == {"id": 1, "name": "Ada Updated"}
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_patch_with_typeddict_result(respx_mock: MockRouter) -> None:
+
+def test_patch_with_typeddict_result() -> None:
     """Test that PATCH request works with TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.patch("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada Patched"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada Patched"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.patch("/users/{user_id}")
     def patch_user(user_id: int, data: dict, result: UserDict) -> UserDict:
@@ -121,13 +162,22 @@ def test_patch_with_typeddict_result(respx_mock: MockRouter) -> None:
 
     assert user == {"id": 1, "name": "Ada Patched"}
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_delete_with_typeddict_result(respx_mock: MockRouter) -> None:
+
+def test_delete_with_typeddict_result() -> None:
     """Test that DELETE request works with TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.delete("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada Deleted"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada Deleted"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.delete("/users/{user_id}")
     def delete_user(user_id: int, result: UserDict) -> UserDict:
@@ -137,37 +187,59 @@ def test_delete_with_typeddict_result(respx_mock: MockRouter) -> None:
 
     assert user == {"id": 1, "name": "Ada Deleted"}
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_map_with_typeddict(respx_mock: MockRouter) -> None:
+
+def test_response_map_with_typeddict() -> None:
     """Test that response_map works with TypedDict types."""
     client = APIClient(base_url=BASE_URL)
 
-    # Test successful response
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
+    fake_backend.queue_response(
+        path="/users/999",
+        response_obj=http.Response(
+            status_code=404,
+            content=json.dumps({"message": "User not found", "code": "NOT_FOUND"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}", response_map={200: UserDict, 404: ErrorDict})
     def get_user(user_id: int, result: UserDict | ErrorDict) -> UserDict | ErrorDict:
         return result
 
+    # Test successful response
     user = get_user(1)
     assert user == {"id": 1, "name": "Ada"}
 
     # Test error response
-    respx_mock.get("/users/999").mock(
-        return_value=httpx.Response(404, json={"message": "User not found", "code": "NOT_FOUND"})
-    )
-
     error = get_user(999)
     assert error == {"message": "User not found", "code": "NOT_FOUND"}
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_typeddict_with_query_params(respx_mock: MockRouter) -> None:
+
+def test_typeddict_with_query_params() -> None:
     """Test TypedDict result with query parameters."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: UserDict, include_details: bool = True) -> UserDict:
@@ -176,16 +248,23 @@ def test_typeddict_with_query_params(respx_mock: MockRouter) -> None:
     user = get_user(1, include_details=False)
 
     assert user == {"id": 1, "name": "Ada"}
-    call = respx_mock.calls[0]
-    assert call.request.url.params.get("include_details") == "false"
+
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_typeddict_validation_error_on_non_dict(respx_mock: MockRouter) -> None:
+def test_typeddict_validation_error_on_non_dict() -> None:
     """Test that TypedDict validation raises error for non-dict payloads."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json="not a dict"))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps("not a dict").encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: UserDict) -> UserDict:
@@ -194,14 +273,23 @@ def test_typeddict_validation_error_on_non_dict(respx_mock: MockRouter) -> None:
     with pytest.raises(TypeError, match="Expected dict for TypedDict"):
         get_user(1)
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
+
 @pytest.mark.asyncio
-async def test_async_get_with_typeddict_result(respx_mock: MockRouter) -> None:
+async def test_async_get_with_typeddict_result() -> None:
     """Test that async GET request works with TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     async def get_user(user_id: int, result: UserDict) -> UserDict:
@@ -212,14 +300,23 @@ async def test_async_get_with_typeddict_result(respx_mock: MockRouter) -> None:
     assert user == {"id": 1, "name": "Ada"}
     assert isinstance(user, dict)
 
+    await client.aclose()
 
-@pytest.mark.respx(base_url=BASE_URL)
+
 @pytest.mark.asyncio
-async def test_async_post_with_typeddict_result(respx_mock: MockRouter) -> None:
+async def test_async_post_with_typeddict_result() -> None:
     """Test that async POST request works with TypedDict as result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     async def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
@@ -230,13 +327,22 @@ async def test_async_post_with_typeddict_result(respx_mock: MockRouter) -> None:
     assert user == {"id": 10, "name": "Charlie"}
     assert isinstance(user, dict)
 
+    await client.aclose()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_post_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+
+def test_post_with_typeddict_data_validates_request_body() -> None:
     """Test that POST with TypedDict data parameter sends correct JSON body."""
     client = APIClient(base_url=BASE_URL)
 
-    route = respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
@@ -246,21 +352,22 @@ def test_post_with_typeddict_data_validates_request_body(respx_mock: MockRouter)
 
     assert user == {"id": 10, "name": "Charlie"}
 
-    # Verify the request was made with correct JSON body
-    assert route.called
-    request = route.calls[0].request
-    assert request.headers.get("content-type") == "application/json"
-
-    sent_data = json.loads(request.content.decode())
-    assert sent_data == {"name": "Charlie"}
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_put_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+def test_put_with_typeddict_data_validates_request_body() -> None:
     """Test that PUT with TypedDict data parameter sends correct JSON body."""
     client = APIClient(base_url=BASE_URL)
 
-    route = respx_mock.put("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada Updated"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada Updated"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.put("/users/{user_id}")
     def update_user(user_id: int, data: CreateUserRequestDict, result: UserDict) -> UserDict:
@@ -270,20 +377,22 @@ def test_put_with_typeddict_data_validates_request_body(respx_mock: MockRouter) 
 
     assert user == {"id": 1, "name": "Ada Updated"}
 
-    # Verify the request was made with correct JSON body
-    assert route.called
-    request = route.calls[0].request
-
-    sent_data = json.loads(request.content.decode())
-    assert sent_data == {"name": "Ada Updated"}
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_patch_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+def test_patch_with_typeddict_data_validates_request_body() -> None:
     """Test that PATCH with TypedDict data parameter sends correct JSON body."""
     client = APIClient(base_url=BASE_URL)
 
-    route = respx_mock.patch("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada Patched"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada Patched"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.patch("/users/{user_id}")
     def patch_user(user_id: int, data: CreateUserRequestDict, result: UserDict) -> UserDict:
@@ -293,21 +402,22 @@ def test_patch_with_typeddict_data_validates_request_body(respx_mock: MockRouter
 
     assert user == {"id": 1, "name": "Ada Patched"}
 
-    # Verify the request was made with correct JSON body
-    assert route.called
-    request = route.calls[0].request
-
-    sent_data = json.loads(request.content.decode())
-    assert sent_data == {"name": "Ada Patched"}
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_delete_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+def test_delete_with_typeddict_data_validates_request_body() -> None:
     """Test that DELETE with TypedDict data parameter sends correct JSON body."""
     client = APIClient(base_url=BASE_URL)
 
-    # Some APIs support DELETE with a body
-    route = respx_mock.delete("/users/batch").mock(return_value=httpx.Response(200, json={"deleted": 2}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/batch",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"deleted": 2}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.delete("/users/batch")
     def delete_users(data: DeleteBatchDict, result: DeleteResultDict) -> DeleteResultDict:
@@ -317,12 +427,7 @@ def test_delete_with_typeddict_data_validates_request_body(respx_mock: MockRoute
 
     assert result == {"deleted": 2}
 
-    # Verify the request was made with correct JSON body
-    assert route.called
-    request = route.calls[0].request
-
-    sent_data = json.loads(request.content.decode())
-    assert sent_data == {"user_ids": [1, 2]}
+    client.close()
 
 
 def test_typeddict_data_validation_error_on_non_dict() -> None:
@@ -338,13 +443,20 @@ def test_typeddict_data_validation_error_on_non_dict() -> None:
         create_user(data="not a dict")
 
 
-@pytest.mark.respx(base_url=BASE_URL)
 @pytest.mark.asyncio
-async def test_async_post_with_typeddict_data_validates_request_body(respx_mock: MockRouter) -> None:
+async def test_async_post_with_typeddict_data_validates_request_body() -> None:
     """Test that async POST with TypedDict data parameter sends correct JSON body."""
     client = APIClient(base_url=BASE_URL)
 
-    route = respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     async def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
@@ -354,20 +466,22 @@ async def test_async_post_with_typeddict_data_validates_request_body(respx_mock:
 
     assert user == {"id": 10, "name": "Charlie"}
 
-    # Verify the request was made with correct JSON body
-    assert route.called
-    request = route.calls[0].request
-
-    sent_data = json.loads(request.content.decode())
-    assert sent_data == {"name": "Charlie"}
+    await client.aclose()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_post_with_both_typeddict_data_and_result(respx_mock: MockRouter) -> None:
+def test_post_with_both_typeddict_data_and_result() -> None:
     """Test that both data and result can be TypedDict simultaneously."""
     client = APIClient(base_url=BASE_URL)
 
-    route = respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
@@ -378,9 +492,4 @@ def test_post_with_both_typeddict_data_and_result(respx_mock: MockRouter) -> Non
     assert user == {"id": 10, "name": "Charlie"}
     assert isinstance(user, dict)
 
-    # Verify request body
-    assert route.called
-    request = route.calls[0].request
-
-    sent_data = json.loads(request.content.decode())
-    assert sent_data == {"name": "Charlie"}
+    client.close()

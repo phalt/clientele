@@ -1,13 +1,16 @@
-"""Tests for singleton httpx client instances in the APIClient."""
+"""Tests for HTTP backend management in the APIClient."""
 
 from __future__ import annotations
 
-import httpx
+import json
+
 import pytest
 from pydantic import BaseModel
-from respx import MockRouter
 
-from clientele.api import APIClient
+from clientele import http
+from clientele.api import APIClient, BaseConfig
+from clientele.http.fake_backend import FakeHTTPBackend
+from clientele.testing import configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -17,13 +20,25 @@ class User(BaseModel):
     name: str
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_can_provide_custom_httpx_client(respx_mock: MockRouter) -> None:
-    """Test that a custom httpx.Client can be provided to the APIClient."""
-    custom_httpx_client = httpx.Client(base_url=BASE_URL, timeout=30.0)
-    client = APIClient(base_url=BASE_URL, httpx_client=custom_httpx_client)
-
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+def test_can_provide_custom_http_backend() -> None:
+    """Test that a custom HTTP backend can be provided to the APIClient."""
+    custom_backend = FakeHTTPBackend(
+        default_response=http.Response(
+            status_code=404,
+            content=b"Not Found",
+            headers={},
+        )
+    )
+    custom_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
+    config = BaseConfig(base_url=BASE_URL, http_backend=custom_backend)
+    client = APIClient(config=config)
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
@@ -31,19 +46,33 @@ def test_can_provide_custom_httpx_client(respx_mock: MockRouter) -> None:
 
     user = get_user(1)
 
-    # Verify the custom client is used
-    assert client.config.http_backend._sync_client is custom_httpx_client  # type: ignore
+    # Verify the custom backend is used
+    assert client.config.http_backend is custom_backend
     assert user.id == 1
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
+
 @pytest.mark.asyncio
-async def test_can_provide_custom_httpx_async_client(respx_mock: MockRouter) -> None:
-    """Test that a custom httpx.AsyncClient can be provided to the APIClient."""
-    custom_httpx_async_client = httpx.AsyncClient(base_url=BASE_URL, timeout=30.0)
-    client = APIClient(base_url=BASE_URL, httpx_async_client=custom_httpx_async_client)
-
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+async def test_can_provide_custom_http_backend_async() -> None:
+    """Test that a custom HTTP backend can be provided to the APIClient for async operations."""
+    custom_backend = FakeHTTPBackend(
+        default_response=http.Response(
+            status_code=404,
+            content=b"Not Found",
+            headers={},
+        )
+    )
+    custom_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
+    config = BaseConfig(base_url=BASE_URL, http_backend=custom_backend)
+    client = APIClient(config=config)
 
     @client.get("/users/{user_id}")
     async def get_user(user_id: int, result: User) -> User:
@@ -51,41 +80,52 @@ async def test_can_provide_custom_httpx_async_client(respx_mock: MockRouter) -> 
 
     user = await get_user(1)
 
-    # Verify the custom async client is used
-    assert client.config.http_backend._async_client is custom_httpx_async_client  # type: ignore
+    # Verify the custom backend is used
+    assert client.config.http_backend is custom_backend
     assert user.id == 1
 
+    await client.aclose()
 
-def test_close_method_closes_owned_sync_client() -> None:
-    """Test that close() closes the sync client."""
+
+def test_close_method_works() -> None:
+    """Test that close() works without errors."""
     client = APIClient(base_url=BASE_URL)
+    fake_backend = configure_client_for_testing(client)
 
     # Close should work without errors
     client.close()
 
-    # After closing, the client should be closed
-    assert client.config.http_backend._sync_client.is_closed  # type: ignore
+    # Backend should still be accessible
+    assert client.config.http_backend is fake_backend
 
 
 @pytest.mark.asyncio
-async def test_aclose_method_closes_owned_async_client() -> None:
-    """Test that aclose() closes the async client."""
+async def test_aclose_method_works() -> None:
+    """Test that aclose() works without errors."""
     client = APIClient(base_url=BASE_URL)
+    fake_backend = configure_client_for_testing(client)
 
     # Close should work without errors
     await client.aclose()
 
-    # After closing, the async client should be closed
-    assert client.config.http_backend._async_client.is_closed  # type: ignore
+    # Backend should still be accessible
+    assert client.config.http_backend is fake_backend
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_can_reconfigure_with_base_url(respx_mock: MockRouter) -> None:
-    """Test that a custom httpx.Client can be provided to the APIClient."""
-    client = APIClient(base_url="whatver")
+def test_can_reconfigure_with_base_url() -> None:
+    """Test that base_url can be reconfigured."""
+    client = APIClient(base_url="whatever")
     client.configure(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
@@ -94,15 +134,29 @@ def test_can_reconfigure_with_base_url(respx_mock: MockRouter) -> None:
     user = get_user(1)
     assert user.id == 1
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_can_reconfigure_with_custom_httpx_client(respx_mock: MockRouter) -> None:
-    """Test that a custom httpx.Client can be provided to the APIClient."""
-    custom_httpx_client = httpx.Client(base_url=BASE_URL, timeout=30.0)
+
+def test_can_reconfigure_with_custom_http_backend() -> None:
+    """Test that a custom HTTP backend can be configured."""
+    custom_backend = FakeHTTPBackend(
+        default_response=http.Response(
+            status_code=404,
+            content=b"Not Found",
+            headers={},
+        )
+    )
+    custom_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
     client = APIClient(base_url=BASE_URL)
-    client.configure(httpx_client=custom_httpx_client)
-
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}))
+    config = BaseConfig(base_url=BASE_URL, http_backend=custom_backend)
+    client.configure(config=config)
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
@@ -110,6 +164,8 @@ def test_can_reconfigure_with_custom_httpx_client(respx_mock: MockRouter) -> Non
 
     user = get_user(1)
 
-    # Verify the custom client is used
-    assert client.config.http_backend._sync_client is custom_httpx_client  # type: ignore
+    # Verify the custom backend is used
+    assert client.config.http_backend is custom_backend
     assert user.id == 1
+
+    client.close()

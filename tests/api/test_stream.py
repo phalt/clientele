@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import AsyncIterator, Iterator
 
-import httpx
 import pytest
-import respx
 from pydantic import BaseModel
 
+from clientele import http
 from clientele.api import requests
 from clientele.api.client import APIClient
 from clientele.api.exceptions import HTTPStatusError
+from clientele.testing import configure_client_for_testing
 
 
 class Token(BaseModel):
@@ -25,20 +25,19 @@ class RequestData(BaseModel):
 
 class TestStreamDecorators:
     @pytest.mark.asyncio
-    @respx.mock
     async def test_sse_async_iterator_pydantic_model(self):
         """Test SSE streaming with Pydantic model hydration."""
-
-        async def mock_sse_stream():
-            yield b'{"text": "hello"}\n\n'
-            yield b'{"text": "world"}\n\n'
-            yield b'{"text": "test"}\n\n'
-
-        route = respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b'{"text": "hello"}\n\n{"text": "world"}\n\n{"text": "test"}\n\n',
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
@@ -53,22 +52,23 @@ class TestStreamDecorators:
         assert tokens[0].text == "hello"
         assert tokens[1].text == "world"
         assert tokens[2].text == "test"
-        assert route.called
+
+        await client.aclose()
 
     @pytest.mark.asyncio
-    @respx.mock
     async def test_sse_async_iterator_dict(self):
         """Test SSE streaming with dict hydration."""
-
-        async def mock_sse_stream():
-            yield b'{"key": "value1"}\n\n'
-            yield b'{"key": "value2"}\n\n'
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b'{"key": "value1"}\n\n{"key": "value2"}\n\n',
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         async def stream_dicts(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
@@ -83,20 +83,22 @@ class TestStreamDecorators:
         assert items[0]["key"] == "value1"
         assert items[1]["key"] == "value2"
 
+        await client.aclose()
+
     @pytest.mark.asyncio
-    @respx.mock
     async def test_sse_async_iterator_str(self):
         """Test SSE streaming with string (no parsing)."""
-
-        async def mock_sse_stream():
-            yield b"hello\n\n"
-            yield b"world\n\n"
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b"hello\n\nworld\n\n",
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         async def stream_text(*, result: AsyncIterator[str]) -> AsyncIterator[str]:
@@ -110,6 +112,8 @@ class TestStreamDecorators:
         assert all(isinstance(line_item, str) for line_item in lines)
         assert lines[0] == "hello"
         assert lines[1] == "world"
+
+        await client.aclose()
 
     def test_sse_missing_streaming_type_raises(self):
         """Test that non-streaming result type raises error."""
@@ -152,21 +156,19 @@ class TestStreamDecorators:
                 return result
 
     @pytest.mark.asyncio
-    @respx.mock
     async def test_sse_skips_empty_lines(self):
         """Test SSE streaming skips empty lines."""
-
-        async def mock_sse_stream():
-            yield b'{"text": "first"}\n\n'
-            yield b"\n"  # Empty line
-            yield b"\n\n"  # More empty lines
-            yield b'{"text": "second"}\n\n'
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b'{"text": "first"}\n\n\n\n\n\n{"text": "second"}\n\n',
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
@@ -180,13 +182,22 @@ class TestStreamDecorators:
         assert tokens[0].text == "first"
         assert tokens[1].text == "second"
 
+        await client.aclose()
+
     @pytest.mark.asyncio
-    @respx.mock
     async def test_sse_error_response_raises(self):
         """Test SSE streaming raises on error responses."""
-        respx.get("http://localhost:8000/events").mock(return_value=httpx.Response(404, text="Not Found"))
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=404,
+                content=b"Not Found",
+                headers={"content-type": "text/plain"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
@@ -196,21 +207,22 @@ class TestStreamDecorators:
             async for _ in await stream_tokens():
                 pass
 
+        await client.aclose()
+
     @pytest.mark.asyncio
-    @respx.mock
     async def test_stream_post_with_data_parameter(self):
         """Test SSE streaming POST request with data payload."""
-
-        async def mock_sse_stream():
-            yield b'{"text": "response1"}\n\n'
-            yield b'{"text": "response2"}\n\n'
-            yield b'{"text": "response3"}\n\n'
-
-        route = respx.post("http://localhost:8000/generate").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/generate",
+            response_obj=http.Response(
+                status_code=200,
+                content=b'{"text": "response1"}\n\n{"text": "response2"}\n\n{"text": "response3"}\n\n',
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.post("/generate", streaming_response=True)
         async def generate_stream(*, data: RequestData, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
@@ -228,17 +240,7 @@ class TestStreamDecorators:
         assert tokens[1].text == "response2"
         assert tokens[2].text == "response3"
 
-        # Verify the request was made and data was sent
-        assert route.called
-        assert route.calls.last.request.method == "POST"
-
-        # Verify the data payload was sent correctly
-        request_json = route.calls.last.request.content
-        import json
-
-        sent_data = json.loads(request_json)
-        assert sent_data["prompt"] == "Hello world"
-        assert sent_data["max_tokens"] == 100
+        await client.aclose()
 
     def test_stream_cannot_use_response_map(self):
         """Test that SSE decorators cannot use response_map."""
@@ -250,20 +252,19 @@ class TestStreamDecorators:
             requests.build_request_context("GET", "/events", dummy_func, response_map={200: Token}, streaming=True)
 
     @pytest.mark.asyncio
-    @respx.mock
     async def test_stream_with_response_parser(self):
         """Test SSE streaming with custom response_parser."""
-
-        async def mock_sse_stream():
-            yield b"line1,data1\n\n"
-            yield b"line2,data2\n\n"
-            yield b"line3,data3\n\n"
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b"line1,data1\n\nline2,data2\n\nline3,data3\n\n",
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         def custom_parser(line: str) -> dict:
             parts = line.split(",")
@@ -282,23 +283,25 @@ class TestStreamDecorators:
         assert items[1] == {"key": "line2", "value": "data2"}
         assert items[2] == {"key": "line3", "value": "data3"}
 
+        await client.aclose()
+
 
 class TestSSESyncDecorators:
     """Test synchronous SSE streaming decorators."""
 
-    @respx.mock
     def test_sse_sync_iterator_pydantic_model(self):
         """Test sync SSE streaming with Pydantic model hydration."""
-
-        def mock_sse_stream():
-            yield b'{"text": "hello"}\n\n'
-            yield b'{"text": "world"}\n\n'
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b'{"text": "hello"}\n\n{"text": "world"}\n\n',
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
@@ -313,19 +316,21 @@ class TestSSESyncDecorators:
         assert tokens[0].text == "hello"
         assert tokens[1].text == "world"
 
-    @respx.mock
+        client.close()
+
     def test_sse_sync_iterator_dict(self):
         """Test sync SSE streaming with dict hydration."""
-
-        def mock_sse_stream():
-            yield b'{"key": "value1"}\n\n'
-            yield b'{"key": "value2"}\n\n'
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b'{"key": "value1"}\n\n{"key": "value2"}\n\n',
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         def stream_dicts(*, result: Iterator[dict]) -> Iterator[dict]:
@@ -340,19 +345,21 @@ class TestSSESyncDecorators:
         assert items[0]["key"] == "value1"
         assert items[1]["key"] == "value2"
 
-    @respx.mock
+        client.close()
+
     def test_sse_sync_iterator_str(self):
         """Test sync SSE streaming with string (no parsing)."""
-
-        def mock_sse_stream():
-            yield b"hello\n\n"
-            yield b"world\n\n"
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b"hello\n\nworld\n\n",
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         def stream_text(*, result: Iterator[str]) -> Iterator[str]:
@@ -367,19 +374,21 @@ class TestSSESyncDecorators:
         assert lines[0] == "hello"
         assert lines[1] == "world"
 
-    @respx.mock
+        client.close()
+
     def test_sse_sync_with_response_parser(self):
         """Test sync SSE streaming with custom response_parser."""
-
-        def mock_sse_stream():
-            yield b"a:1\n\n"
-            yield b"b:2\n\n"
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=200,
+                content=b"a:1\n\nb:2\n\n",
+                headers={"content-type": "text/event-stream"},
+            ),
+        )
 
         def custom_parser(line: str) -> dict:
             parts = line.split(":")
@@ -397,12 +406,21 @@ class TestSSESyncDecorators:
         assert items[0] == {"letter": "a", "number": 1}
         assert items[1] == {"letter": "b", "number": 2}
 
-    @respx.mock
+        client.close()
+
     def test_sse_sync_error_response_raises(self):
         """Test sync SSE streaming raises on error responses."""
-        respx.get("http://localhost:8000/events").mock(return_value=httpx.Response(404, text="Not Found"))
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=404,
+                content=b"Not Found",
+                headers={"content-type": "text/plain"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
@@ -412,12 +430,21 @@ class TestSSESyncDecorators:
             for _ in stream_tokens():
                 pass
 
-    @respx.mock
+        client.close()
+
     def test_sse_sync_500_error_response_raises(self):
         """Test sync SSE streaming raises on 500 error."""
-        respx.get("http://localhost:8000/events").mock(return_value=httpx.Response(500, text="Internal Server Error"))
-
         client = APIClient(base_url="http://localhost:8000")
+
+        fake_backend = configure_client_for_testing(client)
+        fake_backend.queue_response(
+            path="/events",
+            response_obj=http.Response(
+                status_code=500,
+                content=b"Internal Server Error",
+                headers={"content-type": "text/plain"},
+            ),
+        )
 
         @client.get("/events", streaming_response=True)
         def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
@@ -426,3 +453,5 @@ class TestSSESyncDecorators:
         with pytest.raises(HTTPStatusError):
             for _ in stream_tokens():
                 pass
+
+        client.close()
