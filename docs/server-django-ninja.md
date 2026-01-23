@@ -289,4 +289,4 @@ print(response.username)
 ## Next Steps
 
 - [Configure authentication](api-authentication.md)
-- [Set up testing with respx](api-testing.md)
+- [Set up testing](api-testing.md)
