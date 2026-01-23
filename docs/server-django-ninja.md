@@ -50,20 +50,20 @@ You can either:
 **Option A: Use the URL directly** (if the API is accessible):
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/api/openapi.json -o my_client/
+clientele start-api -u http://localhost:8000/api/openapi.json -o my_client/
 ```
 
 **Option B: Download the schema file first**:
 
 ```sh
 curl http://localhost:8000/api/openapi.json > openapi.json
-clientele scaffold-api -f openapi.json -o my_client/
+clientele start-api -f openapi.json -o my_client/
 ```
 
 ## Step 2: Scaffold the Client
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/api/openapi.json -o my_client/
+clientele start-api -u http://localhost:8000/api/openapi.json -o my_client/
 ```
 
 ### Async Client
@@ -71,7 +71,7 @@ clientele scaffold-api -u http://localhost:8000/api/openapi.json -o my_client/
 Django Ninja supports both sync and async views. If you want an async client:
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/api/openapi.json -o my_client/ --asyncio
+clientele start-api -u http://localhost:8000/api/openapi.json -o my_client/ --asyncio
 ```
 
 ## Step 3: Use the scaffolded Client
