@@ -6,7 +6,49 @@
 
 - Built-in `retries.retry` decorator for handling retry logic.
 - This is built on top of `stamina` - a popular and reliable retry package.
-- Customised to suit Clientele's exception handling.
+- The retry logic is customised to suit Clientele's exception handling.
+
+```python
+from clientele import api, retries
+
+client = api.APIClient(api.BaseConfig(base_url="https://httpbin.org/"))
+
+@retries.retry(attempts=3)
+@client.get("/status/{status_code}")
+def get_status(status_code: int, result: dict) -> dict:
+    return result
+```
+
+### Improved testing
+
+- We have drastically improved the testing support for Clientele.
+- The `FakeHTTPBackend` is now designed for testing.
+- The `queue_response` method now takes a `http.Response` object as well as the path.
+- The new `configure_client_for_testing` function accepts an existing client and then returns it with a new testing backend.
+
+```python
+from clientele.testing import configure_client_for_testing
+from clientele import http
+from my_api_client import client, my_function
+
+def my_test():
+    # Swap normal backend for a Fake HTTP backend
+    fake_backend: http.FakeHTTPBackend = configure_client_for_testing(my_api_client.client)
+
+    # Configure HTTP responses
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=Response(
+            status_code=201,
+            content=b'{"id": 10, "name": "Bob"}',
+            headers={"content-type": "application/json"},
+        ),
+    )
+
+    # Call function as normal, but it now calls the fake backend
+    response = my_function()
+
+```
 
 ### Dropped `explore` command
 

@@ -25,7 +25,11 @@ class TestFakeHTTPBackend:
 
     def test_basic_request_capture(self):
         backend = fake_backend.FakeHTTPBackend(
-            default_content={"id": 1, "name": "Test"},
+            default_response=Response(
+                status_code=200,
+                content=b'{"id": 1, "name": "Test"}',
+                headers={"content-type": "application/json"},
+            ),
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
@@ -63,17 +67,29 @@ class TestFakeHTTPBackend:
             return result
 
         backend.queue_response(
-            status=200,
-            content={"first": "response"},
+            path="/resource",
+            response_obj=Response(
+                status_code=200,
+                content=b'{"first": "response"}',
+                headers={"content-type": "application/json"},
+            ),
         )
         backend.queue_response(
-            status=200,
-            content={"second": "response"},
+            path="/resource",
+            response_obj=Response(
+                status_code=200,
+                content=b'{"second": "response"}',
+                headers={"content-type": "application/json"},
+            ),
         )
         # Support bytes
         backend.queue_response(
-            status=200,
-            content=b'{"bytes": "response"}',
+            path="/resource",
+            response_obj=Response(
+                status_code=200,
+                content=b'{"bytes": "response"}',
+                headers={"content-type": "application/json"},
+            ),
         )
 
         result1 = get_resource()
@@ -88,7 +104,11 @@ class TestFakeHTTPBackend:
 
     def test_default_headers_override(self):
         backend = fake_backend.FakeHTTPBackend(
-            default_headers={"X-Default-Header": "DefaultValue"},
+            default_response=Response(
+                status_code=200,
+                content=b"{}",
+                headers={"X-Default-Header": "DefaultValue", "content-type": "application/json"},
+            ),
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
@@ -102,8 +122,12 @@ class TestFakeHTTPBackend:
             return response
 
         backend.queue_response(
-            status=200,
-            content={"status": "ok"},
+            path="/headers-test",
+            response_obj=Response(
+                status_code=200,
+                content=b'{"status": "ok"}',
+                headers={"content-type": "application/json", "X-Default-Header": "DefaultValue"},
+            ),
         )
 
         # Make request
@@ -119,7 +143,11 @@ class TestFakeHTTPBackend:
     def test_post_request_with_data(self):
         """Test POST request with data payload."""
         backend = fake_backend.FakeHTTPBackend(
-            default_content={"id": 42, "created": True},
+            default_response=Response(
+                status_code=200,
+                content=b'{"id": 42, "created": true}',
+                headers={"content-type": "application/json"},
+            ),
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
@@ -170,9 +198,16 @@ class TestFakeHTTPBackend:
         assert len(backend.requests) == 0
 
         # Queue a response and reset
-        backend.queue_response(status=200, content={"test": "data"})
+        backend.queue_response(
+            path="/test",
+            response_obj=Response(
+                status_code=200,
+                content=b'{"test": "data"}',
+                headers={"content-type": "application/json"},
+            ),
+        )
         backend.reset()
-        assert len(backend._response_queue) == 0
+        assert len(backend._response_map) == 0
 
         client.close()
 
@@ -180,7 +215,11 @@ class TestFakeHTTPBackend:
     async def test_async_requests(self):
         """Test async request capture."""
         backend = fake_backend.FakeHTTPBackend(
-            default_content={"async": True},
+            default_response=Response(
+                status_code=200,
+                content=b'{"async": true}',
+                headers={"content-type": "application/json"},
+            ),
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
