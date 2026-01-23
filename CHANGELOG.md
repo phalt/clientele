@@ -4,6 +4,8 @@
 
 - Dropped `scaffold-api` command
 - Dropped `generate-basic` command
+- Drop `httpx_client` from `APIClient`
+- Drop `httpx_async_client` from `APIClient`
 
 ## 1.9.2
 
