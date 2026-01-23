@@ -843,10 +843,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#synchronous-sse" class="md-nav__link">
+  <a href="#synchronous-streaming" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synchronous SSE
+        Synchronous Streaming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parsing-server-sent-events-sse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parsing Server-Sent Events (SSE)
       
     </span>
   </a>
@@ -1361,10 +1372,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#synchronous-sse" class="md-nav__link">
+  <a href="#synchronous-streaming" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Synchronous SSE
+        Synchronous Streaming
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parsing-server-sent-events-sse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parsing Server-Sent Events (SSE)
       
     </span>
   </a>
@@ -1403,7 +1425,7 @@
 
 
 <h1 id="streaming">🌊 Streaming</h1>
-<p>Clientele supports streaming responses using Server-Sent Events through the <code>streaming_response=True</code> parameter.</p>
+<p>Clientele supports HTTP streaming responses through the <code>streaming_response=True</code> parameter.</p>
 <h2 id="basic-stream-example">Basic stream Example</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIterator</span>
 
@@ -1465,8 +1487,8 @@
 <li><code>HTTP PATCH</code></li>
 <li><code>HTTP DELETE</code></li>
 </ul>
-<h2 id="synchronous-sse">Synchronous SSE</h2>
-<p>You can also use synchronous iterators for blocking SSE streams:</p>
+<h2 id="synchronous-streaming">Synchronous Streaming</h2>
+<p>You can also use synchronous iterators for blocking streams:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/events&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1476,12 +1498,44 @@
 <div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">stream_events_sync</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </code></pre></div>
+<h2 id="parsing-server-sent-events-sse">Parsing Server-Sent Events (SSE)</h2>
+<p>For Server-Sent Events format (with <code>data:</code>, <code>event:</code>, <code>id:</code> fields), use a custom <code>response_parser</code> to extract the data:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIterator</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_sse</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse SSE format: extracts data from &#39;data: {json}&#39; lines.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;data: &#39;</span><span class="p">):</span>
+        <span class="n">json_str</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span>  <span class="c1"># Remove &#39;data: &#39; prefix</span>
+        <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_str</span><span class="p">)</span>
+    <span class="c1"># Skip other SSE fields (event:, id:, retry:, comments)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ChatMessage</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">role</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">content</span><span class="p">:</span> <span class="nb">str</span>
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/chat/stream&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">parse_sse</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_chat</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">ChatMessage</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">ChatMessage</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># Server sends SSE format:</span>
+<span class="c1"># data: {&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;Hello&quot;}</span>
+<span class="c1">#</span>
+<span class="c1"># data: {&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;How can I help?&quot;}</span>
+<span class="c1">#</span>
+
+<span class="k">async</span> <span class="k">for</span> <span class="n">message</span> <span class="ow">in</span> <span class="k">await</span> <span class="n">stream_chat</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;prompt&quot;</span><span class="p">:</span> <span class="s2">&quot;Hi&quot;</span><span class="p">}):</span>
+    <span class="k">if</span> <span class="n">message</span><span class="p">:</span>  <span class="c1"># Skip None values from non-data lines</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">role</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Note</strong>: The <code>response_parser</code> receives each line as a string and should return the parsed value. Return <code>None</code> to skip lines (e.g., SSE comments or event type declarations).</p>
 <h2 id="custom-parsing-with-response_parser">Custom Parsing with response_parser</h2>
-<p>You can provide a custom <code>response_parser</code> callback to control how each streamed item is parsed:</p>
+<p>You can provide a custom <code>response_parser</code> callback to control how each streamed line is parsed:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIterator</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_custom_event</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom parser for each streamed line.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_csv_log</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Custom parser for CSV-formatted log lines.&quot;&quot;&quot;</span>
     <span class="n">parts</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
@@ -1489,14 +1543,14 @@
         <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="k">else</span> <span class="s2">&quot;info&quot;</span>
     <span class="p">}</span>
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/logs&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">parse_custom_event</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/logs&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">parse_csv_log</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_logs</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">for</span> <span class="n">log_entry</span> <span class="ow">in</span> <span class="k">await</span> <span class="n">stream_logs</span><span class="p">():</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">log_entry</span><span class="p">[</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">log_entry</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>The <code>response_parser</code> is called for each line received from the stream, giving you full control over how the data is transformed before being yielded to your code.</p>
+<p>The <code>response_parser</code> is called for each non-empty line received from the stream, giving you full control over how the data is transformed before being yielded to your code.</p>
 
 
 
