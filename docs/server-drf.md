@@ -83,27 +83,27 @@ You can either:
 **Option A: Use the URL directly** (if the API is accessible):
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/
+clientele start-api -u http://localhost:8000/api/schema/ -o my_client/
 ```
 
 **Option B: Download the schema file first**:
 
 ```sh
 curl http://localhost:8000/api/schema/ > openapi.json
-clientele scaffold-api -f openapi.json -o my_client/
+clientele start-api -f openapi.json -o my_client/
 ```
 
 **Option C: Generate schema file with Django management command**:
 
 ```sh
 python manage.py spectacular --file openapi.json
-clientele scaffold-api -f openapi.json -o my_client/
+clientele start-api -f openapi.json -o my_client/
 ```
 
 ## Step 3: Scaffold the Client
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/
+clientele start-api -u http://localhost:8000/api/schema/ -o my_client/
 ```
 
 ### Async Client
@@ -111,7 +111,7 @@ clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/
 If you want an async client (note: DRF itself is synchronous, but the client can be async):
 
 ```sh
-clientele scaffold-api -u http://localhost:8000/api/schema/ -o my_client/ --asyncio
+clientele start-api -u http://localhost:8000/api/schema/ -o my_client/ --asyncio
 ```
 
 ## Step 4: Use the scaffolded Client
