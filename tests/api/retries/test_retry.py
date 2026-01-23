@@ -74,3 +74,24 @@ def test_retries_do_not_block_other_statuses_from_raising_properly():
         get_test_endpoint()
 
     assert len(fake_backend.requests) == 2  # Ensure it retried once
+
+
+def test_retries_do_not_block_other_exceptions():
+    fake_backend = http.FakeHTTPBackend()
+    client = api.APIClient(
+        config=api.BaseConfig(
+            base_url="http://fake.api",
+            http_backend=fake_backend,
+        )
+    )
+    fake_backend.queue_response(status=200, content={"error": "Server error"})
+
+    @retries.retry(attempts=3)
+    @client.get("/test-endpoint")
+    def get_test_endpoint(result: dict) -> dict:
+        raise TypeError("Some other exception")
+
+    with pytest.raises(TypeError):
+        get_test_endpoint()
+
+    assert len(fake_backend.requests) == 1  # Ensure it did not retry

@@ -30,6 +30,11 @@ class RequestDataAndParameterResponse(BaseModel):
     your_query: str
 
 
+def test_raises_when_no_params_supplied():
+    with pytest.raises(ValueError):
+        APIClient()
+
+
 @pytest.mark.respx(base_url=BASE_URL)
 def test_get_validates_response_and_builds_query(respx_mock: MockRouter) -> None:
     client = APIClient(base_url=BASE_URL)

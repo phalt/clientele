@@ -22,7 +22,7 @@ class CacheBackend(abc.ABC):
         Returns:
             The cached value if found and not expired, None otherwise
         """
-        ...
+        raise NotImplementedError
 
     @abc.abstractmethod
     def set(self, key: str, value: typing.Any, ttl: typing.Optional[int | float] = None) -> None:
@@ -33,7 +33,7 @@ class CacheBackend(abc.ABC):
             value: The value to cache (must be picklable for some backends)
             ttl: Time-to-live in seconds (None = no expiration)
         """
-        ...
+        raise NotImplementedError
 
     @abc.abstractmethod
     def delete(self, key: str) -> None:
@@ -42,12 +42,12 @@ class CacheBackend(abc.ABC):
         Args:
             key: The cache key to remove
         """
-        ...
+        raise NotImplementedError
 
     @abc.abstractmethod
     def clear(self) -> None:
         """Clear all values from the cache."""
-        ...
+        raise NotImplementedError
 
     @abc.abstractmethod
     def exists(self, key: str) -> bool:
@@ -59,7 +59,7 @@ class CacheBackend(abc.ABC):
         Returns:
             True if the key exists and is not expired, False otherwise
         """
-        ...
+        raise NotImplementedError
 
 
 class CacheEntry:

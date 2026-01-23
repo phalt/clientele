@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import typing
 
 from clientele.http import backends, response
@@ -125,8 +126,6 @@ class FakeHTTPBackend(backends.HTTPBackend):
 
         # Convert dict content to JSON bytes
         if isinstance(content, dict):
-            import json
-
             content_bytes = json.dumps(content).encode("utf-8")
             if "content-type" not in headers:
                 headers["content-type"] = "application/json"
