@@ -16,7 +16,7 @@ Once installed, you can run `clientele version` to make sure you have the latest
 
 ```sh
 > clientele version
-clientele 1.9.0
+clientele 1.9.1
 ```
 
 ## Next steps

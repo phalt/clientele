@@ -1,6 +1,11 @@
 # Change log
 
-## UNRELEASED 1.9.0
+## 1.9.1
+
+- Fix streaming responses to truly yield instead of consuming the full response.
+- Introduces new http_backend methods for handling streaming however the backend chooses.
+
+## 1.9.0
 
 ### Retry support
 
