@@ -1,14 +1,13 @@
 from __future__ import annotations
 
+import json
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-import httpx
-import pytest
-import respx
-
+from clientele import http
 from clientele.cache.backends import MemoryBackend
 from clientele.cache.types import CacheEntry
+from clientele.testing import configure_client_for_testing
 from tests.cache.fixtures import FakeCacheBackend
 
 BASE_URL = "http://localhost"
@@ -249,8 +248,7 @@ class TestMemoryBackend:
 class TestConfigBackend:
     """Tests for custom backend configuration in BaseConfig."""
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_custom_backend_via_config(self, respx_mock: respx.MockRouter):
+    def test_custom_backend_via_config(self):
         """Custom backend set in BaseConfig should be used by memoize decorator."""
         from clientele import api, cache
 
@@ -263,8 +261,16 @@ class TestConfigBackend:
             ),
         )
 
+        fake_http_backend = configure_client_for_testing(client)
         return_json = {"data": "value"}
-        respx_mock.get("test/1").mock(return_value=httpx.Response(json=return_json, status_code=200))
+        fake_http_backend.queue_response(
+            path="/test/1",
+            response_obj=http.Response(
+                status_code=200,
+                content=json.dumps(return_json).encode("utf-8"),
+                headers={"content-type": "application/json"},
+            ),
+        )
 
         @cache.memoize(ttl=300)
         @client.get("/test/{id}")
@@ -275,3 +281,5 @@ class TestConfigBackend:
         assert response1 == return_json
 
         assert custom_backend.store == {"GET:/test/{id}:id=1": {"data": "value"}}
+
+        client.close()

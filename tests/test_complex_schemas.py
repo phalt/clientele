@@ -5,15 +5,16 @@ This test module validates that clientele correctly handles oneOf, anyOf,
 and nullable schema constructs with proper Python typing.
 """
 
+import json
 import sys
 from contextlib import contextmanager
 
-import httpx
 import pytest
-from respx import MockRouter
 
+from clientele import http
 from clientele.generators.api.generator import APIGenerator
 from clientele.generators.standard.generator import StandardGenerator
+from clientele.testing import configure_client_for_testing
 from tests.generators.integration_utils import get_spec_path, load_spec
 
 
@@ -418,11 +419,12 @@ class TestNoContentResponses:
         # Verify the function signature uses the type alias
         assert "-> schemas.ResponseListUsers:" in client_content
 
-    @pytest.mark.respx(base_url="http://localhost:8000")
-    def test_array_response_handle_response_runtime(self, respx_mock: MockRouter):
+    def test_array_response_handle_response_runtime(self):
         """Test that handle_response works correctly with array type aliases at runtime."""
         # Use the already generated server_examples/fastapi/client
         from server_examples.fastapi.client import client
+
+        fake_backend = configure_client_for_testing(client.client)
 
         # Create a mock response with array data
         return_value = [
@@ -430,7 +432,14 @@ class TestNoContentResponses:
             {"id": 2, "name": "Bob", "email": "bob@example.com"},
         ]
 
-        respx_mock.get("/users").mock(return_value=httpx.Response(200, json=return_value))
+        fake_backend.queue_response(
+            path="/users",
+            response_obj=http.Response(
+                status_code=200,
+                content=json.dumps(return_value).encode("utf-8"),
+                headers={"content-type": "application/json"},
+            ),
+        )
 
         # Call handle_response with the list_users function
         result = client.list_users()

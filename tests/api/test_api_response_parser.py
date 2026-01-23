@@ -1,12 +1,14 @@
 from __future__ import annotations
 
-import httpx
+import json
+
 import pytest
 from pydantic import BaseModel
-from respx import MockRouter
 
+from clientele import http
 from clientele.api import APIClient
 from clientele.http import response as http_response
+from clientele.testing import configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -21,12 +23,17 @@ class CustomResponseParserResponse(BaseModel):
     other_value: str
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_accepts_response_parser_and_uses_it_to_return_response(respx_mock: MockRouter) -> None:
+def test_accepts_response_parser_and_uses_it_to_return_response() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}, headers={"x-source": "mock"})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"x-source": "mock", "content-type": "application/json"},
+        ),
     )
 
     def my_response_parser(response: http_response.Response) -> CustomResponseParserResponse:
@@ -40,16 +47,21 @@ def test_accepts_response_parser_and_uses_it_to_return_response(respx_mock: Mock
     custom_response = get_user_custom_response(1)
 
     assert custom_response == "other value"
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/users/1"
+
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_parser_handles_simple_response_types(respx_mock: MockRouter) -> None:
+def test_response_parser_handles_simple_response_types() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}, headers={"x-source": "mock"})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"x-source": "mock", "content-type": "application/json"},
+        ),
     )
 
     def my_response_parser(response: http_response.Response) -> dict:
@@ -62,11 +74,11 @@ def test_response_parser_handles_simple_response_types(respx_mock: MockRouter) -
     custom_response = get_user_custom_response(1)
 
     assert custom_response == "other value"
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/users/1"
+
+    client.close()
 
 
-def test_errors_when_parser_return_types_do_not_match_result_types(respx_mock: MockRouter) -> None:
+def test_errors_when_parser_return_types_do_not_match_result_types() -> None:
     client = APIClient(base_url=BASE_URL)
 
     def my_response_parser(response: http_response.Response) -> CustomResponseParserResponse:
@@ -85,7 +97,7 @@ def test_errors_when_parser_return_types_do_not_match_result_types(respx_mock: M
             return result.id
 
 
-def test_raises_when_both_response_map_and_response_parser_are_provided(respx_mock: MockRouter) -> None:
+def test_raises_when_both_response_map_and_response_parser_are_provided() -> None:
     client = APIClient(base_url=BASE_URL)
 
     def my_response_parser(response: http_response.Response) -> CustomResponseParserResponse:

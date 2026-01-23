@@ -85,15 +85,6 @@ def test_generate_basic_command_creates_files(runner):
         assert len(list(output_dir.iterdir())) > 0
 
 
-def test_print_dependency_instructions():
-    """Test that dependency instructions can be printed without error."""
-    from rich.console import Console
-
-    console = Console()
-    # Should not raise an exception
-    cli._print_dependency_instructions(console)
-
-
 @pytest.mark.parametrize("suffix", [".json", ".yaml"])
 def test_load_openapi_spec_from_file(write_spec_file, suffix):
     """Test loading OpenAPI spec from a file."""

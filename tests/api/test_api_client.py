@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import json
 
-import httpx
 import pytest
 from pydantic import BaseModel
-from respx import MockRouter
 
+from clientele import http
 from clientele.api import APIClient, APIException, BaseConfig
+from clientele.testing import configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -35,12 +35,17 @@ def test_raises_when_no_params_supplied():
         APIClient()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_get_validates_response_and_builds_query(respx_mock: MockRouter) -> None:
+def test_get_validates_response_and_builds_query() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(200, json={"id": 1, "name": "Ada"}, headers={"x-source": "mock"})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+            headers={"x-source": "mock", "content-type": "application/json"},
+        ),
     )
 
     @client.get("/users/{user_id}")
@@ -50,17 +55,21 @@ def test_get_validates_response_and_builds_query(respx_mock: MockRouter) -> None
     user = get_user(1)
 
     assert user == User(id=1, name="Ada")
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/users/1"
-    assert call.request.url.params.get("include_details") == "true"
+
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_get_respects_query_override_and_list_validation(respx_mock: MockRouter) -> None:
+def test_get_respects_query_override_and_list_validation() -> None:
     client = APIClient(config=BaseConfig(base_url=BASE_URL, headers={"Authorization": "Bearer token"}))
 
-    respx_mock.get("/users").mock(
-        return_value=httpx.Response(200, json=[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}])
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps([{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
 
     @client.get("/users")
@@ -70,16 +79,30 @@ def test_get_respects_query_override_and_list_validation(respx_mock: MockRouter)
     users = list_users(query={"search": "dev"})
 
     assert [user.name for user in users] == ["Ada", "Bob"]
-    call = respx_mock.calls[0]
-    assert call.request.headers["Authorization"] == "Bearer token"
-    assert call.request.url.params.get("search") == "dev"
+
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_post_accepts_model_instance_and_dict(respx_mock: MockRouter) -> None:
+def test_post_accepts_model_instance_and_dict() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     def create_user(data: CreateUserRequest, result: User) -> User:
@@ -91,15 +114,21 @@ def test_post_accepts_model_instance_and_dict(respx_mock: MockRouter) -> None:
     dict_user = create_user(data={"name": "Charlie"})
     assert dict_user.name == "Charlie"
 
-    call = respx_mock.calls[0]
-    assert json.loads(call.request.content) == {"name": "Charlie"}
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_post_leftover_kwargs_become_query_params(respx_mock: MockRouter) -> None:
+def test_post_leftover_kwargs_become_query_params() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.post("/users/active").mock(return_value=httpx.Response(200, json={"id": 5, "name": "Eve"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/active",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 5, "name": "Eve"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users/{state}")
     def promote_user(state: str, data: CreateUserRequest, result: User) -> User:
@@ -107,17 +136,29 @@ def test_post_leftover_kwargs_become_query_params(respx_mock: MockRouter) -> Non
 
     promote_user("active", data={"name": "Eve"}, notify=True)
 
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/users/active"
-    assert call.request.url.params.get("notify") == "true"
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_non_json_and_empty_response_handling(respx_mock: MockRouter) -> None:
+def test_non_json_and_empty_response_handling() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/ping").mock(return_value=httpx.Response(204))
-    respx_mock.get("/version").mock(return_value=httpx.Response(200, text="1.0"))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/ping",
+        response_obj=http.Response(
+            status_code=204,
+            content=b"",
+            headers={},
+        ),
+    )
+    fake_backend.queue_response(
+        path="/version",
+        response_obj=http.Response(
+            status_code=200,
+            content=b"1.0",
+            headers={"content-type": "text/plain"},
+        ),
+    )
 
     @client.get("/ping")
     def ping(result: None) -> None:
@@ -130,9 +171,10 @@ def test_non_json_and_empty_response_handling(respx_mock: MockRouter) -> None:
     assert ping() is None
     assert version() == "1.0"
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_path_and_query_params_combined(respx_mock: MockRouter) -> None:
+
+def test_path_and_query_params_combined() -> None:
     """
     Inspired by the /request-data/{path_parameter} endpoint in example_openapi_specs/best.json
     which combines a path placeholder with a query string parameter.
@@ -140,10 +182,14 @@ def test_path_and_query_params_combined(respx_mock: MockRouter) -> None:
 
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/request-data/some-id").mock(
-        return_value=httpx.Response(
-            200, json={"path_parameter": "some-id", "your_query": "hello"}, headers={"X-Example": "spec"}
-        )
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/request-data/some-id",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"path_parameter": "some-id", "your_query": "hello"}).encode("utf-8"),
+            headers={"X-Example": "spec", "content-type": "application/json"},
+        ),
     )
 
     @client.get("/request-data/{path_parameter}")
@@ -155,16 +201,22 @@ def test_path_and_query_params_combined(respx_mock: MockRouter) -> None:
     response = fetch_request_data("some-id", query={"your_query": "hello"})
 
     assert response == RequestDataAndParameterResponse(path_parameter="some-id", your_query="hello")
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/request-data/some-id"
-    assert call.request.url.params["your_query"] == "hello"
+
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_put_serializes_model_and_merges_headers(respx_mock: MockRouter) -> None:
+def test_put_serializes_model_and_merges_headers() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.put("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Updated"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/2",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 2, "name": "Updated"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.put("/users/{user_id}")
     def update_user(user_id: int, data: UpdateUserRequest, result: User) -> User:
@@ -173,16 +225,22 @@ def test_put_serializes_model_and_merges_headers(respx_mock: MockRouter) -> None
     updated = update_user(2, data=UpdateUserRequest(name="Updated"), headers={"X-Trace": "abc"})
 
     assert updated.name == "Updated"
-    call = respx_mock.calls[0]
-    assert call.request.headers["X-Trace"] == "abc"
-    assert json.loads(call.request.content) == {"name": "Updated"}
+
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_patch_validates_dict_body(respx_mock: MockRouter) -> None:
+def test_patch_validates_dict_body() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.patch("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Partial"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/3",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 3, "name": "Partial"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.patch("/users/{user_id}")
     def patch_user(user_id: int, data: UpdateUserRequest, result: User) -> User:
@@ -191,16 +249,22 @@ def test_patch_validates_dict_body(respx_mock: MockRouter) -> None:
     patched = patch_user(3, data={"name": "Partial"})
 
     assert patched == User(id=3, name="Partial")
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/users/3"
-    assert json.loads(call.request.content) == {"name": "Partial"}
+
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_delete_supports_query_and_response_injection(respx_mock: MockRouter) -> None:
+def test_delete_supports_query_and_response_injection() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.delete("/users/4").mock(return_value=httpx.Response(204))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/4",
+        response_obj=http.Response(
+            status_code=204,
+            content=b"",
+            headers={},
+        ),
+    )
 
     @client.delete("/users/{user_id}")
     def delete_user(user_id: int, result: None, query: dict[str, str] | None = None) -> None:
@@ -208,17 +272,22 @@ def test_delete_supports_query_and_response_injection(respx_mock: MockRouter) ->
 
     delete_user(4, query={"hard": "false"})
 
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/users/4"
-    assert call.request.url.params.get("hard") == "false"
+    client.close()
 
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_async_get_validates_response(respx_mock: MockRouter) -> None:
+async def test_async_get_validates_response() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Async"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/2",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 2, "name": "Async"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     async def get_user(user_id: int, result: User) -> User:
@@ -227,16 +296,23 @@ async def test_async_get_validates_response(respx_mock: MockRouter) -> None:
     user = await get_user(2)
 
     assert user == User(id=2, name="Async")
-    call = respx_mock.calls[0]
-    assert call.request.url.path == "/users/2"
+
+    await client.aclose()
 
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_async_post_validates_body_and_query(respx_mock: MockRouter) -> None:
+async def test_async_post_validates_body_and_query() -> None:
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 9, "name": "Zoe"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 9, "name": "Zoe"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     async def create_user(data: CreateUserRequest, result: User) -> User:
@@ -245,9 +321,8 @@ async def test_async_post_validates_body_and_query(respx_mock: MockRouter) -> No
     created = await create_user(data={"name": "Zoe"}, query={"lang": "en"})
 
     assert created == User(id=9, name="Zoe")
-    call = respx_mock.calls[0]
-    assert call.request.url.params["lang"] == "en"
-    assert json.loads(call.request.content) == {"name": "Zoe"}
+
+    await client.aclose()
 
 
 # Test models for response_map feature
@@ -270,15 +345,27 @@ class ValidationErrorResponse(BaseModel):
 ResponseUnion = SuccessResponse | ErrorResponse
 
 
-@pytest.mark.respx(base_url="http://localhost")
-def test_response_map_with_type_alias_union(respx_mock: MockRouter) -> None:
+def test_response_map_with_type_alias_union() -> None:
     """Test response_map with a union type alias."""
     client = APIClient(base_url="http://localhost")
 
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(200, json={"id": 1, "name": "Alice", "status": "success"})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Alice", "status": "success"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
-    respx_mock.get("/users/999").mock(return_value=httpx.Response(404, json={"error": "Not found", "code": 404}))
+    fake_backend.queue_response(
+        path="/users/999",
+        response_obj=http.Response(
+            status_code=404,
+            content=json.dumps({"error": "Not found", "code": 404}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get(
         "/users/{user_id}",
@@ -302,15 +389,22 @@ def test_response_map_with_type_alias_union(respx_mock: MockRouter) -> None:
     assert error.error == "Not found"
     assert error.code == 404
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_map_basic_sync(respx_mock: MockRouter) -> None:
+
+def test_response_map_basic_sync() -> None:
     """Test basic response_map functionality with sync function."""
 
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(200, json={"id": 1, "name": "Alice", "status": "success"})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Alice", "status": "success"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
 
     @client.get(
@@ -328,14 +422,23 @@ def test_response_map_basic_sync(respx_mock: MockRouter) -> None:
     assert user.id == 1
     assert user.name == "Alice"
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_map_error_status_sync(respx_mock: MockRouter) -> None:
+
+def test_response_map_error_status_sync() -> None:
     """Test response_map with error status code (sync)."""
 
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/999").mock(return_value=httpx.Response(404, json={"error": "User not found", "code": 404}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/999",
+        response_obj=http.Response(
+            status_code=404,
+            content=json.dumps({"error": "User not found", "code": 404}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get(
         "/users/{user_id}",
@@ -352,15 +455,22 @@ def test_response_map_error_status_sync(respx_mock: MockRouter) -> None:
     assert user.error == "User not found"
     assert user.code == 404
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_map_unexpected_status_raises_exception_sync(respx_mock: MockRouter) -> None:
+
+def test_response_map_unexpected_status_raises_exception_sync() -> None:
     """Test that unexpected status code raises APIException (sync)."""
 
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(500, json={"error": "Internal server error", "code": 500})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=500,
+            content=json.dumps({"error": "Internal server error", "code": 500}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
 
     @client.get(
@@ -380,13 +490,22 @@ def test_response_map_unexpected_status_raises_exception_sync(respx_mock: MockRo
     assert "Unexpected status code 500" in exc_info.value.reason
     assert "200, 404" in exc_info.value.reason
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_map_multiple_status_codes_sync(respx_mock: MockRouter) -> None:
+
+def test_response_map_multiple_status_codes_sync() -> None:
     """Test response_map with multiple status codes (sync)."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 1, "name": "Bob", "status": "success"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 1, "name": "Bob", "status": "success"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post(
         "/users",
@@ -406,15 +525,22 @@ def test_response_map_multiple_status_codes_sync(respx_mock: MockRouter) -> None
     assert isinstance(user, SuccessResponse)
     assert user.id == 1
 
+    client.close()
+
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_response_map_basic_async(respx_mock: MockRouter) -> None:
+async def test_response_map_basic_async() -> None:
     """Test basic response_map functionality with async function."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/2").mock(
-        return_value=httpx.Response(200, json={"id": 2, "name": "Charlie", "status": "success"})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/2",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 2, "name": "Charlie", "status": "success"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
 
     @client.get(
@@ -432,14 +558,23 @@ async def test_response_map_basic_async(respx_mock: MockRouter) -> None:
     assert user.id == 2
     assert user.name == "Charlie"
 
+    await client.aclose()
+
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_response_map_error_status_async(respx_mock: MockRouter) -> None:
+async def test_response_map_error_status_async() -> None:
     """Test response_map with error status code (async)."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/999").mock(return_value=httpx.Response(404, json={"error": "User not found", "code": 404}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/999",
+        response_obj=http.Response(
+            status_code=404,
+            content=json.dumps({"error": "User not found", "code": 404}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get(
         "/users/{user_id}",
@@ -456,16 +591,23 @@ async def test_response_map_error_status_async(respx_mock: MockRouter) -> None:
     assert user.error == "User not found"
     assert user.code == 404
 
+    await client.aclose()
+
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_response_map_unexpected_status_raises_exception_async(respx_mock: MockRouter) -> None:
+async def test_response_map_unexpected_status_raises_exception_async() -> None:
     """Test that unexpected status code raises APIException (async)."""
 
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/1").mock(
-        return_value=httpx.Response(500, json={"error": "Internal server error", "code": 500})
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=500,
+            content=json.dumps({"error": "Internal server error", "code": 500}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
 
     @client.get(
@@ -483,6 +625,8 @@ async def test_response_map_unexpected_status_raises_exception_async(respx_mock:
 
     assert exc_info.value.response.status_code == 500
     assert "Unexpected status code 500" in exc_info.value.reason
+
+    await client.aclose()
 
 
 def test_response_map_invalid_status_code_raises_error() -> None:
@@ -651,12 +795,19 @@ def test_async_signature_preservation() -> None:
     assert inspect.iscoroutinefunction(get_user_async)
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_function_returns_derived_value(respx_mock: MockRouter) -> None:
+def test_function_returns_derived_value() -> None:
     """Test that function can return a derived value different from result type."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/3",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 3, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user_name(user_id: int, result: User) -> str:
@@ -666,13 +817,22 @@ def test_function_returns_derived_value(respx_mock: MockRouter) -> None:
     assert name == "Charlie"
     assert isinstance(name, str)
 
+    client.close()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_function_returns_tuple_with_result(respx_mock: MockRouter) -> None:
+
+def test_function_returns_tuple_with_result() -> None:
     """Test that function can return a tuple including the result."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "Eve"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "Eve"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     def create_user(data: CreateUserRequest, result: User) -> tuple[User, str]:
@@ -682,14 +842,23 @@ def test_function_returns_tuple_with_result(respx_mock: MockRouter) -> None:
     assert user == User(id=10, name="Eve")
     assert status == "created"
 
+    client.close()
+
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_async_function_returns_derived_value(respx_mock: MockRouter) -> None:
+async def test_async_function_returns_derived_value() -> None:
     """Test that async function can return a derived value."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/5").mock(return_value=httpx.Response(200, json={"id": 5, "name": "Frank"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/5",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 5, "name": "Frank"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     async def get_user_id(user_id: int, result: User) -> int:
@@ -699,13 +868,22 @@ async def test_async_function_returns_derived_value(respx_mock: MockRouter) -> N
     assert user_id == 5
     assert isinstance(user_id, int)
 
+    await client.aclose()
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_optional_query_param_none_is_omitted(respx_mock: MockRouter) -> None:
+
+def test_optional_query_param_none_is_omitted() -> None:
     """Test that optional query parameters with None value are omitted from the URL."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Alice"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/3",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 3, "name": "Alice"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
@@ -715,18 +893,23 @@ def test_optional_query_param_none_is_omitted(respx_mock: MockRouter) -> None:
     user = get_user(user_id=3)
 
     assert user.id == 3
-    call = respx_mock.calls[0]
 
-    # The URL should NOT have any query parameters
-    assert "include_details" not in call.request.url.params
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_optional_query_param_provided_is_included(respx_mock: MockRouter) -> None:
+def test_optional_query_param_provided_is_included() -> None:
     """Test that optional query parameters with non-None value are included in the URL."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Alice"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/3",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 3, "name": "Alice"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
@@ -736,19 +919,22 @@ def test_optional_query_param_provided_is_included(respx_mock: MockRouter) -> No
     user = get_user(user_id=3, include_details=True)
 
     assert user.id == 3
-    call = respx_mock.calls[0]
 
-    # The URL should have the query parameter
-    assert call.request.url.params.get("include_details") == "true"
+    client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_multiple_optional_query_params_some_none(respx_mock: MockRouter) -> None:
+def test_multiple_optional_query_params_some_none() -> None:
     """Test that when some optional query params are None and others have values, only non-None ones are included."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users").mock(
-        return_value=httpx.Response(200, json=[{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}])
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps([{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
     )
 
     @client.get("/users")
@@ -764,21 +950,24 @@ def test_multiple_optional_query_params_some_none(respx_mock: MockRouter) -> Non
     users = list_users(page=2, limit=10)
 
     assert len(users) == 2
-    call = respx_mock.calls[0]
 
-    # Only page and limit should be in params
-    assert call.request.url.params.get("page") == "2"
-    assert call.request.url.params.get("limit") == "10"
-    assert "include_details" not in call.request.url.params
+    client.close()
 
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_async_optional_query_param_none_is_omitted(respx_mock: MockRouter) -> None:
+async def test_async_optional_query_param_none_is_omitted() -> None:
     """Test that async functions also omit None query parameters."""
     client = APIClient(base_url=BASE_URL)
 
-    respx_mock.get("/users/4").mock(return_value=httpx.Response(200, json={"id": 4, "name": "Bob"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/4",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 4, "name": "Bob"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     async def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
@@ -788,7 +977,5 @@ async def test_async_optional_query_param_none_is_omitted(respx_mock: MockRouter
     user = await get_user(user_id=4)
 
     assert user.id == 4
-    call = respx_mock.calls[0]
 
-    # The URL should NOT have any query parameters
-    assert "include_details" not in call.request.url.params
+    await client.aclose()

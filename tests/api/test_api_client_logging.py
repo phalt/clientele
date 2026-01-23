@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
+import json
 import logging
 
-import httpx
 import pytest
 from pydantic import BaseModel
-from respx import MockRouter
 
+from clientele import http
 from clientele.api import APIClient, BaseConfig
+from clientele.testing import configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -19,14 +20,21 @@ class User(BaseModel):
     name: str
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_sync_request_logs_method_and_url(respx_mock: MockRouter, caplog: pytest.LogCaptureFixture) -> None:
+def test_sync_request_logs_method_and_url(caplog: pytest.LogCaptureFixture) -> None:
     """Test that sync requests log method and URL at debug level."""
     logger = logging.getLogger("test_sync")
     config = BaseConfig(base_url=BASE_URL, logger=logger)
     client = APIClient(config=config)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Alice"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
@@ -44,14 +52,21 @@ def test_sync_request_logs_method_and_url(respx_mock: MockRouter, caplog: pytest
 
 
 @pytest.mark.asyncio
-@pytest.mark.respx(base_url=BASE_URL)
-async def test_async_request_logs_method_and_url(respx_mock: MockRouter, caplog: pytest.LogCaptureFixture) -> None:
+async def test_async_request_logs_method_and_url(caplog: pytest.LogCaptureFixture) -> None:
     """Test that async requests log method and URL at debug level."""
     logger = logging.getLogger("test_async")
     config = BaseConfig(base_url=BASE_URL, logger=logger)
     client = APIClient(config=config)
 
-    respx_mock.get("/users/2").mock(return_value=httpx.Response(200, json={"id": 2, "name": "Bob"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/2",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 2, "name": "Bob"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     async def get_user(user_id: int, result: User) -> User:
@@ -68,13 +83,20 @@ async def test_async_request_logs_method_and_url(respx_mock: MockRouter, caplog:
     await client.aclose()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_no_logging_when_logger_not_configured(respx_mock: MockRouter, caplog: pytest.LogCaptureFixture) -> None:
+def test_no_logging_when_logger_not_configured(caplog: pytest.LogCaptureFixture) -> None:
     """Test that requests work normally when no logger is configured."""
     config = BaseConfig(base_url=BASE_URL)  # No logger
     client = APIClient(config=config)
 
-    respx_mock.get("/users/3").mock(return_value=httpx.Response(200, json={"id": 3, "name": "Charlie"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/3",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 3, "name": "Charlie"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
@@ -86,25 +108,30 @@ def test_no_logging_when_logger_not_configured(respx_mock: MockRouter, caplog: p
     assert user.id == 3
     assert user.name == "Charlie"
 
-    # Verify no request/response logs from our code (httpx logs separately with "HTTP Request:")
+    # Verify no request/response logs from our code
     our_logs = [
-        record
-        for record in caplog.records
-        if record.name != "httpx" and ("HTTP Request:" in record.message or "HTTP Response:" in record.message)
+        record for record in caplog.records if "HTTP Request:" in record.message or "HTTP Response:" in record.message
     ]
     assert len(our_logs) == 0, "No request/response logs should be captured when logger is not configured"
 
     client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_post_request_logging(respx_mock: MockRouter, caplog: pytest.LogCaptureFixture) -> None:
+def test_post_request_logging(caplog: pytest.LogCaptureFixture) -> None:
     """Test that POST requests are logged correctly."""
     logger = logging.getLogger("test_post")
     config = BaseConfig(base_url=BASE_URL, logger=logger)
     client = APIClient(config=config)
 
-    respx_mock.post("/users").mock(return_value=httpx.Response(201, json={"id": 10, "name": "New User"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users",
+        response_obj=http.Response(
+            status_code=201,
+            content=json.dumps({"id": 10, "name": "New User"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.post("/users")
     def create_user(data: dict, result: User) -> User:
@@ -120,14 +147,21 @@ def test_post_request_logging(respx_mock: MockRouter, caplog: pytest.LogCaptureF
     client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_logs_include_timing(respx_mock: MockRouter, caplog: pytest.LogCaptureFixture) -> None:
+def test_response_logs_include_timing(caplog: pytest.LogCaptureFixture) -> None:
     """Test that response logs include timing information."""
     logger = logging.getLogger("test_timing")
     config = BaseConfig(base_url=BASE_URL, logger=logger)
     client = APIClient(config=config)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Alice"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
@@ -142,14 +176,21 @@ def test_response_logs_include_timing(respx_mock: MockRouter, caplog: pytest.Log
     client.close()
 
 
-@pytest.mark.respx(base_url=BASE_URL)
-def test_response_logs_include_content(respx_mock: MockRouter, caplog: pytest.LogCaptureFixture) -> None:
+def test_response_logs_include_content(caplog: pytest.LogCaptureFixture) -> None:
     """Test that response logs include the response content."""
     logger = logging.getLogger("test_content")
     config = BaseConfig(base_url=BASE_URL, logger=logger)
     client = APIClient(config=config)
 
-    respx_mock.get("/users/1").mock(return_value=httpx.Response(200, json={"id": 1, "name": "Alice"}))
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=http.Response(
+            status_code=200,
+            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
+            headers={"content-type": "application/json"},
+        ),
+    )
 
     @client.get("/users/{user_id}")
     def get_user(user_id: int, result: User) -> User:
@@ -159,6 +200,6 @@ def test_response_logs_include_content(respx_mock: MockRouter, caplog: pytest.Lo
         get_user(1)
 
     messages = [r.message for r in caplog.records]
-    assert any("Content:" in m and '{"id":1,"name":"Alice"}' in m for m in messages)
+    assert any("Response Content:" in m and '{"id": 1, "name": "Alice"}' in m for m in messages)
 
     client.close()
