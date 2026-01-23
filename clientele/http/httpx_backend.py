@@ -21,22 +21,22 @@ class HttpxHTTPBackend(backends.HTTPBackend):
             See https://www.python-httpx.org/api/#client for available options.
     """
 
-    def __init__(
-        self,
-        client_options: dict[str, typing.Any] | None = None,
-        sync: httpx.Client | None = None,
-        async_client: httpx.AsyncClient | None = None,
-    ) -> None:
+    _sync_client: httpx.Client | None = None
+    _async_client: httpx.AsyncClient | None = None
+
+    def __init__(self, client_options: dict[str, typing.Any] | None = None) -> None:
         self.client_options = client_options or {}
-        self._sync_client = sync or httpx.Client(**self.client_options)
-        self._async_client = async_client or httpx.AsyncClient(**self.client_options)
 
     def build_client(self) -> httpx.Client:
         """Build and return a synchronous httpx.Client."""
+        if not self._sync_client:
+            self._sync_client = httpx.Client(**self.client_options)
         return self._sync_client
 
     def build_async_client(self) -> httpx.AsyncClient:
         """Build and return an asynchronous httpx.AsyncClient."""
+        if not self._async_client:
+            self._async_client = httpx.AsyncClient(**self.client_options)
         return self._async_client
 
     @staticmethod

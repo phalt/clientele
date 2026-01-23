@@ -20,12 +20,8 @@ class TestHttpxHTTPBackend:
         # Mock the HTTP response
         respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
 
-        # Create httpx clients inside the respx context so they're patched
-        sync_client = httpx.Client(base_url=BASE_URL)
-        httpx_backend_instance = httpx_backend.HttpxHTTPBackend(sync=sync_client)
         config = api_config.BaseConfig(
             base_url=BASE_URL,
-            http_backend=httpx_backend_instance,
         )
         client = api_client.APIClient(config=config)
 
@@ -70,12 +66,8 @@ class TestHttpxHTTPBackend:
         # Mock the HTTP response
         respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
 
-        # Create httpx clients inside the respx context so they're patched
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        httpx_backend_instance = httpx_backend.HttpxHTTPBackend(async_client=async_client)
         config = api_config.BaseConfig(
             base_url=BASE_URL,
-            http_backend=httpx_backend_instance,
         )
         client = api_client.APIClient(config=config)
 

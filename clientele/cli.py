@@ -176,10 +176,10 @@ def start_api(url, file, output, asyncio=False, regen=False):
     """
     if not url and not file:
         # No schema provided, generate basic scaffold
-        generate_basic(output=output)  # type: ignore
+        generate_basic(output=output)
     else:
         # Schema provided, generate full client
-        scaffold_api(url=url, file=file, output=output, asyncio=asyncio, regen=regen)  # type: ignore
+        scaffold_api(url=url, file=file, output=output, asyncio=asyncio, regen=regen)
 
 
 cli_group.add_command(version)
