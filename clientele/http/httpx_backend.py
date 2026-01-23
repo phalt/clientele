@@ -4,6 +4,8 @@ import typing
 
 import httpx
 
+from clientele.api import exceptions as api_exceptions
+from clientele.api.stream import hydrate_content
 from clientele.http import backends, response
 
 
@@ -53,12 +55,8 @@ class HttpxHTTPBackend(backends.HTTPBackend):
         httpx_response = native_response
 
         # Handle case where request might not be set (e.g., in tests)
-        try:
-            request_method = httpx_response.request.method
-            request_url = str(httpx_response.request.url)
-        except (RuntimeError, AttributeError):
-            request_method = "GET"
-            request_url = ""
+        request_method = httpx_response.request.method
+        request_url = str(httpx_response.request.url)
 
         return response.Response(
             status_code=httpx_response.status_code,
@@ -118,3 +116,76 @@ class HttpxHTTPBackend(backends.HTTPBackend):
         """Asynchronously close the async httpx client."""
         if self._async_client is not None:
             await self._async_client.aclose()
+
+    def handle_sync_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.Generator[typing.Any, None, None]:
+        """Handle synchronous streaming response without buffering.
+
+        Uses httpx.Client.stream()
+        """
+        client = self.build_client()
+        with client.stream(method, url, **kwargs) as httpx_response:
+            try:
+                # Check status code before starting to stream
+                if 400 <= httpx_response.status_code < 600:
+                    # For error responses, read the full response then raise
+                    httpx_response.read()  # Read the stream before accessing content
+                    generic_response = self.convert_to_response(httpx_response)
+                    raise api_exceptions.HTTPStatusError(
+                        response=generic_response,
+                        reason=f"HTTP {httpx_response.status_code}",
+                    )
+
+                for line in httpx_response.iter_lines():
+                    if not line:
+                        continue
+
+                    if response_parser is not None:
+                        yield response_parser(line)
+                    else:
+                        yield hydrate_content(line, inner_type)
+            finally:
+                pass
+
+    async def handle_async_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.AsyncGenerator[typing.Any, None]:
+        """Handle asynchronous streaming response without buffering.
+
+        Uses httpx.AsyncClient.stream()
+        """
+
+        client = self.build_async_client()
+        async with client.stream(method, url, **kwargs) as httpx_response:
+            try:
+                # Check status code before starting to stream
+                if 400 <= httpx_response.status_code < 600:
+                    # For error responses, read the full response then raise
+                    await httpx_response.aread()  # Read the stream before accessing content
+                    generic_response = self.convert_to_response(httpx_response)
+                    raise api_exceptions.HTTPStatusError(
+                        response=generic_response,
+                        reason=f"HTTP {httpx_response.status_code}",
+                    )
+
+                async for line in httpx_response.aiter_lines():
+                    if not line:
+                        continue
+
+                    if response_parser is not None:
+                        yield response_parser(line)
+                    else:
+                        yield hydrate_content(line, inner_type)
+            finally:
+                pass

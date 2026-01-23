@@ -1,6 +1,5 @@
-from .parser import hydrate_content, parse_sse_stream
+from .parser import hydrate_content
 
 __all__ = [
-    "parse_sse_stream",
     "hydrate_content",
 ]

@@ -72,23 +72,5 @@ class Response:
                 reason=f"HTTP {self.status_code}",
             )
 
-    def iter_lines(self) -> typing.Iterator[str]:
-        """Iterate over response content line by line.
-
-        Yields:
-            Lines from the response content
-        """
-        for line in self.text.splitlines():
-            yield line
-
-    async def aiter_lines(self) -> typing.AsyncIterator[str]:
-        """Asynchronously iterate over response content line by line.
-
-        Yields:
-            Lines from the response content
-        """
-        for line in self.text.splitlines():
-            yield line
-
     def __repr__(self) -> str:
         return f"<Clientele HTTP Response [{self.status_code}]>"

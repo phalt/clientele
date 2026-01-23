@@ -84,3 +84,59 @@ class HTTPBackend(abc.ABC):
     @abc.abstractmethod
     async def aclose(self) -> None:
         """Asynchronously close the async HTTP client and release resources."""
+
+    @abc.abstractmethod
+    def handle_sync_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.Generator[typing.Any, None, None]:
+        """Handle synchronous streaming HTTP response without buffering.
+
+        This method streams the response body line-by-line without buffering
+        the entire response into memory. Each line is yielded immediately
+        after being parsed.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            url: URL to request
+            inner_type: The type to hydrate each streamed item to
+            response_parser: Optional custom parser for each line
+            **kwargs: Additional request parameters (headers, params, json, etc.)
+
+        Yields:
+            Parsed items of inner_type, one per line
+        """
+        yield  # pragma: no cover
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    async def handle_async_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.AsyncGenerator[typing.Any, None]:
+        """Handle asynchronous streaming HTTP response without buffering.
+
+        This method streams the response body line-by-line without buffering
+        the entire response into memory. Each line is yielded immediately
+        after being parsed.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            url: URL to request
+            inner_type: The type to hydrate each streamed item to
+            response_parser: Optional custom parser for each line
+            **kwargs: Additional request parameters (headers, params, json, etc.)
+
+        Yields:
+            Parsed items of inner_type, one per line
+        """
+        yield  # pragma: no cover
+        raise NotImplementedError

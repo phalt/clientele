@@ -25,8 +25,8 @@ class RequestData(BaseModel):
 
 class TestStreamDecorators:
     @pytest.mark.asyncio
-    async def test_sse_async_iterator_pydantic_model(self):
-        """Test SSE streaming with Pydantic model hydration."""
+    async def test_stream_async_iterator_pydantic_model(self):
+        """Test streaming with Pydantic model hydration (SSE-like format with \\n\\n delimiters)."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -56,8 +56,8 @@ class TestStreamDecorators:
         await client.aclose()
 
     @pytest.mark.asyncio
-    async def test_sse_async_iterator_dict(self):
-        """Test SSE streaming with dict hydration."""
+    async def test_stream_async_iterator_dict(self):
+        """Test streaming with dict hydration."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -86,8 +86,8 @@ class TestStreamDecorators:
         await client.aclose()
 
     @pytest.mark.asyncio
-    async def test_sse_async_iterator_str(self):
-        """Test SSE streaming with string (no parsing)."""
+    async def test_stream_async_iterator_str(self):
+        """Test streaming with string (no parsing)."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -115,7 +115,7 @@ class TestStreamDecorators:
 
         await client.aclose()
 
-    def test_sse_missing_streaming_type_raises(self):
+    def test_stream_missing_streaming_type_raises(self):
         """Test that non-streaming result type raises error."""
         client = APIClient(base_url="http://localhost:8000")
 
@@ -125,7 +125,7 @@ class TestStreamDecorators:
             async def bad_stream(*, result: Token) -> Token:  # NOT AsyncIterator!
                 return result
 
-    def test_sse_missing_inner_type_raises(self):
+    def test_stream_missing_inner_type_raises(self):
         """Test that AsyncIterator without inner type raises error."""
         client = APIClient(base_url="http://localhost:8000")
 
@@ -156,8 +156,8 @@ class TestStreamDecorators:
                 return result
 
     @pytest.mark.asyncio
-    async def test_sse_skips_empty_lines(self):
-        """Test SSE streaming skips empty lines."""
+    async def test_stream_skips_empty_lines(self):
+        """Test streaming skips empty lines."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -185,8 +185,8 @@ class TestStreamDecorators:
         await client.aclose()
 
     @pytest.mark.asyncio
-    async def test_sse_error_response_raises(self):
-        """Test SSE streaming raises on error responses."""
+    async def test_stream_error_response_raises(self):
+        """Test streaming raises on error responses."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -211,7 +211,7 @@ class TestStreamDecorators:
 
     @pytest.mark.asyncio
     async def test_stream_post_with_data_parameter(self):
-        """Test SSE streaming POST request with data payload."""
+        """Test streaming POST request with data payload."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -243,7 +243,7 @@ class TestStreamDecorators:
         await client.aclose()
 
     def test_stream_cannot_use_response_map(self):
-        """Test that SSE decorators cannot use response_map."""
+        """Test that decorators cannot use response_map."""
 
         async def dummy_func(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
@@ -253,7 +253,7 @@ class TestStreamDecorators:
 
     @pytest.mark.asyncio
     async def test_stream_with_response_parser(self):
-        """Test SSE streaming with custom response_parser."""
+        """Test streaming with custom response_parser."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -286,11 +286,11 @@ class TestStreamDecorators:
         await client.aclose()
 
 
-class TestSSESyncDecorators:
-    """Test synchronous SSE streaming decorators."""
+class TestStreamingSyncDecorators:
+    """Test synchronous streaming decorators."""
 
-    def test_sse_sync_iterator_pydantic_model(self):
-        """Test sync SSE streaming with Pydantic model hydration."""
+    def test_stream_sync_iterator_pydantic_model(self):
+        """Test sync streaming with Pydantic model hydration."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -318,8 +318,8 @@ class TestSSESyncDecorators:
 
         client.close()
 
-    def test_sse_sync_iterator_dict(self):
-        """Test sync SSE streaming with dict hydration."""
+    def test_stream_sync_iterator_dict(self):
+        """Test sync streaming with dict hydration."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -347,8 +347,8 @@ class TestSSESyncDecorators:
 
         client.close()
 
-    def test_sse_sync_iterator_str(self):
-        """Test sync SSE streaming with string (no parsing)."""
+    def test_stream_sync_iterator_str(self):
+        """Test sync streaming with string (no parsing)."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -376,8 +376,8 @@ class TestSSESyncDecorators:
 
         client.close()
 
-    def test_sse_sync_with_response_parser(self):
-        """Test sync SSE streaming with custom response_parser."""
+    def test_stream_sync_with_response_parser(self):
+        """Test sync streaming with custom response_parser."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -408,8 +408,8 @@ class TestSSESyncDecorators:
 
         client.close()
 
-    def test_sse_sync_error_response_raises(self):
-        """Test sync SSE streaming raises on error responses."""
+    def test_stream_sync_error_response_raises(self):
+        """Test sync streaming raises on error responses."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
@@ -432,8 +432,8 @@ class TestSSESyncDecorators:
 
         client.close()
 
-    def test_sse_sync_500_error_response_raises(self):
-        """Test sync SSE streaming raises on 500 error."""
+    def test_stream_sync_500_error_response_raises(self):
+        """Test sync streaming raises on 500 error."""
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)

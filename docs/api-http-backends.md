@@ -61,6 +61,28 @@ class HTTPBackend(abc.ABC):
     async def send_async_request(self, method: str, url: str, **kwargs) -> typing.Any:
         """Send async request"""
 
+    @abc.abstractmethod
+    def handle_sync_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.Generator[typing.Any, None, None]:
+        """ Handle streaming responses """
+
+    @abc.abstractmethod
+    async def handle_async_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.AsyncGenerator[typing.Any, None]:
+        """ Handle async streaming responses """
+
     @staticmethod
     @abc.abstractmethod
     def convert_to_response(native_response: typing.Any) -> Response:

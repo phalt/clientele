@@ -223,16 +223,22 @@ def _validate_response_parser_return_type_matches_result_return_type(
     """
     func_name = getattr(func, "__name__", "<function>")
 
-    # Get the return type of the response_parser
-    parser_signature = inspect.signature(response_parser)
-    parser_return_annotation = parser_signature.return_annotation
+    # Get the return type of the response_parser using get_type_hints to handle string annotations
+    try:
+        parser_type_hints = typing.get_type_hints(response_parser)
+        parser_return_annotation = parser_type_hints.get("return", inspect._empty)
+    except Exception:
+        # Fallback to inspect.signature if get_type_hints fails
+        parser_signature = inspect.signature(response_parser)
+        parser_return_annotation = parser_signature.return_annotation
 
     if parser_return_annotation is inspect._empty:
         raise TypeError(f"The response_parser provided for function '{func_name}' must have a return type annotation.")
 
     parser_return_types: list[typing.Any] = []
     origin = typing.get_origin(parser_return_annotation)
-    if origin in [typing.Union, types.UnionType]:
+    # Also check if the annotation itself is a UnionType (Python 3.10+ `X | Y` syntax)
+    if origin in [typing.Union, types.UnionType] or isinstance(parser_return_annotation, types.UnionType):
         parser_return_types = list(typing.get_args(parser_return_annotation))
     else:
         parser_return_types = [parser_return_annotation]
@@ -249,12 +255,26 @@ def _validate_response_parser_return_type_matches_result_return_type(
             raise TypeError(f"Could not extract inner type from streaming result type: {result_annotation}")
 
         # For streaming, parser should return the inner type
-        result_types = [inner_type]
+        # If inner type is a Union, decompose it for comparison
+        origin = typing.get_origin(inner_type)
+        if origin in [typing.Union, types.UnionType] or isinstance(inner_type, types.UnionType):
+            result_types = list(typing.get_args(inner_type))
+        else:
+            result_types = [inner_type]
     else:
         result_types = _get_result_types_from_type_hints(type_hints)
 
     def _stringify_types(types_list: list[typing.Any]) -> list[str]:
-        return [t.__name__ if not isinstance(t, str) else t for t in types_list]
+        result = []
+        for t in types_list:
+            if isinstance(t, str):
+                result.append(t)
+            elif hasattr(t, "__name__"):
+                result.append(t.__name__)
+            else:
+                # For types without __name__ (like UnionType), convert to string
+                result.append(str(t))
+        return result
 
     stringified_parser_types = _stringify_types(parser_return_types)
     stringified_return_types = _stringify_types(result_types)

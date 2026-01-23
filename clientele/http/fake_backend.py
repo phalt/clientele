@@ -53,6 +53,10 @@ class FakeHTTPBackend(backends.HTTPBackend):
         # Map request paths to lists of Response objects (FIFO queue per path)
         self._response_map: dict[str, list[response.Response]] = {}
 
+        # Map request paths to lists of streaming data (for streaming requests)
+        # Each entry is a list of lines to stream
+        self._stream_map: dict[str, list[list[str]]] = {}
+
     def build_client(self) -> None:
         """Return None as no real client is needed."""
         return None
@@ -193,3 +197,169 @@ class FakeHTTPBackend(backends.HTTPBackend):
         """Clear all captured requests and queued responses."""
         self.requests.clear()
         self._response_map.clear()
+        self._stream_map.clear()
+
+    def _get_next_stream(self, url: str) -> tuple[list[str], int] | None:
+        """Get the next stream for the given URL path or None if no queued streams.
+
+        If no explicit stream is queued, checks if a Response is queued and
+        converts its content to lines for backward compatibility with tests.
+
+        Args:
+            url: The request URL
+
+        Returns:
+            A tuple of (lines, status_code) if data is queued for this URL, otherwise None
+        """
+        # Try to find a matching path in the stream map
+        for path in self._stream_map:
+            if path in url:
+                streams = self._stream_map[path]
+                if streams:
+                    return (streams.pop(0), 200)  # Default to 200 for queued streams
+
+        # Fallback: check if a Response is queued and convert it to stream lines
+        for path in self._response_map:
+            if path in url:
+                responses = self._response_map[path]
+                if responses:
+                    response = responses.pop(0)
+                    # Convert response text to lines for streaming
+                    lines = response.text.splitlines()
+                    # Filter out empty lines to match streaming behavior
+                    filtered_lines = [line for line in lines if line]
+                    return (filtered_lines, response.status_code)
+
+        return None
+
+    def handle_sync_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.Generator[typing.Any, None, None]:
+        """Handle synchronous streaming for testing.
+
+        Yields queued mock stream data, or empty iterator if no data queued.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            url: URL to request
+            inner_type: The type to hydrate each streamed item to
+            response_parser: Optional custom parser for each line
+            **kwargs: Additional request parameters (stored but not used)
+
+        Yields:
+            Parsed items of inner_type
+        """
+        from clientele.api import exceptions as api_exceptions
+        from clientele.api.stream import hydrate_content
+
+        # Capture the request
+        request_details = {
+            "method": method,
+            "url": url,
+            "kwargs": kwargs,
+            "streaming": True,
+        }
+        self.requests.append(request_details)
+
+        # Get queued stream data or return empty
+        stream_data = self._get_next_stream(url)
+        if stream_data is None:
+            return
+
+        stream_lines, status_code = stream_data
+
+        # Check status code before streaming
+        if 400 <= status_code < 600:
+            # For error responses, create a Response and raise
+            error_response = response.Response(
+                status_code=status_code,
+                content=b"",
+                headers={},
+                request_method=method,
+                request_url=url,
+            )
+            raise api_exceptions.HTTPStatusError(
+                response=error_response,
+                reason=f"HTTP {status_code}",
+            )
+
+        # Yield each line
+        for line in stream_lines:
+            if not line:
+                continue
+
+            if response_parser is not None:
+                yield response_parser(line)
+            else:
+                yield hydrate_content(line, inner_type)
+
+    async def handle_async_stream(
+        self,
+        method: str,
+        url: str,
+        inner_type: typing.Any,
+        response_parser: typing.Callable[[str], typing.Any] | None = None,
+        **kwargs: typing.Any,
+    ) -> typing.AsyncGenerator[typing.Any, None]:
+        """Handle asynchronous streaming for testing.
+
+        Yields queued mock stream data, or empty async iterator if no data queued.
+
+        Args:
+            method: HTTP method (GET, POST, etc.)
+            url: URL to request
+            inner_type: The type to hydrate each streamed item to
+            response_parser: Optional custom parser for each line
+            **kwargs: Additional request parameters (stored but not used)
+
+        Yields:
+            Parsed items of inner_type
+        """
+        from clientele.api import exceptions as api_exceptions
+        from clientele.api.stream import hydrate_content
+
+        # Capture the request
+        request_details = {
+            "method": method,
+            "url": url,
+            "kwargs": kwargs,
+            "streaming": True,
+        }
+        self.requests.append(request_details)
+
+        # Get queued stream data or return empty
+        stream_data = self._get_next_stream(url)
+        if stream_data is None:
+            return
+
+        stream_lines, status_code = stream_data
+
+        # Check status code before streaming
+        if 400 <= status_code < 600:
+            # For error responses, create a Response and raise
+            error_response = response.Response(
+                status_code=status_code,
+                content=b"",
+                headers={},
+                request_method=method,
+                request_url=url,
+            )
+            raise api_exceptions.HTTPStatusError(
+                response=error_response,
+                reason=f"HTTP {status_code}",
+            )
+
+        # Yield each line
+        for line in stream_lines:
+            if not line:
+                continue
+
+            if response_parser is not None:
+                yield response_parser(line)
+            else:
+                yield hydrate_content(line, inner_type)

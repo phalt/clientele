@@ -1,6 +1,6 @@
 # 🌊 Streaming
 
-Clientele supports streaming responses using Server-Sent Events through the `streaming_response=True` parameter.
+Clientele supports HTTP streaming responses through the `streaming_response=True` parameter.
 
 ## Basic stream Example
 
@@ -86,9 +86,9 @@ Clientele streams support:
 - `HTTP PATCH`
 - `HTTP DELETE`
 
-## Synchronous SSE
+## Synchronous Streaming
 
-You can also use synchronous iterators for blocking SSE streams:
+You can also use synchronous iterators for blocking streams:
 
 ```python
 from typing import Iterator
@@ -103,15 +103,54 @@ for event in stream_events_sync():
     print(event.text)
 ```
 
+## Parsing Server-Sent Events (SSE)
+
+For Server-Sent Events format (with `data:`, `event:`, `id:` fields), use a custom `response_parser` to extract the data:
+
+```python
+from typing import AsyncIterator
+import json
+
+def parse_sse(line: str) -> dict | None:
+    """Parse SSE format: extracts data from 'data: {json}' lines."""
+    if line.startswith('data: '):
+        json_str = line[6:]  # Remove 'data: ' prefix
+        return json.loads(json_str)
+    # Skip other SSE fields (event:, id:, retry:, comments)
+    return None
+
+class ChatMessage(BaseModel):
+    role: str
+    content: str
+
+@client.post("/chat/stream", streaming_response=True, response_parser=parse_sse)
+async def stream_chat(*, data: dict, result: AsyncIterator[ChatMessage]) -> AsyncIterator[ChatMessage]:
+    return result
+```
+
+```python
+# Server sends SSE format:
+# data: {"role": "assistant", "content": "Hello"}
+#
+# data: {"role": "assistant", "content": "How can I help?"}
+#
+
+async for message in await stream_chat(data={"prompt": "Hi"}):
+    if message:  # Skip None values from non-data lines
+        print(f"{message.role}: {message.content}")
+```
+
+**Note**: The `response_parser` receives each line as a string and should return the parsed value. Return `None` to skip lines (e.g., SSE comments or event type declarations).
+
 ## Custom Parsing with response_parser
 
-You can provide a custom `response_parser` callback to control how each streamed item is parsed:
+You can provide a custom `response_parser` callback to control how each streamed line is parsed:
 
 ```python
 from typing import AsyncIterator
 
-def parse_custom_event(line: str) -> dict:
-    """Custom parser for each streamed line."""
+def parse_csv_log(line: str) -> dict:
+    """Custom parser for CSV-formatted log lines."""
     parts = line.split(",")
     return {
         "timestamp": parts[0],
@@ -119,7 +158,7 @@ def parse_custom_event(line: str) -> dict:
         "level": parts[2] if len(parts) > 2 else "info"
     }
 
-@client.get("/logs", streaming_response=True, response_parser=parse_custom_event)
+@client.get("/logs", streaming_response=True, response_parser=parse_csv_log)
 async def stream_logs(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
     return result
 ```
@@ -129,4 +168,4 @@ async for log_entry in await stream_logs():
     print(f"{log_entry['timestamp']}: {log_entry['message']}")
 ```
 
-The `response_parser` is called for each line received from the stream, giving you full control over how the data is transformed before being yielded to your code.
+The `response_parser` is called for each non-empty line received from the stream, giving you full control over how the data is transformed before being yielded to your code.

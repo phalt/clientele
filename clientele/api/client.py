@@ -12,7 +12,7 @@ import pydantic
 
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
-from clientele.api import requests, stream, type_utils
+from clientele.api import requests, type_utils
 from clientele.http import httpx_backend as http_httpx
 from clientele.http import response as http_response
 
@@ -446,32 +446,41 @@ class APIClient:
         self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
     ) -> typing.Any:
         """
-        Execute an async streaming request (SSE).
-
-        Similar to _execute_async but doesn't parse the full response,
-        instead returns an async generator that yields parsed items.
+        Execute an async streaming request.
         """
 
         prepared = self._prepare_call(context, args, kwargs)
 
-        # Send request but DON'T consume the response
-        response = await self._send_request_async(
-            method=context.method,
-            url=prepared.url_path,
-            query_params=prepared.query_params,
-            data_payload=prepared.data_payload,
-            headers_override=prepared.headers_override,
-            response_map=None,
-        )
-
         # Extract the inner type from AsyncIterator[T]
         inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
 
-        # Create the async generator
-        stream_generator = stream.parse_sse_stream(
-            response,
-            inner_type,
-            context.response_parser,  # type: ignore[arg-type]
+        # Build request kwargs
+        headers = {**self.config.headers, **(prepared.headers_override or {})}
+        request_kwargs: dict[str, typing.Any] = {
+            "params": prepared.query_params,
+            "headers": headers,
+        }
+        if prepared.data_payload is not None:
+            request_kwargs["json"] = prepared.data_payload
+
+        if self.config.logger is not None:
+            self.config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
+
+        # For streaming, response_parser must accept str, not Response
+        # Type narrowing: in streaming mode, parser is Callable[[str], Any] | None
+        streaming_parser: typing.Callable[[str], typing.Any] | None = None
+        if context.response_parser is not None:
+            # In streaming context, this is guaranteed to be Callable[[str], Any]
+            streaming_parser = context.response_parser  # type: ignore[assignment]
+
+        if not self.config.http_backend:
+            raise RuntimeError("HTTP backend is not configured.")
+        stream_generator = self.config.http_backend.handle_async_stream(
+            method=context.method,
+            url=prepared.url_path,
+            inner_type=inner_type,
+            response_parser=streaming_parser,
+            **request_kwargs,
         )
 
         # Inject the generator as 'result' and call the user's function
@@ -490,39 +499,54 @@ class APIClient:
         self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
     ) -> typing.Any:
         """
-        Execute a sync streaming request (SSE).
+        Execute a sync streaming request.
 
-        Synchronous version of _execute_async_stream.
+        Uses the HTTP backend's streaming handler for true streaming
+        without buffering the entire response into memory. Streams line-by-line.
+
+        For Server-Sent Events (SSE) format parsing, use a custom response_parser
+        that extracts the data from SSE fields (e.g., "data: {json}").
         """
 
         prepared = self._prepare_call(context, args, kwargs)
 
-        # Send request
-        response = self._send_request(
-            method=context.method,
-            url=prepared.url_path,
-            query_params=prepared.query_params,
-            data_payload=prepared.data_payload,
-            headers_override=prepared.headers_override,
-            response_map=None,
-        )
-
-        # Extract inner type
+        # Extract the inner type from Iterator[T]
         inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
 
-        # Create sync generator
-        def stream_generator():
-            for line in response.iter_lines():
-                if not line:
-                    continue
+        if self.config.http_backend is None:
+            raise RuntimeError("HTTP backend is not configured.")
 
-                if context.response_parser is not None:
-                    yield context.response_parser(line)  # type: ignore[arg-type]
-                else:
-                    yield stream.hydrate_content(line, inner_type)
+        # Build request kwargs
+        headers = {**self.config.headers, **(prepared.headers_override or {})}
+        request_kwargs: dict[str, typing.Any] = {
+            "params": prepared.query_params,
+            "headers": headers,
+        }
+        if prepared.data_payload is not None:
+            request_kwargs["json"] = prepared.data_payload
 
-        prepared.call_arguments["result"] = stream_generator()
+        if self.config.logger is not None:
+            self.config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
 
+        # For streaming, response_parser must accept str, not Response
+        # Type narrowing: in streaming mode, parser is Callable[[str], Any] | None
+        streaming_parser: typing.Callable[[str], typing.Any] | None = None
+        if context.response_parser is not None:
+            # In streaming context, this is guaranteed to be Callable[[str], Any]
+            streaming_parser = context.response_parser  # type: ignore[assignment]
+
+        stream_generator = self.config.http_backend.handle_sync_stream(
+            method=context.method,
+            url=prepared.url_path,
+            inner_type=inner_type,
+            response_parser=streaming_parser,
+            **request_kwargs,
+        )
+
+        # Inject the generator as 'result' and call the user's function
+        prepared.call_arguments["result"] = stream_generator
+
+        # The user's function should just return the result
         result = prepared.context.func(**prepared.call_arguments)
 
         return result
