@@ -142,8 +142,6 @@ def _extract_request_context(func: typing.Callable) -> tuple[typing.Optional[str
     This function inspects the closure of a function decorated with @client.get(), etc.
     to extract the _RequestContext object containing the path template and HTTP method.
 
-    Reference implementation: clientele/explore/introspector.py lines 266-304
-
     Args:
         func: The decorated function
 

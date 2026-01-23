@@ -23,9 +23,3 @@ Regenerate using this command:
 ```sh
 clientele start-api -f example_openapi_specs/best.json -o tests/api_clients/test_client/  --regen
 ```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```

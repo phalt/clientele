@@ -24,33 +24,6 @@ The server will start at `http://localhost:8000`.
 - **OpenAPI JSON**: http://localhost:8000/openapi.json
 - **Interactive Docs**: http://localhost:8000/docs
 
-## Explore the client
-
-From the root of the repository:
-
-```sh
-# Run clientele explore to use the client
-uv run clientele explore -c server_examples/fastapi/client/
-
-
-═══════════════════════════════════════════════════════════
-  Clientele Interactive API Explorer v1.0.0
-═══════════════════════════════════════════════════════════
-
-Type /help or ? for commands, /exit or Ctrl+D to quit
-Type /list to see available operations
-
-Press TAB for autocomplete
-
->>> get_user(user_id=1)
-✓ Success in 0.01s
-{ 
-  "id": 1,
-  "name": "Alice",
-  "email": "alice@example.com"
->>>
-```
-
 ## API Endpoints
 
 This example includes:

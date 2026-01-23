@@ -22,6 +22,5 @@ clientele 1.8.1
 ## Next steps
 
 - [Clientele API guide](api-overview.md) to write your own API client
-- [OpenAPI client scaffolder](openapi-cli.md) to scaffold an API client from an OpenAPI schema
-- [API Explorer](explore.md) to explore an API through an interactive REPL
+- [Client creator](openapi-cli.md) to quick start an API client
 - [API server integration](server-fastapi.md) to learn how to integrate with popular Python API servers

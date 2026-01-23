@@ -23,9 +23,3 @@ Regenerate using this command:
 ```sh
 clientele generate-class -f example_openapi_specs/best.json -o tests/old_clients/test_class_client/  --regen t
 ```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```

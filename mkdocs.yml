@@ -51,7 +51,6 @@ nav:
     - 🥧 Mypy support: mypy.md
   - 📟 Command line tools:
     - 🏗️ Client creator: openapi-cli.md
-    - 🗺️ API Explorer: explore.md
   - ⚡️ API Server Integrations:
     - ⚡️ FastAPI: server-fastapi.md
     - 🦄 Django REST Framework: server-drf.md

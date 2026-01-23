@@ -23,9 +23,3 @@ Regenerate using this command:
 ```sh
 clientele start-api -f server_examples/fastapi/openapi.json -o server_examples/fastapi/client/  --regen
 ```
-
-Explore this API interactively:
-
-```sh
-clientele explore -c .
-```
