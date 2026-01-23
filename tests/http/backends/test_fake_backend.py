@@ -4,10 +4,25 @@ import pytest
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
-from clientele.http import fake_backend
+from clientele.http import Response, fake_backend
 
 
 class TestFakeHTTPBackend:
+    def test_clients_return_none(self):
+        backend = fake_backend.FakeHTTPBackend()
+        assert backend.build_client() is None
+        assert backend.build_async_client() is None
+
+    def test_convert_to_response_noop(self):
+        backend = fake_backend.FakeHTTPBackend()
+        sample_response = Response(
+            status_code=200,
+            content=b'{"key": "value"}',
+            headers={"content-type": "application/json"},
+        )
+        converted = backend.convert_to_response(sample_response)
+        assert converted is sample_response
+
     def test_basic_request_capture(self):
         backend = fake_backend.FakeHTTPBackend(
             default_content={"id": 1, "name": "Test"},
@@ -55,13 +70,50 @@ class TestFakeHTTPBackend:
             status=200,
             content={"second": "response"},
         )
+        # Support bytes
+        backend.queue_response(
+            status=200,
+            content=b'{"bytes": "response"}',
+        )
 
         result1 = get_resource()
         result2 = get_resource()
+        result_bytes = get_resource()
 
         assert result1 == {"first": "response"}
         assert result2 == {"second": "response"}
+        assert result_bytes == {"bytes": "response"}
 
+        client.close()
+
+    def test_default_headers_override(self):
+        backend = fake_backend.FakeHTTPBackend(
+            default_headers={"X-Default-Header": "DefaultValue"},
+        )
+        config = api_config.BaseConfig(
+            base_url="https://api.example.com",
+            http_backend=backend,
+        )
+        client = api_client.APIClient(config=config)
+
+        @client.get("/headers-test")
+        def headers_test(result: dict, response: Response) -> Response:
+            # Note: returns the response object instead!
+            return response
+
+        backend.queue_response(
+            status=200,
+            content={"status": "ok"},
+        )
+
+        # Make request
+        response = headers_test()
+
+        # Verify response
+        assert response.content == b'{"status": "ok"}'
+
+        # Verify headers gets content-type and default header
+        assert response.headers.keys() == {"content-type", "X-Default-Header"}
         client.close()
 
     def test_post_request_with_data(self):

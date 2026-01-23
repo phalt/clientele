@@ -425,10 +425,6 @@ class APIClient:
             response_map=context.response_map,
         )
         result = self._finalise_call(prepared=prepared, response=response)
-        if inspect.isawaitable(result):
-            raise TypeError(
-                "Synchronous handlers cannot return awaitable results; declare the function as async instead"
-            )
         return result
 
     async def _execute_async(
@@ -480,8 +476,6 @@ class APIClient:
 
         # Inject the generator as 'result' and call the user's function
         prepared.call_arguments["result"] = stream_generator
-        if "response" in prepared.context.signature.parameters:
-            prepared.call_arguments["response"] = response
 
         # The user's function should just return the result
         result = prepared.context.func(**prepared.call_arguments)
@@ -528,15 +522,8 @@ class APIClient:
                     yield stream.hydrate_content(line, inner_type)
 
         prepared.call_arguments["result"] = stream_generator()
-        if "response" in prepared.context.signature.parameters:
-            prepared.call_arguments["response"] = response
 
         result = prepared.context.func(**prepared.call_arguments)
-
-        if inspect.isawaitable(result):
-            raise TypeError(
-                "Synchronous handlers cannot return awaitable results; declare the function as async instead"
-            )
 
         return result
 

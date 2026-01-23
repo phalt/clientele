@@ -198,37 +198,6 @@ class TestStreamDecorators:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_sse_with_response_parameter(self):
-        """Test SSE streaming with response parameter injection."""
-
-        async def mock_sse_stream():
-            yield b'{"text": "test"}\n\n'
-
-        respx.get("http://localhost:8000/events").mock(
-            return_value=httpx.Response(200, content=mock_sse_stream(), headers={"content-type": "text/event-stream"})
-        )
-
-        client = APIClient(base_url="http://localhost:8000")
-
-        captured_response = None
-
-        @client.get("/events", streaming_response=True)
-        async def stream_with_response(
-            *, result: AsyncIterator[Token], response: httpx.Response
-        ) -> AsyncIterator[Token]:
-            nonlocal captured_response
-            captured_response = response
-            return result
-
-        tokens = []
-        async for token in await stream_with_response():
-            tokens.append(token)
-
-        assert captured_response is not None
-        assert captured_response.status_code == 200
-
-    @pytest.mark.asyncio
-    @respx.mock
     async def test_stream_post_with_data_parameter(self):
         """Test SSE streaming POST request with data payload."""
 

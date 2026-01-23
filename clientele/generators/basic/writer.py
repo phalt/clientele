@@ -10,11 +10,6 @@ def write_to_schemas(content: str, output_dir: str) -> None:
     _write_to(path, content)
 
 
-def write_to_http(content: str, output_dir: str) -> None:
-    path = pathlib.Path(output_dir) / "http.py"
-    _write_to(path, content)
-
-
 def write_to_client(content: str, output_dir: str) -> None:
     path = pathlib.Path(output_dir) / "client.py"
     _write_to(path, content)
