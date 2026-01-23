@@ -866,10 +866,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#transport-configuration" class="md-nav__link">
+  <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transport configuration
+        Example
       
     </span>
   </a>
@@ -877,10 +877,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-httpx-client" class="md-nav__link">
+  <a href="#declare-status-codes-to-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom HTTPX Client
+        Declare status codes to retry
       
     </span>
   </a>
@@ -888,10 +888,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decorator" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decorator
+        How it works
       
     </span>
   </a>
@@ -1091,34 +1091,6 @@
     
   
     🏗️ Client creator
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🗺️ API Explorer
   
 
     
@@ -1334,10 +1306,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#transport-configuration" class="md-nav__link">
+  <a href="#example" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Transport configuration
+        Example
       
     </span>
   </a>
@@ -1345,10 +1317,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-httpx-client" class="md-nav__link">
+  <a href="#declare-status-codes-to-retry" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Custom HTTPX Client
+        Declare status codes to retry
       
     </span>
   </a>
@@ -1356,10 +1328,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#decorator" class="md-nav__link">
+  <a href="#how-it-works" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Decorator
+        How it works
       
     </span>
   </a>
@@ -1387,42 +1359,35 @@
 
 
 <h1 id="retries">🔄 Retries</h1>
-<p>In reality, networks can fail. Sometimes we want to be able to apply retry logic to handle this.</p>
-<p>Clientele does not have any built-in retry logic because there are many well tested options available that already work well. </p>
-<p>However, we are considering introducing a comfortable abstraction, <a href="https://github.com/phalt/clientele/issues/158">add your opinion here</a>.</p>
-<h2 id="transport-configuration">Transport configuration</h2>
-<p>You can set a retry transport, such as <a href="https://will-ockmore.github.io/httpx-retries/">httpx-retries</a>, using Clientele's configuration:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">httpx_retries</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetryTransport</span>
+<p>Clientele provides a built-in decorator for handling HTTP request retries.</p>
+<h2 id="example">Example</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">retries</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://myapi.com&quot;</span><span class="p">,</span> <span class="n">transport</span><span class="o">=</span><span class="n">RetryTransport</span><span class="p">())</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org/&quot;</span><span class="p">))</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="custom-httpx-client">Custom HTTPX Client</h2>
-<p>Alternatively you can use a retry transport with a custom <code>httpx.Client</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">httpx_retries</span><span class="w"> </span><span class="kn">import</span> <span class="n">RetryTransport</span>
-
-<span class="n">httpx_client</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Client</span><span class="p">(</span><span class="n">transport</span><span class="o">=</span><span class="n">RetryTransport</span><span class="p">())</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://myapi.com&quot;</span><span class="p">,</span> <span class="n">httpx_client</span><span class="o">=</span><span class="n">httpx_client</span><span class="p">)</span>
-</code></pre></div>
-<h2 id="decorator">Decorator</h2>
-<p>A good alternative approach is to use <a href="https://stamina.hynek.me/en/stable/">stamina</a>, a popular and versatile retry logic decorator.</p>
-<p>Stamina "just works" with Clientele:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">stamina</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org/&quot;</span><span class="p">)</span>
-
-<span class="nd">@stamina</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">on</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">HTTPError</span><span class="p">,</span> <span class="n">attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="nd">@retries</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/status/</span><span class="si">{status_code}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
+<h2 id="declare-status-codes-to-retry">Declare status codes to retry</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">retries</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org/&quot;</span><span class="p">))</span>
+
+<span class="nd">@retries</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">on_status</span><span class="o">=</span><span class="p">[</span><span class="mi">400</span><span class="p">,</span> <span class="mi">403</span><span class="p">,</span> <span class="mi">500</span><span class="p">])</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/status/</span><span class="si">{status_code}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<h2 id="how-it-works">How it works</h2>
+<ul>
+<li>Clientele's decorator is a small wrapper for <a href="https://stamina.hynek.me/en/stable/">stamina</a>, a popular and versatile retry logic decorator.</li>
+<li>We have configured the <code>retries.retry</code> decorator to work with Clientele specific exception behaviour.</li>
+<li>A default status that is 500 or higher will be retried using Stamina's <a href="https://stamina.hynek.me/en/stable/motivation.html">backoff and jitter</a> approach.</li>
+<li>If you supply <code>on_status</code> then it will only retry for those specific statuses.</li>
+<li>If you want more granular control then you can swap to <code>stamina.retry</code> and configure yourself.</li>
+</ul>
 
 
 

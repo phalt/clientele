@@ -1017,34 +1017,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🗺️ API Explorer
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1258,6 +1230,56 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unreleased-190" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UNRELEASED 1.9.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UNRELEASED 1.9.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#retry-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retry support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#improved-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Improved testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dropped-explore-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dropped explore command
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#181" class="md-nav__link">
@@ -1957,6 +1979,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#unreleased-190" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UNRELEASED 1.9.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UNRELEASED 1.9.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#retry-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retry support
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#improved-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Improved testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dropped-explore-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dropped explore command
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#181" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2640,6 +2712,54 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="unreleased-190">UNRELEASED 1.9.0</h2>
+<h3 id="retry-support">Retry support</h3>
+<ul>
+<li>Built-in <code>retries.retry</code> decorator for handling retry logic.</li>
+<li>This is built on top of <code>stamina</code> - a popular and reliable retry package.</li>
+<li>The retry logic is customised to suit Clientele's exception handling.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">retries</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org/&quot;</span><span class="p">))</span>
+
+<span class="nd">@retries</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/status/</span><span class="si">{status_code}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<h3 id="improved-testing">Improved testing</h3>
+<ul>
+<li>We have drastically improved the testing support for Clientele.</li>
+<li>The <code>FakeHTTPBackend</code> is now designed for testing.</li>
+<li>The <code>queue_response</code> method now takes a <code>http.Response</code> object as well as the path.</li>
+<li>The new <code>configure_client_for_testing</code> function accepts an existing client and then returns it with a new testing backend.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_client_for_testing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">http</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">my_function</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">my_test</span><span class="p">():</span>
+    <span class="c1"># Swap normal backend for a Fake HTTP backend</span>
+    <span class="n">fake_backend</span><span class="p">:</span> <span class="n">http</span><span class="o">.</span><span class="n">FakeHTTPBackend</span> <span class="o">=</span> <span class="n">configure_client_for_testing</span><span class="p">(</span><span class="n">my_api_client</span><span class="o">.</span><span class="n">client</span><span class="p">)</span>
+
+    <span class="c1"># Configure HTTP responses</span>
+    <span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
+        <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/users&quot;</span><span class="p">,</span>
+        <span class="n">response_obj</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;{&quot;id&quot;: 10, &quot;name&quot;: &quot;Bob&quot;}&#39;</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Call function as normal, but it now calls the fake backend</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">my_function</span><span class="p">()</span>
+</code></pre></div>
+<h3 id="dropped-explore-command">Dropped <code>explore</code> command</h3>
+<ul>
+<li>While it is a cool feature, it distracts from the purpose of Clientele, so it is being removed.</li>
+</ul>
 <h2 id="181">1.8.1</h2>
 <ul>
 <li>Add <code>configure</code> method to <code>APIClient</code> - enabling reconfiguration of clients. Thank you <a href="https://github.com/chassing">Christian Assing</a> for the contribution.</li>

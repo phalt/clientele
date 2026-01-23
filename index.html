@@ -500,17 +500,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#direct-requests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Direct requests
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#works-with-python-api-frameworks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1152,34 +1141,6 @@
 
               
             
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🗺️ API Explorer
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
           </ul>
         </nav>
       
@@ -1437,17 +1398,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#direct-requests" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Direct requests
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#works-with-python-api-frameworks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1529,10 +1479,11 @@
 <ul>
 <li><strong>A comfortable abstraction</strong> - Encourages consistency and focus on the functionality.</li>
 <li><strong>Easy to learn</strong> - Clientele is visually similar to popular python API server frameworks.</li>
-<li><strong>Easy to test</strong> - Comes with built-in testing tools, and works with existing libraries like <a href="https://lundberg.github.io/respx/">respx</a> and <a href="https://pypi.org/project/pytest-httpx/">pytest-httpx</a>.</li>
-<li><strong>Easy to configure</strong> - Clientele has sensible defaults and plenty of hooks for customisation.</li>
+<li><strong>Easy to test</strong> - Comes with built-in testing tools.</li>
+<li><strong>Easy to configure</strong> - Sensible HTTP defaults and plenty of hooks for customisation.</li>
 <li><strong>Easy data validation</strong> - Built in data validation using <a href="https://docs.pydantic.dev/latest/">Pydantic</a>.</li>
-<li><strong>Use your own HTTP</strong> - Clientele can support all HTTP libraries.</li>
+<li><strong>Core built-ins</strong> - Caching, Network, and Retry handling built specifically for HTTP.</li>
+<li><strong>Use your own HTTP</strong> - Clientele can support any Python HTTP library.</li>
 <li><strong>OpenAPI support</strong> - Build your own client, or scaffold one from an OpenAPI schema.</li>
 </ul>
 <h2 id="async-support">Async support</h2>
@@ -1570,16 +1521,9 @@
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_events</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
-<h2 id="direct-requests">Direct requests</h2>
-<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">request</span><span class="p">(</span>
-    <span class="s2">&quot;GET&quot;</span><span class="p">,</span> 
-    <span class="s2">&quot;pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">,</span> 
-    <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">200</span><span class="p">:</span> <span class="n">Pokemon</span><span class="p">},</span> 
-    <span class="n">pokemon_id</span><span class="o">=</span><span class="mi">1</span>
-<span class="p">)</span>
-</code></pre></div>
 <h2 id="works-with-python-api-frameworks">Works with Python API frameworks</h2>
-<p>Built and tested to be 100% compatible with the OpenAPI schemas generated from:</p>
+<p>Building an API service in Python? Clientele can build you a client library in seconds.</p>
+<p>Clientele is built and tested to be 100% compatible with the OpenAPI schemas generated from:</p>
 <ul>
 <li><strong>FastAPI</strong></li>
 <li><strong>Django REST Framework</strong> via <strong>drf-spectacular</strong></li>

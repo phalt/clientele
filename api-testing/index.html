@@ -971,17 +971,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#respx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RESPX
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1119,34 +1108,6 @@
     
   
     🏗️ Client creator
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../explore/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    🗺️ API Explorer
   
 
     
@@ -1411,17 +1372,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#respx" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        RESPX
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -1443,113 +1393,99 @@
 
 
 <h1 id="testing">🧪 Testing</h1>
-<p>Clientele is designed for easy testing with our built-in fake backends or with existing third party tools.</p>
+<p>Clientele is designed for easy testing with our built-in fake backend.</p>
 <h2 id="fakehttpbackend">FakeHTTPBackend</h2>
 <p>The <code>FakeHTTPBackend</code> allows you to test your API client without making real HTTP requests.</p>
-<p>Instead of making real network calls, the fake backend captures all requests and returns configurable responses. You can swap out the HTTP backend on an existing client by replacing <code>client.config.http_backend</code>.</p>
+<p>Instead of making real network calls, the fake backend captures all requests and returns configurable responses.</p>
 <h3 id="basic-example">Basic Example</h3>
 <p>Assuming you have a pre-written client:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">get_user</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_client_for_testing</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="c1"># Create a fake backend with default response</span>
-<span class="n">fake_backend</span> <span class="o">=</span> <span class="n">FakeHTTPBackend</span><span class="p">(</span>
-    <span class="n">default_content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Alice&quot;</span><span class="p">},</span>
-    <span class="n">default_status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_my_api</span><span class="p">():</span>
+    <span class="c1"># Configure a fake backend with default response</span>
+    <span class="n">fake_backend</span><span class="p">:</span> <span class="n">FakeHTTPBackend</span> <span class="o">=</span> <span class="n">configure_client_for_testing</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
 
-<span class="c1"># Replace the client&#39;s HTTP backend</span>
-<span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">http_backend</span> <span class="o">=</span> <span class="n">fake_backend</span>
+    <span class="c1"># Configure the HTTP response itself</span>
+    <span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
+        <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/users/1&quot;</span><span class="p">,</span>
+        <span class="n">response_obj</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span>
+            <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+            <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;{&quot;id&quot;: 1, &quot;name&quot;: &quot;Bob&quot;}&#39;</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
 
-<span class="c1"># Call your API method</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
+    <span class="c1"># Call your API method</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">123</span><span class="p">)</span>
 
-<span class="c1"># Verify the response</span>
-<span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Alice&quot;</span>
+    <span class="c1"># Verify the response</span>
+    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Bob&quot;</span>
 
-<span class="c1"># Verify what was requested</span>
-<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="k">assert</span> <span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span>
-<span class="k">assert</span> <span class="s2">&quot;/users/123&quot;</span> <span class="ow">in</span> <span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
+    <span class="c1"># Verify what was requested</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;method&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span>
+    <span class="k">assert</span> <span class="s2">&quot;/users/1&quot;</span> <span class="ow">in</span> <span class="n">fake_backend</span><span class="o">.</span><span class="n">requests</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;url&quot;</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="queuing-different-responses">Queuing Different Responses</h3>
-<p>You can queue different responses for multiple requests:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span>
+<p>You can queue different responses for specific request paths:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">create_user</span><span class="p">,</span> <span class="n">get_user</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_client_for_testing</span>
 
 <span class="c1"># Replace the HTTP backend</span>
-<span class="n">fake_backend</span> <span class="o">=</span> <span class="n">FakeHTTPBackend</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">http_backend</span> <span class="o">=</span> <span class="n">fake_backend</span>
+<span class="n">fake_backend</span><span class="p">:</span> <span class="n">FakeHTTPBackend</span> <span class="o">=</span> <span class="n">configure_client_for_testing</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
 
-<span class="c1"># Queue responses in order</span>
+<span class="c1"># Queue responses for a specific path</span>
 <span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
-    <span class="n">status</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
-    <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">},</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/users&quot;</span><span class="p">,</span>
+    <span class="n">response_obj</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
+        <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;{&quot;id&quot;: 11, &quot;name&quot;: &quot;Bob&quot;}&#39;</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+    <span class="p">),</span>
 <span class="p">)</span>
 <span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
-    <span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
-    <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">},</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/users/10&quot;</span><span class="p">,</span>
+    <span class="n">response_obj</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+        <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;{&quot;id&quot;: 10, &quot;name&quot;: &quot;Bob&quot;}&#39;</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+    <span class="p">),</span>
 <span class="p">)</span>
 
-<span class="c1"># First request gets the 201 response</span>
-<span class="n">created</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;bob@example.com&quot;</span><span class="p">})</span>
-<span class="k">assert</span> <span class="n">created</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">10</span>
+<span class="c1"># First request gets the /users response</span>
+<span class="n">created</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bob&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;bob@example.com&quot;</span><span class="p">})</span>
+<span class="k">assert</span> <span class="n">created</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="mi">11</span>
 
-<span class="c1"># Second request gets the 200 response</span>
-<span class="n">fetched</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="c1"># Second request gets the /users/10 response</span>
+<span class="n">fetched</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">fetched</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;Bob&quot;</span>
 </code></pre></div>
 <h3 id="error-responses">Error Responses</h3>
 <p>You can also simulate error responses:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_api_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">get_user</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.http</span><span class="w"> </span><span class="kn">import</span> <span class="n">FakeHTTPBackend</span><span class="p">,</span> <span class="n">Response</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_client_for_testing</span>
 
 <span class="c1"># Replace the HTTP backend</span>
-<span class="n">fake_backend</span> <span class="o">=</span> <span class="n">FakeHTTPBackend</span><span class="p">()</span>
-<span class="n">client</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">http_backend</span> <span class="o">=</span> <span class="n">fake_backend</span>
+<span class="n">fake_backend</span><span class="p">:</span> <span class="n">FakeHTTPBackend</span> <span class="o">=</span> <span class="n">configure_client_for_testing</span><span class="p">(</span><span class="n">client</span><span class="p">)</span>
 
 <span class="c1"># Queue a 404 error response</span>
 <span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
-    <span class="n">status</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span>
-    <span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;User not found&quot;</span><span class="p">,</span> <span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="mi">404</span><span class="p">},</span>
+    <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/users/999&quot;</span><span class="p">,</span>
+    <span class="n">response_obj</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span>
+        <span class="n">status_code</span><span class="o">=</span><span class="mi">404</span><span class="p">,</span>
+        <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;{&quot;error&quot;: &quot;User not found&quot;, &quot;code&quot;: 404}&#39;</span><span class="p">,</span>
+        <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+    <span class="p">),</span>
 <span class="p">)</span>
 
-<span class="n">error</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
+<span class="n">error</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">999</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">error</span><span class="o">.</span><span class="n">error</span> <span class="o">==</span> <span class="s2">&quot;User not found&quot;</span>
-</code></pre></div>
-<h2 id="respx">RESPX</h2>
-<p>You can use <a href="https://lundberg.github.io/respx/">respx</a> for easy testing if you have the default <a href="../api-http-backends/">httpx backend</a> installed.</p>
-<p>Our <a href="https://github.com/phalt/clientele/blob/0.4.4/tests/test_generated_client.py">own test suite</a> shows how you can write mock tests for your API client.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">httpx</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">respx</span><span class="w"> </span><span class="kn">import</span> <span class="n">MockRouter</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">.test_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">constants</span><span class="p">,</span> <span class="n">schemas</span>
-
-<span class="n">BASE_URL</span> <span class="o">=</span> <span class="n">constants</span><span class="o">.</span><span class="n">api_base_url</span><span class="p">()</span>
-
-
-<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">respx</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="n">BASE_URL</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">test_simple_request_simple_request_get</span><span class="p">(</span><span class="n">respx_mock</span><span class="p">:</span> <span class="n">MockRouter</span><span class="p">):</span>
-    <span class="c1"># Given</span>
-    <span class="n">mocked_response</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;hello world&quot;</span><span class="p">}</span>
-    <span class="n">mock_path</span> <span class="o">=</span> <span class="s2">&quot;/simple-request&quot;</span>
-    <span class="n">respx_mock</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">mock_path</span><span class="p">)</span><span class="o">.</span><span class="n">mock</span><span class="p">(</span>
-        <span class="n">return_value</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span><span class="n">json</span><span class="o">=</span><span class="n">mocked_response</span><span class="p">,</span> <span class="n">status_code</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="c1"># When</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">simple_request_simple_request_get</span><span class="p">()</span>
-    <span class="c1"># Then</span>
-    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">schemas</span><span class="o">.</span><span class="n">SimpleResponse</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="n">call</span> <span class="o">=</span> <span class="n">respx_mock</span><span class="o">.</span><span class="n">calls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="n">call</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">url</span> <span class="o">==</span> <span class="n">BASE_URL</span> <span class="o">+</span> <span class="n">mock_path</span>
 </code></pre></div>
 
 
