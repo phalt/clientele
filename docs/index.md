@@ -44,10 +44,11 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 
 - **A comfortable abstraction** - Encourages consistency and focus on the functionality.
 - **Easy to learn** - Clientele is visually similar to popular python API server frameworks.
-- **Easy to test** - Comes with built-in testing tools, and works with existing libraries like [respx](https://lundberg.github.io/respx/) and [pytest-httpx](https://pypi.org/project/pytest-httpx/).
-- **Easy to configure** - Clientele has sensible defaults and plenty of hooks for customisation.
+- **Easy to test** - Comes with built-in testing tools.
+- **Easy to configure** - Sensible HTTP defaults and plenty of hooks for customisation.
 - **Easy data validation** - Built in data validation using [Pydantic](https://docs.pydantic.dev/latest/).
-- **Use your own HTTP** - Clientele can support all HTTP libraries.
+- **Core built-ins** - Caching, Network, and Retry handling built specifically for HTTP.
+- **Use your own HTTP** - Clientele can support any Python HTTP library.
 - **OpenAPI support** - Build your own client, or scaffold one from an OpenAPI schema.
 
 ## Async support
@@ -94,20 +95,11 @@ async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[E
     return result
 ```
 
-## Direct requests
-
-```python
-result = client.request(
-    "GET", 
-    "pokemon/{pokemon_id}", 
-    response_map={200: Pokemon}, 
-    pokemon_id=1
-)
-```
-
 ## Works with Python API frameworks
 
-Built and tested to be 100% compatible with the OpenAPI schemas generated from:
+Building an API service in Python? Clientele can build you a client library in seconds.
+
+Clientele is built and tested to be 100% compatible with the OpenAPI schemas generated from:
 
 - **FastAPI**
 - **Django REST Framework** via **drf-spectacular**
