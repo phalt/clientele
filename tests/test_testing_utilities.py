@@ -1,11 +1,11 @@
-"""Tests for testing utilities: ResponseFactory and NetworkError simulation."""
+"""Tests for testing utilities: ResponseFactory and NetworkErrorFactory simulation."""
 
 import pytest
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
 from clientele.http import fake_backend
-from clientele.testing import NetworkError, ResponseFactory
+from clientele.testing import NetworkErrorFactory, ResponseFactory
 
 
 def test_ok_with_data():
@@ -122,7 +122,7 @@ def test_queue_timeout():
     def get_users(result: list) -> list:
         return result
 
-    backend.queue_error("/users", NetworkError.timeout())
+    backend.queue_error("/users", NetworkErrorFactory.timeout())
 
     with pytest.raises(TimeoutError, match="Request timed out"):
         get_users()
@@ -147,7 +147,7 @@ def test_queue_connection_refused():
     def get_users(result: list) -> list:
         return result
 
-    backend.queue_error("/users", NetworkError.connection_refused())
+    backend.queue_error("/users", NetworkErrorFactory.connection_refused())
 
     with pytest.raises(ConnectionRefusedError):
         get_users()
@@ -168,7 +168,7 @@ def test_queue_connection_reset():
     def get_users(result: list) -> list:
         return result
 
-    backend.queue_error("/users", NetworkError.connection_reset())
+    backend.queue_error("/users", NetworkErrorFactory.connection_reset())
 
     with pytest.raises(ConnectionResetError, match="Connection reset by peer"):
         get_users()
@@ -189,7 +189,7 @@ def test_queue_dns_failure():
     def get_users(result: list) -> list:
         return result
 
-    backend.queue_error("/users", NetworkError.dns_failure("api.example.com"))
+    backend.queue_error("/users", NetworkErrorFactory.dns_failure("api.example.com"))
 
     with pytest.raises(OSError, match="Failed to resolve hostname"):
         get_users()
@@ -210,7 +210,7 @@ def test_error_takes_priority_over_response():
     def get_resource(result: dict) -> dict:
         return result
 
-    backend.queue_error("/resource", NetworkError.timeout())
+    backend.queue_error("/resource", NetworkErrorFactory.timeout())
     backend.queue_response("/resource", ResponseFactory.ok({"data": "value"}))
 
     # Error should be raised first
@@ -237,8 +237,8 @@ def test_error_consumed_fifo():
     def get_resource(result: dict) -> dict:
         return result
 
-    backend.queue_error("/resource", NetworkError.timeout())
-    backend.queue_error("/resource", NetworkError.connection_refused())
+    backend.queue_error("/resource", NetworkErrorFactory.timeout())
+    backend.queue_error("/resource", NetworkErrorFactory.connection_refused())
     backend.queue_response("/resource", ResponseFactory.ok({"success": True}))
 
     with pytest.raises(TimeoutError):
@@ -267,7 +267,7 @@ async def test_async_error():
     async def get_users(result: list) -> list:
         return result
 
-    backend.queue_error("/users", NetworkError.timeout())
+    backend.queue_error("/users", NetworkErrorFactory.timeout())
 
     with pytest.raises(TimeoutError):
         await get_users()
@@ -279,7 +279,7 @@ def test_reset_clears_errors():
     """Test that reset() clears queued errors."""
     backend = fake_backend.FakeHTTPBackend()
 
-    backend.queue_error("/resource", NetworkError.timeout())
+    backend.queue_error("/resource", NetworkErrorFactory.timeout())
     assert len(backend._error_map["/resource"]) == 1
 
     backend.reset()
