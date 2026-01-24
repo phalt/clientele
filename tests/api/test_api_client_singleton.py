@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-import json
-
 import pytest
 from pydantic import BaseModel
 
-from clientele import http
 from clientele.api import APIClient, BaseConfig
 from clientele.http.fake_backend import FakeHTTPBackend
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -22,20 +19,10 @@ class User(BaseModel):
 
 def test_can_provide_custom_http_backend() -> None:
     """Test that a custom HTTP backend can be provided to the APIClient."""
-    custom_backend = FakeHTTPBackend(
-        default_response=http.Response(
-            status_code=404,
-            content=b"Not Found",
-            headers={},
-        )
-    )
+    custom_backend = FakeHTTPBackend(default_response=ResponseFactory.not_found())
     custom_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
-        ),
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Ada"}),
     )
     config = BaseConfig(base_url=BASE_URL, http_backend=custom_backend)
     client = APIClient(config=config)
@@ -56,19 +43,11 @@ def test_can_provide_custom_http_backend() -> None:
 @pytest.mark.asyncio
 async def test_can_provide_custom_http_backend_async() -> None:
     """Test that a custom HTTP backend can be provided to the APIClient for async operations."""
-    custom_backend = FakeHTTPBackend(
-        default_response=http.Response(
-            status_code=404,
-            content=b"Not Found",
-            headers={},
-        )
-    )
+    custom_backend = FakeHTTPBackend(default_response=ResponseFactory.not_found())
     custom_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
         ),
     )
     config = BaseConfig(base_url=BASE_URL, http_backend=custom_backend)
@@ -120,10 +99,8 @@ def test_can_reconfigure_with_base_url() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
         ),
     )
 
@@ -139,19 +116,11 @@ def test_can_reconfigure_with_base_url() -> None:
 
 def test_can_reconfigure_with_custom_http_backend() -> None:
     """Test that a custom HTTP backend can be configured."""
-    custom_backend = FakeHTTPBackend(
-        default_response=http.Response(
-            status_code=404,
-            content=b"Not Found",
-            headers={},
-        )
-    )
+    custom_backend = FakeHTTPBackend(default_response=ResponseFactory.not_found())
     custom_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
         ),
     )
     client = APIClient(base_url=BASE_URL)

@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import json
 from typing import TypedDict
 
 import pytest
 
-from clientele import http
 from clientele.api import APIClient
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 
 # Test TypedDict definitions
@@ -43,10 +41,8 @@ def test_get_with_typeddict_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
         ),
     )
 
@@ -69,10 +65,8 @@ def test_post_with_typeddict_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Charlie"},
         ),
     )
 
@@ -95,10 +89,8 @@ def test_get_with_typeddict_list_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps([{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data=[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}],
         ),
     )
 
@@ -122,10 +114,8 @@ def test_put_with_typeddict_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada Updated"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada Updated"},
         ),
     )
 
@@ -147,10 +137,8 @@ def test_patch_with_typeddict_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada Patched"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada Patched"},
         ),
     )
 
@@ -172,10 +160,8 @@ def test_delete_with_typeddict_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada Deleted"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada Deleted"},
         ),
     )
 
@@ -197,18 +183,14 @@ def test_response_map_with_typeddict() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
         ),
     )
     fake_backend.queue_response(
         path="/users/999",
-        response_obj=http.Response(
-            status_code=404,
-            content=json.dumps({"message": "User not found", "code": "NOT_FOUND"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.not_found(
+            data={"message": "User not found", "code": "NOT_FOUND"},
         ),
     )
 
@@ -234,10 +216,8 @@ def test_typeddict_with_query_params() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
         ),
     )
 
@@ -259,10 +239,8 @@ def test_typeddict_validation_error_on_non_dict() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps("not a dict").encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data="not a dict",
         ),
     )
 
@@ -284,10 +262,8 @@ async def test_async_get_with_typeddict_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
         ),
     )
 
@@ -311,10 +287,8 @@ async def test_async_post_with_typeddict_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Charlie"},
         ),
     )
 
@@ -337,10 +311,8 @@ def test_post_with_typeddict_data_validates_request_body() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Charlie"},
         ),
     )
 
@@ -362,10 +334,8 @@ def test_put_with_typeddict_data_validates_request_body() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada Updated"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada Updated"},
         ),
     )
 
@@ -387,10 +357,8 @@ def test_patch_with_typeddict_data_validates_request_body() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada Patched"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada Patched"},
         ),
     )
 
@@ -412,10 +380,8 @@ def test_delete_with_typeddict_data_validates_request_body() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/batch",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"deleted": 2}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"deleted": 2},
         ),
     )
 
@@ -451,10 +417,8 @@ async def test_async_post_with_typeddict_data_validates_request_body() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Charlie"},
         ),
     )
 
@@ -476,10 +440,8 @@ def test_post_with_both_typeddict_data_and_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Charlie"},
         ),
     )
 

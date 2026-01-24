@@ -2,15 +2,13 @@
 
 from __future__ import annotations
 
-import json
 import logging
 
 import pytest
 from pydantic import BaseModel
 
-from clientele import http
 from clientele.api import APIClient, BaseConfig
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -29,11 +27,7 @@ def test_sync_request_logs_method_and_url(caplog: pytest.LogCaptureFixture) -> N
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
-        ),
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Alice"}),
     )
 
     @client.get("/users/{user_id}")
@@ -59,14 +53,7 @@ async def test_async_request_logs_method_and_url(caplog: pytest.LogCaptureFixtur
     client = APIClient(config=config)
 
     fake_backend = configure_client_for_testing(client)
-    fake_backend.queue_response(
-        path="/users/2",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 2, "name": "Bob"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
-        ),
-    )
+    fake_backend.queue_response(path="/users/2", response_obj=ResponseFactory.ok(data={"id": 2, "name": "Bob"}))
 
     @client.get("/users/{user_id}")
     async def get_user(user_id: int, result: User) -> User:
@@ -91,11 +78,7 @@ def test_no_logging_when_logger_not_configured(caplog: pytest.LogCaptureFixture)
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/3",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 3, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
-        ),
+        response_obj=ResponseFactory.ok(data={"id": 3, "name": "Charlie"}),
     )
 
     @client.get("/users/{user_id}")
@@ -126,11 +109,7 @@ def test_post_request_logging(caplog: pytest.LogCaptureFixture) -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "New User"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
-        ),
+        response_obj=ResponseFactory.created(data={"id": 10, "name": "New User"}),
     )
 
     @client.post("/users")
@@ -156,11 +135,7 @@ def test_response_logs_include_timing(caplog: pytest.LogCaptureFixture) -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
-        ),
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Alice"}),
     )
 
     @client.get("/users/{user_id}")
@@ -185,11 +160,7 @@ def test_response_logs_include_content(caplog: pytest.LogCaptureFixture) -> None
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
-        ),
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Alice"}),
     )
 
     @client.get("/users/{user_id}")

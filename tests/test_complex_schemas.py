@@ -5,16 +5,14 @@ This test module validates that clientele correctly handles oneOf, anyOf,
 and nullable schema constructs with proper Python typing.
 """
 
-import json
 import sys
 from contextlib import contextmanager
 
 import pytest
 
-from clientele import http
 from clientele.generators.api.generator import APIGenerator
 from clientele.generators.standard.generator import StandardGenerator
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 from tests.generators.integration_utils import get_spec_path, load_spec
 
 
@@ -434,11 +432,7 @@ class TestNoContentResponses:
 
         fake_backend.queue_response(
             path="/users",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps(return_value).encode("utf-8"),
-                headers={"content-type": "application/json"},
-            ),
+            response_obj=ResponseFactory.ok(data=return_value),
         )
 
         # Call handle_response with the list_users function

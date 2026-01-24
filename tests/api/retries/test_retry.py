@@ -1,6 +1,6 @@
 import pytest
 
-from clientele import api, http, retries, testing
+from clientele import api, retries, testing
 
 client = api.APIClient(config=api.BaseConfig(base_url="http://fake.api"))
 
@@ -11,17 +11,15 @@ def test_retries_retry_default_behaviour():
     # Configure fake responses: first a 500 error, then a 200 success
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=500,
-            content=b'{"error": "Server error"}',
+        response_obj=testing.ResponseFactory.internal_server_error(
+            data=b'{"error": "Server error"}',
             headers={"content-type": "application/json"},
         ),
     )
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=200,
-            content=b'{"data": "Success"}',
+        response_obj=testing.ResponseFactory.ok(
+            data=b'{"data": "Success"}',
             headers={"content-type": "application/json"},
         ),
     )
@@ -43,25 +41,22 @@ def test_retries_retry_with_explicit_statuses():
     # Configure fake responses: first a 500 error, then a 400 error, then a 200 success
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=500,
-            content=b'{"error": "Server error"}',
+        response_obj=testing.ResponseFactory.internal_server_error(
+            data=b'{"error": "Server error"}',
             headers={"content-type": "application/json"},
         ),
     )
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=400,
-            content=b'{"error": "Bad request"}',
+        response_obj=testing.ResponseFactory.bad_request(
+            data=b'{"error": "Bad request"}',
             headers={"content-type": "application/json"},
         ),
     )
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=200,
-            content=b'{"data": "Success"}',
+        response_obj=testing.ResponseFactory.ok(
+            data=b'{"data": "Success"}',
             headers={"content-type": "application/json"},
         ),
     )
@@ -83,17 +78,15 @@ def test_retries_do_not_block_other_statuses_from_raising_properly():
     # Configure fake responses: first a 500 error, then a 400 error which should raise
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=500,
-            content=b'{"error": "Server error"}',
+        response_obj=testing.ResponseFactory.internal_server_error(
+            data=b'{"error": "Server error"}',
             headers={"content-type": "application/json"},
         ),
     )
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=400,
-            content=b'{"error": "Bad request"}',
+        response_obj=testing.ResponseFactory.bad_request(
+            data=b'{"error": "Bad request"}',
             headers={"content-type": "application/json"},
         ),
     )
@@ -113,9 +106,8 @@ def test_retries_do_not_block_other_exceptions():
     fake_backend = testing.configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/test-endpoint",
-        response_obj=http.Response(
-            status_code=200,
-            content=b'{"error": "Server error"}',
+        response_obj=testing.ResponseFactory.ok(
+            data=b'{"error": "Server error"}',
             headers={"content-type": "application/json"},
         ),
     )
