@@ -7,6 +7,9 @@ from clientele.api import client as api_client
 from clientele.http import Response, fake_backend
 from clientele.http.status_codes import codes
 
+# Type alias for response data that can be serialized
+ResponseData = dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None
+
 
 def configure_client_for_testing(
     client: api_client.APIClient,
@@ -38,7 +41,7 @@ def configure_client_for_testing(
     return backend
 
 
-def _prep_content(data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None) -> bytes:
+def _prep_content(data: ResponseData) -> bytes:
     if data is None:
         return b""
     if isinstance(data, str):
@@ -49,9 +52,20 @@ def _prep_content(data: dict[str, typing.Any] | typing.List[typing.Any] | str | 
 
 
 class ResponseFactory:
+    """Factory for creating common HTTP responses.
+
+    Simplifies creating mock responses for testing by providing
+    convenience methods for common HTTP status codes.
+
+    Example:
+        >>> from clientele.testing import ResponseFactory
+        >>> backend.queue_response("/users", ResponseFactory.ok([{"id": 1}]))
+        >>> backend.queue_response("/users/99", ResponseFactory.not_found())
+    """
+
     @staticmethod
     def ok(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 200 OK Response.
@@ -67,7 +81,7 @@ class ResponseFactory:
 
     @staticmethod
     def created(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 201 Created Response.
@@ -83,7 +97,7 @@ class ResponseFactory:
 
     @staticmethod
     def accepted(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 202 Accepted Response.
@@ -110,7 +124,7 @@ class ResponseFactory:
 
     @staticmethod
     def bad_request(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 400 Bad Request Response.
@@ -126,7 +140,7 @@ class ResponseFactory:
 
     @staticmethod
     def unauthorized(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 401 Unauthorized Response.
@@ -142,7 +156,7 @@ class ResponseFactory:
 
     @staticmethod
     def forbidden(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 403 Forbidden Response.
@@ -158,7 +172,7 @@ class ResponseFactory:
 
     @staticmethod
     def not_found(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 404 Not Found Response.
@@ -174,7 +188,7 @@ class ResponseFactory:
 
     @staticmethod
     def internal_server_error(
-        data: dict[str, typing.Any] | typing.List[typing.Any] | str | bytes | None = None,
+        data: ResponseData = None,
         headers: dict[str, str] | None = None,
     ) -> Response:
         """Create a generic 500 Internal Server Error Response.
@@ -187,3 +201,67 @@ class ResponseFactory:
             headers=headers or {"Content-Type": "application/json"},
             content=_prep_content(data),
         )
+
+    @staticmethod
+    def unprocessable_entity(
+        data: ResponseData = None,
+        headers: dict[str, str] | None = None,
+    ) -> Response:
+        """Create a generic 422 Unprocessable Entity Response.
+
+        Args:
+            data: Optional JSON data to include in the response body.
+        """
+        return Response(
+            status_code=codes.UNPROCESSABLE_ENTITY,
+            headers=headers or {"Content-Type": "application/json"},
+            content=_prep_content(data),
+        )
+
+    @staticmethod
+    def service_unavailable(
+        data: ResponseData = None,
+        headers: dict[str, str] | None = None,
+    ) -> Response:
+        """Create a generic 503 Service Unavailable Response.
+
+        Args:
+            data: Optional JSON data to include in the response body.
+        """
+        return Response(
+            status_code=codes.SERVICE_UNAVAILABLE,
+            headers=headers or {"Content-Type": "application/json"},
+            content=_prep_content(data),
+        )
+
+
+class NetworkError:
+    """Factory for network error simulation.
+
+    These errors simulate network-level failures that occur
+    before receiving an HTTP response.
+
+    Example:
+        >>> from clientele.testing import NetworkError
+        >>> backend.queue_error("/users", NetworkError.timeout())
+    """
+
+    @staticmethod
+    def timeout(message: str = "Request timed out") -> TimeoutError:
+        """Simulate a request timeout."""
+        return TimeoutError(message)
+
+    @staticmethod
+    def connection_refused(message: str = "Connection refused") -> ConnectionRefusedError:
+        """Simulate connection refused by server."""
+        return ConnectionRefusedError(message)
+
+    @staticmethod
+    def connection_reset(message: str = "Connection reset by peer") -> ConnectionResetError:
+        """Simulate connection reset during request."""
+        return ConnectionResetError(message)
+
+    @staticmethod
+    def dns_failure(host: str = "unknown") -> OSError:
+        """Simulate DNS resolution failure."""
+        return OSError(f"Failed to resolve hostname: {host}")

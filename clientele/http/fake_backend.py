@@ -57,6 +57,9 @@ class FakeHTTPBackend(backends.HTTPBackend):
         # Each entry is a list of lines to stream
         self._stream_map: dict[str, list[list[str]]] = {}
 
+        # Map request paths to lists of Exceptions (FIFO queue per path)
+        self._error_map: dict[str, list[Exception]] = {}
+
     def build_client(self) -> None:
         """Return None as no real client is needed."""
         return None
@@ -98,6 +101,29 @@ class FakeHTTPBackend(backends.HTTPBackend):
         if path not in self._response_map:
             self._response_map[path] = []
         self._response_map[path].append(response_obj)
+
+    def queue_error(self, path: str, error: Exception) -> None:
+        """Queue an error to raise for requests to a path.
+
+        Errors are consumed FIFO, same as responses.
+        Errors take priority over queued responses.
+
+        Args:
+            path: URL path pattern to match
+            error: Exception instance to raise
+        """
+        if path not in self._error_map:
+            self._error_map[path] = []
+        self._error_map[path].append(error)
+
+    def _get_next_error(self, url: str) -> Exception | None:
+        """Get next queued error for URL, or None."""
+        for path in self._error_map:
+            if path in url:
+                errors = self._error_map[path]
+                if errors:
+                    return errors.pop(0)
+        return None
 
     def _get_next_response(self, url: str) -> response.Response | None:
         """Get the next response for the given URL path or None if no queued responses.
@@ -164,7 +190,23 @@ class FakeHTTPBackend(backends.HTTPBackend):
 
         Returns:
             A generic clientele.http.Response object
+
+        Raises:
+            Exception: If an error is queued for this URL path
         """
+        # Check for queued error FIRST (errors take priority)
+        error = self._get_next_error(url)
+        if error is not None:
+            self.requests.append(
+                {
+                    "method": method,
+                    "url": url,
+                    "kwargs": kwargs,
+                    "error": error,
+                }
+            )
+            raise error
+
         return self._create_response(method, url, **kwargs)
 
     async def send_async_request(
@@ -182,7 +224,23 @@ class FakeHTTPBackend(backends.HTTPBackend):
 
         Returns:
             A generic clientele.http.Response object
+
+        Raises:
+            Exception: If an error is queued for this URL path
         """
+        # Check for queued error FIRST (errors take priority)
+        error = self._get_next_error(url)
+        if error is not None:
+            self.requests.append(
+                {
+                    "method": method,
+                    "url": url,
+                    "kwargs": kwargs,
+                    "error": error,
+                }
+            )
+            raise error
+
         return self._create_response(method, url, **kwargs)
 
     def close(self) -> None:
@@ -194,10 +252,11 @@ class FakeHTTPBackend(backends.HTTPBackend):
         pass
 
     def reset(self) -> None:
-        """Clear all captured requests and queued responses."""
+        """Clear all captured requests, queued responses, and errors."""
         self.requests.clear()
         self._response_map.clear()
         self._stream_map.clear()
+        self._error_map.clear()
 
     def _get_next_stream(self, url: str) -> tuple[list[str], int] | None:
         """Get the next stream for the given URL path or None if no queued streams.
