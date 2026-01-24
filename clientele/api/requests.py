@@ -6,8 +6,9 @@ import typing
 
 import pydantic
 
-from clientele.api import http_status, type_utils
+from clientele.api import type_utils
 from clientele.http import response as http_response
+from clientele.http import status_codes
 
 
 class PreparedCall(pydantic.BaseModel):
@@ -186,7 +187,7 @@ def _validate_response_map(
     """
     # Validate all keys are valid HTTP status codes
     for status_code in response_map.keys():
-        if not http_status.codes.is_valid_status_code(status_code):
+        if not status_codes.codes.is_valid_status_code(status_code):
             raise ValueError(f"Invalid status code {status_code} in response_map")
 
     # Validate all values are Pydantic BaseModel subclasses or TypedDict classes

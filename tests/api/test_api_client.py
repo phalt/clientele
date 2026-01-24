@@ -1,13 +1,10 @@
 from __future__ import annotations
 
-import json
-
 import pytest
 from pydantic import BaseModel
 
-from clientele import http
 from clientele.api import APIClient, APIException, BaseConfig
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -41,11 +38,7 @@ def test_get_validates_response_and_builds_query() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
-            headers={"x-source": "mock", "content-type": "application/json"},
-        ),
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Ada"}),
     )
 
     @client.get("/users/{user_id}")
@@ -65,10 +58,8 @@ def test_get_respects_query_override_and_list_validation() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps([{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data=[{"id": 1, "name": "Ada"}, {"id": 2, "name": "Bob"}],
         ),
     )
 
@@ -89,18 +80,14 @@ def test_post_accepts_model_instance_and_dict() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Charlie"},
         ),
     )
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Charlie"},
         ),
     )
 
@@ -123,10 +110,8 @@ def test_post_leftover_kwargs_become_query_params() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/active",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 5, "name": "Eve"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 5, "name": "Eve"},
         ),
     )
 
@@ -145,17 +130,12 @@ def test_non_json_and_empty_response_handling() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/ping",
-        response_obj=http.Response(
-            status_code=204,
-            content=b"",
-            headers={},
-        ),
+        response_obj=ResponseFactory.no_content(),
     )
     fake_backend.queue_response(
         path="/version",
-        response_obj=http.Response(
-            status_code=200,
-            content=b"1.0",
+        response_obj=ResponseFactory.ok(
+            data="1.0",
             headers={"content-type": "text/plain"},
         ),
     )
@@ -185,9 +165,8 @@ def test_path_and_query_params_combined() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/request-data/some-id",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"path_parameter": "some-id", "your_query": "hello"}).encode("utf-8"),
+        response_obj=ResponseFactory.ok(
+            data={"path_parameter": "some-id", "your_query": "hello"},
             headers={"X-Example": "spec", "content-type": "application/json"},
         ),
     )
@@ -211,10 +190,8 @@ def test_put_serializes_model_and_merges_headers() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/2",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 2, "name": "Updated"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 2, "name": "Updated"},
         ),
     )
 
@@ -235,10 +212,8 @@ def test_patch_validates_dict_body() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/3",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 3, "name": "Partial"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 3, "name": "Partial"},
         ),
     )
 
@@ -259,11 +234,7 @@ def test_delete_supports_query_and_response_injection() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/4",
-        response_obj=http.Response(
-            status_code=204,
-            content=b"",
-            headers={},
-        ),
+        response_obj=ResponseFactory.no_content(),
     )
 
     @client.delete("/users/{user_id}")
@@ -282,10 +253,8 @@ async def test_async_get_validates_response() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/2",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 2, "name": "Async"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 2, "name": "Async"},
         ),
     )
 
@@ -307,10 +276,8 @@ async def test_async_post_validates_body_and_query() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 9, "name": "Zoe"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 9, "name": "Zoe"},
         ),
     )
 
@@ -352,18 +319,14 @@ def test_response_map_with_type_alias_union() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice", "status": "success"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice", "status": "success"},
         ),
     )
     fake_backend.queue_response(
         path="/users/999",
-        response_obj=http.Response(
-            status_code=404,
-            content=json.dumps({"error": "Not found", "code": 404}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.not_found(
+            data={"error": "Not found", "code": 404},
         ),
     )
 
@@ -400,10 +363,8 @@ def test_response_map_basic_sync() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice", "status": "success"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice", "status": "success"},
         ),
     )
 
@@ -433,10 +394,8 @@ def test_response_map_error_status_sync() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/999",
-        response_obj=http.Response(
-            status_code=404,
-            content=json.dumps({"error": "User not found", "code": 404}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.not_found(
+            data={"error": "User not found", "code": 404},
         ),
     )
 
@@ -466,10 +425,8 @@ def test_response_map_unexpected_status_raises_exception_sync() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=500,
-            content=json.dumps({"error": "Internal server error", "code": 500}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.internal_server_error(
+            data={"error": "Internal server error", "code": 500},
         ),
     )
 
@@ -500,10 +457,8 @@ def test_response_map_multiple_status_codes_sync() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 1, "name": "Bob", "status": "success"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 1, "name": "Bob", "status": "success"},
         ),
     )
 
@@ -536,10 +491,8 @@ async def test_response_map_basic_async() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/2",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 2, "name": "Charlie", "status": "success"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 2, "name": "Charlie", "status": "success"},
         ),
     )
 
@@ -569,10 +522,8 @@ async def test_response_map_error_status_async() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/999",
-        response_obj=http.Response(
-            status_code=404,
-            content=json.dumps({"error": "User not found", "code": 404}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.not_found(
+            data={"error": "User not found", "code": 404},
         ),
     )
 
@@ -603,10 +554,8 @@ async def test_response_map_unexpected_status_raises_exception_async() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=500,
-            content=json.dumps({"error": "Internal server error", "code": 500}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.internal_server_error(
+            data={"error": "Internal server error", "code": 500},
         ),
     )
 
@@ -802,10 +751,8 @@ def test_function_returns_derived_value() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/3",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 3, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 3, "name": "Charlie"},
         ),
     )
 
@@ -827,10 +774,8 @@ def test_function_returns_tuple_with_result() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "Eve"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Eve"},
         ),
     )
 
@@ -853,10 +798,8 @@ async def test_async_function_returns_derived_value() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/5",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 5, "name": "Frank"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 5, "name": "Frank"},
         ),
     )
 
@@ -878,10 +821,8 @@ def test_optional_query_param_none_is_omitted() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/3",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 3, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 3, "name": "Alice"},
         ),
     )
 
@@ -904,10 +845,8 @@ def test_optional_query_param_provided_is_included() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/3",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 3, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 3, "name": "Alice"},
         ),
     )
 
@@ -930,10 +869,8 @@ def test_multiple_optional_query_params_some_none() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps([{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data=[{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}],
         ),
     )
 
@@ -962,10 +899,8 @@ async def test_async_optional_query_param_none_is_omitted() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/4",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 4, "name": "Bob"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 4, "name": "Bob"},
         ),
     )
 

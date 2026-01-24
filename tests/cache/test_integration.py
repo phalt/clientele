@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-import json
 import time
 
 import pytest
 
-from clientele import api, cache, http
-from clientele.testing import configure_client_for_testing
+from clientele import api, cache
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 BASE_URL = "https://pokeapi.co/api/v2"
 
@@ -24,9 +23,8 @@ class TestCachingContract:
         mocked_response = {"name": "pikachu"}
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps(mocked_response).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data=mocked_response,
                 headers={"content-type": "application/json"},
             ),
         )
@@ -56,25 +54,22 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "pikachu"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "pikachu"},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/pokemon/1",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "bulbasaur"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "bulbasaur"},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "pikachu"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "pikachu"},
                 headers={"content-type": "application/json"},
             ),
         )
@@ -102,17 +97,15 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "pikachu"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "pikachu"},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "pikachu"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "pikachu"},
                 headers={"content-type": "application/json"},
             ),
         )
@@ -141,9 +134,8 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/users/1",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "Alice"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "Alice"},
                 headers={"content-type": "application/json"},
             ),
         )
@@ -171,17 +163,15 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "pikachu"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "pikachu"},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "pikachu"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "pikachu"},
                 headers={"content-type": "application/json"},
             ),
         )
@@ -209,9 +199,8 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/pokemon/25",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"name": "pikachu"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"name": "pikachu"},
                 headers={"content-type": "application/json"},
             ),
         )
@@ -241,25 +230,22 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/search",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"results": ["result1"]}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"results": ["result1"]},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/search",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"results": ["result2"]}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"results": ["result2"]},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/search",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"results": ["result3"]}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"results": ["result3"]},
                 headers={"content-type": "application/json"},
             ),
         )
@@ -287,17 +273,15 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/maybe-exists/999",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/maybe-exists/999",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={},
                 headers={"content-type": "application/json"},
             ),
         )
@@ -332,33 +316,29 @@ class TestCachingContract:
         fake_backend = configure_client_for_testing(client)
         fake_backend.queue_response(
             path="/items/1",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"item": "data1"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"item": "data1"},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/items/2",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"item": "data2"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"item": "data2"},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/items/3",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"item": "data3"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"item": "data3"},
                 headers={"content-type": "application/json"},
             ),
         )
         fake_backend.queue_response(
             path="/items/1",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps({"item": "data1"}).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data={"item": "data1"},
                 headers={"content-type": "application/json"},
             ),
         )

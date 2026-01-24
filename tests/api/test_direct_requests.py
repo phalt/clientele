@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import json
-
 import pytest
 from pydantic import BaseModel
 
-from clientele import http
 from clientele.api import APIClient, APIException
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -43,10 +40,8 @@ def test_request_get_simple() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice"},
         ),
     )
 
@@ -71,10 +66,8 @@ def test_request_get_with_query_params() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps([{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data=[{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}],
         ),
     )
 
@@ -101,10 +94,8 @@ def test_request_get_with_path_params() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/organizations/acme/users/42",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 42, "name": "Charlie"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 42, "name": "Charlie"},
         ),
     )
 
@@ -130,10 +121,8 @@ def test_request_get_with_custom_headers() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice"},
         ),
     )
 
@@ -157,10 +146,8 @@ def test_request_get_with_response_map_error_status() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/999",
-        response_obj=http.Response(
-            status_code=404,
-            content=json.dumps({"error": "User not found", "code": 404}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.not_found(
+            data={"error": "User not found", "code": 404},
         ),
     )
 
@@ -185,10 +172,8 @@ def test_request_get_unexpected_status_raises_exception() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=500,
-            content=json.dumps({"error": "Server error"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.internal_server_error(
+            data={"error": "Server error"},
         ),
     )
 
@@ -212,10 +197,8 @@ def test_request_post_with_dict_data() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 10, "name": "David"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "David"},
         ),
     )
 
@@ -239,10 +222,8 @@ def test_request_post_with_pydantic_model() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 11, "name": "Eve"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 11, "name": "Eve"},
         ),
     )
 
@@ -267,10 +248,8 @@ def test_request_post_with_path_params_and_data() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/organizations/acme/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 20, "name": "Frank"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 20, "name": "Frank"},
         ),
     )
 
@@ -295,10 +274,8 @@ def test_request_post_multiple_status_codes() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=400,
-            content=json.dumps({"error": "Invalid request", "code": 400}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.bad_request(
+            data={"error": "Invalid request", "code": 400},
         ),
     )
 
@@ -322,10 +299,8 @@ def test_request_put_with_data() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/5",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 5, "name": "Updated"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 5, "name": "Updated"},
         ),
     )
 
@@ -350,10 +325,8 @@ def test_request_patch_with_data() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/6",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 6, "name": "Patched"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 6, "name": "Patched"},
         ),
     )
 
@@ -378,11 +351,7 @@ def test_request_delete_no_content() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/7",
-        response_obj=http.Response(
-            status_code=204,
-            content=b"",
-            headers={},
-        ),
+        response_obj=ResponseFactory.no_content(),
     )
 
     result = client.request(
@@ -404,10 +373,8 @@ def test_request_delete_with_response() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/8",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 8, "name": "Deleted"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 8, "name": "Deleted"},
         ),
     )
 
@@ -431,10 +398,8 @@ async def test_arequest_get_simple() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice"},
         ),
     )
 
@@ -460,10 +425,8 @@ async def test_arequest_get_with_query_params() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps([{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data=[{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}],
         ),
     )
 
@@ -490,10 +453,8 @@ async def test_arequest_get_with_path_params() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/products/electronics/42",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 42, "name": "Laptop", "price": 999.99}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 42, "name": "Laptop", "price": 999.99},
         ),
     )
 
@@ -520,10 +481,8 @@ async def test_arequest_get_with_headers() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice"},
         ),
     )
 
@@ -548,10 +507,8 @@ async def test_arequest_get_error_response() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/999",
-        response_obj=http.Response(
-            status_code=404,
-            content=json.dumps({"error": "Not found", "code": 404}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.not_found(
+            data={"error": "Not found", "code": 404},
         ),
     )
 
@@ -576,10 +533,8 @@ async def test_arequest_post_with_dict() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 100, "name": "Gabriel"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 100, "name": "Gabriel"},
         ),
     )
 
@@ -604,10 +559,8 @@ async def test_arequest_post_with_model() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 101, "name": "Hannah"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 101, "name": "Hannah"},
         ),
     )
 
@@ -633,10 +586,8 @@ async def test_arequest_post_with_path_and_data() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/organizations/xyz/users",
-        response_obj=http.Response(
-            status_code=201,
-            content=json.dumps({"id": 200, "name": "Isaac"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.created(
+            data={"id": 200, "name": "Isaac"},
         ),
     )
 
@@ -662,10 +613,8 @@ async def test_arequest_put() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/50",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 50, "name": "Updated Async"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 50, "name": "Updated Async"},
         ),
     )
 
@@ -691,10 +640,8 @@ async def test_arequest_patch() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/51",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 51, "name": "Patched Async"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 51, "name": "Patched Async"},
         ),
     )
 
@@ -720,11 +667,7 @@ async def test_arequest_delete() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/52",
-        response_obj=http.Response(
-            status_code=204,
-            content=b"",
-            headers={},
-        ),
+        response_obj=ResponseFactory.no_content(),
     )
 
     result = await client.arequest(
@@ -746,10 +689,8 @@ def test_request_with_query_and_path_params() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/organizations/acme/users",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps([{"id": 1, "name": "Alice"}]).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data=[{"id": 1, "name": "Alice"}],
         ),
     )
 
@@ -775,10 +716,8 @@ def test_request_no_data_for_post_creates_empty_request() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/trigger",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"status": "triggered"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"status": "triggered"},
         ),
     )
 
@@ -805,10 +744,8 @@ def test_request_with_query_filtering_none_values() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice"},
         ),
     )
 
@@ -833,10 +770,8 @@ def test_request_with_client_headers() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice"},
         ),
     )
 
@@ -862,10 +797,8 @@ async def test_arequest_with_client_headers() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Alice"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Alice"},
         ),
     )
 
@@ -888,10 +821,8 @@ def test_request_complex_path_substitution() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/v1/tenants/tenant-123/projects/proj-456/resources/res-789",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Resource"}).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Resource"},
         ),
     )
 
@@ -922,15 +853,11 @@ def test_request_list_response_validation() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/products",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps(
-                [
-                    {"id": 1, "name": "Widget", "price": 9.99},
-                    {"id": 2, "name": "Gadget", "price": 19.99},
-                ]
-            ).encode("utf-8"),
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data=[
+                {"id": 1, "name": "Widget", "price": 9.99},
+                {"id": 2, "name": "Gadget", "price": 19.99},
+            ],
         ),
     )
 
@@ -958,9 +885,8 @@ def test_request_string_response() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/version",
-        response_obj=http.Response(
-            status_code=200,
-            content=b"1.2.3",
+        response_obj=ResponseFactory.ok(
+            data="1.2.3",
             headers={"content-type": "text/plain"},
         ),
     )
@@ -984,10 +910,8 @@ async def test_arequest_string_response() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/version",
-        response_obj=http.Response(
-            status_code=200,
-            content=b"1.2.3",
-            headers={"content-type": "text/plain"},
+        response_obj=ResponseFactory.ok(
+            data="1.2.3",
         ),
     )
 

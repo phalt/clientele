@@ -1,14 +1,11 @@
 from __future__ import annotations
 
-import json
-
 import pytest
 from pydantic import BaseModel
 
-from clientele import http
 from clientele.api import APIClient
 from clientele.http import response as http_response
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
 
@@ -29,9 +26,8 @@ def test_accepts_response_parser_and_uses_it_to_return_response() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
             headers={"x-source": "mock", "content-type": "application/json"},
         ),
     )
@@ -57,9 +53,8 @@ def test_response_parser_handles_simple_response_types() -> None:
     fake_backend = configure_client_for_testing(client)
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=http.Response(
-            status_code=200,
-            content=json.dumps({"id": 1, "name": "Ada"}).encode("utf-8"),
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Ada"},
             headers={"x-source": "mock", "content-type": "application/json"},
         ),
     )

@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import json
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from clientele import http
 from clientele.cache.backends import MemoryBackend
 from clientele.cache.types import CacheEntry
-from clientele.testing import configure_client_for_testing
+from clientele.testing import ResponseFactory, configure_client_for_testing
 from tests.cache.fixtures import FakeCacheBackend
 
 BASE_URL = "http://localhost"
@@ -265,9 +263,8 @@ class TestConfigBackend:
         return_json = {"data": "value"}
         fake_http_backend.queue_response(
             path="/test/1",
-            response_obj=http.Response(
-                status_code=200,
-                content=json.dumps(return_json).encode("utf-8"),
+            response_obj=ResponseFactory.ok(
+                data=return_json,
                 headers={"content-type": "application/json"},
             ),
         )

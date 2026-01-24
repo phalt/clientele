@@ -1,5 +1,11 @@
 # Change log
 
+## 1.9.2
+
+### RequestFactory
+
+- Added `RequestFactory` to `clientele.testing` for quick response fixtures.
+
 ## 1.9.1
 
 - Fix streaming responses to truly yield instead of consuming the full response.

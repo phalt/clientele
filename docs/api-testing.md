@@ -14,8 +14,8 @@ Assuming you have a pre-written client:
 
 ```python
 from my_api_client import client, get_user
-from clientele.http import FakeHTTPBackend, Response
-from clientele.testing import configure_client_for_testing
+from clientele.http import FakeHTTPBackend
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 
 def test_my_api():
@@ -25,10 +25,8 @@ def test_my_api():
     # Configure the HTTP response itself
     fake_backend.queue_response(
         path="/users/1",
-        response_obj=Response(
-            status_code=200,
-            content=b'{"id": 1, "name": "Bob"}',
-            headers={"content-type": "application/json"},
+        response_obj=ResponseFactory.ok(
+            data={"id": 1, "name": "Bob"},
         ),
     )
 
@@ -51,8 +49,8 @@ You can queue different responses for specific request paths:
 
 ```python
 from my_api_client import client, create_user, get_user
-from clientele.http import FakeHTTPBackend, Response
-from clientele.testing import configure_client_for_testing
+from clientele.http import FakeHTTPBackend
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 # Replace the HTTP backend
 fake_backend: FakeHTTPBackend = configure_client_for_testing(client)
@@ -60,19 +58,15 @@ fake_backend: FakeHTTPBackend = configure_client_for_testing(client)
 # Queue responses for a specific path
 fake_backend.queue_response(
     path="/users",
-    response_obj=Response(
-        status_code=201,
-        content=b'{"id": 11, "name": "Bob"}',
-        headers={"content-type": "application/json"},
-    ),
+    response_obj=ResponseFactory.created(
+            data={"id": 10, "name": "Bob"},
+        ),
 )
 fake_backend.queue_response(
     path="/users/10",
-    response_obj=Response(
-        status_code=200,
-        content=b'{"id": 10, "name": "Bob"}',
-        headers={"content-type": "application/json"},
-    ),
+    response_obj=ResponseFactory.ok(
+            data={"id": 10, "name": "Bob"},
+        ),
 )
 
 # First request gets the /users response
@@ -90,8 +84,8 @@ You can also simulate error responses:
 
 ```python
 from my_api_client import client, get_user
-from clientele.http import FakeHTTPBackend, Response
-from clientele.testing import configure_client_for_testing
+from clientele.http import FakeHTTPBackend
+from clientele.testing import ResponseFactory, configure_client_for_testing
 
 # Replace the HTTP backend
 fake_backend: FakeHTTPBackend = configure_client_for_testing(client)
@@ -99,10 +93,8 @@ fake_backend: FakeHTTPBackend = configure_client_for_testing(client)
 # Queue a 404 error response
 fake_backend.queue_response(
     path="/users/999",
-    response_obj=Response(
-        status_code=404,
-        content=b'{"error": "User not found", "code": 404}',
-        headers={"content-type": "application/json"},
+    reponse_obj=ResponseFactory.not_found(
+        data={"error": "User not found"},
     ),
 )
 
