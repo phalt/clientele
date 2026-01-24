@@ -5,6 +5,7 @@ import pytest
 from clientele.api import client as api_client
 from clientele.api import config as api_config
 from clientele.http import Response, fake_backend
+from clientele.testing import ResponseFactory
 
 
 class TestFakeHTTPBackend:
@@ -15,21 +16,13 @@ class TestFakeHTTPBackend:
 
     def test_convert_to_response_noop(self):
         backend = fake_backend.FakeHTTPBackend()
-        sample_response = Response(
-            status_code=200,
-            content=b'{"key": "value"}',
-            headers={"content-type": "application/json"},
-        )
+        sample_response = ResponseFactory.ok({"key": "value"})
         converted = backend.convert_to_response(sample_response)
         assert converted is sample_response
 
     def test_basic_request_capture(self):
         backend = fake_backend.FakeHTTPBackend(
-            default_response=Response(
-                status_code=200,
-                content=b'{"id": 1, "name": "Test"}',
-                headers={"content-type": "application/json"},
-            ),
+            default_response=ResponseFactory.ok({"id": 1, "name": "Test"}),
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
@@ -68,28 +61,16 @@ class TestFakeHTTPBackend:
 
         backend.queue_response(
             path="/resource",
-            response_obj=Response(
-                status_code=200,
-                content=b'{"first": "response"}',
-                headers={"content-type": "application/json"},
-            ),
+            response_obj=ResponseFactory.ok({"first": "response"}),
         )
         backend.queue_response(
             path="/resource",
-            response_obj=Response(
-                status_code=200,
-                content=b'{"second": "response"}',
-                headers={"content-type": "application/json"},
-            ),
+            response_obj=ResponseFactory.ok({"second": "response"}),
         )
         # Support bytes
         backend.queue_response(
             path="/resource",
-            response_obj=Response(
-                status_code=200,
-                content=b'{"bytes": "response"}',
-                headers={"content-type": "application/json"},
-            ),
+            response_obj=ResponseFactory.ok({"bytes": "response"}),
         )
 
         result1 = get_resource()
@@ -104,9 +85,8 @@ class TestFakeHTTPBackend:
 
     def test_default_headers_override(self):
         backend = fake_backend.FakeHTTPBackend(
-            default_response=Response(
-                status_code=200,
-                content=b"{}",
+            default_response=ResponseFactory.ok(
+                data={},
                 headers={"X-Default-Header": "DefaultValue", "content-type": "application/json"},
             ),
         )
@@ -123,9 +103,8 @@ class TestFakeHTTPBackend:
 
         backend.queue_response(
             path="/headers-test",
-            response_obj=Response(
-                status_code=200,
-                content=b'{"status": "ok"}',
+            response_obj=ResponseFactory.ok(
+                data={"status": "ok"},
                 headers={"content-type": "application/json", "X-Default-Header": "DefaultValue"},
             ),
         )
@@ -143,11 +122,7 @@ class TestFakeHTTPBackend:
     def test_post_request_with_data(self):
         """Test POST request with data payload."""
         backend = fake_backend.FakeHTTPBackend(
-            default_response=Response(
-                status_code=200,
-                content=b'{"id": 42, "created": true}',
-                headers={"content-type": "application/json"},
-            ),
+            default_response=ResponseFactory.ok({"id": 42, "created": True}),
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",
@@ -200,11 +175,7 @@ class TestFakeHTTPBackend:
         # Queue a response and reset
         backend.queue_response(
             path="/test",
-            response_obj=Response(
-                status_code=200,
-                content=b'{"test": "data"}',
-                headers={"content-type": "application/json"},
-            ),
+            response_obj=ResponseFactory.ok({"test": "data"}),
         )
         backend.reset()
         assert len(backend._response_map) == 0
@@ -215,11 +186,7 @@ class TestFakeHTTPBackend:
     async def test_async_requests(self):
         """Test async request capture."""
         backend = fake_backend.FakeHTTPBackend(
-            default_response=Response(
-                status_code=200,
-                content=b'{"async": true}',
-                headers={"content-type": "application/json"},
-            ),
+            default_response=ResponseFactory.ok({"async": True}),
         )
         config = api_config.BaseConfig(
             base_url="https://api.example.com",

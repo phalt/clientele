@@ -235,15 +235,15 @@ class ResponseFactory:
         )
 
 
-class NetworkError:
+class NetworkErrorFactory:
     """Factory for network error simulation.
 
     These errors simulate network-level failures that occur
     before receiving an HTTP response.
 
     Example:
-        >>> from clientele.testing import NetworkError
-        >>> backend.queue_error("/users", NetworkError.timeout())
+        >>> from clientele.testing import NetworkErrorFactory
+        >>> backend.queue_error("/users", NetworkErrorFactory.timeout())
     """
 
     @staticmethod
