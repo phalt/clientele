@@ -33,7 +33,7 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 
 - **A comfortable abstraction** - Encourages consistency and focus on the functionality.
 - **Easy to learn** - Clientele is visually similar to popular python API server frameworks.
-- **Easy to test** - Comes with built-in testing tools.
+- **Easy to test** - All the testing tools you need to maintain API integrations.
 - **Easy to configure** - Sensible HTTP defaults and plenty of hooks for customisation.
 - **Easy data validation** - Built in data validation using [Pydantic](https://docs.pydantic.dev/latest/).
 - **Core built-ins** - Caching, Network, and Retry handling built specifically for HTTP.
