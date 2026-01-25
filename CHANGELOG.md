@@ -2,10 +2,15 @@
 
 ## 1.9.2
 
+This release includes testing tools to make API integration testing easier.
+
 ### ResponseFactory
 
 - Added `ResponseFactory` to `clientele.testing` for quick response fixtures.
 - Create common HTTP responses easily: `ok()`, `created()`, `not_found()`, `bad_request()`, `internal_server_error()`, and more.
+
+### NetworkErrorFactory
+
 - Added `NetworkErrorFactory` factory to `clientele.testing` for simulating network-level failures.
 - Simulate common network errors like `timeout()`, `connection_refused()`, `connection_reset()`, and `dns_failure()`.
 - `FakeHTTPBackend` now supports `queue_error()` to queue errors for specific paths.
