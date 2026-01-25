@@ -1232,6 +1232,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#192" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.9.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responsefactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResponseFactory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkerrorfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetworkErrorFactory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#191" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1990,6 +2029,45 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#192" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.9.2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.9.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responsefactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ResponseFactory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#networkerrorfactory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetworkErrorFactory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#191" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2734,6 +2812,19 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="192">1.9.2</h2>
+<p>This release includes testing tools to make API integration testing easier.</p>
+<h3 id="responsefactory">ResponseFactory</h3>
+<ul>
+<li>Added <code>ResponseFactory</code> to <code>clientele.testing</code> for quick response fixtures.</li>
+<li>Create common HTTP responses easily: <code>ok()</code>, <code>created()</code>, <code>not_found()</code>, <code>bad_request()</code>, <code>internal_server_error()</code>, and more.</li>
+</ul>
+<h3 id="networkerrorfactory">NetworkErrorFactory</h3>
+<ul>
+<li>Added <code>NetworkErrorFactory</code> factory to <code>clientele.testing</code> for simulating network-level failures.</li>
+<li>Simulate common network errors like <code>timeout()</code>, <code>connection_refused()</code>, <code>connection_reset()</code>, and <code>dns_failure()</code>.</li>
+<li><code>FakeHTTPBackend</code> now supports <code>queue_error()</code> to queue errors for specific paths.</li>
+</ul>
 <h2 id="191">1.9.1</h2>
 <ul>
 <li>Fix streaming responses to truly yield instead of consuming the full response.</li>
