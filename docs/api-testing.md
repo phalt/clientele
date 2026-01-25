@@ -1,6 +1,6 @@
 # 🧪 Testing
 
-Clientele is designed for easy testing with our built-in fake backend.
+Clientele comes with everything you need for testing api integrations.
 
 ## FakeHTTPBackend
 
@@ -100,4 +100,25 @@ fake_backend.queue_response(
 
 error = get_user(user_id=999)
 assert error.error == "User not found"
+```
+
+## ResponseFactory
+
+Use `clientele.testing.ResponseFactory` to build common HTTP Responses quickly:
+
+```python
+from clientele.testing import ResponseFactory
+
+backend.queue_response("/users", ResponseFactory.ok([{"id": 1}]))
+backend.queue_response("/users/99", ResponseFactory.not_found())
+```
+
+## NetworkErrorFactory
+
+Use `clientele.testing.NetworkErrorFactory` to build common Network errors quickly:
+
+```python
+
+from clientele.testing import NetworkErrorFactory
+backend.queue_error("/users", NetworkErrorFactory.timeout())
 ```
