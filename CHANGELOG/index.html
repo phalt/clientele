@@ -771,6 +771,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../api-graphql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧬 GraphQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../api-exceptions/" class="md-nav__link">
         
   
@@ -1230,6 +1258,34 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.11.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graphqlclient-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GraphQLClient support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#1100" class="md-nav__link">
@@ -2040,6 +2096,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#1110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.11.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.11.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#graphqlclient-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GraphQLClient support
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1100" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2834,6 +2918,35 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="1110">1.11.0</h2>
+<h3 id="graphqlclient-support">GraphQLClient support</h3>
+<ul>
+<li>A method for building GraphQL integrations has been introduced.</li>
+<li>It follows the "Clientele" pattern of the standard <code>APIClient</code>.</li>
+</ul>
+<p><strong>Query example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    query($owner: String!, $name: String!) {</span>
+<span class="s1">        repository(owner: $owner, name: $name) {</span>
+<span class="s1">            name</span>
+<span class="s1">            stargazerCount</span>
+<span class="s1">        }</span>
+<span class="s1">    }</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoryData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">repository</span>
+</code></pre></div>
+<p><strong>Mutation example</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">mutation</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">    mutation($title: String!) {</span>
+<span class="s1">        createIssue(input: {title: $title}) {</span>
+<span class="s1">            issue { id title }</span>
+<span class="s1">        }</span>
+<span class="s1">    }</span>
+<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_issue</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">IssueData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Issue</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">createIssue</span><span class="o">.</span><span class="n">issue</span>
+</code></pre></div>
 <h2 id="1100">1.10.0</h2>
 <ul>
 <li>Dropped <code>scaffold-api</code> command</li>

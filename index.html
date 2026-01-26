@@ -489,10 +489,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#streaming-responses" class="md-nav__link">
+  <a href="#graphql-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Streaming responses
+        GraphQL support
       
     </span>
   </a>
@@ -875,6 +875,34 @@
     
   
     🌊 Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="api-graphql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🧬 GraphQL
   
 
     
@@ -1387,10 +1415,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#streaming-responses" class="md-nav__link">
+  <a href="#graphql-support" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Streaming responses
+        GraphQL support
       
     </span>
   </a>
@@ -1485,6 +1513,7 @@
 <li><strong>Core built-ins</strong> - Caching, Network, and Retry handling built specifically for HTTP.</li>
 <li><strong>Use your own HTTP</strong> - Clientele can support any Python HTTP library.</li>
 <li><strong>OpenAPI support</strong> - Build your own client, or scaffold one from an OpenAPI schema.</li>
+<li><strong>GraphQL support</strong> - Clientele has a GraphQLClient tailored for GraphQL APIs.</li>
 </ul>
 <h2 id="async-support">Async support</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1502,24 +1531,32 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">create_book</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">CreateBookRequest</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookResponse</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
-<h2 id="streaming-responses">Streaming responses</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIterator</span>
+<h2 id="graphql-support">GraphQL support</h2>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele.graphql</span><span class="w"> </span><span class="kn">import</span> <span class="n">GraphQLClient</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">GraphQLClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.github.com/graphql&quot;</span><span class="p">)</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">Repository</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">stargazerCount</span><span class="p">:</span> <span class="nb">int</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org&quot;</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RepositoryQueryData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">repository</span><span class="p">:</span> <span class="n">Repository</span>
 
+<span class="k">class</span><span class="w"> </span><span class="nc">RepositoryQueryResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">RepositoryQueryData</span>
 
-<span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
-
-
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/stream/</span><span class="si">{n}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_events</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="n">result</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    query($owner: String!, $name: String!) {</span>
+<span class="s2">        repository(owner: $owner, name: $name) {</span>
+<span class="s2">            name</span>
+<span class="s2">            stargazerCount</span>
+<span class="s2">        }</span>
+<span class="s2">    }</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">repository</span>
 </code></pre></div>
 <h2 id="works-with-python-api-frameworks">Works with Python API frameworks</h2>
 <p>Building an API service in Python? Clientele can build you a client library in seconds.</p>
