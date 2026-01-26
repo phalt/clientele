@@ -43,6 +43,7 @@ nav:
     - 🔌 HTTP Backends: api-http-backends.md
     - 💾 Caching: api-cache.md
     - 🌊 Streaming: api-stream.md
+    - 🧬 GraphQL: api-graphql.md
     - 🚨 Exception Handling: api-exceptions.md
     - 🔄 Retries: api-retries.md
     - 🪵 Logging: api-logging.md

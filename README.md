@@ -39,6 +39,7 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 - **Core built-ins** - Caching, Network, and Retry handling built specifically for HTTP.
 - **Use your own HTTP** - Clientele can support any Python HTTP library.
 - **OpenAPI support** - Build your own client, or scaffold one from an OpenAPI schema.
+- **GraphQL support** - Clientele has a GraphQLClient tailored for GraphQL APIs.
 
 ## Async support
 
