@@ -52,33 +52,5 @@ generate-test-clients:  ## regenerate the test clients in the tests/ directory
 	uv run clientele start-api -f server_examples/django_rest_framework/openapi.yaml -o server_examples/django_rest_framework/client/ --regen
 	uv run clientele start-api -f server_examples/django_ninja/openapi.json -o server_examples/django_ninja/client/ --regen
 
-brew-status:  ## Check the status of Homebrew publishing setup
-	@homebrew/check_status.sh
-
-brew-formula:  ## Generate Homebrew formula for current version
-	uv run python homebrew/generate_formula.py
-
-brew-verify:  ## Verify the generated Homebrew formula (requires Homebrew installed)
-	@if command -v brew >/dev/null 2>&1; then \
-		brew audit --strict --online homebrew/clientele.rb; \
-	else \
-		echo "Homebrew is not installed. Skipping verification."; \
-	fi
-
-brew-test-local:  ## Test installing the formula locally (requires Homebrew installed)
-	@if command -v brew >/dev/null 2>&1; then \
-		echo "Testing formula installation..."; \
-		brew install --build-from-source homebrew/clientele.rb; \
-		echo "Running version check..."; \
-		clientele version; \
-	else \
-		echo "Error: Homebrew is not installed."; \
-		exit 1; \
-	fi
-
-test-openapi-directory:  ## Test clientele against all schemas from APIs-guru/openapi-directory
-	uv run python3 test_openapi_directory.py
-
-
 open-coverage-report:  ## Open the coverage report in a browser
 	uv run python3 -m webbrowser file://$(PWD)/htmlcov/index.html

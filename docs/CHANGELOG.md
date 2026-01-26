@@ -1,5 +1,41 @@
 # Change log
 
+## UNRELEASED 1.11.0
+
+### GraphQLClient support
+
+- A method for building GraphQL integrations has been introduced.
+- It follows the "Clientele" pattern of the standard `APIClient`.
+
+**Query example**:
+
+```python
+@client.query('''
+    query($owner: String!, $name: String!) {
+        repository(owner: $owner, name: $name) {
+            name
+            stargazerCount
+        }
+    }
+''')
+def get_repo(owner: str, name: str, result: RepositoryData) -> Repository:
+    return result.repository
+```
+
+**Mutation example**:
+
+```python
+@client.mutation('''
+    mutation($title: String!) {
+        createIssue(input: {title: $title}) {
+            issue { id title }
+        }
+    }
+''')
+def create_issue(title: str, result: IssueData) -> Issue:
+    return result.createIssue.issue
+```
+
 ## 1.10.0
 
 - Dropped `scaffold-api` command

@@ -97,7 +97,3 @@ This requires pypi login details.
 ```sh
 $UV_PUBLISH_TOKEN=<TOKEN> make release
 ```
-
-## Release to homebrew
-
-TODO
