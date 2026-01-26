@@ -1972,22 +1972,22 @@
 <h3 id="downloading-the-schema">Downloading the Schema</h3>
 <p>You can either:</p>
 <p><strong>Option A: Use the URL directly</strong> (if the API is accessible):</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>start-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
 <p><strong>Option B: Download the schema file first</strong>:</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>&gt;<span class="w"> </span>openapi.json
-clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
 <p><strong>Option C: Generate schema file with Django management command</strong>:</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>manage.py<span class="w"> </span>spectacular<span class="w"> </span>--file<span class="w"> </span>openapi.json
-clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
+clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class="w"> </span>openapi.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
 <h2 id="step-3-scaffold-the-client">Step 3: Scaffold the Client</h2>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>start-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
 <h3 id="async-client">Async Client</h3>
 <p>If you want an async client (note: DRF itself is synchronous, but the client can be async):</p>
-<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>scaffold-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>start-api<span class="w"> </span>-u<span class="w"> </span>http://localhost:8000/api/schema/<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio
 </code></pre></div>
 <h2 id="step-4-use-the-scaffolded-client">Step 4: Use the scaffolded Client</h2>
 <h3 id="usage-example">Usage Example</h3>
