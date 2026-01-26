@@ -1,6 +1,6 @@
 # Change log
 
-## UNRELEASED 1.10.0
+## 1.10.0
 
 - Dropped `scaffold-api` command
 - Dropped `generate-basic` command
