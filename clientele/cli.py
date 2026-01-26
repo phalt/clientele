@@ -119,12 +119,8 @@ def version():
     print(f"clientele {settings.VERSION}")
 
 
-@click.command()
-@click.option("-o", "--output", help="Directory for the generated client", required=True)
 def generate_basic(output):
     """
-    DEPRECATED - use start-api
-
     Generate a "basic" file structure, no code.
     """
     from rich.console import Console
@@ -140,16 +136,8 @@ def generate_basic(output):
     generator.generate()
 
 
-@click.command()
-@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
-@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
-@click.option("-o", "--output", help="Directory for the generated client", required=True)
-@click.option("-a", "--asyncio", is_flag=True, help="Generate async client")
-@click.option("-r", "--regen", is_flag=True, help="Regenerate client")
 def scaffold_api(url, file, output, asyncio=False, regen=False):
     """
-    DEPRECATED - use start-api
-
     Scaffold an API client from an OpenAPI schema.
     """
     from rich.console import Console
@@ -188,14 +176,12 @@ def start_api(url, file, output, asyncio=False, regen=False):
     """
     if not url and not file:
         # No schema provided, generate basic scaffold
-        generate_basic.callback(output=output)  # type: ignore
+        generate_basic(output=output)
     else:
         # Schema provided, generate full client
-        scaffold_api.callback(url=url, file=file, output=output, asyncio=asyncio, regen=regen)  # type: ignore
+        scaffold_api(url=url, file=file, output=output, asyncio=asyncio, regen=regen)
 
 
-cli_group.add_command(generate_basic)
-cli_group.add_command(scaffold_api)
 cli_group.add_command(version)
 cli_group.add_command(start_api)
 

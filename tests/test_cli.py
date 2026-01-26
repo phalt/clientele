@@ -70,13 +70,13 @@ def test_generate_commands_require_output_parameter(runner, command):
 
 
 def test_generate_basic_command_creates_files(runner):
-    """Test generate-basic command creates basic file structure."""
+    """Test start-api command creates basic file structure."""
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "basic_client"
 
         runner.invoke(
             cli.cli_group,
-            ["generate-basic", "--output", str(output_dir)],
+            ["start-api", "--output", str(output_dir)],
         )
 
         # Should create output directory
@@ -138,7 +138,6 @@ def test_load_openapi_spec_from_url(simple_openapi_spec, httpserver, content_typ
 @pytest.mark.parametrize(
     "command,regen_arg,expected_output",
     [
-        ("scaffold-api", ["--regen"], "generated"),
         ("start-api", ["--regen"], "generated"),
     ],
 )

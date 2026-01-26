@@ -16,7 +16,6 @@ from respx import MockRouter
 from clientele.api import client as api_client
 from clientele.api import config as api_config
 from clientele.api.exceptions import HTTPStatusError
-from clientele.http import httpx_backend
 
 BASE_URL = "https://api.example.com"
 
@@ -48,10 +47,7 @@ class TestHttpxAsyncStreaming:
 
         respx_mock.get("/events").mock(side_effect=streaming_side_effect)
 
-        # Create httpx client and backend within respx context
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -83,9 +79,7 @@ class TestHttpxAsyncStreaming:
 
         respx_mock.get("/events").mock(side_effect=streaming_side_effect)
 
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -115,10 +109,7 @@ class TestHttpxAsyncStreaming:
             return httpx.Response(200, stream=stream_content(), headers={"content-type": "text/event-stream"})
 
         respx_mock.get("/events").mock(side_effect=streaming_side_effect)
-
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -149,9 +140,7 @@ class TestHttpxAsyncStreaming:
 
         respx_mock.get("/events").mock(side_effect=streaming_side_effect)
 
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -180,9 +169,7 @@ class TestHttpxAsyncStreaming:
             )
         )
 
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -208,9 +195,7 @@ class TestHttpxAsyncStreaming:
 
         respx_mock.post("/generate").mock(side_effect=streaming_side_effect)
 
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.post("/generate", streaming_response=True)
@@ -243,9 +228,7 @@ class TestHttpxAsyncStreaming:
 
         respx_mock.get("/events").mock(side_effect=streaming_side_effect)
 
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         def custom_parser(line: str) -> dict:
@@ -283,9 +266,7 @@ class TestHttpxSyncStreaming:
             )
         )
 
-        sync_client = httpx.Client(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(sync=sync_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -315,9 +296,7 @@ class TestHttpxSyncStreaming:
             )
         )
 
-        sync_client = httpx.Client(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(sync=sync_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -347,9 +326,7 @@ class TestHttpxSyncStreaming:
             )
         )
 
-        sync_client = httpx.Client(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(sync=sync_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -379,9 +356,7 @@ class TestHttpxSyncStreaming:
             )
         )
 
-        sync_client = httpx.Client(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(sync=sync_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         def custom_parser(line: str) -> dict:
@@ -413,9 +388,7 @@ class TestHttpxSyncStreaming:
             )
         )
 
-        sync_client = httpx.Client(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(sync=sync_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -439,9 +412,7 @@ class TestHttpxSyncStreaming:
             )
         )
 
-        sync_client = httpx.Client(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(sync=sync_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
@@ -474,9 +445,7 @@ class TestSSEFormatStreaming:
 
         respx_mock.post("/chat/stream").mock(side_effect=streaming_side_effect)
 
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         # Use the exact parse_sse from our documentation
@@ -526,9 +495,7 @@ class TestSSEFormatStreaming:
 
         respx_mock.get("/users/stream").mock(side_effect=streaming_side_effect)
 
-        async_client = httpx.AsyncClient(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(async_client=async_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         def parse_sse(line: str) -> dict | None:
@@ -567,10 +534,7 @@ class TestSSEFormatStreaming:
                 headers={"content-type": "text/event-stream"},
             )
         )
-
-        sync_client = httpx.Client(base_url=BASE_URL)
-        backend = httpx_backend.HttpxHTTPBackend(sync=sync_client)
-        config = api_config.BaseConfig(base_url=BASE_URL, http_backend=backend)
+        config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
         def parse_sse(line: str) -> dict | None:
