@@ -1,6 +1,6 @@
 # Change log
 
-## UNRELEASED 1.11.0
+## 1.11.0
 
 ### GraphQLClient support
 

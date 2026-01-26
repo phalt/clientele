@@ -63,26 +63,34 @@ def create_book(data: CreateBookRequest, result: CreateBookResponse) -> CreateBo
     return result
 ```
 
-## Streaming responses
+## GraphQL support
 
 ```python
-from typing import AsyncIterator
-
-from clientele import api
 from pydantic import BaseModel
+from clientele.graphql import GraphQLClient
 
+client = GraphQLClient(base_url="https://api.github.com/graphql")
 
-client = api.APIClient(base_url="https://httpbin.org")
+class Repository(BaseModel):
+    name: str
+    stargazerCount: int
 
+class RepositoryQueryData(BaseModel):
+    repository: Repository
 
-class Event(BaseModel):
-    id: int
-    url: str
+class RepositoryQueryResponse(BaseModel):
+    data: RepositoryQueryData
 
-
-@client.get("/stream/{n}", streaming_response=True)
-async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
-    return result
+@client.query("""
+    query($owner: String!, $name: String!) {
+        repository(owner: $owner, name: $name) {
+            name
+            stargazerCount
+        }
+    }
+""")
+def get_repo(owner: str, name: str, result: RepositoryQueryResponse) -> Repository:
+    return result.data.repository
 ```
 
 ## Works with Python API frameworks
