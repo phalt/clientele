@@ -22,6 +22,14 @@
 </p>
 </div>
 
+## What is Clientele?
+
+Clientele is a comprehensive framework for building and maintaining API Integrations.
+
+Focus on the functionality and the data you want from an API, and let Clientele handle the rest.
+
+Build, test, and maintain API integrations confidently.
+
 ## Example code
 
 ```python

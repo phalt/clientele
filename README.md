@@ -11,6 +11,14 @@
 ![Pydantic Badge](https://img.shields.io/badge/Data_validation-pydantic-violet?style=flat)
 ![Http Badge](https://img.shields.io/badge/HTTP-Customisable-blue?style=flat)
 
+## What is Clientele?
+
+Clientele is a comprehensive framework for building and maintaining API Integrations.
+
+Focus on the functionality and the data you want from an API, and let Clientele handle the rest.
+
+Build, test, and maintain API integrations confidently.
+
 ## Example code
 
 ```python
