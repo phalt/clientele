@@ -1,8 +1,15 @@
-# 
+# ⚜️ Clientele
 
-![clientele_header](clientele_header.png)
+## What is Clientele?
 
-<div style="text-align: center;">
+Clientele is a comprehensive framework for building and maintaining API Integrations.
+
+Focus on the functionality and the data you want from an API, and let Clientele handle the rest.
+
+Build, test, and maintain API integrations confidently.
+
+
+<div style="text-align: center; padding-top:10px;">
 <p>
     <a href="https://pypi.org/project/clientele">
     <img alt="Package version" src="https://img.shields.io/pypi/v/clientele?color=%2334D058&label=latest%20version">
@@ -21,14 +28,6 @@
     <img alt="Http Badge" src="https://img.shields.io/badge/HTTP-Customisable-blue?style=flat">
 </p>
 </div>
-
-## What is Clientele?
-
-Clientele is a comprehensive framework for building and maintaining API Integrations.
-
-Focus on the functionality and the data you want from an API, and let Clientele handle the rest.
-
-Build, test, and maintain API integrations confidently.
 
 ## Example code
 
