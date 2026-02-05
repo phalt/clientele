@@ -146,7 +146,7 @@ def get_type(t):
         # In Python, this should be None
         base_type = "None"
     elif t_type == DataType.ARRAY:
-        inner_class = get_type(t.get("items"))
+        inner_class = get_type(t.get("items")) if t.get("items") else "typing.Any"
         base_type = f"list[{inner_class}]"
     elif ref := t.get("$ref"):
         # Handle component-based references
