@@ -1,5 +1,9 @@
 # Change log
 
+## 1.11.1
+
+- Added test coverage for `DataType.ARRAY` handling in `get_type` function, covering both arrays with specified item types and arrays without items (defaulting to `typing.Any`).
+
 ## 1.11.0
 
 ### GraphQLClient support
