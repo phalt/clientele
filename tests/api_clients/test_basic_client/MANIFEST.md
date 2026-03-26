@@ -16,7 +16,7 @@ uv add clientele
 
 API VERSION: 
 OPENAPI VERSION: 
-CLIENTELE VERSION: 1.11.0
+CLIENTELE VERSION: 1.11.1
 
 Regenerate using this command:
 
