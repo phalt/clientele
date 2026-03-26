@@ -106,6 +106,20 @@ def test_get_type_with_allof():
     assert result is not None
 
 
+def test_get_type_with_array_with_items() -> None:
+    type_spec = {"type": "array", "items": {"type": "string"}}
+    result = utils.get_type(type_spec)
+    # Should create a list type with the inner type
+    assert result == "list[str]"
+
+
+def test_get_type_with_array_without_items() -> None:
+    type_spec = {"type": "array"}
+    result = utils.get_type(type_spec)
+    # Should create a list type with typing.Any as the inner type
+    assert result == "list[typing.Any]"
+
+
 def test_get_schema_from_ref_basic():
     """Test get_schema_from_ref retrieves schema from components/schemas."""
     # Use existing test spec that has components
