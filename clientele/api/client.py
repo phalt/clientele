@@ -16,8 +16,15 @@ from clientele.api import requests, type_utils
 from clientele.http import httpx_backend as http_httpx
 from clientele.http import response as http_response
 
-_F = typing.TypeVar("_F", bound=typing.Callable[..., typing.Any])
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
+
+_P = typing.ParamSpec("_P")
+_R = typing.TypeVar("_R", covariant=True)
+_F = typing.Callable[_P, _R]
+
+
+class _WRAP_F(typing.Protocol[_P, _R]):
+    def __call__(self, result: typing.Any, *args: _P.args, **kwargs: _P.kwargs) -> _R: ...
 
 
 class APIClient:
@@ -190,7 +197,7 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[_WRAP_F[_P, _R]], _F[_P, _R]]:
         return self._create_decorator(
             "GET",
             path,
@@ -208,7 +215,7 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[_WRAP_F[_P, _R]], _F[_P, _R]]:
         return self._create_decorator(
             "POST",
             path,
@@ -226,7 +233,7 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[_WRAP_F[_P, _R]], _F[_P, _R]]:
         return self._create_decorator(
             "PUT",
             path,
@@ -244,7 +251,7 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[_WRAP_F[_P, _R]], _F[_P, _R]]:
         return self._create_decorator(
             "PATCH",
             path,
@@ -262,7 +269,7 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[_WRAP_F[_P, _R]], _F[_P, _R]]:
         return self._create_decorator(
             "DELETE",
             path,
@@ -281,8 +288,8 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
-        def decorator(func: _F) -> _F:
+    ) -> typing.Callable[[_WRAP_F[_P, _R]], _F[_P, _R]]:
+        def decorator(func: _WRAP_F[_P, _R]) -> _F[_P, _R]:
             context = requests.build_request_context(
                 method,
                 path,
@@ -295,24 +302,20 @@ class APIClient:
             if inspect.iscoroutinefunction(func):
 
                 @functools.wraps(func)
-                async def async_wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+                async def async_wrapper(*args, **kwargs):
                     if streaming_response:
                         return await self._execute_async_stream(context, args, kwargs)
                     return await self._execute_async(context, args, kwargs)
 
-                # Preserve the original signature for IDE support
-                async_wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-                return typing.cast(_F, async_wrapper)
+                return async_wrapper
 
             @functools.wraps(func)
-            def wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
+            def wrapper(*args, **kwargs):
                 if streaming_response:
                     return self._execute_sync_stream(context, args, kwargs)
                 return self._execute_sync(context, args, kwargs)
 
-            # Preserve the original signature for IDE support
-            wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-            return typing.cast(_F, wrapper)
+            return wrapper
 
         return decorator
 
