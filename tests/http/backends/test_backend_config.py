@@ -1,8 +1,7 @@
 """Tests for HTTP backend support."""
 
-import httpx
 import pytest
-from respx import MockRouter
+import respx
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
@@ -14,8 +13,8 @@ BASE_URL = "https://api.example.com"
 class TestBackendIntegration:
     """Test integration between backends and API client."""
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_switching_backends(self, respx_mock: MockRouter):
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_switching_backends(self, httpx2_mock: respx.Router):
         """Test switching between different backends."""
         # Start with fake backend
         fk_backend = fake_backend.FakeHTTPBackend(
@@ -53,20 +52,20 @@ class TestBackendIntegration:
         def test_httpx(result: dict) -> dict:
             return result
 
-        respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
+        httpx2_mock.get("/get").respond(200, json={"headers": {"test": "value"}})
 
         result = test_httpx()
         assert "headers" in result
 
         client_httpx.close()
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_no_backend_uses_default_httpx(self, respx_mock: MockRouter):
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_no_backend_uses_default_httpx(self, httpx2_mock: respx.Router):
         """Test that not providing a backend uses httpx by default."""
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
-        respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
+        httpx2_mock.get("/get").respond(200, json={"headers": {"test": "value"}})
 
         @client.get("/get")
         def test_get(result: dict) -> dict:

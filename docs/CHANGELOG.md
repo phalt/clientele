@@ -1,6 +1,6 @@
 # Change log
 
-## 1.12.0 UNRELEASED
+## 2.0.0 UNRELEASED
 
 - Drastically improved typing support for injected parameters.
   - Previously we relied on a mypy plugin to handle the typing of injected parameters.
@@ -9,6 +9,11 @@
   - The new typing support is good enough that newer versions of `mypy`, `pyright` and `ty` should work with it out of the box.
 - Client generator has been updated to use the new type checker conventions (inject parameters must go first in function signatures).
 - Dev dependencies have been updated to latest versions.
+- Migrate httpx to httpx2.
+  - Given the feature freeze on httpx, we have opted to move to httpx2.
+  - Clientele supports HttpBackends with httpx2 as a default.
+  - In the future, we may add bundled support for other backends.
+  - You can still use your own httpx backend by implementing the `HttpBackend` interface.
 
 ## 1.11.1
 

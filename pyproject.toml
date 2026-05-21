@@ -7,7 +7,7 @@ license = { text = "MIT" }
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "httpx>=0.28.1",
+    "httpx2>=2.2.0",
     "click>=8.3.1",
     "pydantic>=2.12.5",
     "rich>=14.2.0",
@@ -39,7 +39,7 @@ dev = [
     "mkdocs>=1.6.1",
     "ipython>=8.37.0",
     "mkdocs-material>=9.7.6",
-    "respx>=0.22.0",
+    "pytest-httpx2>=1.0.0",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.2.0",
     "pytest-cov>=7.1.0",
@@ -98,6 +98,7 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+addopts = ["-p pytest_httpx2"]
 
 [tool.ty.src]
 # Exclude the mypy-specific test directory (intentional type errors for mypy plugin

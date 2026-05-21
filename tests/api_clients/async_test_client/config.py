@@ -3,7 +3,7 @@ This file will never be updated on subsequent clientele runs.
 Use it as a space to store configuration and constants.
 """
 
-import httpx
+import httpx2
 from pydantic import Field
 
 from clientele import api as clientele_framework
@@ -38,8 +38,8 @@ class Config(clientele_framework.BaseConfig):
     follow_redirects: bool = False
     verify: bool | str = True
     http2: bool = False
-    auth: httpx.Auth | tuple[str, str] | None = None
-    limits: httpx.Limits | None = None
-    proxies: httpx.Proxy | None = None
-    transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
-    cookies: httpx.Cookies | None = None
+    auth: httpx2.Auth | tuple[str, str] | None = None
+    limits: httpx2.Limits | None = None
+    proxies: httpx2.Proxy | None = None
+    transport: httpx2.BaseTransport | httpx2.AsyncBaseTransport | None = None
+    cookies: httpx2.Cookies | None = None

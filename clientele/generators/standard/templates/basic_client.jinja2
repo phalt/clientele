@@ -13,7 +13,7 @@ if _transport := c.config.transport:
     _client_kwargs['transport'] = _transport
 if c.config.user_key and c.config.pass_key:
     _client_kwargs['auth'] = (c.config.user_key, c.config.pass_key)
-client = httpx.{{client_type}}(**_client_kwargs)
+client = httpx2.{{client_type}}(**_client_kwargs)
 
 
 {% if client_type == 'AsyncClient' %}

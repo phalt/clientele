@@ -1,13 +1,13 @@
 
 
-def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+def get(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
     return client.get(parse_url(url), headers=client_headers)
 
 
-def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP POST request"""
     if headers:
         client_headers.update(headers)
@@ -15,7 +15,7 @@ def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.R
     return client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
-def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP PUT request"""
     if headers:
         client_headers.update(headers)
@@ -23,7 +23,7 @@ def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Re
     return client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
-def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP PATCH request"""
     if headers:
         client_headers.update(headers)
@@ -31,7 +31,7 @@ def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.
     return client.patch(parse_url(url), json=json_data, headers=client_headers)
 
 
-def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+def delete(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)

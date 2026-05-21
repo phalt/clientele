@@ -15,7 +15,7 @@ if _limits := c.config.limits:
     _client_kwargs['limits'] = _limits
 if _transport := c.config.transport:
     _client_kwargs['transport'] = _transport
-client = httpx.{{client_type}}(**_client_kwargs)
+client = httpx2.{{client_type}}(**_client_kwargs)
 
 
 {% if client_type == 'AsyncClient' %}

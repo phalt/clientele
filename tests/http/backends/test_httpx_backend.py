@@ -1,8 +1,7 @@
 """Tests for HTTP backend support."""
 
-import httpx
 import pytest
-from respx import MockRouter
+import respx
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
@@ -14,11 +13,10 @@ BASE_URL = "https://api.example.com"
 class TestHttpxHTTPBackend:
     """Test HttpxHTTPBackend functionality."""
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_custom_client_options(self, respx_mock: MockRouter):
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_custom_client_options(self, httpx2_mock: respx.Router):
         """Test passing custom options to httpx client."""
-        # Mock the HTTP response
-        respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
+        httpx2_mock.get("/get").respond(200, json={"headers": {"test": "value"}})
 
         config = api_config.BaseConfig(
             base_url=BASE_URL,
@@ -60,11 +58,10 @@ class TestHttpxHTTPBackend:
         await httpx_backend_instance.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_async_real_request(self, respx_mock: MockRouter):
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_async_real_request(self, httpx2_mock: respx.Router):
         """Test async requests with httpx backend."""
-        # Mock the HTTP response
-        respx_mock.get("/get").mock(return_value=httpx.Response(200, json={"headers": {"test": "value"}}))
+        httpx2_mock.get("/get").respond(200, json={"headers": {"test": "value"}})
 
         config = api_config.BaseConfig(
             base_url=BASE_URL,

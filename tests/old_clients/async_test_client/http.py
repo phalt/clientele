@@ -7,7 +7,7 @@ import types
 import typing
 from urllib import parse
 
-import httpx
+import httpx2
 
 from tests.old_clients.async_test_client import config as c  # noqa
 from tests.old_clients.async_test_client import schemas  # noqa
@@ -22,9 +22,9 @@ class APIException(Exception):
     """Could not match API response to return type of this function"""
 
     reason: str
-    response: httpx.Response
+    response: httpx2.Response
 
-    def __init__(self, response: httpx.Response, reason: str, *args: object) -> None:
+    def __init__(self, response: httpx2.Response, reason: str, *args: object) -> None:
         self.response = response
         self.reason = reason
         super().__init__(*args)
@@ -143,7 +143,7 @@ if _limits := c.config.limits:
     _client_kwargs["limits"] = _limits
 if _transport := c.config.transport:
     _client_kwargs["transport"] = _transport
-client = httpx.AsyncClient(**_client_kwargs)
+client = httpx2.AsyncClient(**_client_kwargs)
 
 
 @contextlib.asynccontextmanager
@@ -152,7 +152,7 @@ async def _client_context():
     yield client
 
 
-async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def get(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
@@ -160,7 +160,7 @@ async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response
         return await async_client.get(parse_url(url), headers=client_headers)
 
 
-async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP POST request"""
     if headers:
         client_headers.update(headers)
@@ -169,7 +169,7 @@ async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> h
         return await async_client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
-async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP PUT request"""
     if headers:
         client_headers.update(headers)
@@ -178,7 +178,7 @@ async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> ht
         return await async_client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
-async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)

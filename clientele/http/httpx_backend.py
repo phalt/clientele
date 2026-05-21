@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing
 
-import httpx
+import httpx2
 
 from clientele.api import exceptions as api_exceptions
 from clientele.api.stream import hydrate_content
@@ -13,45 +13,45 @@ class HttpxHTTPBackend(backends.HTTPBackend):
     """Default HTTP backend using the httpx library.
 
     This is the default backend for clientele and provides full support
-    for synchronous and asynchronous HTTP requests using httpx.
+    for synchronous and asynchronous HTTP requests using httpx2.
 
-    This backend converts httpx.Response objects to generic clientele.http.Response
+    This backend converts httpx2.Response objects to generic clientele.http.Response
     objects to maintain abstraction from the underlying HTTP library.
 
     Args:
-        client_options: Dictionary of options to pass to httpx.Client and httpx.AsyncClient.
-            See https://www.python-httpx.org/api/#client for available options.
+        client_options: Dictionary of options to pass to httpx2.Client and httpx2.AsyncClient.
+            See https://www.python-httpx2.org/api/#client for available options.
     """
 
-    _sync_client: httpx.Client | None = None
-    _async_client: httpx.AsyncClient | None = None
+    _sync_client: httpx2.Client | None = None
+    _async_client: httpx2.AsyncClient | None = None
 
     def __init__(self, client_options: dict[str, typing.Any] | None = None) -> None:
         self.client_options = client_options or {}
 
-    def build_client(self) -> httpx.Client:
-        """Build and return a synchronous httpx.Client."""
+    def build_client(self) -> httpx2.Client:
+        """Build and return a synchronous httpx2.Client."""
         if not self._sync_client:
-            self._sync_client = httpx.Client(**self.client_options)
+            self._sync_client = httpx2.Client(**self.client_options)
         return self._sync_client
 
-    def build_async_client(self) -> httpx.AsyncClient:
-        """Build and return an asynchronous httpx.AsyncClient."""
+    def build_async_client(self) -> httpx2.AsyncClient:
+        """Build and return an asynchronous httpx2.AsyncClient."""
         if not self._async_client:
-            self._async_client = httpx.AsyncClient(**self.client_options)
+            self._async_client = httpx2.AsyncClient(**self.client_options)
         return self._async_client
 
     @staticmethod
     def convert_to_response(native_response: typing.Any) -> response.Response:
-        """Convert an httpx.Response to a generic clientele Response.
+        """Convert an httpx2.Response to a generic clientele Response.
 
         Args:
-            native_response: An httpx.Response object
+            native_response: An httpx2.Response object
 
         Returns:
             A generic clientele.http.Response object
         """
-        # Accept any httpx.Response or response-like object
+        # Accept any httpx2.Response or response-like object
         httpx_response = native_response
 
         # Handle case where request might not be set (e.g., in tests)
@@ -73,7 +73,7 @@ class HttpxHTTPBackend(backends.HTTPBackend):
         url: str,
         **kwargs: typing.Any,
     ) -> response.Response:
-        """Send a synchronous HTTP request using httpx.
+        """Send a synchronous HTTP request using httpx2.
 
         Args:
             method: HTTP method (GET, POST, etc.)
@@ -93,7 +93,7 @@ class HttpxHTTPBackend(backends.HTTPBackend):
         url: str,
         **kwargs: typing.Any,
     ) -> response.Response:
-        """Send an asynchronous HTTP request using httpx.
+        """Send an asynchronous HTTP request using httpx2.
 
         Args:
             method: HTTP method (GET, POST, etc.)
@@ -127,7 +127,7 @@ class HttpxHTTPBackend(backends.HTTPBackend):
     ) -> typing.Generator[typing.Any, None, None]:
         """Handle synchronous streaming response without buffering.
 
-        Uses httpx.Client.stream()
+        Uses httpx2.Client.stream()
         """
         client = self.build_client()
         with client.stream(method, url, **kwargs) as httpx_response:
@@ -163,7 +163,7 @@ class HttpxHTTPBackend(backends.HTTPBackend):
     ) -> typing.AsyncGenerator[typing.Any, None]:
         """Handle asynchronous streaming response without buffering.
 
-        Uses httpx.AsyncClient.stream()
+        Uses httpx2.AsyncClient.stream()
         """
 
         client = self.build_async_client()

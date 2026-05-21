@@ -6,7 +6,7 @@ import types
 import typing
 from urllib import parse
 
-import httpx
+import httpx2
 
 from tests.old_clients.test_client import config as c  # noqa
 from tests.old_clients.test_client import schemas  # noqa
@@ -21,9 +21,9 @@ class APIException(Exception):
     """Could not match API response to return type of this function"""
 
     reason: str
-    response: httpx.Response
+    response: httpx2.Response
 
-    def __init__(self, response: httpx.Response, reason: str, *args: object) -> None:
+    def __init__(self, response: httpx2.Response, reason: str, *args: object) -> None:
         self.response = response
         self.reason = reason
         super().__init__(*args)
@@ -142,17 +142,17 @@ if _limits := c.config.limits:
     _client_kwargs["limits"] = _limits
 if _transport := c.config.transport:
     _client_kwargs["transport"] = _transport
-client = httpx.Client(**_client_kwargs)
+client = httpx2.Client(**_client_kwargs)
 
 
-def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+def get(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
     return client.get(parse_url(url), headers=client_headers)
 
 
-def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP POST request"""
     if headers:
         client_headers.update(headers)
@@ -160,7 +160,7 @@ def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.R
     return client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
-def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP PUT request"""
     if headers:
         client_headers.update(headers)
@@ -168,7 +168,7 @@ def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Re
     return client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
-def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP PATCH request"""
     if headers:
         client_headers.update(headers)
@@ -176,7 +176,7 @@ def patch(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.
     return client.patch(parse_url(url), json=json_data, headers=client_headers)
 
 
-def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+def delete(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)

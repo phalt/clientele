@@ -8,16 +8,37 @@ from __future__ import annotations
 
 from typing import AsyncIterator, Iterator
 
-import httpx
+import httpx  # required for respx stream type compatibility
 import pytest
+import respx
 from pydantic import BaseModel
-from respx import MockRouter
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
 from clientele.api.exceptions import HTTPStatusError
 
 BASE_URL = "https://api.example.com"
+
+
+class AsyncBytesStream(httpx.AsyncByteStream):
+    """Async byte stream that yields pre-defined chunks, one per iteration."""
+
+    def __init__(self, chunks: list[bytes]) -> None:
+        self._chunks = chunks
+
+    async def __aiter__(self) -> AsyncIterator[bytes]:
+        for chunk in self._chunks:
+            yield chunk
+
+
+class SyncBytesStream(httpx.SyncByteStream):
+    """Sync byte stream that yields pre-defined chunks, one per iteration."""
+
+    def __init__(self, chunks: list[bytes]) -> None:
+        self._chunks = chunks
+
+    def __iter__(self) -> Iterator[bytes]:
+        yield from self._chunks
 
 
 class Token(BaseModel):
@@ -35,17 +56,14 @@ class TestHttpxAsyncStreaming:
     """Test async streaming with HttpxHTTPBackend using respx."""
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_stream_async_iterator_pydantic_model(self, respx_mock: MockRouter):
-        """Test async streaming with Pydantic model hydration."""
-
-        async def stream_content():
-            yield b'{"text": "hello"}\n\n{"text": "world"}\n\n{"text": "test"}\n\n'
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.get("/events").mock(side_effect=streaming_side_effect)
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_stream_async_iterator_pydantic_model(self, httpx2_mock: respx.Router) -> None:
+        """Test async streaming with Pydantic model hydration — each item arrives as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=AsyncBytesStream([b'{"text": "hello"}\n\n', b'{"text": "world"}\n\n', b'{"text": "test"}\n\n']),
+            headers={"content-type": "text/event-stream"},
+        )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -67,17 +85,14 @@ class TestHttpxAsyncStreaming:
         await client.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_stream_async_iterator_dict(self, respx_mock: MockRouter):
-        """Test async streaming with dict hydration."""
-
-        async def stream_content():
-            yield b'{"key": "value1"}\n\n{"key": "value2"}\n\n'
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.get("/events").mock(side_effect=streaming_side_effect)
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_stream_async_iterator_dict(self, httpx2_mock: respx.Router) -> None:
+        """Test async streaming with dict hydration — each item arrives as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=AsyncBytesStream([b'{"key": "value1"}\n\n', b'{"key": "value2"}\n\n']),
+            headers={"content-type": "text/event-stream"},
+        )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -98,17 +113,15 @@ class TestHttpxAsyncStreaming:
         await client.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_stream_async_iterator_str(self, respx_mock: MockRouter):
-        """Test async streaming with string (no parsing)."""
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_stream_async_iterator_str(self, httpx2_mock: respx.Router) -> None:
+        """Test async streaming with string (no parsing) — each item arrives as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=AsyncBytesStream([b"hello\n\n", b"world\n\n"]),
+            headers={"content-type": "text/event-stream"},
+        )
 
-        async def stream_content():
-            yield b"hello\n\nworld\n\n"
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.get("/events").mock(side_effect=streaming_side_effect)
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
@@ -128,17 +141,14 @@ class TestHttpxAsyncStreaming:
         await client.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_stream_skips_empty_lines(self, respx_mock: MockRouter):
-        """Test async streaming skips empty lines."""
-
-        async def stream_content():
-            yield b'{"text": "first"}\n\n\n\n\n\n{"text": "second"}\n\n'
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.get("/events").mock(side_effect=streaming_side_effect)
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_stream_skips_empty_lines(self, httpx2_mock: respx.Router) -> None:
+        """Test async streaming skips empty lines between chunks."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=AsyncBytesStream([b'{"text": "first"}\n\n', b"\n\n\n\n", b'{"text": "second"}\n\n']),
+            headers={"content-type": "text/event-stream"},
+        )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -158,16 +168,10 @@ class TestHttpxAsyncStreaming:
         await client.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_stream_error_response_raises(self, respx_mock: MockRouter):
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_stream_error_response_raises(self, httpx2_mock: respx.Router) -> None:
         """Test async streaming raises on error responses."""
-        respx_mock.get("/events").mock(
-            return_value=httpx.Response(
-                404,
-                content=b"Not Found",
-                headers={"content-type": "text/plain"},
-            )
-        )
+        httpx2_mock.get("/events").respond(404, content=b"Not Found", headers={"content-type": "text/plain"})
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -183,17 +187,16 @@ class TestHttpxAsyncStreaming:
         await client.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_stream_post_with_data_parameter(self, respx_mock: MockRouter):
-        """Test async streaming POST request with data payload."""
-
-        async def stream_content():
-            yield b'{"text": "response1"}\n\n{"text": "response2"}\n\n{"text": "response3"}\n\n'
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.post("/generate").mock(side_effect=streaming_side_effect)
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_stream_post_with_data_parameter(self, httpx2_mock: respx.Router) -> None:
+        """Test async streaming POST request with data payload — each item as a separate chunk."""
+        httpx2_mock.post("/generate").respond(
+            200,
+            stream=AsyncBytesStream(
+                [b'{"text": "response1"}\n\n', b'{"text": "response2"}\n\n', b'{"text": "response3"}\n\n']
+            ),
+            headers={"content-type": "text/event-stream"},
+        )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -216,17 +219,14 @@ class TestHttpxAsyncStreaming:
         await client.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_stream_with_response_parser(self, respx_mock: MockRouter):
-        """Test async streaming with custom response_parser."""
-
-        async def stream_content():
-            yield b"line1,data1\n\nline2,data2\n\nline3,data3\n\n"
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.get("/events").mock(side_effect=streaming_side_effect)
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_stream_with_response_parser(self, httpx2_mock: respx.Router) -> None:
+        """Test async streaming with custom response_parser — each item as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=AsyncBytesStream([b"line1,data1\n\n", b"line2,data2\n\n", b"line3,data3\n\n"]),
+            headers={"content-type": "text/event-stream"},
+        )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -254,16 +254,13 @@ class TestHttpxAsyncStreaming:
 class TestHttpxSyncStreaming:
     """Test sync streaming with HttpxHTTPBackend using respx."""
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_stream_sync_iterator_pydantic_model(self, respx_mock: MockRouter):
-        """Test sync streaming with Pydantic model hydration."""
-        stream = httpx.ByteStream(b'{"text": "hello"}\n\n{"text": "world"}\n\n')
-        respx_mock.get("/events").mock(
-            return_value=httpx.Response(
-                200,
-                stream=stream,
-                headers={"content-type": "text/event-stream"},
-            )
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_stream_sync_iterator_pydantic_model(self, httpx2_mock: respx.Router) -> None:
+        """Test sync streaming with Pydantic model hydration — each item as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=SyncBytesStream([b'{"text": "hello"}\n\n', b'{"text": "world"}\n\n']),
+            headers={"content-type": "text/event-stream"},
         )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
@@ -284,16 +281,13 @@ class TestHttpxSyncStreaming:
 
         client.close()
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_stream_sync_iterator_dict(self, respx_mock: MockRouter):
-        """Test sync streaming with dict hydration."""
-        stream = httpx.ByteStream(b'{"key": "value1"}\n\n{"key": "value2"}\n\n')
-        respx_mock.get("/events").mock(
-            return_value=httpx.Response(
-                200,
-                stream=stream,
-                headers={"content-type": "text/event-stream"},
-            )
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_stream_sync_iterator_dict(self, httpx2_mock: respx.Router) -> None:
+        """Test sync streaming with dict hydration — each item as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=SyncBytesStream([b'{"key": "value1"}\n\n', b'{"key": "value2"}\n\n']),
+            headers={"content-type": "text/event-stream"},
         )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
@@ -314,16 +308,13 @@ class TestHttpxSyncStreaming:
 
         client.close()
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_stream_sync_iterator_str(self, respx_mock: MockRouter):
-        """Test sync streaming with string (no parsing)."""
-        stream = httpx.ByteStream(b"hello\n\nworld\n\n")
-        respx_mock.get("/events").mock(
-            return_value=httpx.Response(
-                200,
-                stream=stream,
-                headers={"content-type": "text/event-stream"},
-            )
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_stream_sync_iterator_str(self, httpx2_mock: respx.Router) -> None:
+        """Test sync streaming with string (no parsing) — each item as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=SyncBytesStream([b"hello\n\n", b"world\n\n"]),
+            headers={"content-type": "text/event-stream"},
         )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
@@ -344,16 +335,13 @@ class TestHttpxSyncStreaming:
 
         client.close()
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_stream_sync_with_response_parser(self, respx_mock: MockRouter):
-        """Test sync streaming with custom response_parser."""
-        stream = httpx.ByteStream(b"a:1\n\nb:2\n\n")
-        respx_mock.get("/events").mock(
-            return_value=httpx.Response(
-                200,
-                stream=stream,
-                headers={"content-type": "text/event-stream"},
-            )
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_stream_sync_with_response_parser(self, httpx2_mock: respx.Router) -> None:
+        """Test sync streaming with custom response_parser — each item as a separate chunk."""
+        httpx2_mock.get("/events").respond(
+            200,
+            stream=SyncBytesStream([b"a:1\n\n", b"b:2\n\n"]),
+            headers={"content-type": "text/event-stream"},
         )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
@@ -377,16 +365,10 @@ class TestHttpxSyncStreaming:
 
         client.close()
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_stream_sync_error_response_raises(self, respx_mock: MockRouter):
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_stream_sync_error_response_raises(self, httpx2_mock: respx.Router) -> None:
         """Test sync streaming raises on error responses."""
-        respx_mock.get("/events").mock(
-            return_value=httpx.Response(
-                404,
-                content=b"Not Found",
-                headers={"content-type": "text/plain"},
-            )
-        )
+        httpx2_mock.get("/events").respond(404, content=b"Not Found", headers={"content-type": "text/plain"})
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -401,15 +383,11 @@ class TestHttpxSyncStreaming:
 
         client.close()
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_stream_sync_500_error_response_raises(self, respx_mock: MockRouter):
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_stream_sync_500_error_response_raises(self, httpx2_mock: respx.Router) -> None:
         """Test sync streaming raises on 500 error."""
-        respx_mock.get("/events").mock(
-            return_value=httpx.Response(
-                500,
-                content=b"Internal Server Error",
-                headers={"content-type": "text/plain"},
-            )
+        httpx2_mock.get("/events").respond(
+            500, content=b"Internal Server Error", headers={"content-type": "text/plain"}
         )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
@@ -430,33 +408,30 @@ class TestSSEFormatStreaming:
     """Test actual Server-Sent Events format streaming."""
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_sse_format_with_data_prefix(self, respx_mock: MockRouter):
-        """Test streaming SSE format with 'data:' prefix using response_parser."""
-
-        async def stream_sse_content():
-            # Real SSE format with data: prefix
-            yield b'data: {"role": "assistant", "content": "Hello"}\n\n'
-            yield b'data: {"role": "assistant", "content": "How"}\n\n'
-            yield b'data: {"role": "assistant", "content": "are you?"}\n\n'
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_sse_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.post("/chat/stream").mock(side_effect=streaming_side_effect)
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_sse_format_with_data_prefix(self, httpx2_mock: respx.Router) -> None:
+        """Test streaming SSE format with 'data:' prefix — each event as a separate chunk."""
+        httpx2_mock.post("/chat/stream").respond(
+            200,
+            stream=AsyncBytesStream(
+                [
+                    b'data: {"role": "assistant", "content": "Hello"}\n\n',
+                    b'data: {"role": "assistant", "content": "How"}\n\n',
+                    b'data: {"role": "assistant", "content": "are you?"}\n\n',
+                ]
+            ),
+            headers={"content-type": "text/event-stream"},
+        )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 
-        # Use the exact parse_sse from our documentation
         def parse_sse(line: str) -> dict | None:
             """Parse SSE format: extracts data from 'data: {json}' lines."""
             if line.startswith("data: "):
                 import json
 
-                json_str = line[6:]  # Remove 'data: ' prefix
-                return json.loads(json_str)
-            # Skip other SSE fields (event:, id:, retry:, comments)
+                return json.loads(line[6:])
             return None
 
         @client.post("/chat/stream", streaming_response=True, response_parser=parse_sse)
@@ -465,7 +440,7 @@ class TestSSEFormatStreaming:
 
         messages = []
         async for message in await stream_chat(data={"prompt": "Hi"}):
-            if message:  # Skip None values
+            if message:
                 messages.append(message)
 
         assert len(messages) == 3
@@ -476,24 +451,24 @@ class TestSSEFormatStreaming:
         await client.aclose()
 
     @pytest.mark.asyncio
-    @pytest.mark.respx(base_url=BASE_URL)
-    async def test_sse_format_with_mixed_fields(self, respx_mock: MockRouter):
-        """Test SSE format with data, event, id, and comment lines."""
-
-        async def stream_sse_content():
-            # Mix of SSE fields - only data: lines should be parsed
-            yield b": comment line\n"
-            yield b"event: user-connected\n"
-            yield b'data: {"user": "alice"}\n\n'
-            yield b"id: 123\n"
-            yield b'data: {"user": "bob"}\n\n'
-            yield b"retry: 10000\n"
-            yield b'data: {"user": "charlie"}\n\n'
-
-        async def streaming_side_effect(request):
-            return httpx.Response(200, stream=stream_sse_content(), headers={"content-type": "text/event-stream"})
-
-        respx_mock.get("/users/stream").mock(side_effect=streaming_side_effect)
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    async def test_sse_format_with_mixed_fields(self, httpx2_mock: respx.Router) -> None:
+        """Test SSE format with data, event, id, and comment lines — each as a separate chunk."""
+        httpx2_mock.get("/users/stream").respond(
+            200,
+            stream=AsyncBytesStream(
+                [
+                    b": comment line\n",
+                    b"event: user-connected\n",
+                    b'data: {"user": "alice"}\n\n',
+                    b"id: 123\n",
+                    b'data: {"user": "bob"}\n\n',
+                    b"retry: 10000\n",
+                    b'data: {"user": "charlie"}\n\n',
+                ]
+            ),
+            headers={"content-type": "text/event-stream"},
+        )
 
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
@@ -511,10 +486,9 @@ class TestSSEFormatStreaming:
 
         users = []
         async for user in await stream_users():
-            if user:  # Filter out None values
+            if user:
                 users.append(user)
 
-        # Should only get the 3 data: lines, not event:, id:, retry:, or comments
         assert len(users) == 3
         assert users[0] == {"user": "alice"}
         assert users[1] == {"user": "bob"}
@@ -522,18 +496,15 @@ class TestSSEFormatStreaming:
 
         await client.aclose()
 
-    @pytest.mark.respx(base_url=BASE_URL)
-    def test_sse_sync_format(self, respx_mock: MockRouter):
-        """Test sync SSE format streaming."""
-        # Real SSE format
-        stream = httpx.ByteStream(b'data: {"status": "processing"}\n\ndata: {"status": "complete"}\n\n')
-        respx_mock.get("/status").mock(
-            return_value=httpx.Response(
-                200,
-                stream=stream,
-                headers={"content-type": "text/event-stream"},
-            )
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_sse_sync_format(self, httpx2_mock: respx.Router) -> None:
+        """Test sync SSE format streaming — each event as a separate chunk."""
+        httpx2_mock.get("/status").respond(
+            200,
+            stream=SyncBytesStream([b'data: {"status": "processing"}\n\n', b'data: {"status": "complete"}\n\n']),
+            headers={"content-type": "text/event-stream"},
         )
+
         config = api_config.BaseConfig(base_url=BASE_URL)
         client = api_client.APIClient(config=config)
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Protocol, runtime_checkable
 
-import httpx
+import httpx2
 import pydantic
 import pydantic_settings
 
@@ -29,7 +29,7 @@ class BaseConfig(pydantic_settings.BaseSettings):
     """
     Runtime configuration for clientele clients.
 
-    httpx configuration options can be found at https://www.python-httpx.org/
+    httpx configuration options can be found at https://httpx2.pydantic.dev/
 
     Values can be set via:
     1. Environment variables (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
@@ -64,11 +64,11 @@ class BaseConfig(pydantic_settings.BaseSettings):
     follow_redirects: bool = False
     verify: bool | str = True
     http2: bool = False
-    auth: httpx.Auth | tuple[str, str] | None = None
-    limits: httpx.Limits | None = None
-    proxies: httpx.Proxy | None = None
-    transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
-    cookies: httpx.Cookies | None = None
+    auth: httpx2.Auth | tuple[str, str] | None = None
+    limits: httpx2.Limits | None = None
+    proxies: httpx2.Proxy | None = None
+    transport: httpx2.BaseTransport | httpx2.AsyncBaseTransport | None = None
+    cookies: httpx2.Cookies | None = None
     # Cache configuration
     cache_backend: cache_types.CacheBackend | None = None
     # HTTP backend configuration
@@ -77,7 +77,7 @@ class BaseConfig(pydantic_settings.BaseSettings):
     logger: Logger | None = None
 
     def httpx_client_options(self) -> dict[str, Any]:
-        """Create a dictionary of options suitable for ``httpx.Client``."""
+        """Create a dictionary of options suitable for ``httpx2.Client``."""
 
         options: dict[str, Any] = {
             "base_url": self.base_url,

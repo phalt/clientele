@@ -3,7 +3,7 @@ This file will never be updated on subsequent clientele runs.
 Use it as a space to store configuration and constants.
 """
 
-import httpx
+import httpx2
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -47,8 +47,8 @@ class Config(BaseSettings):
     verify_ssl: bool = True
     http2: bool = False
     max_redirects: int = 20
-    limits: httpx.Limits | None = None
-    transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None
+    limits: httpx2.Limits | None = None
+    transport: httpx2.BaseTransport | httpx2.AsyncBaseTransport | None = None
 
 
 # Create a singleton instance that can be imported and used

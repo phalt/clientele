@@ -7,7 +7,7 @@ import types
 import typing
 from urllib import parse
 
-import httpx
+import httpx2
 
 from tests.old_clients.async_test_class_client import config as c  # noqa
 from tests.old_clients.async_test_class_client import schemas  # noqa
@@ -22,9 +22,9 @@ class APIException(Exception):
     """Could not match API response to return type of this function"""
 
     reason: str
-    response: httpx.Response
+    response: httpx2.Response
 
-    def __init__(self, response: httpx.Response, reason: str, *args: object) -> None:
+    def __init__(self, response: httpx2.Response, reason: str, *args: object) -> None:
         self.response = response
         self.reason = reason
         super().__init__(*args)
@@ -133,9 +133,9 @@ class HTTPClient:
 
     def __init__(self, config: c.Config):
         self.config = config
-        self._client: typing.Optional[httpx.AsyncClient] = None
+        self._client: typing.Optional[httpx2.AsyncClient] = None
 
-    def _get_client(self) -> httpx.AsyncClient:
+    def _get_client(self) -> httpx2.AsyncClient:
         """Get or create the httpx client with current configuration."""
         if self._client is None:
             client_headers = self.config.additional_headers.copy()
@@ -152,7 +152,7 @@ class HTTPClient:
                 client_kwargs["limits"] = _limits
             if _transport := self.config.transport:
                 client_kwargs["transport"] = _transport
-            self._client = httpx.AsyncClient(**client_kwargs)
+            self._client = httpx2.AsyncClient(**client_kwargs)
         return self._client
 
     def _get_headers(self, additional_headers: typing.Optional[dict] = None) -> dict:
@@ -168,34 +168,34 @@ class HTTPClient:
         """Async context manager for the HTTP client."""
         yield self._get_client()
 
-    async def get(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    async def get(self, url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
         """Issue an HTTP GET request"""
         request_headers = self._get_headers(headers)
         async with self._client_context() as async_client:
             return await async_client.get(parse_url(url, self.config), headers=request_headers)
 
-    async def post(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    async def post(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
         """Issue an HTTP POST request"""
         request_headers = self._get_headers(headers)
         json_data = json.loads(json.dumps(data, default=json_serializer))
         async with self._client_context() as async_client:
             return await async_client.post(parse_url(url, self.config), json=json_data, headers=request_headers)
 
-    async def put(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    async def put(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
         """Issue an HTTP PUT request"""
         request_headers = self._get_headers(headers)
         json_data = json.loads(json.dumps(data, default=json_serializer))
         async with self._client_context() as async_client:
             return await async_client.put(parse_url(url, self.config), json=json_data, headers=request_headers)
 
-    async def patch(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+    async def patch(self, url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
         """Issue an HTTP PATCH request"""
         request_headers = self._get_headers(headers)
         json_data = json.loads(json.dumps(data, default=json_serializer))
         async with self._client_context() as async_client:
             return await async_client.patch(parse_url(url, self.config), json=json_data, headers=request_headers)
 
-    async def delete(self, url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+    async def delete(self, url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
         """Issue an HTTP DELETE request"""
         request_headers = self._get_headers(headers)
         async with self._client_context() as async_client:

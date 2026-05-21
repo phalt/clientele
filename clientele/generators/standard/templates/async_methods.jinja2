@@ -1,6 +1,6 @@
 
 
-async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def get(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP GET request"""
     if headers:
         client_headers.update(headers)
@@ -8,7 +8,7 @@ async def get(url: str, headers: typing.Optional[dict] = None) -> httpx.Response
         return await async_client.get(parse_url(url), headers=client_headers)
 
 
-async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP POST request"""
     if headers:
         client_headers.update(headers)
@@ -17,7 +17,7 @@ async def post(url: str, data: dict, headers: typing.Optional[dict] = None) -> h
         return await async_client.post(parse_url(url), json=json_data, headers=client_headers)
 
 
-async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP PUT request"""
     if headers:
         client_headers.update(headers)
@@ -26,7 +26,7 @@ async def put(url: str, data: dict, headers: typing.Optional[dict] = None) -> ht
         return await async_client.put(parse_url(url), json=json_data, headers=client_headers)
 
 
-async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx.Response:
+async def delete(url: str, headers: typing.Optional[dict] = None) -> httpx2.Response:
     """Issue an HTTP DELETE request"""
     if headers:
         client_headers.update(headers)

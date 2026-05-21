@@ -7,13 +7,13 @@ import time
 import typing
 from urllib import parse
 
-import httpx
+import httpx2
 import pydantic
 
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
 from clientele.api import requests, type_utils
-from clientele.http import httpx_backend as http_httpx
+from clientele.http import httpx_backend
 from clientele.http import response as http_response
 
 # Typing support for injected parameters
@@ -53,8 +53,8 @@ class APIClient:
         *,
         config: api_config.BaseConfig | None = None,
         base_url: str | None = None,
-        httpx_client: httpx.Client | None = None,
-        httpx_async_client: httpx.AsyncClient | None = None,
+        httpx_client: httpx2.Client | None = None,
+        httpx_async_client: httpx2.AsyncClient | None = None,
     ) -> None:
         if config is None:
             # Enforce base_url when no config is provided
@@ -80,7 +80,7 @@ class APIClient:
 
         # Set http_backend if not already set
         if self.config.http_backend is None:
-            self.config.http_backend = http_httpx.HttpxHTTPBackend(
+            self.config.http_backend = httpx_backend.HttpxHTTPBackend(
                 client_options=self.config.httpx_client_options(),
             )
 
