@@ -10,7 +10,7 @@ from clientele import api
 client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 @client.get("/pokemon/{pokemon_name}")
-def get_pokemon_info(pokemon_name: str, result: dict) -> dict:
+def get_pokemon_info(result: dict, pokemon_name: str) -> dict:
     return result
 ```
 
@@ -32,7 +32,7 @@ class PokemonInfo(BaseModel):
 
 
 @client.get("/pokemon/{pokemon_name}")
-def get_pokemon_info(pokemon_name: str, result: PokemonInfo) -> PokemonInfo:
+def get_pokemon_info(result: PokemonInfo, pokemon_name: str) -> PokemonInfo:
     return result
 ```
 
@@ -48,7 +48,7 @@ from clientele import api
 client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 @client.get("/pokemon/{pokemon_name}")
-def get_pokemon_info(pokemon_name: str, result: dict) -> str:
+def get_pokemon_info(result: dict, pokemon_name: str) -> str:
     return result.get("name")
 ```
 
@@ -107,7 +107,7 @@ client = api.APIClient(base_url="https://httpbin.org")
 
 
 @client.post("/post")
-def post_input_data(data: dict, result: dict) -> dict:
+def post_input_data(result: dict, data: dict) -> dict:
     return result
 ```
 
@@ -129,7 +129,7 @@ class InputData(BaseModel):
 
 
 @client.post("/post")
-def post_input_data(data: InputData, result: dict) -> InputData:
+def post_input_data(result: dict, data: InputData) -> InputData:
     return result
 ```
 
@@ -146,7 +146,7 @@ client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 
 @client.get("/pokemon/{pokemon_name}")
-def get_pokemon_info(pokemon_name: str, result: dict, response: httpx.Response) -> dict:
+def get_pokemon_info(result: dict, response: httpx.Response, pokemon_name: str) -> dict:
     print(response.headers)
     return result
 
@@ -173,7 +173,7 @@ def parse_response_myself(response: httpx.Response) -> dict:
 
 
 @client.get("/pokemon/{pokemon_name}", response_parser=parse_response_myself)
-def get_pokemon_info(pokemon_name: str, result: dict) -> str:
+def get_pokemon_info(result: dict, pokemon_name: str) -> str:
     return result["my_custom_key"]
 ```
 
@@ -203,7 +203,7 @@ def parse_response_myself(response: httpx.Response) -> MyResult:
 
 
 @client.get("/pokemon/{pokemon_name}", response_parser=parse_response_myself)
-def get_pokemon_info(pokemon_name: str, result: MyResult) -> str:
+def get_pokemon_info(result: MyResult, pokemon_name: str) -> str:
     return result.custom_key
 ```
 
@@ -226,7 +226,7 @@ class NotFoundResult(BaseModel):
 
 
 @client.get("/pokemon/{pokemon_name}", response_map={200: OkResult, 404: NotFoundResult})
-def get_pokemon_info(pokemon_name: str, result: OkResult | NotFoundResult) -> str:
+def get_pokemon_info(result: OkResult | NotFoundResult, pokemon_name: str) -> str:
     return result.name
 ```
 
@@ -249,7 +249,7 @@ class OnlyErrorResult(BaseModel):
 
 
 @client.get("/pokemon/{pokemon_name}", response_map={500: OnlyErrorResult})
-def get_pokemon_info(pokemon_name: str, result: OnlyErrorResult) -> str:
+def get_pokemon_info(result: OnlyErrorResult, pokemon_name: str) -> str:
     return result.name
 
 
@@ -322,7 +322,7 @@ client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 
 @client.get("/pokemon/{pokemon_id}")
-async def get_pokemon_name(pokemon_id: int, result: dict) -> str:
+async def get_pokemon_name(result: dict, pokemon_id: int) -> str:
     return result["name"]
 
 
@@ -350,7 +350,7 @@ client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 @cache.memoize(ttl=300)  # Cache for 5 minutes
 @client.get("/pokemon/{pokemon_id}")
-def get_pokemon(pokemon_id: int, result: dict) -> dict:
+def get_pokemon(result: dict, pokemon_id: int) -> dict:
     return result
 ```
 
@@ -371,7 +371,7 @@ client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 @cache.memoize(ttl=300)
 @client.get("/pokemon")
-def list_pokemon(limit: int, offset: int, result: dict) -> dict:
+def list_pokemon(result: dict, limit: int, offset: int) -> dict:
     return result
 ```
 
@@ -391,7 +391,7 @@ client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 
 @cache.memoize(ttl=600)
 @client.get("/ability")
-def list_abilities(limit: int, offset: int, result: dict) -> dict:
+def list_abilities(result: dict, limit: int, offset: int) -> dict:
     return result
 ```
 
@@ -414,7 +414,7 @@ client = api.APIClient(base_url="https://pokeapi.co/api/v2")
     key=lambda pokemon_id, version_id: f"pokemon:{pokemon_id}:version:{version_id}"
 )
 @client.get("/pokemon/{pokemon_id}")
-def get_pokemon_version(pokemon_id: int, version_id: int, result: dict) -> dict:
+def get_pokemon_version(result: dict, pokemon_id: int, version_id: int) -> dict:
     # Custom key ensures different versions are cached separately
     return result
 
@@ -436,7 +436,7 @@ client = api.APIClient(base_url="https://pokeapi.co/api/v2")
 # Cache for just 10 seconds to reduce burst traffic
 @cache.memoize(ttl=10)
 @client.get("/pokemon/{pokemon_id}")
-def get_pokemon_burst(pokemon_id: int, result: dict) -> dict:
+def get_pokemon_burst(result: dict, pokemon_id: int) -> dict:
     return result
 
 ```
@@ -467,7 +467,7 @@ class Event(BaseModel):
 
 
 @client.get("/stream/{n}", streaming_response=True)
-async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+async def stream_events(result: AsyncIterator[Event], n: int) -> AsyncIterator[Event]:
     return result
 ```
 

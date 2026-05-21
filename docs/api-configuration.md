@@ -81,7 +81,7 @@ base_config = clientele_api.BaseConfig(
 client = clientele_api.APIClient(config=base_config)
 
 @client.get("/users/{user_id}")
-def get_user(user_id: int, result: User) -> User:
+def get_user(result: User, user_id: int) -> User:
     return result
 
 class MyApplication:

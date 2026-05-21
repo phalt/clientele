@@ -11,7 +11,7 @@ client = api.APIClient(base_url="https://api.example.com")
 
 @cache.memoize(ttl=300)  # Cache for 5 minutes
 @client.get("/users/{id}")
-def get_user(id: int, result: dict) -> dict:
+def get_user(result: dict, id: int) -> dict:
     return result
 
 # First call - hits the API
@@ -43,7 +43,7 @@ Set how long cached responses remain valid:
 ```python
 @memoize(ttl=300)  # 5 minutes
 @client.get("/pokemon/{id}")
-def get_pokemon(id: int, result: dict) -> dict:
+def get_pokemon(result: dict, id: int) -> dict:
     return result
 ```
 
@@ -57,7 +57,7 @@ Override the default key generation with a custom function:
     key=lambda user_id: f"user:{user_id}"  # Custom key format
 )
 @client.get("/users/{user_id}")
-def get_user(user_id: int, result: dict) -> dict:
+def get_user(result: dict, user_id: int) -> dict:
     return result
 ```
 
@@ -74,7 +74,7 @@ ENABLE_CACHE = os.getenv("ENABLE_CACHE", "true") == "true"
 
 @memoize(ttl=300, enabled=ENABLE_CACHE)
 @client.get("/pokemon/{id}")
-def get_pokemon(id: int, result: dict) -> dict:
+def get_pokemon(result: dict, id: int) -> dict:
     return result
 ```
 
@@ -90,7 +90,7 @@ small_cache = MemoryBackend(max_size=50)
 
 @memoize(ttl=300, backend=small_cache)
 @client.get("/items/{id}")
-def get_item(id: int, result: dict) -> dict:
+def get_item(result: dict, id: int) -> dict:
     return result
 ```
 
@@ -107,7 +107,7 @@ client = api.APIClient(config=api.BaseConfig(
 
 @cache.memoize(ttl=300)
 @client.get("/items/{id}")
-def get_item(id: int, result: dict) -> dict:
+def get_item(result: dict, id: int) -> dict:
     return result
 ```
 
@@ -119,7 +119,7 @@ The `@memoize` decorator works seamlessly with async functions:
 ```python
 @memoize(ttl=300)
 @client.get("/users/{id}")
-async def get_user(id: int, result: dict) -> dict:
+async def get_user(result: dict, id: int) -> dict:
     return result
 
 # Usage
@@ -215,7 +215,7 @@ redis_cache = RedisBackend(redis_url="redis://localhost:6379/0")
 # Use per-decorator
 @cache.memoize(ttl=300, backend=redis_cache)
 @client.get("/users/{id}")
-def get_user(id: int, result: dict) -> dict:
+def get_user(result: dict, id: int) -> dict:
     return result
 ```
 

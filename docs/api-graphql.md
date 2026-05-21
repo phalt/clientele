@@ -28,7 +28,7 @@ class RepositoryQueryResponse(BaseModel):
         }
     }
 """)
-def get_repo(owner: str, name: str, result: RepositoryQueryResponse) -> Repository:
+def get_repo(result: RepositoryQueryResponse, owner: str, name: str) -> Repository:
     return result.data.repository
 
 repo = get_repo(owner="phalt", name="clientele")
@@ -74,7 +74,7 @@ class CreateIssueMutationResponse(BaseModel):
         }
     }
 """)
-def create_issue(title: str, body: str, result: CreateIssueMutationResponse) -> Issue:
+def create_issue(result: CreateIssueMutationResponse, title: str, body: str) -> Issue:
     return result.data.createIssue.issue
 
 issue = create_issue(title="Bug report", body="Something is broken")
@@ -110,7 +110,7 @@ class RepositoriesQueryResponse(BaseModel):
         }
     }
 """)
-def search_repos(owner: str, language: str | None, result: RepositoriesQueryResponse) -> list[Repository]:
+def search_repos(result: RepositoriesQueryResponse, owner: str, language: str | None) -> list[Repository]:
     return result.data.repositories
 
 # Call without optional parameter - language is omitted from variables
@@ -150,7 +150,7 @@ class RepositoryQueryResponse(BaseModel):
         }
     }
 """)
-async def get_repo(owner: str, name: str, result: RepositoryQueryResponse) -> Repository:
+async def get_repo(result: RepositoryQueryResponse, owner: str, name: str) -> Repository:
     return result.data.repository
 
 # Use with await
@@ -188,7 +188,7 @@ class CreateIssueMutationResponse(BaseModel):
         }
     }
 """)
-async def create_issue(title: str, body: str | None, result: CreateIssueMutationResponse) -> Issue:
+async def create_issue(result: CreateIssueMutationResponse, title: str, body: str | None) -> Issue:
     return result.data.createIssue.issue
 
 # Use with await
@@ -222,7 +222,7 @@ class RepositoryQueryResponse(BaseModel):
         }
     }
 """)
-def get_repo(owner: str, name: str, result: RepositoryQueryResponse, response: Response) -> Repository:
+def get_repo(result: RepositoryQueryResponse, response: Response, owner: str, name: str) -> Repository:
     print(f"Status: {response.status_code}")
     print(f"Headers: {response.headers}")
     return result.data.repository
@@ -247,7 +247,7 @@ client = GraphQLClient(base_url="https://api.github.com/graphql")
         }
     }
 """)
-def get_repo(owner: str, name: str, result: dict) -> dict:
+def get_repo(result: dict, owner: str, name: str) -> dict:
     return result["data"]["repository"]
 
 repo = get_repo(owner="phalt", name="clientele")

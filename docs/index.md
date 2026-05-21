@@ -41,7 +41,7 @@ class Pokemon(BaseModel):
     name: str
 
 @client.get("/pokemon/{id}")
-def get_pokemon_name(id: int, result: Pokemon) -> str:
+def get_pokemon_name(result: Pokemon, id: int) -> str:
     return result.name
 ```
 
@@ -63,7 +63,7 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
 
 ```python
 @client.get("/pokemon/{id}")
-async def get_pokemon_name(id: int, result: Pokemon) -> str:
+async def get_pokemon_name(result: Pokemon, id: int) -> str:
     return result.name
 ```
 
@@ -77,7 +77,7 @@ client = clientele_api.APIClient(base_url="http://localhost:8000")
 
 
 @client.post("/books")
-def create_book(data: CreateBookRequest, result: CreateBookResponse) -> CreateBookResponse:
+def create_book(result: CreateBookResponse, data: CreateBookRequest) -> CreateBookResponse:
     return result
 ```
 
@@ -107,7 +107,7 @@ class RepositoryQueryResponse(BaseModel):
         }
     }
 """)
-def get_repo(owner: str, name: str, result: RepositoryQueryResponse) -> Repository:
+def get_repo(result: RepositoryQueryResponse, owner: str, name: str) -> Repository:
     return result.data.repository
 ```
 

@@ -20,7 +20,7 @@ class Event(BaseModel):
 
 
 @client.get("/stream/{n}", streaming_response=True)
-async def stream_events(n: int, result: AsyncIterator[Event]) -> AsyncIterator[Event]:
+async def stream_events(result: AsyncIterator[Event], n: int) -> AsyncIterator[Event]:
     return result
 ```
 
@@ -124,7 +124,7 @@ class ChatMessage(BaseModel):
     content: str
 
 @client.post("/chat/stream", streaming_response=True, response_parser=parse_sse)
-async def stream_chat(*, data: dict, result: AsyncIterator[ChatMessage]) -> AsyncIterator[ChatMessage]:
+async def stream_chat(*, result: AsyncIterator[ChatMessage], data: dict) -> AsyncIterator[ChatMessage]:
     return result
 ```
 

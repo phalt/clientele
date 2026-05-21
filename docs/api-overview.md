@@ -15,7 +15,7 @@ class User(BaseModel):
     email: str
 
 @client.get("/users/{user_id}")
-def get_user(user_id: int, result: User, include_details: bool = True) -> User:
+def get_user(result: User, user_id: int, include_details: bool = True) -> User:
     return result
 
 user = get_user(42)
@@ -47,7 +47,7 @@ class User(BaseModel):
     name: str
 
 @client.post("/users")
-def create_user(*, data: CreateUserRequest, result: User) -> User:
+def create_user(*, result: User, data: CreateUserRequest) -> User:
     return result
 
 user = create_user(data=CreateUserRequest(name="Ada"))
@@ -61,7 +61,7 @@ class UserDict(TypedDict):
     name: str
 
 @client.post("/users")
-def create_user_with_dict(*, data: CreateUserRequestDict, result: UserDict) -> UserDict:
+def create_user_with_dict(*, result: UserDict, data: CreateUserRequestDict) -> UserDict:
     return result
 
 # Pass dict directly - no instantiation needed
@@ -98,21 +98,21 @@ class User(BaseModel):
 
 # PUT with a full body
 @client.put("/users/{user_id}")
-def update_user(user_id: int, *, data: UpdateUser, result: User) -> User:
+def update_user(result: User, user_id: int, *, data: UpdateUser) -> User:
     return result
 
 updated = update_user(1, data=UpdateUser(name="New Name", email="test@foo.com"))
 
 # PATCH with partial data
 @client.patch("/users/{user_id}")
-def patch_user_name(user_id: int, *, data: PatchNameUser, result: User) -> User:
+def patch_user_name(result: User, user_id: int, *, data: PatchNameUser) -> User:
     return result
 
 patched = patch_user_name(1, data=PatchUserName(name="New Name"))
 
 # DELETE that returns an empty response body
 @client.delete("/users/{user_id}")
-def delete_user(user_id: int, *, result: None) -> None:
+def delete_user(result: None, user_id: int) -> None:
     return result
 
 delete_user(1)
@@ -125,17 +125,17 @@ The `result` parameter defines **what response you get from the API**, but your 
 ```python
 # Return the result directly (most common)
 @client.get("/users/{user_id}")
-def get_user(user_id: int, result: User) -> User:
+def get_user(result: User, user_id: int) -> User:
     return result
 
 # Return a derived value
 @client.get("/users/{user_id}")
-def get_user_email(user_id: int, result: User) -> str:
+def get_user_email(result: User, user_id: int) -> str:
     return result.email
 
 # Return multiple values as a tuple
 @client.post("/events")
-def create_event(data: EventIn, result: EventOut) -> tuple[EventOut, str]:
+def create_event(result: EventOut, data: EventIn) -> tuple[EventOut, str]:
     log.info("Created event %s", result.id)
     return result, "success"
 ```
@@ -146,6 +146,32 @@ Clientele will inject the following parameters into your function once an http r
 
 - `result`: an instance of the type specified in the `result` parameter annotation. This parameter is **mandatory** and its type annotation determines how the response is parsed. Can be a Pydantic model or a TypedDict.
 - `response`: the `httpx.Response` - useful for logging, debugging etc. (optional)
+
+**Both `result` and `response` must be declared first in your function signature**, before any caller-supplied parameters (path params, query params, `data`). This is required for type checker support (see below).
+
+## Typing support for injected parameters
+
+Clientele does some Python typing magic to give type checkers (mypy, pyright, ty) a correct view of your decorated functions.
+
+The decorator type signature says: *"I accept a function whose first parameter(s) are injected values, and I return a new callable with those parameters removed."* This means type checkers see the public API — for example `get_user` is typed as `(user_id: int) -> User`, with `result` invisible to callers.
+
+For this to work, **`result` and `response` must appear first** in the parameter list:
+
+```python
+# Correct — injected params first, type checker sees: (user_id: int) -> User
+@client.get("/users/{user_id}")
+def get_user(result: User, user_id: int) -> User:
+    return result
+
+# Incorrect — result is not first, typing will not work correctly
+@client.get("/users/{user_id}")
+def get_user(user_id: int, result: User) -> User:
+    return result
+```
+
+At runtime, Clientele also patches the function's signature to hide `result` and `response` from introspection tools (IDEs, `inspect.signature()`, the cache key generator). This uses the same ordering rule: injected params are identified by name, stripped from the public signature, and injected automatically when the HTTP response arrives.
+
+If you use the [mypy plugin](mypy.md), mypy will also strip injected parameters by name regardless of position — but for other type checkers (pyright, ty) the position-first rule is required.
 
 ## Response parsing rules
 
@@ -181,7 +207,7 @@ def custom_parser(response: httpx.Response) -> CustomResponseParserResponse:
 
 # Annotate the decorate to use, `result` type must match
 @client.get("/users/{user_id}", response_parser=custom_parser)
-def get_user_custom_response(user_id: int, result: CustomResponseParserResponse) -> str:
+def get_user_custom_response(result: CustomResponseParserResponse, user_id: int) -> str:
     return result.other_value
 
 ```
@@ -213,7 +239,7 @@ class NotFoundError(BaseModel):
         404: NotFoundError,
     }
 )
-def get_user(user_id: int, result: User | NotFoundError) -> User | NotFoundError:
+def get_user(result: User | NotFoundError, user_id: int) -> User | NotFoundError:
     return result
 
 # Returns User for 200 responses
@@ -254,7 +280,7 @@ If multiple statuses return the same response it is easy enough to extend the ma
     }
 )
 def create_user(
-    data: User, result: User | ValidationError
+    result: User | ValidationError, data: User
 ) -> User | ValidationError:
     return result
 

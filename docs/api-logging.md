@@ -22,7 +22,7 @@ class InputData(BaseModel):
 
 
 @client.post("/anything")
-def send_post_data(data: InputData, result: dict) -> str:
+def send_post_data(result: dict, data: InputData) -> str:
     return result["json"]
 ```
 

@@ -47,7 +47,7 @@ class User(BaseModel):
     email: str
 
 @client.get("/users/{user_id}")
-def get_user(user_id: int, result: User) -> User:
+def get_user(result: User, user_id: int) -> User:
     return result
 
 # With the plugin: ✅ This works correctly

@@ -11,7 +11,7 @@ client = api.APIClient(api.BaseConfig(base_url="https://httpbin.org/"))
 
 @retries.retry(attempts=3)
 @client.get("/status/{status_code}")
-def get_status(status_code: int, result: dict) -> dict:
+def get_status(result: dict, status_code: int) -> dict:
     return result
 ```
 
@@ -24,7 +24,7 @@ client = api.APIClient(api.BaseConfig(base_url="https://httpbin.org/"))
 
 @retries.retry(attempts=3, on_status=[400, 403, 500])
 @client.get("/status/{status_code}")
-def get_status(status_code: int, result: dict) -> dict:
+def get_status(result: dict, status_code: int) -> dict:
     return result
 ```
 

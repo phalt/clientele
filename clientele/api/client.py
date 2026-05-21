@@ -41,7 +41,7 @@ class APIClient:
     client = api.APIClient(base_url="https://pokeapi.co/api/v2/")
 
     @client.get("/pokemon/{id}")
-    def get_pokemon_name(id: int, result: Pokemon) -> str:
+    def get_pokemon_name(result: Pokemon, id: int) -> str:
         return result.name
     ```
 

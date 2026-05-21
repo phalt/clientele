@@ -15,15 +15,15 @@ client = clientele_api.APIClient(config=Config())
 
 @client.post("/books")
 def create_user(
-    data: CreateBookResponse,
     result: CreateBookResponse,
+    data: CreateBookResponse,
 ) -> CreateBookResponse:
     return result
 
 
 # Mix sync and async functions in the same client
 @client.get("/book/{book_id}")
-async def get_book(book_id: int, result: BookResponse) -> BookResponse:
+async def get_book(result: BookResponse, book_id: int) -> BookResponse:
     return result
 ```
 
