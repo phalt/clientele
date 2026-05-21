@@ -161,11 +161,11 @@ def _extract_request_context(func: typing.Callable) -> tuple[typing.Optional[str
         (None, None)
     """
     try:
-        if not hasattr(func, "__closure__") or func.__closure__ is None:
+        closure = getattr(func, "__closure__", None)
+        if closure is None:
             return (None, None)
 
-        # Type checker: __closure__ is confirmed to be not None above
-        for cell in func.__closure__:  # type: ignore[union-attr]
+        for cell in closure:
             cell_contents = cell.cell_contents
             if hasattr(cell_contents, "__dict__"):
                 cell_dict = getattr(cell_contents, "__dict__", {})
@@ -182,9 +182,10 @@ def _extract_request_context(func: typing.Callable) -> tuple[typing.Optional[str
 
 def _extract_cache_backend(func: typing.Callable) -> CacheBackend:
     try:
-        if not hasattr(func, "__closure__") or func.__closure__ is None:
+        closure = getattr(func, "__closure__", None)
+        if closure is None:
             return _default_backend
-        for cell in func.__closure__:  # type: ignore[union-attr]
+        for cell in closure:
             cell_contents = cell.cell_contents
             if isinstance(cell_contents, api.APIClient):
                 backend = cell_contents.config.cache_backend

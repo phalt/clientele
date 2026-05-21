@@ -150,7 +150,7 @@ class FakeHTTPBackend(backends.HTTPBackend):
     ) -> response.Response:
         """Create a fake generic Response object."""
         # Capture the request
-        request_details = {
+        request_details: dict[str, typing.Any] = {
             "method": method,
             "url": url,
             "kwargs": kwargs,

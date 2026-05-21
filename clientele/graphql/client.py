@@ -7,7 +7,8 @@ import typing
 
 from clientele.api import APIClient, requests
 
-_F = typing.TypeVar("_F", bound=typing.Callable[..., typing.Any])
+_P = typing.ParamSpec("_P")
+_R = typing.TypeVar("_R")
 
 
 class GraphQLClient(APIClient):
@@ -20,7 +21,7 @@ class GraphQLClient(APIClient):
         query_string: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[typing.Callable[typing.Concatenate[typing.Any, _P], _R]], typing.Callable[_P, _R]]:
         """
         Decorator for GraphQL queries.
 
@@ -42,14 +43,14 @@ class GraphQLClient(APIClient):
                 return result.repository
             ```
         """
-        return self._create_graphql_decorator("POST", query_string, response_map=response_map)
+        return self._create_graphql_decorator("POST", query_string, response_map=response_map)  # type: ignore[return-value]
 
     def mutation(
         self,
         mutation_string: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[typing.Callable[typing.Concatenate[typing.Any, _P], _R]], typing.Callable[_P, _R]]:
         """
         Decorator for GraphQL mutations.
 
@@ -70,7 +71,7 @@ class GraphQLClient(APIClient):
                 return result.createIssue.issue
             ```
         """
-        return self._create_graphql_decorator("POST", mutation_string, response_map=response_map)
+        return self._create_graphql_decorator("POST", mutation_string, response_map=response_map)  # type: ignore[return-value]
 
     def _create_graphql_decorator(
         self,
@@ -78,12 +79,12 @@ class GraphQLClient(APIClient):
         graphql_string: str,
         *,
         response_map: dict[int, type[typing.Any]] | None = None,
-    ) -> typing.Callable[[_F], _F]:
+    ) -> typing.Callable[[typing.Any], typing.Any]:
         """
         Create a GraphQL decorator using Clientele's existing decorator machinery.
         """
 
-        def decorator(func: _F) -> _F:
+        def decorator(func: typing.Any) -> typing.Any:
             context = requests.build_request_context(
                 method=method,
                 path="",  # GraphQL uses a single endpoint
@@ -97,15 +98,15 @@ class GraphQLClient(APIClient):
                 async def async_wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
                     return await self._execute_graphql_async(context, graphql_string, args, kwargs)
 
-                async_wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-                return typing.cast(_F, async_wrapper)
+                setattr(async_wrapper, "__signature__", context.signature)
+                return async_wrapper
 
             @functools.wraps(func)
             def wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
                 return self._execute_graphql_sync(context, graphql_string, args, kwargs)
 
-            wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-            return typing.cast(_F, wrapper)
+            setattr(wrapper, "__signature__", context.signature)
+            return wrapper
 
         return decorator
 

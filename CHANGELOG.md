@@ -1,5 +1,12 @@
 # Change log
 
+## 1.12.0 UNRELEASED
+
+- Drastically improved typing support for injected parameters.
+  - Previously we relied on a mypy plugin to handle the typing of injected parameters.
+  - New type linting tools like `ty` do not offer a plugin, so we had to find a different approach.
+  - We now use a custom type checker to provide accurate type information for injected parameters.
+
 ## 1.11.1
 
 - Added test coverage for `DataType.ARRAY` handling in `get_type` function, covering both arrays with specified item types and arrays without items (defaulting to `typing.Any`).

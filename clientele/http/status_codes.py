@@ -30,6 +30,8 @@ class codes(IntEnum):
         * RFC 8470: Using Early Data in HTTP
     """
 
+    phrase: str
+
     def __new__(cls, value: int, phrase: str = "") -> codes:
         obj = int.__new__(cls, value)
         obj._value_ = value

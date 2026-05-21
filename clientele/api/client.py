@@ -16,8 +16,11 @@ from clientele.api import requests, type_utils
 from clientele.http import httpx_backend as http_httpx
 from clientele.http import response as http_response
 
-_F = typing.TypeVar("_F", bound=typing.Callable[..., typing.Any])
+# Typing support for injected parameters
+_P = typing.ParamSpec("_P")
+_R = typing.TypeVar("_R")
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
+_INJECTED_PARAMS = frozenset({"result", "response"})
 
 
 class APIClient:
@@ -190,8 +193,8 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
-        return self._create_decorator(
+    ) -> typing.Callable[[typing.Callable[typing.Concatenate[typing.Any, _P], _R]], typing.Callable[_P, _R]]:
+        return self._create_decorator(  # type: ignore[return-value]
             "GET",
             path,
             response_map=response_map,
@@ -208,8 +211,8 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
-        return self._create_decorator(
+    ) -> typing.Callable[[typing.Callable[typing.Concatenate[typing.Any, _P], _R]], typing.Callable[_P, _R]]:
+        return self._create_decorator(  # type: ignore[return-value]
             "POST",
             path,
             response_map=response_map,
@@ -226,8 +229,8 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
-        return self._create_decorator(
+    ) -> typing.Callable[[typing.Callable[typing.Concatenate[typing.Any, _P], _R]], typing.Callable[_P, _R]]:
+        return self._create_decorator(  # type: ignore[return-value]
             "PUT",
             path,
             response_map=response_map,
@@ -244,8 +247,8 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
-        return self._create_decorator(
+    ) -> typing.Callable[[typing.Callable[typing.Concatenate[typing.Any, _P], _R]], typing.Callable[_P, _R]]:
+        return self._create_decorator(  # type: ignore[return-value]
             "PATCH",
             path,
             response_map=response_map,
@@ -262,8 +265,8 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
-        return self._create_decorator(
+    ) -> typing.Callable[[typing.Callable[typing.Concatenate[typing.Any, _P], _R]], typing.Callable[_P, _R]]:
+        return self._create_decorator(  # type: ignore[return-value]
             "DELETE",
             path,
             response_map=response_map,
@@ -281,8 +284,8 @@ class APIClient:
         | typing.Callable[[str], typing.Any]
         | None = None,
         streaming_response: bool = False,
-    ) -> typing.Callable[[_F], _F]:
-        def decorator(func: _F) -> _F:
+    ) -> typing.Callable[[typing.Any], typing.Any]:
+        def decorator(func: typing.Any) -> typing.Any:
             context = requests.build_request_context(
                 method,
                 path,
@@ -292,6 +295,12 @@ class APIClient:
                 streaming=streaming_response,
             )
 
+            # Build a public signature (without injected params) for IDE support
+            # and runtime tools like the cache key generator. The full signature
+            # is stored on context for internal injection in _finalise_call.
+            public_params = [p for n, p in context.signature.parameters.items() if n not in _INJECTED_PARAMS]
+            public_sig = context.signature.replace(parameters=public_params)
+
             if inspect.iscoroutinefunction(func):
 
                 @functools.wraps(func)
@@ -300,9 +309,8 @@ class APIClient:
                         return await self._execute_async_stream(context, args, kwargs)
                     return await self._execute_async(context, args, kwargs)
 
-                # Preserve the original signature for IDE support
-                async_wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-                return typing.cast(_F, async_wrapper)
+                setattr(async_wrapper, "__signature__", public_sig)
+                return async_wrapper
 
             @functools.wraps(func)
             def wrapper(*args: typing.Any, **kwargs: typing.Any) -> typing.Any:
@@ -310,9 +318,8 @@ class APIClient:
                     return self._execute_sync_stream(context, args, kwargs)
                 return self._execute_sync(context, args, kwargs)
 
-            # Preserve the original signature for IDE support
-            wrapper.__signature__ = context.signature  # type: ignore[attr-defined]
-            return typing.cast(_F, wrapper)
+            setattr(wrapper, "__signature__", public_sig)
+            return wrapper
 
         return decorator
 
@@ -334,7 +341,12 @@ class APIClient:
         recognized_kwargs = {k: v for k, v in kwargs_copy.items() if k in context.signature.parameters}
         extra_kwargs = {k: v for k, v in kwargs_copy.items() if k not in context.signature.parameters}
 
-        bound_arguments = context.signature.bind_partial(*args, **recognized_kwargs)
+        # Bind against the public signature (injected params removed) so that
+        # positional args from callers map to the correct parameters. The full
+        # signature is kept on context for injection in _finalise_call.
+        public_params = [p for n, p in context.signature.parameters.items() if n not in _INJECTED_PARAMS]
+        public_sig = context.signature.replace(parameters=public_params)
+        bound_arguments = public_sig.bind_partial(*args, **recognized_kwargs)
         bound_arguments.apply_defaults()
         call_arguments = bound_arguments.arguments
         # Note: extra_kwargs are NOT added to call_arguments - they're for query params only
@@ -458,12 +470,12 @@ class APIClient:
         if self.config.logger is not None:
             self.config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
 
-        # For streaming, response_parser must accept str, not Response
-        # Type narrowing: in streaming mode, parser is Callable[[str], Any] | None
-        streaming_parser: typing.Callable[[str], typing.Any] | None = None
-        if context.response_parser is not None:
-            # In streaming context, this is guaranteed to be Callable[[str], Any]
-            streaming_parser = context.response_parser  # type: ignore[assignment]
+        # For streaming, response_parser must accept str, not Response.
+        # Cast is safe: streaming endpoints only accept Callable[[str], Any] parsers,
+        # validated at decoration time by _validate_response_parser_return_type_matches_result_return_type.
+        streaming_parser: typing.Callable[[str], typing.Any] | None = typing.cast(
+            typing.Callable[[str], typing.Any] | None, context.response_parser
+        )
 
         if not self.config.http_backend:
             raise RuntimeError("HTTP backend is not configured.")
@@ -520,12 +532,12 @@ class APIClient:
         if self.config.logger is not None:
             self.config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
 
-        # For streaming, response_parser must accept str, not Response
-        # Type narrowing: in streaming mode, parser is Callable[[str], Any] | None
-        streaming_parser: typing.Callable[[str], typing.Any] | None = None
-        if context.response_parser is not None:
-            # In streaming context, this is guaranteed to be Callable[[str], Any]
-            streaming_parser = context.response_parser  # type: ignore[assignment]
+        # For streaming, response_parser must accept str, not Response.
+        # Cast is safe: streaming endpoints only accept Callable[[str], Any] parsers,
+        # validated at decoration time by _validate_response_parser_return_type_matches_result_return_type.
+        streaming_parser: typing.Callable[[str], typing.Any] | None = typing.cast(
+            typing.Callable[[str], typing.Any] | None, context.response_parser
+        )
 
         stream_generator = self.config.http_backend.handle_sync_stream(
             method=context.method,
@@ -698,9 +710,9 @@ class APIClient:
                 payload = response.text
 
         if response_parser is not None:
-            # If a custom response_parser is provided, use it directly
-            # For non-streaming, parser accepts Response; for streaming it accepts str
-            return response_parser(response)  # type: ignore[arg-type]
+            # Non-streaming parsers accept Response; streaming parsers accept str.
+            # The union type is intentional: callers pass the appropriate type at runtime.
+            return typing.cast(typing.Callable[[typing.Any], typing.Any], response_parser)(response)
 
         # If response_map is provided, use it to determine the response model
         if response_map is not None:
