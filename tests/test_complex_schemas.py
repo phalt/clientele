@@ -207,7 +207,7 @@ class TestRuntimeBehavior:
         generator.generate()
 
         with import_generated_schemas(tmp_path):
-            import schemas  # type: ignore[import-not-found]
+            import schemas  # type: ignore
 
             # Should be able to access classes
             assert hasattr(schemas, "Cat")
@@ -231,7 +231,7 @@ class TestRuntimeBehavior:
         generator.generate()
 
         with import_generated_schemas(tmp_path):
-            import schemas  # type: ignore[import-not-found]
+            import schemas  # type: ignore
 
             # Create instances with different union types
             cat = schemas.Cat(type_="cat", meow_volume=10)
@@ -262,7 +262,7 @@ class TestRuntimeBehavior:
         generator.generate()
 
         with import_generated_schemas(tmp_path):
-            import schemas  # type: ignore[import-not-found]
+            import schemas  # type: ignore
 
             # Create instance with nullable fields
             resp = schemas.NullableFieldsResponse(

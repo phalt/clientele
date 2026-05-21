@@ -271,7 +271,7 @@ class TestConfigBackend:
 
         @cache.memoize(ttl=300)
         @client.get("/test/{id}")
-        def get_item(id: int, *, result: dict) -> dict:
+        def get_item(result: dict, id: int) -> dict:
             return result
 
         response1 = get_item(1)

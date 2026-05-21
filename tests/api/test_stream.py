@@ -38,7 +38,7 @@ class TestStreamDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def stream_tokens(result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
         tokens = []
@@ -68,7 +68,7 @@ class TestStreamDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        async def stream_dicts(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
+        async def stream_dicts(result: AsyncIterator[dict]) -> AsyncIterator[dict]:
             return result
 
         items = []
@@ -97,7 +97,7 @@ class TestStreamDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        async def stream_text(*, result: AsyncIterator[str]) -> AsyncIterator[str]:
+        async def stream_text(result: AsyncIterator[str]) -> AsyncIterator[str]:
             return result
 
         lines = []
@@ -118,7 +118,7 @@ class TestStreamDecorators:
         with pytest.raises(TypeError, match="must have a streaming result type"):
 
             @client.get("/events", streaming_response=True)
-            async def bad_stream(*, result: Token) -> Token:  # NOT AsyncIterator!
+            async def bad_stream(result: Token) -> Token:  # NOT AsyncIterator!
                 return result
 
     def test_stream_missing_inner_type_raises(self):
@@ -128,7 +128,7 @@ class TestStreamDecorators:
         with pytest.raises(TypeError, match="no inner type specified"):
 
             @client.get("/events", streaming_response=True)
-            async def bad_stream(*, result: AsyncIterator) -> AsyncIterator:  # Missing [T]!
+            async def bad_stream(result: AsyncIterator) -> AsyncIterator:  # Missing [T]!
                 return result
 
     def test_async_function_with_iterator_raises(self):
@@ -138,7 +138,7 @@ class TestStreamDecorators:
         with pytest.raises(TypeError, match="must use AsyncIterator, not Iterator"):
 
             @client.get("/events", streaming_response=True)
-            async def bad_stream(*, result: Iterator[Token]) -> Iterator[Token]:  # Should be AsyncIterator!
+            async def bad_stream(result: Iterator[Token]) -> Iterator[Token]:  # Should be AsyncIterator!
                 return result
 
     def test_sync_function_with_async_iterator_raises(self):
@@ -148,7 +148,7 @@ class TestStreamDecorators:
         with pytest.raises(TypeError, match="must use Iterator, not AsyncIterator"):
 
             @client.get("/events", streaming_response=True)
-            def bad_stream(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:  # Should be Iterator!
+            def bad_stream(result: AsyncIterator[Token]) -> AsyncIterator[Token]:  # Should be Iterator!
                 return result
 
     @pytest.mark.asyncio
@@ -166,7 +166,7 @@ class TestStreamDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def stream_tokens(result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
         tokens = []
@@ -194,7 +194,7 @@ class TestStreamDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def stream_tokens(result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
         with pytest.raises(HTTPStatusError):
@@ -218,7 +218,7 @@ class TestStreamDecorators:
         )
 
         @client.post("/generate", streaming_response=True)
-        async def generate_stream(*, data: RequestData, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def generate_stream(result: AsyncIterator[Token], data: RequestData) -> AsyncIterator[Token]:
             return result
 
         request_data = RequestData(prompt="Hello world", max_tokens=100)
@@ -238,7 +238,7 @@ class TestStreamDecorators:
     def test_stream_cannot_use_response_map(self):
         """Test that decorators cannot use response_map."""
 
-        async def dummy_func(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def dummy_func(result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
         with pytest.raises(TypeError, match="cannot use response_map"):
@@ -263,7 +263,7 @@ class TestStreamDecorators:
             return {"key": parts[0], "value": parts[1]}
 
         @client.get("/events", streaming_response=True, response_parser=custom_parser)
-        async def stream_custom(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
+        async def stream_custom(result: AsyncIterator[dict]) -> AsyncIterator[dict]:
             return result
 
         items = []
@@ -295,7 +295,7 @@ class TestStreamingSyncDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+        def stream_tokens(result: Iterator[Token]) -> Iterator[Token]:
             return result
 
         tokens = []
@@ -323,7 +323,7 @@ class TestStreamingSyncDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        def stream_dicts(*, result: Iterator[dict]) -> Iterator[dict]:
+        def stream_dicts(result: Iterator[dict]) -> Iterator[dict]:
             return result
 
         items = []
@@ -351,7 +351,7 @@ class TestStreamingSyncDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        def stream_text(*, result: Iterator[str]) -> Iterator[str]:
+        def stream_text(result: Iterator[str]) -> Iterator[str]:
             return result
 
         lines = []
@@ -383,7 +383,7 @@ class TestStreamingSyncDecorators:
             return {"letter": parts[0], "number": int(parts[1])}
 
         @client.get("/events", streaming_response=True, response_parser=custom_parser)
-        def stream_custom(*, result: Iterator[dict]) -> Iterator[dict]:
+        def stream_custom(result: Iterator[dict]) -> Iterator[dict]:
             return result
 
         items = []
@@ -410,7 +410,7 @@ class TestStreamingSyncDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+        def stream_tokens(result: Iterator[Token]) -> Iterator[Token]:
             return result
 
         with pytest.raises(HTTPStatusError):
@@ -433,7 +433,7 @@ class TestStreamingSyncDecorators:
         )
 
         @client.get("/events", streaming_response=True)
-        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+        def stream_tokens(result: Iterator[Token]) -> Iterator[Token]:
             return result
 
         with pytest.raises(HTTPStatusError):

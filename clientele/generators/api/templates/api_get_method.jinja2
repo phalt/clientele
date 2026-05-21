@@ -6,7 +6,7 @@
 {% else %}
 @client.{{method}}("{{api_url}}")
 {% endif %}
-{{asyncio and "async " or ""}}def {{func_name}}({% if function_arguments.get_required_args_as_string() %}{{function_arguments.get_required_args_as_string()}}, {% endif %}result: {{response_types}}{% if function_arguments.get_optional_args_as_string() %}, {{function_arguments.get_optional_args_as_string()}}{% endif %}) -> {{response_types}}:
+{{asyncio and "async " or ""}}def {{func_name}}(result: {{response_types}}{% if function_arguments.get_required_args_as_string() %}, {{function_arguments.get_required_args_as_string()}}{% endif %}{% if function_arguments.get_optional_args_as_string() %}, {{function_arguments.get_optional_args_as_string()}}{% endif %}) -> {{response_types}}:
     {% if summary or description or deprecated %}"""{% if summary %}{{summary}}{% endif %}{% if description %}
 
     {{description}}{% endif %}{% if deprecated %}

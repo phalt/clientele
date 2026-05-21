@@ -28,7 +28,7 @@ def test_can_provide_custom_http_backend() -> None:
     client = APIClient(config=config)
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
+    def get_user(result: User, user_id: int) -> User:
         return result
 
     user = get_user(1)
@@ -54,7 +54,7 @@ async def test_can_provide_custom_http_backend_async() -> None:
     client = APIClient(config=config)
 
     @client.get("/users/{user_id}")
-    async def get_user(user_id: int, result: User) -> User:
+    async def get_user(result: User, user_id: int) -> User:
         return result
 
     user = await get_user(1)
@@ -105,7 +105,7 @@ def test_can_reconfigure_with_base_url() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
+    def get_user(result: User, user_id: int) -> User:
         return result
 
     user = get_user(1)
@@ -128,7 +128,7 @@ def test_can_reconfigure_with_custom_http_backend() -> None:
     client.configure(config=config)
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
+    def get_user(result: User, user_id: int) -> User:
         return result
 
     user = get_user(1)

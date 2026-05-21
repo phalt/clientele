@@ -24,7 +24,7 @@ client = APIClient(base_url="http://example.com")
 
 
 @client.post("/users")
-def create_user(data: CreateUserRequest, result: User) -> User:
+def create_user(result: User, data: CreateUserRequest) -> User:
     return result
 
 
@@ -34,12 +34,12 @@ def example_usage_with_pydantic_model() -> None:
 
 
 def example_usage_with_dict() -> None:
-    user = create_user(data={"name": "Charlie"})
+    user = create_user(data={"name": "Charlie"})  # type: ignore[arg-type]
     assert user.name == "Charlie"
 
 
 def example_usage_with_errors() -> None:
-    user = create_user(data={"name": "Charlie"}, non_existent_param="value")
+    user = create_user(data={"name": "Charlie"}, non_existent_param="value")  # type: ignore[arg-type]
     assert user.non_existent_attribute == "Charlie"
 
 

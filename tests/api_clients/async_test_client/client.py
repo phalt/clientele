@@ -40,7 +40,7 @@ async def optional_parameters_request_optional_parameters_get(
 
 @client.post("/request-data", response_map={200: schemas.RequestDataResponse, 422: schemas.HTTPValidationError})
 async def request_data_request_data_post(
-    data: schemas.RequestDataRequest, result: schemas.HTTPValidationError | schemas.RequestDataResponse
+    result: schemas.HTTPValidationError | schemas.RequestDataResponse, data: schemas.RequestDataRequest
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data
 
@@ -51,7 +51,7 @@ async def request_data_request_data_post(
 
 @client.put("/request-data", response_map={200: schemas.RequestDataResponse, 422: schemas.HTTPValidationError})
 async def request_data_request_data_put(
-    data: schemas.RequestDataRequest, result: schemas.HTTPValidationError | schemas.RequestDataResponse
+    result: schemas.HTTPValidationError | schemas.RequestDataResponse, data: schemas.RequestDataRequest
 ) -> schemas.HTTPValidationError | schemas.RequestDataResponse:
     """Request Data
 
@@ -65,9 +65,9 @@ async def request_data_request_data_put(
     response_map={200: schemas.RequestDataAndParameterResponse, 422: schemas.HTTPValidationError},
 )
 async def request_data_path_request_data(
-    path_parameter: str,
-    data: schemas.RequestDataRequest,
     result: schemas.HTTPValidationError | schemas.RequestDataAndParameterResponse,
+    data: schemas.RequestDataRequest,
+    path_parameter: str,
 ) -> schemas.HTTPValidationError | schemas.RequestDataAndParameterResponse:
     """Request Data Path
 
@@ -94,7 +94,7 @@ async def security_required_request_security_required_get(
     "/simple-query", response_map={200: schemas.SimpleQueryParametersResponse, 422: schemas.HTTPValidationError}
 )
 async def query_request_simple_query_get(
-    your_input: str, result: schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse
+    result: schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse, your_input: str
 ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request
 
@@ -130,7 +130,7 @@ async def simple_request_simple_request_get(result: schemas.SimpleResponse) -> s
     "/simple-request/{your_input}", response_map={200: schemas.ParameterResponse, 422: schemas.HTTPValidationError}
 )
 async def parameter_request_simple_request(
-    your_input: str, result: schemas.HTTPValidationError | schemas.ParameterResponse
+    result: schemas.HTTPValidationError | schemas.ParameterResponse, your_input: str
 ) -> schemas.HTTPValidationError | schemas.ParameterResponse:
     """Parameter Request
 
@@ -153,7 +153,7 @@ async def deprecated_endpoint_deprecated_endpoint_get(result: schemas.SimpleResp
 
 @client.post("/nullable-fields", response_map={200: schemas.NullableFieldsResponse, 422: schemas.HTTPValidationError})
 async def nullable_fields_nullable_fields_post(
-    data: schemas.NullableFieldsRequest, result: schemas.HTTPValidationError | schemas.NullableFieldsResponse
+    result: schemas.HTTPValidationError | schemas.NullableFieldsResponse, data: schemas.NullableFieldsRequest
 ) -> schemas.HTTPValidationError | schemas.NullableFieldsResponse:
     """Nullable Fields Request
 

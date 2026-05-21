@@ -42,7 +42,7 @@ def test_get_validates_response_and_builds_query() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User, include_details: bool = True) -> User:
+    def get_user(result: User, user_id: int, include_details: bool = True) -> User:
         return result
 
     user = get_user(1)
@@ -64,7 +64,7 @@ def test_get_respects_query_override_and_list_validation() -> None:
     )
 
     @client.get("/users")
-    def list_users(query: dict[str, str], result: list[User]) -> list[User]:
+    def list_users(result: list[User], query: dict[str, str]) -> list[User]:
         return result
 
     users = list_users(query={"search": "dev"})
@@ -92,13 +92,13 @@ def test_post_accepts_model_instance_and_dict() -> None:
     )
 
     @client.post("/users")
-    def create_user(data: CreateUserRequest, result: User) -> User:
+    def create_user(result: User, data: CreateUserRequest) -> User:
         return result
 
     user = create_user(data=CreateUserRequest(name="Charlie"))
     assert user.id == 10
 
-    dict_user = create_user(data={"name": "Charlie"})
+    dict_user = create_user(data={"name": "Charlie"})  # type: ignore
     assert dict_user.name == "Charlie"
 
     client.close()
@@ -116,10 +116,10 @@ def test_post_leftover_kwargs_become_query_params() -> None:
     )
 
     @client.post("/users/{state}")
-    def promote_user(state: str, data: CreateUserRequest, result: User) -> User:
+    def promote_user(result: User, state: str, data: CreateUserRequest) -> User:
         return result
 
-    promote_user("active", data={"name": "Eve"}, notify=True)
+    promote_user("active", data={"name": "Eve"}, notify=True)  # type: ignore
 
     client.close()
 
@@ -173,11 +173,11 @@ def test_path_and_query_params_combined() -> None:
 
     @client.get("/request-data/{path_parameter}")
     def fetch_request_data(
-        path_parameter: str, result: RequestDataAndParameterResponse
+        result: RequestDataAndParameterResponse, path_parameter: str
     ) -> RequestDataAndParameterResponse:
         return result
 
-    response = fetch_request_data("some-id", query={"your_query": "hello"})
+    response = fetch_request_data("some-id", query={"your_query": "hello"})  # type: ignore
 
     assert response == RequestDataAndParameterResponse(path_parameter="some-id", your_query="hello")
 
@@ -196,10 +196,10 @@ def test_put_serializes_model_and_merges_headers() -> None:
     )
 
     @client.put("/users/{user_id}")
-    def update_user(user_id: int, data: UpdateUserRequest, result: User) -> User:
+    def update_user(result: User, user_id: int, data: UpdateUserRequest) -> User:
         return result
 
-    updated = update_user(2, data=UpdateUserRequest(name="Updated"), headers={"X-Trace": "abc"})
+    updated = update_user(2, data=UpdateUserRequest(name="Updated"), headers={"X-Trace": "abc"})  # type: ignore
 
     assert updated.name == "Updated"
 
@@ -218,10 +218,10 @@ def test_patch_validates_dict_body() -> None:
     )
 
     @client.patch("/users/{user_id}")
-    def patch_user(user_id: int, data: UpdateUserRequest, result: User) -> User:
+    def patch_user(result: User, user_id: int, data: UpdateUserRequest) -> User:
         return result
 
-    patched = patch_user(3, data={"name": "Partial"})
+    patched = patch_user(3, data={"name": "Partial"})  # type: ignore
 
     assert patched == User(id=3, name="Partial")
 
@@ -238,7 +238,7 @@ def test_delete_supports_query_and_response_injection() -> None:
     )
 
     @client.delete("/users/{user_id}")
-    def delete_user(user_id: int, result: None, query: dict[str, str] | None = None) -> None:
+    def delete_user(result: None, user_id: int, query: dict[str, str] | None = None) -> None:
         return result
 
     delete_user(4, query={"hard": "false"})
@@ -259,7 +259,7 @@ async def test_async_get_validates_response() -> None:
     )
 
     @client.get("/users/{user_id}")
-    async def get_user(user_id: int, result: User) -> User:
+    async def get_user(result: User, user_id: int) -> User:
         return result
 
     user = await get_user(2)
@@ -282,10 +282,10 @@ async def test_async_post_validates_body_and_query() -> None:
     )
 
     @client.post("/users")
-    async def create_user(data: CreateUserRequest, result: User) -> User:
+    async def create_user(result: User, data: CreateUserRequest) -> User:
         return result
 
-    created = await create_user(data={"name": "Zoe"}, query={"lang": "en"})
+    created = await create_user(data={"name": "Zoe"}, query={"lang": "en"})  # type: ignore
 
     assert created == User(id=9, name="Zoe")
 
@@ -337,7 +337,7 @@ def test_response_map_with_type_alias_union() -> None:
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int, result: ResponseUnion) -> ResponseUnion:
+    def get_user(result: ResponseUnion, user_id: int) -> ResponseUnion:
         return result
 
     # Test 200 response
@@ -375,7 +375,7 @@ def test_response_map_basic_sync() -> None:
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+    def get_user(result: SuccessResponse | ErrorResponse, user_id: int) -> SuccessResponse | ErrorResponse:
         return result
 
     user = get_user(1)
@@ -406,7 +406,7 @@ def test_response_map_error_status_sync() -> None:
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+    def get_user(result: SuccessResponse | ErrorResponse, user_id: int) -> SuccessResponse | ErrorResponse:
         return result
 
     user = get_user(999)
@@ -437,7 +437,7 @@ def test_response_map_unexpected_status_raises_exception_sync() -> None:
             404: ErrorResponse,
         },
     )
-    def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+    def get_user(result: SuccessResponse | ErrorResponse, user_id: int) -> SuccessResponse | ErrorResponse:
         return result
 
     with pytest.raises(APIException) as exc_info:
@@ -471,7 +471,7 @@ def test_response_map_multiple_status_codes_sync() -> None:
         },
     )
     def create_user(
-        data: dict, result: SuccessResponse | ErrorResponse | ValidationErrorResponse
+        result: SuccessResponse | ErrorResponse | ValidationErrorResponse, data: dict
     ) -> SuccessResponse | ErrorResponse | ValidationErrorResponse:
         return result
 
@@ -503,7 +503,7 @@ async def test_response_map_basic_async() -> None:
             404: ErrorResponse,
         },
     )
-    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+    async def get_user(result: SuccessResponse | ErrorResponse, user_id: int) -> SuccessResponse | ErrorResponse:
         return result
 
     user = await get_user(2)
@@ -534,7 +534,7 @@ async def test_response_map_error_status_async() -> None:
             404: ErrorResponse,
         },
     )
-    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+    async def get_user(result: SuccessResponse | ErrorResponse, user_id: int) -> SuccessResponse | ErrorResponse:
         return result
 
     user = await get_user(999)
@@ -566,7 +566,7 @@ async def test_response_map_unexpected_status_raises_exception_async() -> None:
             404: ErrorResponse,
         },
     )
-    async def get_user(user_id: int, result: SuccessResponse | ErrorResponse) -> SuccessResponse | ErrorResponse:
+    async def get_user(result: SuccessResponse | ErrorResponse, user_id: int) -> SuccessResponse | ErrorResponse:
         return result
 
     with pytest.raises(APIException) as exc_info:
@@ -590,7 +590,7 @@ def test_response_map_invalid_status_code_raises_error() -> None:
                 999: SuccessResponse,  # Invalid status code (outside 100-599 range)
             },
         )
-        def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+        def get_user(result: SuccessResponse, user_id: int) -> SuccessResponse:
             return result
 
 
@@ -605,7 +605,7 @@ def test_response_map_custom_status_code_works() -> None:
             599: SuccessResponse,  # Valid but not in enum
         },
     )
-    def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+    def get_user(result: SuccessResponse, user_id: int) -> SuccessResponse:
         return result
 
 
@@ -624,7 +624,7 @@ def test_response_map_non_pydantic_model_raises_error() -> None:
             "/users/{user_id}",
             response_map=cast(dict[int, type[BaseModel]], {200: NotAModel}),
         )
-        def get_user(user_id: int, result: NotAModel) -> NotAModel:
+        def get_user(result: NotAModel, user_id: int) -> NotAModel:
             return result
 
 
@@ -641,7 +641,7 @@ def test_response_map_missing_return_type_raises_error() -> None:
                 404: ErrorResponse,
             },
         )
-        def get_user(user_id: int, result: SuccessResponse) -> SuccessResponse:
+        def get_user(result: SuccessResponse, user_id: int) -> SuccessResponse:
             return result
 
 
@@ -672,7 +672,7 @@ def test_return_value_independent_of_result_type() -> None:
     client = APIClient(base_url=BASE_URL)
 
     @client.get("/users/{user_id}")
-    def get_user_name(user_id: int, result: User) -> str:
+    def get_user_name(result: User, user_id: int) -> str:
         return result.name
 
 
@@ -683,14 +683,14 @@ def test_signature_preservation_for_ide_support() -> None:
     client = APIClient(base_url=BASE_URL)
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User, expand: bool = False) -> User:
+    def get_user(result: User, user_id: int, expand: bool = False) -> User:
         """Get a user by ID."""
         return result
 
-    # Check that the signature is preserved
+    # Check that the public signature (injected params removed) is exposed
     sig = inspect.signature(get_user)
     params = list(sig.parameters.keys())
-    assert params == ["user_id", "result", "expand"], f"Expected ['user_id', 'result', 'expand'], got {params}"
+    assert params == ["user_id", "expand"], f"Expected ['user_id', 'expand'], got {params}"
 
     # Check parameter details - annotations might be strings due to forward refs
     user_id_param = sig.parameters["user_id"]
@@ -732,13 +732,13 @@ def test_async_signature_preservation() -> None:
     client = APIClient(base_url=BASE_URL)
 
     @client.get("/users/{user_id}")
-    async def get_user_async(user_id: int, result: User, include_details: bool = True) -> User:
+    async def get_user_async(result: User, user_id: int, include_details: bool = True) -> User:
         """Get a user asynchronously."""
         return result
 
     sig = inspect.signature(get_user_async)
     params = list(sig.parameters.keys())
-    assert params == ["user_id", "result", "include_details"]
+    assert params == ["user_id", "include_details"]
 
     # Check that it's still recognized as async
     assert inspect.iscoroutinefunction(get_user_async)
@@ -757,7 +757,7 @@ def test_function_returns_derived_value() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user_name(user_id: int, result: User) -> str:
+    def get_user_name(result: User, user_id: int) -> str:
         return result.name
 
     name = get_user_name(3)
@@ -780,7 +780,7 @@ def test_function_returns_tuple_with_result() -> None:
     )
 
     @client.post("/users")
-    def create_user(data: CreateUserRequest, result: User) -> tuple[User, str]:
+    def create_user(result: User, data: CreateUserRequest) -> tuple[User, str]:
         return result, "created"
 
     user, status = create_user(data=CreateUserRequest(name="Eve"))
@@ -804,7 +804,7 @@ async def test_async_function_returns_derived_value() -> None:
     )
 
     @client.get("/users/{user_id}")
-    async def get_user_id(user_id: int, result: User) -> int:
+    async def get_user_id(result: User, user_id: int) -> int:
         return result.id
 
     user_id = await get_user_id(5)
@@ -827,7 +827,7 @@ def test_optional_query_param_none_is_omitted() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
+    def get_user(result: User, user_id: int, include_details: bool | None = None) -> User:
         return result
 
     # Call without providing the optional parameter
@@ -851,7 +851,7 @@ def test_optional_query_param_provided_is_included() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
+    def get_user(result: User, user_id: int, include_details: bool | None = None) -> User:
         return result
 
     # Call with the optional parameter
@@ -905,7 +905,7 @@ async def test_async_optional_query_param_none_is_omitted() -> None:
     )
 
     @client.get("/users/{user_id}")
-    async def get_user(user_id: int, result: User, include_details: bool | None = None) -> User:
+    async def get_user(result: User, user_id: int, include_details: bool | None = None) -> User:
         return result
 
     # Call without providing the optional parameter

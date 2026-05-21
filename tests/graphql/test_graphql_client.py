@@ -55,7 +55,7 @@ def test_graphql_query_sync():
             }
         }
     """)
-    def get_repo(owner: str, name: str, result: dict) -> dict:
+    def get_repo(result: dict, owner: str, name: str) -> dict:
         return result["data"]["repository"]
 
     repo = get_repo(owner="phalt", name="clientele")
@@ -96,7 +96,7 @@ def test_graphql_mutation_sync():
             }
         }
     """)
-    def create_repo(name: str, description: str, result: dict) -> dict:
+    def create_repo(result: dict, name: str, description: str) -> dict:
         return result["data"]["createRepository"]["repository"]
 
     repo = create_repo(name="new-repo", description="A new repository")
@@ -130,7 +130,7 @@ async def test_graphql_query_async():
             }
         }
     """)
-    async def get_repo(owner: str, name: str, result: dict) -> dict:
+    async def get_repo(result: dict, owner: str, name: str) -> dict:
         return result["data"]["repository"]
 
     repo = await get_repo(owner="phalt", name="clientele")
@@ -172,7 +172,7 @@ async def test_graphql_mutation_async():
             }
         }
     """)
-    async def create_repo(name: str, description: str, result: dict) -> dict:
+    async def create_repo(result: dict, name: str, description: str) -> dict:
         return result["data"]["createRepository"]["repository"]
 
     repo = await create_repo(name="new-repo", description="A new repository")
@@ -206,13 +206,13 @@ def test_graphql_query_sync_with_response():
             }
         }
     """)
-    def get_repo(owner: str, name: str, result: dict, response: Response) -> dict:
+    def get_repo(result: dict, owner: str, name: str, response: Response) -> dict:
         # Can inspect the response object before returning
         assert response.status_code == 200
         assert "application/json" in response.headers.get("Content-Type", "")
         return result["data"]["repository"]
 
-    repo = get_repo(owner="phalt", name="clientele")
+    repo = get_repo(owner="phalt", name="clientele")  # type: ignore
     assert repo["name"] == "clientele"
     assert repo["stargazerCount"] == 100
 
@@ -246,13 +246,13 @@ async def test_graphql_mutation_async_with_response():
             }
         }
     """)
-    async def create_repo(name: str, description: str, result: dict, response: Response) -> dict:
+    async def create_repo(result: dict, name: str, description: str, response: Response) -> dict:
         # Can inspect the response object before returning
         assert response.status_code == 200
         assert "application/json" in response.headers.get("Content-Type", "")
         return result["data"]["createRepository"]["repository"]
 
-    repo = await create_repo(name="new-repo", description="A new repository")
+    repo = await create_repo(name="new-repo", description="A new repository")  # type: ignore
     assert repo["name"] == "new-repo"
     assert repo["url"] == "https://github.com/phalt/new-repo"
 
@@ -277,7 +277,7 @@ def test_graphql_query_with_optional_arguments():
             }
         }
     """)
-    def search_repos(owner: str, language: str | None, result: dict) -> dict:
+    def search_repos(result: dict, owner: str, language: str | None) -> dict:
         return result["data"]["repositories"]
 
     # Call with None for optional parameter
@@ -329,7 +329,7 @@ async def test_graphql_mutation_with_optional_arguments():
             }
         }
     """)
-    async def create_issue(title: str, body: str | None, result: dict) -> dict:
+    async def create_issue(result: dict, title: str, body: str | None) -> dict:
         return result["data"]["createIssue"]["issue"]
 
     # Call with None for optional parameter
@@ -363,7 +363,7 @@ def test_graphql_query_with_pydantic_hydration():
             }
         }
     """)
-    def get_repo(owner: str, name: str, result: RepositoryQueryResponse) -> Repository:
+    def get_repo(result: RepositoryQueryResponse, owner: str, name: str) -> Repository:
         return result.data.repository
 
     repo = get_repo(owner="phalt", name="clientele")
@@ -397,7 +397,7 @@ async def test_graphql_mutation_with_pydantic_hydration():
             }
         }
     """)
-    async def create_issue(title: str, result: CreateIssueMutationResponse) -> Issue:
+    async def create_issue(result: CreateIssueMutationResponse, title: str) -> Issue:
         return result.data.createIssue.issue
 
     issue = await create_issue(title="Bug report")

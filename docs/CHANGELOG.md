@@ -6,6 +6,8 @@
   - Previously we relied on a mypy plugin to handle the typing of injected parameters.
   - New type linting tools like `ty` do not offer a plugin, so we had to find a different approach.
   - We now use a custom type checker to provide accurate type information for injected parameters.
+  - The new typing support is good enough that newer versions of `mypy`, `pyright` and `ty` should work with it out of the box.
+- Client generator has been updated to use the new type checker conventions (inject parameters must go first in function signatures).
 
 
 ## 1.11.1

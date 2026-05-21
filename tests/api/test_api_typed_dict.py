@@ -47,7 +47,7 @@ def test_get_with_typeddict_result() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: UserDict) -> UserDict:
+    def get_user(result: UserDict, user_id: int) -> UserDict:
         return result
 
     user = get_user(1)
@@ -71,7 +71,7 @@ def test_post_with_typeddict_result() -> None:
     )
 
     @client.post("/users")
-    def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    def create_user(result: UserDict, data: CreateUserRequestDict) -> UserDict:
         return result
 
     user = create_user(data={"name": "Charlie"})
@@ -120,7 +120,7 @@ def test_put_with_typeddict_result() -> None:
     )
 
     @client.put("/users/{user_id}")
-    def update_user(user_id: int, data: dict, result: UserDict) -> UserDict:
+    def update_user(result: UserDict, user_id: int, data: dict) -> UserDict:
         return result
 
     user = update_user(1, data={"name": "Ada Updated"})
@@ -143,7 +143,7 @@ def test_patch_with_typeddict_result() -> None:
     )
 
     @client.patch("/users/{user_id}")
-    def patch_user(user_id: int, data: dict, result: UserDict) -> UserDict:
+    def patch_user(result: UserDict, user_id: int, data: dict) -> UserDict:
         return result
 
     user = patch_user(1, data={"name": "Ada Patched"})
@@ -166,7 +166,7 @@ def test_delete_with_typeddict_result() -> None:
     )
 
     @client.delete("/users/{user_id}")
-    def delete_user(user_id: int, result: UserDict) -> UserDict:
+    def delete_user(result: UserDict, user_id: int) -> UserDict:
         return result
 
     user = delete_user(1)
@@ -195,7 +195,7 @@ def test_response_map_with_typeddict() -> None:
     )
 
     @client.get("/users/{user_id}", response_map={200: UserDict, 404: ErrorDict})
-    def get_user(user_id: int, result: UserDict | ErrorDict) -> UserDict | ErrorDict:
+    def get_user(result: UserDict | ErrorDict, user_id: int) -> UserDict | ErrorDict:
         return result
 
     # Test successful response
@@ -222,7 +222,7 @@ def test_typeddict_with_query_params() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: UserDict, include_details: bool = True) -> UserDict:
+    def get_user(result: UserDict, user_id: int, include_details: bool = True) -> UserDict:
         return result
 
     user = get_user(1, include_details=False)
@@ -245,7 +245,7 @@ def test_typeddict_validation_error_on_non_dict() -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: UserDict) -> UserDict:
+    def get_user(result: UserDict, user_id: int) -> UserDict:
         return result
 
     with pytest.raises(TypeError, match="Expected dict for TypedDict"):
@@ -268,7 +268,7 @@ async def test_async_get_with_typeddict_result() -> None:
     )
 
     @client.get("/users/{user_id}")
-    async def get_user(user_id: int, result: UserDict) -> UserDict:
+    async def get_user(result: UserDict, user_id: int) -> UserDict:
         return result
 
     user = await get_user(1)
@@ -293,7 +293,7 @@ async def test_async_post_with_typeddict_result() -> None:
     )
 
     @client.post("/users")
-    async def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    async def create_user(result: UserDict, data: CreateUserRequestDict) -> UserDict:
         return result
 
     user = await create_user(data={"name": "Charlie"})
@@ -317,7 +317,7 @@ def test_post_with_typeddict_data_validates_request_body() -> None:
     )
 
     @client.post("/users")
-    def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    def create_user(result: UserDict, data: CreateUserRequestDict) -> UserDict:
         return result
 
     user = create_user(data={"name": "Charlie"})
@@ -340,7 +340,7 @@ def test_put_with_typeddict_data_validates_request_body() -> None:
     )
 
     @client.put("/users/{user_id}")
-    def update_user(user_id: int, data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    def update_user(result: UserDict, user_id: int, data: CreateUserRequestDict) -> UserDict:
         return result
 
     user = update_user(1, data={"name": "Ada Updated"})
@@ -363,7 +363,7 @@ def test_patch_with_typeddict_data_validates_request_body() -> None:
     )
 
     @client.patch("/users/{user_id}")
-    def patch_user(user_id: int, data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    def patch_user(result: UserDict, user_id: int, data: CreateUserRequestDict) -> UserDict:
         return result
 
     user = patch_user(1, data={"name": "Ada Patched"})
@@ -386,7 +386,7 @@ def test_delete_with_typeddict_data_validates_request_body() -> None:
     )
 
     @client.delete("/users/batch")
-    def delete_users(data: DeleteBatchDict, result: DeleteResultDict) -> DeleteResultDict:
+    def delete_users(result: DeleteResultDict, data: DeleteBatchDict) -> DeleteResultDict:
         return result
 
     result = delete_users(data={"user_ids": [1, 2]})
@@ -401,12 +401,12 @@ def test_typeddict_data_validation_error_on_non_dict() -> None:
     client = APIClient(base_url=BASE_URL)
 
     @client.post("/users")
-    def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    def create_user(result: UserDict, data: CreateUserRequestDict) -> UserDict:
         return result
 
     # Passing a non-dict should raise TypeError before making the request
     with pytest.raises(TypeError, match="Expected dict for TypedDict"):
-        create_user(data="not a dict")
+        create_user(data="not a dict")  # type: ignore
 
 
 @pytest.mark.asyncio
@@ -423,7 +423,7 @@ async def test_async_post_with_typeddict_data_validates_request_body() -> None:
     )
 
     @client.post("/users")
-    async def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    async def create_user(result: UserDict, data: CreateUserRequestDict) -> UserDict:
         return result
 
     user = await create_user(data={"name": "Charlie"})
@@ -446,7 +446,7 @@ def test_post_with_both_typeddict_data_and_result() -> None:
     )
 
     @client.post("/users")
-    def create_user(data: CreateUserRequestDict, result: UserDict) -> UserDict:
+    def create_user(result: UserDict, data: CreateUserRequestDict) -> UserDict:
         return result
 
     user = create_user(data={"name": "Charlie"})

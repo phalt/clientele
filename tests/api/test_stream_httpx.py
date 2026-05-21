@@ -51,7 +51,7 @@ class TestHttpxAsyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def stream_tokens(result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
         tokens = []
@@ -83,7 +83,7 @@ class TestHttpxAsyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        async def stream_dicts(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
+        async def stream_dicts(result: AsyncIterator[dict]) -> AsyncIterator[dict]:
             return result
 
         items = []
@@ -113,7 +113,7 @@ class TestHttpxAsyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        async def stream_text(*, result: AsyncIterator[str]) -> AsyncIterator[str]:
+        async def stream_text(result: AsyncIterator[str]) -> AsyncIterator[str]:
             return result
 
         lines = []
@@ -144,7 +144,7 @@ class TestHttpxAsyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def stream_tokens(result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
         tokens = []
@@ -173,7 +173,7 @@ class TestHttpxAsyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        async def stream_tokens(*, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def stream_tokens(result: AsyncIterator[Token]) -> AsyncIterator[Token]:
             return result
 
         with pytest.raises(HTTPStatusError):
@@ -199,7 +199,7 @@ class TestHttpxAsyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.post("/generate", streaming_response=True)
-        async def generate_stream(*, data: RequestData, result: AsyncIterator[Token]) -> AsyncIterator[Token]:
+        async def generate_stream(result: AsyncIterator[Token], data: RequestData) -> AsyncIterator[Token]:
             return result
 
         request_data = RequestData(prompt="Hello world", max_tokens=100)
@@ -236,7 +236,7 @@ class TestHttpxAsyncStreaming:
             return {"key": parts[0], "value": parts[1]}
 
         @client.get("/events", streaming_response=True, response_parser=custom_parser)
-        async def stream_custom(*, result: AsyncIterator[dict]) -> AsyncIterator[dict]:
+        async def stream_custom(result: AsyncIterator[dict]) -> AsyncIterator[dict]:
             return result
 
         items = []
@@ -270,7 +270,7 @@ class TestHttpxSyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+        def stream_tokens(result: Iterator[Token]) -> Iterator[Token]:
             return result
 
         tokens = []
@@ -300,7 +300,7 @@ class TestHttpxSyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        def stream_dicts(*, result: Iterator[dict]) -> Iterator[dict]:
+        def stream_dicts(result: Iterator[dict]) -> Iterator[dict]:
             return result
 
         items = []
@@ -330,7 +330,7 @@ class TestHttpxSyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        def stream_text(*, result: Iterator[str]) -> Iterator[str]:
+        def stream_text(result: Iterator[str]) -> Iterator[str]:
             return result
 
         lines = []
@@ -364,7 +364,7 @@ class TestHttpxSyncStreaming:
             return {"letter": parts[0], "number": int(parts[1])}
 
         @client.get("/events", streaming_response=True, response_parser=custom_parser)
-        def stream_custom(*, result: Iterator[dict]) -> Iterator[dict]:
+        def stream_custom(result: Iterator[dict]) -> Iterator[dict]:
             return result
 
         items = []
@@ -392,7 +392,7 @@ class TestHttpxSyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+        def stream_tokens(result: Iterator[Token]) -> Iterator[Token]:
             return result
 
         with pytest.raises(HTTPStatusError):
@@ -416,7 +416,7 @@ class TestHttpxSyncStreaming:
         client = api_client.APIClient(config=config)
 
         @client.get("/events", streaming_response=True)
-        def stream_tokens(*, result: Iterator[Token]) -> Iterator[Token]:
+        def stream_tokens(result: Iterator[Token]) -> Iterator[Token]:
             return result
 
         with pytest.raises(HTTPStatusError):
@@ -460,7 +460,7 @@ class TestSSEFormatStreaming:
             return None
 
         @client.post("/chat/stream", streaming_response=True, response_parser=parse_sse)
-        async def stream_chat(*, data: dict, result: AsyncIterator[dict | None]) -> AsyncIterator[dict | None]:
+        async def stream_chat(result: AsyncIterator[dict | None], data: dict) -> AsyncIterator[dict | None]:
             return result
 
         messages = []
@@ -506,7 +506,7 @@ class TestSSEFormatStreaming:
             return None
 
         @client.get("/users/stream", streaming_response=True, response_parser=parse_sse)
-        async def stream_users(*, result: AsyncIterator[dict | None]) -> AsyncIterator[dict | None]:
+        async def stream_users(result: AsyncIterator[dict | None]) -> AsyncIterator[dict | None]:
             return result
 
         users = []
@@ -545,7 +545,7 @@ class TestSSEFormatStreaming:
             return None
 
         @client.get("/status", streaming_response=True, response_parser=parse_sse)
-        def stream_status(*, result: Iterator[dict | None]) -> Iterator[dict | None]:
+        def stream_status(result: Iterator[dict | None]) -> Iterator[dict | None]:
             return result
 
         statuses = []

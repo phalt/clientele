@@ -19,7 +19,7 @@ def list_users(result: schemas.ResponseListUsers) -> schemas.ResponseListUsers:
 
 @client.post("/users", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
 def create_user(
-    data: schemas.CreateUserRequest, result: schemas.HTTPValidationError | schemas.UserResponse
+    result: schemas.HTTPValidationError | schemas.UserResponse, data: schemas.CreateUserRequest
 ) -> schemas.HTTPValidationError | schemas.UserResponse:
     """Create User
 
@@ -30,8 +30,8 @@ def create_user(
 
 @client.get("/users/{user_id}", response_map={200: schemas.UserResponse, 422: schemas.HTTPValidationError})
 def get_user(
-    user_id: int,
     result: schemas.HTTPValidationError | schemas.UserResponse,
+    user_id: int,
     include_posts: typing.Optional[bool] = None,
 ) -> schemas.HTTPValidationError | schemas.UserResponse:
     """Get User

@@ -37,7 +37,7 @@ def test_accepts_response_parser_and_uses_it_to_return_response() -> None:
         return CustomResponseParserResponse(name=data["name"], other_value="other value")
 
     @client.get("/users/{user_id}", response_parser=my_response_parser)
-    def get_user_custom_response(user_id: int, result: CustomResponseParserResponse) -> str:
+    def get_user_custom_response(result: CustomResponseParserResponse, user_id: int) -> str:
         return result.other_value
 
     custom_response = get_user_custom_response(1)
@@ -63,7 +63,7 @@ def test_response_parser_handles_simple_response_types() -> None:
         return {"other_value": "other value"}
 
     @client.get("/users/{user_id}", response_parser=my_response_parser)
-    def get_user_custom_response(user_id: int, result: dict) -> str:
+    def get_user_custom_response(result: dict, user_id: int) -> str:
         return result["other_value"]
 
     custom_response = get_user_custom_response(1)
@@ -88,7 +88,7 @@ def test_errors_when_parser_return_types_do_not_match_result_types() -> None:
     ):
 
         @client.get("/users/{user_id}", response_parser=my_response_parser)
-        def get_user(user_id: int, result: User) -> int:
+        def get_user(result: User, user_id: int) -> int:
             return result.id
 
 
@@ -106,5 +106,5 @@ def test_raises_when_both_response_map_and_response_parser_are_provided() -> Non
         @client.get(
             "/users/{user_id}", response_parser=my_response_parser, response_map={200: CustomResponseParserResponse}
         )
-        def get_raises_with_both(user_id: int, result: CustomResponseParserResponse) -> str:
+        def get_raises_with_both(result: CustomResponseParserResponse, user_id: int) -> str:
             return result.name

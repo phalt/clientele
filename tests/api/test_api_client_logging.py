@@ -31,7 +31,7 @@ def test_sync_request_logs_method_and_url(caplog: pytest.LogCaptureFixture) -> N
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
+    def get_user(result: User, user_id: int) -> User:
         return result
 
     with caplog.at_level(logging.DEBUG, logger="test_sync"):
@@ -56,7 +56,7 @@ async def test_async_request_logs_method_and_url(caplog: pytest.LogCaptureFixtur
     fake_backend.queue_response(path="/users/2", response_obj=ResponseFactory.ok(data={"id": 2, "name": "Bob"}))
 
     @client.get("/users/{user_id}")
-    async def get_user(user_id: int, result: User) -> User:
+    async def get_user(result: User, user_id: int) -> User:
         return result
 
     with caplog.at_level(logging.DEBUG, logger="test_async"):
@@ -82,7 +82,7 @@ def test_no_logging_when_logger_not_configured(caplog: pytest.LogCaptureFixture)
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
+    def get_user(result: User, user_id: int) -> User:
         return result
 
     with caplog.at_level(logging.DEBUG):
@@ -113,7 +113,7 @@ def test_post_request_logging(caplog: pytest.LogCaptureFixture) -> None:
     )
 
     @client.post("/users")
-    def create_user(data: dict, result: User) -> User:
+    def create_user(result: User, data: dict) -> User:
         return result
 
     with caplog.at_level(logging.DEBUG, logger="test_post"):
@@ -139,7 +139,7 @@ def test_response_logs_include_timing(caplog: pytest.LogCaptureFixture) -> None:
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
+    def get_user(result: User, user_id: int) -> User:
         return result
 
     with caplog.at_level(logging.DEBUG, logger="test_timing"):
@@ -164,7 +164,7 @@ def test_response_logs_include_content(caplog: pytest.LogCaptureFixture) -> None
     )
 
     @client.get("/users/{user_id}")
-    def get_user(user_id: int, result: User) -> User:
+    def get_user(result: User, user_id: int) -> User:
         return result
 
     with caplog.at_level(logging.DEBUG, logger="test_content"):

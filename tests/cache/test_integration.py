@@ -31,7 +31,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300)
         @client.get("/pokemon/{id}")
-        def get_pokemon(id: int, result: dict) -> dict:
+        def get_pokemon(result: dict, id: int) -> dict:
             return result
 
         result1 = get_pokemon(id=25)
@@ -76,7 +76,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300, backend=isolated_cache)
         @client.get("/pokemon/{id}")
-        def get_pokemon(id: int, result: dict) -> dict:
+        def get_pokemon(result: dict, id: int) -> dict:
             return result
 
         get_pokemon(id=25)
@@ -112,7 +112,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=1, backend=isolated_cache)
         @client.get("/pokemon/{id}")
-        def get_pokemon(id: int, result: dict) -> dict:
+        def get_pokemon(result: dict, id: int) -> dict:
             return result
 
         get_pokemon(id=25)
@@ -142,7 +142,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300, key=lambda id, version: f"user:{id}")
         @client.get("/users/{id}")
-        def get_user(id: int, version: int, result: dict) -> dict:
+        def get_user(result: dict, id: int, version: int) -> dict:
             return result
 
         result1 = get_user(id=1, version=1)
@@ -178,7 +178,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300, enabled=False)
         @client.get("/pokemon/{id}")
-        def get_pokemon(id: int, result: dict) -> dict:
+        def get_pokemon(result: dict, id: int) -> dict:
             return result
 
         get_pokemon(id=25)
@@ -207,7 +207,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300, backend=isolated_cache)
         @client.get("/pokemon/{id}")
-        async def get_pokemon(id: int, result: dict) -> dict:
+        async def get_pokemon(result: dict, id: int) -> dict:
             return result
 
         result1 = await get_pokemon(id=25)
@@ -252,7 +252,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300, backend=isolated_cache)
         @client.get("/search")
-        def search(search_term: str, limit: int, result: dict) -> dict:
+        def search(result: dict, search_term: str, limit: int) -> dict:
             return result
 
         search(search_term="python", limit=10)
@@ -290,7 +290,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300)
         @client.get("/maybe-exists/{id}")
-        def get_item(id: int, result: dict) -> dict | None:
+        def get_item(result: dict, id: int) -> dict | None:
             call_count[0] += 1
             return None
 
@@ -345,7 +345,7 @@ class TestCachingContract:
 
         @cache.memoize(ttl=300, backend=small_cache)
         @client.get("/items/{id}")
-        def get_item(id: int, result: dict) -> dict:
+        def get_item(result: dict, id: int) -> dict:
             return result
 
         get_item(id=1)  # Cache: [1]

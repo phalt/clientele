@@ -18,7 +18,7 @@ def list_users(result: schemas.Response) -> schemas.Response:
 
 
 @client.post("/api/users")
-def create_user(data: schemas.UserIn, result: schemas.UserOut) -> schemas.UserOut:
+def create_user(result: schemas.UserOut, data: schemas.UserIn) -> schemas.UserOut:
     """Create User
 
     Create a new user.
@@ -27,7 +27,7 @@ def create_user(data: schemas.UserIn, result: schemas.UserOut) -> schemas.UserOu
 
 
 @client.get("/api/users/{user_id}")
-def get_user(user_id: int, result: schemas.UserOut, include_posts: typing.Optional[bool] = None) -> schemas.UserOut:
+def get_user(result: schemas.UserOut, user_id: int, include_posts: typing.Optional[bool] = None) -> schemas.UserOut:
     """Get User
 
         Get a specific user by ID.

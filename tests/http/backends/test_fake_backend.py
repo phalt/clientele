@@ -31,7 +31,7 @@ class TestFakeHTTPBackend:
         client = api_client.APIClient(config=config)
 
         @client.get("/users/{user_id}")
-        def get_user(user_id: int, result: dict) -> dict:
+        def get_user(result: dict, user_id: int) -> dict:
             return result
 
         # Make a request
@@ -110,7 +110,7 @@ class TestFakeHTTPBackend:
         )
 
         # Make request
-        response = headers_test()
+        response = headers_test()  # type: ignore
 
         # Verify response
         assert response.content == b'{"status": "ok"}'
@@ -131,7 +131,7 @@ class TestFakeHTTPBackend:
         client = api_client.APIClient(config=config)
 
         @client.post("/users")
-        def create_user(data: dict, result: dict) -> dict:
+        def create_user(result: dict, data: dict) -> dict:
             return result
 
         # Make request with payload

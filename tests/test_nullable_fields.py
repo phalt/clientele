@@ -134,7 +134,7 @@ components:
         sys.path.insert(0, str(output_dir))
 
         try:
-            import schemas  # type: ignore[import-not-found]
+            import schemas  # type: ignore
 
             # Test with null 'previous' (first page response)
             response_data = {
