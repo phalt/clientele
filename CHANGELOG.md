@@ -8,6 +8,7 @@
   - We now use a custom type checker to provide accurate type information for injected parameters.
   - The new typing support is good enough that newer versions of `mypy`, `pyright` and `ty` should work with it out of the box.
 - Client generator has been updated to use the new type checker conventions (inject parameters must go first in function signatures).
+- Dev dependencies have been updated to latest versions.
 
 ## 1.11.1
 
