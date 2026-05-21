@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Protocol, runtime_checkable
+from typing import Protocol, runtime_checkable
 
-import httpx2
 import pydantic
 import pydantic_settings
 
@@ -28,8 +27,6 @@ class Logger(Protocol):
 class BaseConfig(pydantic_settings.BaseSettings):
     """
     Runtime configuration for clientele clients.
-
-    httpx configuration options can be found at https://httpx2.pydantic.dev/
 
     Values can be set via:
     1. Environment variables (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
@@ -64,40 +61,12 @@ class BaseConfig(pydantic_settings.BaseSettings):
     follow_redirects: bool = False
     verify: bool | str = True
     http2: bool = False
-    auth: httpx2.Auth | tuple[str, str] | None = None
-    limits: httpx2.Limits | None = None
-    proxies: httpx2.Proxy | None = None
-    transport: httpx2.BaseTransport | httpx2.AsyncBaseTransport | None = None
-    cookies: httpx2.Cookies | None = None
     # Cache configuration
     cache_backend: cache_types.CacheBackend | None = None
     # HTTP backend configuration
     http_backend: http_backends.HTTPBackend | None = None
     # Logging configuration
     logger: Logger | None = None
-
-    def httpx_client_options(self) -> dict[str, Any]:
-        """Create a dictionary of options suitable for ``httpx2.Client``."""
-
-        options: dict[str, Any] = {
-            "base_url": self.base_url,
-            "headers": self.headers,
-            "timeout": self.timeout,
-            "follow_redirects": self.follow_redirects,
-            "verify": self.verify,
-            "http2": self.http2,
-            "cookies": self.cookies,
-        }
-        if self.auth is not None:
-            options["auth"] = self.auth
-        if self.limits is not None:
-            options["limits"] = self.limits
-        if self.proxies is not None:
-            options["proxies"] = self.proxies
-        if self.transport is not None:
-            options["transport"] = self.transport
-        return options
-
 
 def get_default_config(base_url: str) -> BaseConfig:
     """
@@ -112,13 +81,8 @@ def get_default_config(base_url: str) -> BaseConfig:
         headers={},
         timeout=5.0,
         follow_redirects=False,
-        auth=None,
         verify=True,
         http2=False,
-        limits=None,
-        proxies=None,
-        transport=None,
-        cookies=None,
         cache_backend=None,
         http_backend=None,
         logger=None,

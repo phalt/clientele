@@ -8,10 +8,6 @@ _client_kwargs: dict[str, typing.Any] = {
     'http2': c.config.http2,
     'max_redirects': c.config.max_redirects,
 }
-if _limits := c.config.limits:
-    _client_kwargs['limits'] = _limits
-if _transport := c.config.transport:
-    _client_kwargs['transport'] = _transport
 client = httpx2.{{client_type}}(**_client_kwargs)
 
 

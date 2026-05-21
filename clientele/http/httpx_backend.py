@@ -29,6 +29,19 @@ class HttpxHTTPBackend(backends.HTTPBackend):
     def __init__(self, client_options: dict[str, typing.Any] | None = None) -> None:
         self.client_options = client_options or {}
 
+    @classmethod
+    def from_config(cls, config: typing.Any) -> "HttpxHTTPBackend":
+        return cls(
+            client_options={
+                "base_url": config.base_url,
+                "headers": config.headers,
+                "timeout": config.timeout,
+                "follow_redirects": config.follow_redirects,
+                "verify": config.verify,
+                "http2": config.http2,
+            }
+        )
+
     def build_client(self) -> httpx2.Client:
         """Build and return a synchronous httpx2.Client."""
         if not self._sync_client:

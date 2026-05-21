@@ -7,7 +7,6 @@ import time
 import typing
 from urllib import parse
 
-import httpx2
 import pydantic
 
 from clientele.api import config as api_config
@@ -53,8 +52,6 @@ class APIClient:
         *,
         config: api_config.BaseConfig | None = None,
         base_url: str | None = None,
-        httpx_client: httpx2.Client | None = None,
-        httpx_async_client: httpx2.AsyncClient | None = None,
     ) -> None:
         if config is None:
             # Enforce base_url when no config is provided
@@ -80,9 +77,7 @@ class APIClient:
 
         # Set http_backend if not already set
         if self.config.http_backend is None:
-            self.config.http_backend = httpx_backend.HttpxHTTPBackend(
-                client_options=self.config.httpx_client_options(),
-            )
+            self.config.http_backend = httpx_backend.HttpxHTTPBackend.from_config(self.config)
 
     def close(self) -> None:
         """Close the synchronous HTTP client."""

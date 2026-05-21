@@ -2,6 +2,8 @@
 
 ## 2.0.0 UNRELEASED
 
+This release includes many breaking changes, improved type support, and dependency changes.
+
 - Drastically improved typing support for injected parameters.
   - Previously we relied on a mypy plugin to handle the typing of injected parameters.
   - New type linting tools like `ty` do not offer a plugin, so we had to find a different approach.
@@ -14,6 +16,9 @@
   - Clientele supports HttpBackends with httpx2 as a default.
   - In the future, we may add bundled support for other backends.
   - You can still use your own httpx backend by implementing the `HttpBackend` interface.
+- Configuration options for httpx have been removed from `BaseConfig`.
+  - This is the final step in moving to the HttpBackends interface.
+- Cleaned up tests for the old style APIClients (before the Clientele framework was introduced).
 
 ## 1.11.1
 
