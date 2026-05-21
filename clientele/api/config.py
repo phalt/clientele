@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Protocol, runtime_checkable
+from typing import Any, Protocol, runtime_checkable
 
 import pydantic
 import pydantic_settings
@@ -67,6 +67,7 @@ class BaseConfig(pydantic_settings.BaseSettings):
     http_backend: http_backends.HTTPBackend | None = None
     # Logging configuration
     logger: Logger | None = None
+
 
 def get_default_config(base_url: str) -> BaseConfig:
     """

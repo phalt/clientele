@@ -27,6 +27,11 @@ class RequestDataAndParameterResponse(BaseModel):
     your_query: str
 
 
+class RunMetadata(BaseModel):
+    runtag: str
+    description: str
+
+
 def test_raises_when_no_params_supplied():
     with pytest.raises(ValueError):
         APIClient()
@@ -100,6 +105,77 @@ def test_post_accepts_model_instance_and_dict() -> None:
 
     dict_user = create_user(data={"name": "Charlie"})  # type: ignore
     assert dict_user.name == "Charlie"
+
+    client.close()
+
+
+def test_post_data_goes_to_body_not_query_params_issue_241() -> None:
+    """Confirm correct behaviour for https://github.com/phalt/clientele/issues/241.
+
+    The reporter got a POST request sent as query params. The expected behaviour
+    is: the 'data' parameter always goes to the JSON body, never to query params.
+    Extra unknown kwargs correctly become query params (by design). The reporter
+    likely called their function with the wrong kwarg name (e.g. 'metadata='
+    instead of 'data='), causing the payload to be treated as an extra kwarg and
+    appended to the URL as-is.
+    """
+    client = APIClient(base_url=BASE_URL)
+
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/runs/abc123",
+        response_obj=ResponseFactory.created(data={"id": 1, "name": "run"}),
+    )
+
+    @client.post("/runs/{api_key}")
+    def start_run(result: User, api_key: str, data: RunMetadata) -> User:
+        return result
+
+    start_run("abc123", data=RunMetadata(runtag="my-run", description="test"))
+
+    captured = fake_backend.requests[0]["kwargs"]
+
+    # 'data' must be serialised into the JSON body, not the query string
+    assert "json" in captured, "data must be sent as JSON body"
+    body = captured["json"]
+    assert body["runtag"] == "my-run"
+    assert body["description"] == "test"
+    params = captured.get("params") or {}
+    assert "data" not in params, "data must never appear as a query param"
+
+    client.close()
+
+
+def test_post_extra_kwargs_become_query_params() -> None:
+    """Extra kwargs not in the function signature are sent as query params (by design).
+
+    This is the likely cause of https://github.com/phalt/clientele/issues/241:
+    the reporter passed their payload under the wrong kwarg name, so it was
+    treated as an extra kwarg and stringified into the query string instead of
+    the request body.
+    """
+    client = APIClient(base_url=BASE_URL)
+
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/runs/abc123",
+        response_obj=ResponseFactory.created(data={"id": 1, "name": "run"}),
+    )
+
+    @client.post("/runs/{api_key}")
+    def start_run(result: User, api_key: str, data: RunMetadata) -> User:
+        return result
+
+    # Pass a kwarg that isn't in the signature; it should become a query param
+    start_run("abc123", data=RunMetadata(runtag="my-run", description="test"), dry_run=True)  # type: ignore
+
+    captured = fake_backend.requests[0]["kwargs"]
+
+    # 'data' is still in the body
+    assert captured["json"]["runtag"] == "my-run"
+    # The unknown kwarg appears as a query param
+    params = captured.get("params") or {}
+    assert params.get("dry_run") is True
 
     client.close()
 
