@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+import sys
 import textwrap
 
-import click
+try:
+    import click
+except ImportError:
+    print(
+        "The clientele CLI requires additional dependencies.\n"
+        "Install them with: pip install 'clientele[cli]'"
+    )
+    sys.exit(1)
 
 from clientele import settings
 

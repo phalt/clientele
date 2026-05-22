@@ -230,21 +230,26 @@ name = "clientele"
 version = "1.11.1"
 source = { editable = "." }
 dependencies = [
-    { name = "cicerone" },
-    { name = "click" },
     { name = "httpx2" },
-    { name = "jinja2" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
+    { name = "stamina" },
+]
+
+[package.optional-dependencies]
+cli = [
+    { name = "cicerone" },
+    { name = "click" },
+    { name = "jinja2" },
     { name = "pyyaml" },
     { name = "rich" },
     { name = "ruff" },
-    { name = "stamina" },
     { name = "types-pyyaml" },
 ]
 
 [package.dev-dependencies]
 dev = [
+    { name = "clientele", extra = ["cli"] },
     { name = "django" },
     { name = "django-ninja" },
     { name = "djangorestframework" },
@@ -265,21 +270,23 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "cicerone", specifier = "==0.3.0" },
-    { name = "click", specifier = ">=8.3.1" },
+    { name = "cicerone", marker = "extra == 'cli'", specifier = "==0.3.0" },
+    { name = "click", marker = "extra == 'cli'", specifier = ">=8.3.1" },
     { name = "httpx2", specifier = ">=2.2.0" },
-    { name = "jinja2", specifier = ">=3.1.6" },
+    { name = "jinja2", marker = "extra == 'cli'", specifier = ">=3.1.6" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pydantic-settings", specifier = ">=2.12.0" },
-    { name = "pyyaml", specifier = ">=6.0.3" },
-    { name = "rich", specifier = ">=14.2.0" },
-    { name = "ruff", specifier = ">=0.15.5" },
+    { name = "pyyaml", marker = "extra == 'cli'", specifier = ">=6.0.3" },
+    { name = "rich", marker = "extra == 'cli'", specifier = ">=14.2.0" },
+    { name = "ruff", marker = "extra == 'cli'", specifier = ">=0.15.5" },
     { name = "stamina", specifier = ">=25.2.0" },
-    { name = "types-pyyaml", specifier = ">=6.0.12.20250915" },
+    { name = "types-pyyaml", marker = "extra == 'cli'", specifier = ">=6.0.12.20250915" },
 ]
+provides-extras = ["core", "cli"]
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "clientele", extras = ["cli"] },
     { name = "django", specifier = ">=4.2" },
     { name = "django-ninja", specifier = ">=1.0.0" },
     { name = "djangorestframework", specifier = ">=3.17.1" },
