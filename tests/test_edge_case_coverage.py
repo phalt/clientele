@@ -43,9 +43,9 @@ def test_load_openapi_spec_no_normalization_needed(openapi_30_spec):
 
 def test_schemas_generator_no_schemas_branch():
     """Test schemas generator when components has no schemas attribute."""
-    from clientele.generators.standard.generators.schemas import SchemasGenerator
+    from clientele.generators.api import writer as api_writer
+    from clientele.generators.shared.generators.schemas import SchemasGenerator
 
-    # Create a spec with components that has schemas=None
     spec_dict = {
         "openapi": "3.0.0",
         "info": {"title": "Test API", "version": "1.0.0"},
@@ -58,10 +58,8 @@ def test_schemas_generator_no_schemas_branch():
     spec = cicerone_parse.parse_spec_from_dict(spec_dict)
 
     with tempfile.TemporaryDirectory() as tmpdir:
-        generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir))
+        generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir), writer=api_writer)
 
-        # This should exercise lines 231-232 (no schemas in components)
-        # The method should return early without generating anything
         generator.generate_schema_classes()
 
         # Should complete without error

@@ -7,7 +7,6 @@ import pytest
 from cicerone import parse as cicerone_parse
 
 from clientele.generators.api.generator import APIGenerator
-from clientele.generators.standard.generator import StandardGenerator
 
 
 def load_fixture_spec(spec_path: Path):
@@ -72,7 +71,7 @@ def validate_generated_python_file(file_path: Path, file_content: str, fixture_p
 
 
 @pytest.mark.parametrize("fixture_path", FIXTURE_SCHEMAS)
-@pytest.mark.parametrize("client_generator", [APIGenerator, StandardGenerator])
+@pytest.mark.parametrize("client_generator", [APIGenerator])
 def test_fixture_schema_generates_client(fixture_path, client_generator) -> None:
     """Test that each fixture schema can generate a working client."""
     base_path = Path(__file__).parent.parent

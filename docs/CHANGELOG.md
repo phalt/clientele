@@ -20,6 +20,7 @@ This release includes many breaking changes, improved type support, and dependen
   - This is the final step in moving to the HttpBackends interface.
 - Cleaned up tests for the old style APIClients (before the Clientele framework was introduced).
 - Handle generic alias reponse types better (#240).
+- Refactor the old Standard APIClient generator to be a generic base class.
 
 ## 1.11.1
 

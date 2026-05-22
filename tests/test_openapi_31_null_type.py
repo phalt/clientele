@@ -5,10 +5,9 @@ import pytest
 from cicerone import parse as cicerone_parse
 
 from clientele.generators.api.generator import APIGenerator
-from clientele.generators.standard.generator import StandardGenerator
 
 
-@pytest.mark.parametrize("generator_class", [StandardGenerator, APIGenerator])
+@pytest.mark.parametrize("generator_class", [APIGenerator])
 def test_openapi_31_null_type_in_anyof(generator_class):
     # OpenAPI 3.1.0 schema - FastAPI 0.125.0
     openapi_spec = """
@@ -88,7 +87,7 @@ components:
         compile(schemas_content, str(schemas_file), "exec")
 
 
-@pytest.mark.parametrize("generator_class", [StandardGenerator, APIGenerator])
+@pytest.mark.parametrize("generator_class", [APIGenerator])
 def test_openapi_31_null_only_type(generator_class):
     openapi_spec = """
 openapi: 3.1.0

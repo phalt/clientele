@@ -88,7 +88,7 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         """Override to add response_map to template context and fix URL handling for clientele api."""
         from rich import console as rich_console
 
-        from clientele.generators.standard import utils
+        from clientele.generators.shared import utils
 
         console = rich_console.Console()
 

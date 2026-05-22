@@ -1,4 +1,4 @@
-"""Base class for client generators shared by standard and classbase generators."""
+"""Base class for client generators shared by api and basic generators."""
 
 import collections
 import typing
@@ -8,7 +8,7 @@ from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
 from clientele.generators import cicerone_compat
-from clientele.generators.standard import utils
+from clientele.generators.shared import utils
 
 console = rich_console.Console()
 

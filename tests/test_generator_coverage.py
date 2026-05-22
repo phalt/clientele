@@ -6,9 +6,10 @@ from pathlib import Path
 
 import pytest
 
+from clientele.generators.api import writer as api_writer
 from clientele.generators.api.generator import APIGenerator
 from clientele.generators.cicerone_compat import normalize_openapi_31_schema, normalize_openapi_31_spec
-from clientele.generators.standard.generator import StandardGenerator
+from clientele.generators.shared.generators.schemas import SchemasGenerator
 
 
 def test_normalize_openapi_31_schema_only_null_type():
@@ -135,7 +136,6 @@ def test_normalize_openapi_31_spec_non_dict_path_item():
             "/test": "not a dict",
         },
     }
-    # Should not raise an error
     result = normalize_openapi_31_spec(spec)
     assert result["paths"]["/test"] == "not a dict"
 
@@ -146,7 +146,6 @@ def test_normalize_openapi_31_spec_dollar_prefixed_keys():
         "openapi": "3.1.0",
         "paths": {"/test": {"$ref": "#/components/paths/TestPath"}},
     }
-    # Should not raise an error
     result = normalize_openapi_31_spec(spec)
     assert result["paths"]["/test"]["$ref"] == "#/components/paths/TestPath"
 
@@ -157,7 +156,6 @@ def test_normalize_openapi_31_spec_non_dict_response():
         "openapi": "3.1.0",
         "paths": {"/test": {"get": {"responses": {"200": "not a dict"}}}},
     }
-    # Should not raise an error
     result = normalize_openapi_31_spec(spec)
     assert result["paths"]["/test"]["get"]["responses"]["200"] == "not a dict"
 
@@ -168,7 +166,6 @@ def test_normalize_openapi_31_spec_non_dict_parameter():
         "openapi": "3.1.0",
         "paths": {"/test": {"get": {"parameters": ["not a dict"]}}},
     }
-    # Should not raise an error
     result = normalize_openapi_31_spec(spec)
     assert result["paths"]["/test"]["get"]["parameters"][0] == "not a dict"
 
@@ -176,7 +173,7 @@ def test_normalize_openapi_31_spec_non_dict_parameter():
 class TestGeneratorCoverage:
     """Tests for generator module coverage."""
 
-    @pytest.mark.parametrize("generator_class", [StandardGenerator, APIGenerator])
+    @pytest.mark.parametrize("generator_class", [APIGenerator])
     def test_generator_removes_existing_file(self, generator_class):
         """Test that generators removes existing files before regenerating."""
 
@@ -205,33 +202,28 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                # Generate client once
                 generator = generator_class(
                     spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=spec_file
                 )
                 generator.generate()
 
-                # Verify files were created
                 assert (output_dir / "client.py").exists()
 
-                # Create a non-config file to test removal
                 test_file = output_dir / "schemas.py"
                 test_file.write_text("# Old content")
 
-                # Generate again - should remove and recreate files (except config.py)
                 generator2 = generator_class(
                     spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=spec_file
                 )
                 generator2.generate()
 
-                # File should have been replaced
                 assert test_file.exists()
                 assert "# Old content" not in test_file.read_text()
 
             finally:
                 Path(spec_file).unlink()
 
-    @pytest.mark.parametrize("generator_class", [StandardGenerator, APIGenerator])
+    @pytest.mark.parametrize("generator_class", [APIGenerator])
     def test_generator_with_servers(self, generator_class):
         """Test generator with servers in spec."""
 
@@ -266,11 +258,9 @@ class TestGeneratorCoverage:
                 )
                 generator.generate()
 
-                # Verify client was created with the server URL
                 assert (output_dir / "config.py").exists()
                 client_content = (output_dir / "config.py").read_text()
-                # Check that the domain from the test spec is in the generated code
-                assert "api.example.com" in client_content  # nosec: B113 - False positive, this is a test assertion
+                assert "api.example.com" in client_content  # nosec: B113
 
             finally:
                 Path(spec_file).unlink()
@@ -278,8 +268,6 @@ class TestGeneratorCoverage:
     def test_schemas_generator_no_components(self):
         """Test schemas generator with no components in spec."""
 
-        from clientele.generators.standard.generators.schemas import SchemasGenerator
-
         openapi_spec = {
             "openapi": "3.0.0",
             "info": {"title": "Test API", "version": "1.0.0"},
@@ -303,13 +291,9 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir))
+                generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir), writer=api_writer)
 
-                # Should handle missing components gracefully
-                # This will exercise the early return path in generate_schema_classes
                 generator.generate_schema_classes()
-
-                # Should not crash - method should return early when no components
 
             finally:
                 Path(spec_file).unlink()
@@ -317,12 +301,10 @@ class TestGeneratorCoverage:
     def test_schemas_generator_no_schemas_in_components(self):
         """Test schemas generator with components but no schemas."""
 
-        from clientele.generators.standard.generators.schemas import SchemasGenerator
-
         openapi_spec = {
             "openapi": "3.0.0",
             "info": {"title": "Test API", "version": "1.0.0"},
-            "components": {},  # Empty components
+            "components": {},
             "paths": {
                 "/test": {
                     "get": {
@@ -343,13 +325,9 @@ class TestGeneratorCoverage:
 
                 spec = cicerone_parse.parse_spec_from_file(spec_file)
 
-                generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir))
+                generator = SchemasGenerator(spec=spec, output_dir=str(tmpdir), writer=api_writer)
 
-                # Should handle missing schemas gracefully
-                # This will exercise the early return path when components has no schemas
                 generator.generate_schema_classes()
-
-                # Should not crash - method should return early
 
             finally:
                 Path(spec_file).unlink()

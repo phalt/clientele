@@ -39,7 +39,7 @@ class APIGenerator(generators.Generator):
         url: typing.Optional[str],
         file: typing.Optional[str],
     ) -> None:
-        self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir)
+        self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir, writer=writer)
         self.clients_generator = clients.ClientsGenerator(
             spec=spec,
             output_dir=output_dir,

@@ -14,10 +14,9 @@ import pytest
 from cicerone import parse as cicerone_parse
 
 from clientele.generators.api.generator import APIGenerator
-from clientele.generators.standard.generator import StandardGenerator
 
 
-@pytest.mark.parametrize("generator_class", [StandardGenerator, APIGenerator])
+@pytest.mark.parametrize("generator_class", [APIGenerator])
 def test_nullable_pagination_fields(generator_class):
     """Test that nullable pagination fields accept null values.
 

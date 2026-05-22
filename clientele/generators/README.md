@@ -4,9 +4,9 @@ In the future, this will be the directory for all the possible generators that c
 
 Copy the basic template if you want to start your own.
 
-## Standard
+## API
 
-The standard generator
+The Clientele API client generator
 
 ## Basic
 

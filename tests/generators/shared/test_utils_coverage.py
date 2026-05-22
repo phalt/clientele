@@ -1,6 +1,6 @@
 """Additional tests for standard utils to increase coverage."""
 
-from clientele.generators.standard import utils
+from clientele.generators.shared import utils
 
 
 def test_snake_case_prop_with_empty_string():

@@ -2,7 +2,7 @@
 
 import typing
 
-from clientele.generators.standard import utils
+from clientele.generators.shared import utils
 
 
 def build_union_type_string(
