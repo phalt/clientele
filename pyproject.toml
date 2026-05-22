@@ -57,6 +57,7 @@ dev = [
     "drf-spectacular>=0.26.0",
     "django-ninja>=1.0.0",
     "mypy>=1.19.1",
+    "requests>=2.32.0",
 ]
 
 [build-system]

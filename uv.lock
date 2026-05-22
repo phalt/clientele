@@ -264,6 +264,7 @@ dev = [
     { name = "pytest-cov" },
     { name = "pytest-httpserver" },
     { name = "pytest-httpx2" },
+    { name = "requests" },
     { name = "ty" },
     { name = "uvicorn" },
 ]
@@ -302,6 +303,7 @@ dev = [
     { name = "pytest-cov", specifier = ">=7.1.0" },
     { name = "pytest-httpserver", specifier = ">=1.1.3" },
     { name = "pytest-httpx2", specifier = ">=1.0.0" },
+    { name = "requests", specifier = ">=2.32.0" },
     { name = "ty", specifier = ">=0.0.38" },
     { name = "uvicorn", specifier = ">=0.20.0" },
 ]

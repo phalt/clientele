@@ -154,6 +154,63 @@ backend.reset()
 - Demonstrations and examples
 - Development mode with fake data
 
+### RequestsHTTPBackend
+
+A synchronous-only backend using the popular [requests](https://requests.readthedocs.io/) library.
+
+!!! note "requests is not installed by default"
+    This backend requires `requests` to be installed separately:
+    ```
+    pip install requests
+    ```
+    Importing `clientele.http.requests_backend` without `requests` installed will raise an `ImportError` with instructions.
+
+!!! warning "Async not supported"
+    `RequestsHTTPBackend` only supports synchronous requests. Calling any async method
+    (`send_async_request`, `handle_async_stream`, `build_async_client`) will raise
+    `NotImplementedError`. Use `HttpxHTTPBackend` if you need async support.
+
+#### Usage
+
+```python
+from clientele.http.requests_backend import RequestsHTTPBackend
+from clientele.api import config, client
+
+http_backend = RequestsHTTPBackend(
+    base_url="https://api.example.com",
+    headers={"Authorization": "Bearer my-token"},
+    timeout=30.0,
+    follow_redirects=True,
+    verify=True,
+)
+
+cfg = config.BaseConfig(
+    base_url="https://api.example.com",
+    http_backend=http_backend,
+)
+
+api = client.APIClient(config=cfg)
+
+@api.get("/users/{user_id}")
+def get_user(result: dict, user_id: int) -> dict:
+    return result
+```
+
+#### Options
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_url` | `str` | `""` | Base URL prepended to all relative paths |
+| `headers` | `dict` | `{}` | Default headers sent on every request |
+| `timeout` | `float \| None` | `5.0` | Timeout in seconds. `None` disables timeout |
+| `follow_redirects` | `bool` | `False` | Whether to follow HTTP redirects |
+| `verify` | `bool \| str` | `True` | SSL verification. `False` to disable, or path to CA bundle |
+
+#### Limitations
+
+- **Sync only** — async methods raise `NotImplementedError`
+- **No HTTP/2** — `requests` does not support HTTP/2; use `HttpxHTTPBackend` with `http2=True` if needed
+
 ## Creating Custom Backends
 
 Example: psuedocode `aiohttp` async HTTP backend

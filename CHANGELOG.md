@@ -1,5 +1,11 @@
 # Change log
 
+
+## 2.1.0 UNRELEASED
+
+- Introduce `RequestsHTTPBackend` for making HTTP requests using the `requests` library.
+  - The library `requests` is not installed by default. See the documentation for installation instructions.
+
 ## 2.0.0
 
 This release includes many breaking changes, improved type support, and dependency changes.
