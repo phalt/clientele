@@ -8,6 +8,9 @@
 - Introduce `AIOHTTPBackend` for making HTTP requests using the `aiohttp` library.
   - This backend implements asynchronous HTTP requests only.
   - The library `aiohttp` is not installed by default. See the documentation for installation instructions.
+- Introduce `NiquestsHTTPBackend` for making HTTP requests using the `niquests` library.
+  - This backend implements both synchronous and asynchronous HTTP requests.
+  - The library `niquests` is not installed by default. See the documentation for installation instructions.
 
 ## 2.0.0
 
