@@ -49,7 +49,7 @@ nav:
     - 🪵 Logging: api-logging.md
     - 🧪 Testing: api-testing.md
     - 🎯 Direct requests: api-direct-requests.md
-    - 🥧 Mypy support: mypy.md
+    - 💉 Injected parameters & typing: injected-parameters.md
   - 📟 Command line tools:
     - 🏗️ Client creator: openapi-cli.md
   - ⚡️ API Server Integrations:

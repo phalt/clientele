@@ -26,7 +26,7 @@ How Clientele works:
 - Path parameters inside `{}` are filled from the function arguments (e.g. `user_id`).
 - Any remaining keyword arguments (like `include_details` above) become query parameters, but you can also provide a dict function parameter `query={...}` instead.
 - The **`result` parameter is mandatory** and its type annotation (`User`) drives response parsing.
-- Your function is injected with the `result` parameter - this is the response payload hydrated into your `result` parameter's type.
+- Your function is injected with the `result` parameter - this is the response payload hydrated into your `result` parameter's type. Callers never supply it; Clientele injects it after the HTTP response arrives.
 - The function's return value is independent - you can return the result directly, transform it, or return something completely different.
 
 ## HTTP POST example
@@ -147,31 +147,9 @@ Clientele will inject the following parameters into your function once an http r
 - `result`: an instance of the type specified in the `result` parameter annotation. This parameter is **mandatory** and its type annotation determines how the response is parsed. Can be a Pydantic model or a TypedDict.
 - `response`: the `httpx.Response` - useful for logging, debugging etc. (optional)
 
-**Both `result` and `response` must be declared first in your function signature**, before any caller-supplied parameters (path params, query params, `data`). This is required for type checker support (see below).
+**Both `result` and `response` must be declared first in your function signature**, before any caller-supplied parameters (path params, query params, `data`).
 
-## Typing support for injected parameters
-
-Clientele does some Python typing magic to give type checkers (mypy, pyright, ty) a correct view of your decorated functions.
-
-The decorator type signature says: *"I accept a function whose first parameter(s) are injected values, and I return a new callable with those parameters removed."* This means type checkers see the public API — for example `get_user` is typed as `(user_id: int) -> User`, with `result` invisible to callers.
-
-For this to work, **`result` and `response` must appear first** in the parameter list:
-
-```python
-# Correct — injected params first, type checker sees: (user_id: int) -> User
-@client.get("/users/{user_id}")
-def get_user(result: User, user_id: int) -> User:
-    return result
-
-# Incorrect — result is not first, typing will not work correctly
-@client.get("/users/{user_id}")
-def get_user(user_id: int, result: User) -> User:
-    return result
-```
-
-At runtime, Clientele also patches the function's signature to hide `result` and `response` from introspection tools (IDEs, `inspect.signature()`, the cache key generator). This uses the same ordering rule: injected params are identified by name, stripped from the public signature, and injected automatically when the HTTP response arrives.
-
-If you use the [mypy plugin](mypy.md), mypy will also strip injected parameters by name regardless of position — but for other type checkers (pyright, ty) the position-first rule is required.
+For a full explanation of why this constraint exists, how Clientele hides these parameters from callers and type checkers, and how to configure mypy support, see [Injected parameters & typing](injected-parameters.md).
 
 ## Response parsing rules
 
