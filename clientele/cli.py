@@ -6,10 +6,7 @@ import textwrap
 try:
     import click
 except ImportError:
-    print(
-        "The clientele CLI requires additional dependencies.\n"
-        "Install them with: pip install 'clientele[cli]'"
-    )
+    print("The clientele CLI requires additional dependencies.\nInstall them with: pip install 'clientele[cli]'")
     sys.exit(1)
 
 from clientele import settings

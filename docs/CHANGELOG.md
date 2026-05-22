@@ -4,6 +4,9 @@
 
 This release includes many breaking changes, improved type support, and dependency changes.
 
+- Installation has been split between `clientele` and `clientele[cli]`.
+  - Core: `clientele` provides the core API framework without any CLI dependencies.
+  - CLI: `clientele[cli]` provides additional dependencies for the CLI and OpenAPI client generation.
 - Drastically improved typing support for injected parameters.
   - Previously we relied on a mypy plugin to handle the typing of injected parameters.
   - New type linting tools like `ty` do not offer a plugin, so we had to find a different approach.
