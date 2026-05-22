@@ -211,54 +211,67 @@ def get_user(result: dict, user_id: int) -> dict:
 - **Sync only** — async methods raise `NotImplementedError`
 - **No HTTP/2** — `requests` does not support HTTP/2; use `HttpxHTTPBackend` with `http2=True` if needed
 
-## Creating Custom Backends
+### AiohttpHTTPBackend
 
-Example: psuedocode `aiohttp` async HTTP backend
+An asynchronous-only backend using the popular [aiohttp](https://docs.aiohttp.org/) library.
+
+!!! note "aiohttp is not installed by default"
+    This backend requires `aiohttp` to be installed separately:
+    ```
+    pip install aiohttp
+    ```
+    Importing `clientele.http.aiohttp_backend` without `aiohttp` installed will raise an `ImportError` with instructions.
+
+!!! warning "Sync not supported"
+    `AiohttpHTTPBackend` only supports asynchronous requests. Calling any sync method
+    (`send_sync_request`, `handle_sync_stream`, `build_client`) will raise
+    `NotImplementedError`. Use `HttpxHTTPBackend` if you need sync support.
+
+#### Usage
 
 ```python
-from clientele.http import backends, response
-import aiohttp
+from clientele.http.aiohttp_backend import AiohttpHTTPBackend
+from clientele.api import config, client
 
-class AiohttpHTTPBackend(backends.HTTPBackend):
-    def __init__(self):
-        self._session: aiohttp.ClientSession | None = None
-    
-    def build_client(self):
-        # For sync, return a placeholder or raise NotImplementedError
-        raise NotImplementedError("Use async_client for aiohttp")
-    
-    def build_async_client(self) -> aiohttp.ClientSession:
-        if self._session is None:
-            self._session = aiohttp.ClientSession()
-        return self._session
-    
-    @staticmethod
-    def convert_to_response(native_response: aiohttp.ClientResponse) -> response.Response:
-        """Convert aiohttp.ClientResponse to generic Response"""
-        return response.Response(
-            status_code=native_response.status,
-            headers=dict(native_response.headers),
-            content=native_response._body,
-            text=native_response._body.decode('utf-8'),
-            request_method=native_response.method,
-            request_url=str(native_response.url),
-        )
-    
-    def send_sync_request(self, method, url, **kwargs):
-        raise NotImplementedError("Use async backend")
-    
-    async def send_async_request(self, method, url, **kwargs):
-        async with self._session.request(method, url, **kwargs) as resp:
-            await resp.read()
-            return self.convert_to_response(resp)
-    
-    def close(self):
-        pass  # aiohttp doesn't need sync close
-    
-    async def aclose(self):
-        if self._session:
-            await self._session.close()
+http_backend = AiohttpHTTPBackend(
+    base_url="https://api.example.com",
+    headers={"Authorization": "Bearer my-token"},
+    timeout=30.0,
+    follow_redirects=True,
+    verify=True,
+)
+
+cfg = config.BaseConfig(
+    base_url="https://api.example.com",
+    http_backend=http_backend,
+)
+
+api = client.APIClient(config=cfg)
+
+@api.get("/users/{user_id}")
+async def get_user(result: dict, user_id: int) -> dict:
+    return result
 ```
+
+#### Options
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_url` | `str` | `""` | Base URL prepended to all relative paths |
+| `headers` | `dict` | `{}` | Default headers sent on every request |
+| `timeout` | `float \| None` | `5.0` | Timeout in seconds. `None` disables timeout |
+| `follow_redirects` | `bool` | `False` | Whether to follow HTTP redirects |
+| `verify` | `bool` | `True` | SSL verification. `False` to disable |
+
+#### Limitations
+
+- **Async only** — sync methods raise `NotImplementedError`
+- **No CA bundle path** — `verify` only accepts `bool`; to use a custom CA bundle, pass a custom `ssl.SSLContext` via a connector directly on the session
+- **No HTTP/2** — `aiohttp` does not support HTTP/2 natively
+
+## Creating Custom Backends
+
+To implement your own backend, subclass `clientele.http.backends.HTTPBackend` and implement all abstract methods. Backends that only support one mode (sync or async) should raise `NotImplementedError` in the unsupported methods — see `RequestsHTTPBackend` (sync-only) and `AiohttpHTTPBackend` (async-only) in the source for reference implementations.
 
 ### Default Behavior
 

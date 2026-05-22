@@ -3,7 +3,11 @@
 ## 2.1.0 UNRELEASED
 
 - Introduce `RequestsHTTPBackend` for making HTTP requests using the `requests` library.
+  - This backend implements synchronous HTTP requests only.
   - The library `requests` is not installed by default. See the documentation for installation instructions.
+- Introduce `AIOHTTPBackend` for making HTTP requests using the `aiohttp` library.
+  - This backend implements asynchronous HTTP requests only.
+  - The library `aiohttp` is not installed by default. See the documentation for installation instructions.
 
 ## 2.0.0
 

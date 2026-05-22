@@ -58,6 +58,7 @@ dev = [
     "django-ninja>=1.0.0",
     "mypy>=1.19.1",
     "requests>=2.32.0",
+    "aiohttp>=3.9.0",
 ]
 
 [build-system]
