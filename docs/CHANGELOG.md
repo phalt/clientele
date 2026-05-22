@@ -1,6 +1,6 @@
 # Change log
 
-## 2.0.0 UNRELEASED
+## 2.0.0
 
 This release includes many breaking changes, improved type support, and dependency changes.
 
