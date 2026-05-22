@@ -261,6 +261,30 @@ class TestValidateResponseMap:
         # Should not raise
         requests._validate_response_map(response_map, func, type_hints)
 
+    def test_validate_response_map_with_list_type_alias_issue_240(self):
+        """Confirm correct behaviour for https://github.com/phalt/clientele/issues/240.
+
+        When a FastAPI endpoint returns list[SomeModel], the code generator emits a
+        type alias such as `ResponseFooPost = list[SomeModel]`. At runtime that value
+        is a `types.GenericAlias`, not a class, so the existing checks
+        `is_pydantic_model` and `is_typeddict` both return False and
+        `_validate_response_map` raises ValueError — crashing the import of the
+        generated client module before any request is made.
+
+        The fix is to accept `list[<BaseModel subclass>]` (and similar generic
+        aliases whose inner type is a valid model) in the response_map validation.
+        """
+        list_type = list[SampleModel]  # GenericAlias, as the generator emits
+
+        def func(result: list[SampleModel]) -> list[SampleModel]:
+            return result
+
+        type_hints = typing.get_type_hints(func)
+        response_map = {200: list_type}
+
+        # Must not raise — importing the generated client should succeed
+        requests._validate_response_map(response_map, func, type_hints)
+
 
 class TestValidateResponseParser:
     def test_validate_response_parser_valid(self):

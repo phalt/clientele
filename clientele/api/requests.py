@@ -192,7 +192,11 @@ def _validate_response_map(
 
     # Validate all values are Pydantic BaseModel subclasses or TypedDict classes
     for status_code, model_class in response_map.items():
-        if not (type_utils.is_pydantic_model(model_class) or type_utils.is_typeddict(model_class)):
+        if not (
+            type_utils.is_pydantic_model(model_class)
+            or type_utils.is_typeddict(model_class)
+            or type_utils.is_list_of_pydantic_model(model_class)
+        ):
             raise ValueError(
                 f"response_map value for status code {status_code} must be a Pydantic BaseModel subclass or TypedDict"
             )

@@ -15,6 +15,14 @@ def is_pydantic_model(annotation: typing.Any) -> bool:
     return inspect.isclass(annotation) and issubclass(annotation, pydantic.BaseModel)
 
 
+def is_list_of_pydantic_model(annotation: typing.Any) -> bool:
+    """Check if annotation is list[<BaseModel subclass>] (a GenericAlias, not a class)."""
+    if typing.get_origin(annotation) is not list:
+        return False
+    args = typing.get_args(annotation)
+    return bool(args) and is_pydantic_model(args[0])
+
+
 def is_streaming_type(annotation: typing.Any) -> bool:
     """
     Check if annotation is Iterator, AsyncIterator, etc.
