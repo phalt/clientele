@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.clientele.dev/mypy/">
+        <link rel="canonical" href="https://docs.clientele.dev/injected-parameters/">
       
       
         <link rel="prev" href="../api-direct-requests/">
@@ -25,7 +25,7 @@
     
     
       
-        <title>🥧 Mypy support - Clientele</title>
+        <title>💉 Injected parameters & typing - Clientele</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#mypy-support" class="md-skip">
+        <a href="#injected-parameters-typing" class="md-skip">
           Skip to content
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              🥧 Mypy support
+              💉 Injected parameters & typing
             
           </span>
         </div>
@@ -962,7 +962,7 @@
   <span class="md-ellipsis">
     
   
-    🥧 Mypy support
+    💉 Injected parameters & typing
   
 
     
@@ -980,7 +980,7 @@
   <span class="md-ellipsis">
     
   
-    🥧 Mypy support
+    💉 Injected parameters & typing
   
 
     
@@ -1006,10 +1006,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-it-does" class="md-nav__link">
+  <a href="#the-problem-they-solve" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What it does
+        The problem they solve
       
     </span>
   </a>
@@ -1017,10 +1017,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#what-callers-and-ides-see" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        What callers and IDEs see
       
     </span>
   </a>
@@ -1028,33 +1028,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#injected-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
+        Injected parameters
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ordering-requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering requirement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mypy-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mypy plugin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mypy plugin">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-mypyini-or-setupcfg" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using mypy.ini or setup.cfg
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-pyprojecttoml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using pyproject.toml
+        Setup
       
     </span>
   </a>
@@ -1063,28 +1074,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#credits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Credits
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1384,10 +1373,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#what-it-does" class="md-nav__link">
+  <a href="#the-problem-they-solve" class="md-nav__link">
     <span class="md-ellipsis">
       
-        What it does
+        The problem they solve
       
     </span>
   </a>
@@ -1395,10 +1384,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
+  <a href="#what-callers-and-ides-see" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation
+        What callers and IDEs see
       
     </span>
   </a>
@@ -1406,33 +1395,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#configuration" class="md-nav__link">
+  <a href="#injected-parameters" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Configuration
+        Injected parameters
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Configuration">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ordering-requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering requirement
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mypy-plugin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mypy plugin
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mypy plugin">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#using-mypyini-or-setupcfg" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Using mypy.ini or setup.cfg
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#using-pyprojecttoml" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Using pyproject.toml
+        Setup
       
     </span>
   </a>
@@ -1441,28 +1441,6 @@
         
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#credits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Credits
-      
-    </span>
-  </a>
   
 </li>
       
@@ -1486,50 +1464,123 @@
   
 
 
-<h1 id="mypy-support">🥧 Mypy support</h1>
-<p>Clientele includes a mypy plugin that provides proper type checking for decorated API functions.</p>
-<h2 id="what-it-does">What it does</h2>
-<p>The mypy plugin:</p>
-<ul>
-<li>Removes injected parameters (<code>result</code> and <code>response</code>) from function signatures during type checking</li>
-<li>Allows <code>dict</code> types to be passed to Pydantic model parameters</li>
-<li>Prevents false positives when calling your decorated API functions</li>
-</ul>
-<h2 id="installation">Installation</h2>
-<p>The plugin is automatically installed when you install Clientele.</p>
-<h2 id="configuration">Configuration</h2>
-<p>Add the plugin to your mypy configuration file.</p>
-<h3 id="using-mypyini-or-setupcfg">Using <code>mypy.ini</code> or <code>setup.cfg</code></h3>
-<div class="highlight"><pre><span></span><code><span class="k">[mypy]</span>
-<span class="na">plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">clientele.mypy</span>
+<h1 id="injected-parameters-typing">Injected parameters &amp; typing</h1>
+<h2 id="the-problem-they-solve">The problem they solve</h2>
+<p>When you decorate a function with <code>@client.get(...)</code>, Clientele needs to hand back the parsed HTTP response to your function body. The natural way to do that is through a parameter, but that creates an awkward situation:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
-<h3 id="using-pyprojecttoml">Using <code>pyproject.toml</code></h3>
-<div class="highlight"><pre><span></span><code><span class="k">[tool.mypy]</span>
-<span class="n">plugins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;clientele.mypy&quot;</span><span class="p">]</span>
+<p>From <em>inside</em> the function, <code>result</code> is essential because it holds the <code>User</code> parsed from the response. But from the <em>caller's</em> perspective, <code>result</code> makes no sense: callers supply <code>user_id</code>, not a <code>User</code> they already have. If Clientele exposed <code>result</code> in the public signature, every call site would look broken:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Without injection stripping the callers would need to provide result themselves:</span>
+<span class="n">get_user</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="err">???</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
 </code></pre></div>
-<h2 id="example">Example</h2>
-<p>Without the plugin, mypy would complain about the <code>result</code> parameter:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<p>Injected parameters are how Clientele resolves this: <code>result</code> (and the optional <code>response</code>) live in the function definition for <em>your</em> use, but Clientele <strong>strips them from the public signature</strong> so callers never see them.</p>
+<hr />
+<h2 id="what-callers-and-ides-see">What callers and IDEs see</h2>
+<p>Clientele uses Python's <code>typing.Concatenate</code> and <code>typing.ParamSpec</code> to express this contract to type checkers at the decorator level. The decorator signature says: <em>"I accept a function whose first N parameters are injected values, and I return a new callable with those parameters removed."</em></p>
+<p>The result is that your IDE and type checker see the <strong>public API</strong>, not the implementation detail:</p>
+<div class="highlight"><pre><span></span><code># What you write:
+def get_user(result: User, user_id: int) -&gt; User
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
+# What your IDE and type checker see after decoration:
+get_user(user_id: int) -&gt; User
+</code></pre></div>
+<p>So autocomplete shows <code>user_id</code>, not <code>result</code>. Passing <code>user_id=42</code> produces no type error. Passing <code>result=...</code> produces an error, because <code>result</code> isn't in the public signature at all.</p>
+<div class="highlight"><pre><span></span><code><span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>        <span class="c1"># ✅ correct</span>
+<span class="n">get_user</span><span class="p">(</span><span class="n">result</span><span class="o">=</span><span class="n">my_user</span><span class="p">,</span> <span class="n">user_id</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>  <span class="c1"># ❌ type error: unknown argument</span>
+</code></pre></div>
+<p>At runtime, Clientele also patches the function's <code>__signature__</code> so that <code>inspect.signature()</code>, IDEs using runtime introspection, and Clientele's own cache key generator all agree with what the type checker sees.</p>
+<hr />
+<h2 id="injected-parameters">Injected parameters</h2>
+<p>Clientele injects the following parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>result</code></td>
+<td>Your annotated type</td>
+<td>Yes</td>
+<td>The HTTP response body, parsed and validated into the declared type</td>
+</tr>
+<tr>
+<td><code>response</code></td>
+<td><code>http.Response</code></td>
+<td>No</td>
+<td>The raw <code>http.Response</code>, useful for headers, status, debugging</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
 
+<span class="c1"># result only — the common case</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
-<span class="c1"># With the plugin: ✅ This works correctly</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-
-<span class="c1"># Without the plugin: ❌ mypy would require get_user(user_id=1, result=...)</span>
+<span class="c1"># result + response — when you need headers or status</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user_with_meta</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Response</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span>
 </code></pre></div>
-<p>The plugin ensures mypy understands that <code>result</code> and <code>response</code> are injected by Clientele and should not be provided by callers.</p>
-<h2 id="credits">Credits</h2>
-<p>Big thanks to <a href="https://github.com/chassing">Christian Assing</a> for contributing this plugin!</p>
+<hr />
+<h2 id="ordering-requirement">Ordering requirement</h2>
+<p><strong><code>result</code> and <code>response</code> must appear first in the parameter list</strong>, before any caller-supplied parameters (path params, query params, <code>data</code>).</p>
+<p>This is required because the <code>Concatenate</code> trick works by stripping parameters from the <em>front</em> of the signature. If injected params appear anywhere else, the type math breaks and type checkers will see the wrong signature.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✅ Correct: injected params first</span>
+<span class="c1"># Type checker sees: get_user(user_id: int) -&gt; User</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># ❌ Incorrect: result is not first</span>
+<span class="c1"># Type checker sees: get_user(user_id: int, result: User) -&gt; User</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<p>The runtime injection works regardless of position (Clientele finds injected params by name), but <strong>correct typing requires them first</strong>.</p>
+<hr />
+<h2 id="mypy-plugin">Mypy plugin</h2>
+<p>Mypy does not natively support the <code>Concatenate</code>-based approach for stripping positional parameters. Clientele ships a mypy plugin that teaches mypy the same rule explicitly:</p>
+<ul>
+<li>Removes <code>result</code> and <code>response</code> from decorated function signatures during type checking</li>
+<li>Allows <code>dict</code> types to be passed where Pydantic models are expected (TypedDict ergonomics)</li>
+</ul>
+<h3 id="setup">Setup</h3>
+<p>The plugin is installed automatically with Clientele. Add it to your mypy configuration:</p>
+<p>=== "mypy.ini / setup.cfg"</p>
+<div class="highlight"><pre><span></span><code>```ini
+[mypy]
+plugins = clientele.mypy
+```
+</code></pre></div>
+<p>=== "pyproject.toml"</p>
+<div class="highlight"><pre><span></span><code>```toml
+[tool.mypy]
+plugins = [&quot;clientele.mypy&quot;]
+```
+</code></pre></div>
+<p>With the plugin active, mypy behaves the same as pyright and ty: <code>result</code> and <code>response</code> are invisible to callers.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you use <strong>pyright</strong> or <strong>ty</strong>, no plugin is needed — the <code>Concatenate</code>-based decorator signature is supported natively. Just ensure injected params appear first (see above).</p>
+</div>
+<hr />
 
 
 
