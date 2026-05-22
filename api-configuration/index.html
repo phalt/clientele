@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -709,17 +709,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-httpx-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom httpx client
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#reconfiguration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1401,17 +1390,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#custom-httpx-client" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Custom httpx client
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#reconfiguration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1469,30 +1447,9 @@
 <li><code>follow_redirects: bool = False</code> - if redirects should be followed.</li>
 <li><code>verify: bool | str = True</code> - if SSL connections should be verified.</li>
 <li><code>http2: bool = False</code> - if http2 should be used for making requests.</li>
-<li><code>auth: httpx.Auth | tuple[str, str] | None = None</code> - the <a href="https://www.python-httpx.org/advanced/authentication/">authentication method</a> for requests.</li>
-<li><code>limits: httpx.Limits | None = None</code> - the <a href="https://www.python-httpx.org/advanced/resource-limits/">connection pool size</a> for the underlying client.</li>
-<li><code>proxies: httpx.Proxy | None = None</code> - the <a href="https://www.python-httpx.org/advanced/proxies/">proxies</a> for the underlying client.</li>
-<li><code>transport: httpx.BaseTransport | httpx.AsyncBaseTransport | None = None</code> - custom <a href="https://www.python-httpx.org/advanced/transports/">transport objects</a> for the underlying client.</li>
-<li><code>cookies: httpx.Cookies | None = None</code> - the <a href="https://www.python-httpx.org/quickstart/#cookies">cookies</a> you want to send with http requests.</li>
 <li><code>cache_backend</code> - the <a href="../api-cache/">cache backend</a> you want to use when caching results.</li>
 <li><code>http_backend</code> - the <a href="../api-http-backends/">http backend</a> you want to use when making HTTP requests.</li>
 </ul>
-<h2 id="custom-httpx-client">Custom httpx client</h2>
-<p>You can supply your own <code>httpx.Client</code> and <code>httpx.AsyncClient</code> if you prefer full control:</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>These options are considered deprecated from clientele version 2.0.0 and will not be supported in future versions.</p>
-<p>Use <a href="../api-http-backends/">http backends</a> instead.</p>
-</div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span>
-    <span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">,</span>
-    <span class="n">httpx_client</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">Client</span><span class="p">(),</span>
-    <span class="n">httpx_async_client</span><span class="o">=</span><span class="n">httpx</span><span class="o">.</span><span class="n">AsyncClient</span><span class="p">()</span>
-<span class="p">)</span>
-</code></pre></div>
 <h2 id="reconfiguration">Reconfiguration</h2>
 <p>You can reconfigure an existing client (<code>APIClient</code>) at any time using the <code>configure</code> method. This is useful when you want to change options at runtime based on application specific configuration or logic:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
@@ -1506,7 +1463,7 @@
 <span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">base_config</span><span class="p">)</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MyApplication</span><span class="p">:</span>

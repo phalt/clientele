@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -662,6 +662,17 @@
     <span class="md-ellipsis">
       
         Injected parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typing-support-for-injected-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typing support for injected parameters
       
     </span>
   </a>
@@ -1489,6 +1500,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#typing-support-for-injected-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typing support for injected parameters
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#response-parsing-rules" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1600,7 +1622,7 @@
     <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">include_details</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">include_details</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="n">user</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
@@ -1629,7 +1651,7 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/users&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">CreateUserRequest</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">CreateUserRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">CreateUserRequest</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ada&quot;</span><span class="p">))</span>
@@ -1643,7 +1665,7 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/users&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_user_with_dict</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">CreateUserRequestDict</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">UserDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserDict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_user_with_dict</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">UserDict</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">CreateUserRequestDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserDict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="c1"># Pass dict directly - no instantiation needed</span>
@@ -1676,21 +1698,21 @@
 
 <span class="c1"># PUT with a full body</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">update_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">UpdateUser</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">UpdateUser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="n">updated</span> <span class="o">=</span> <span class="n">update_user</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">UpdateUser</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;New Name&quot;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@foo.com&quot;</span><span class="p">))</span>
 
 <span class="c1"># PATCH with partial data</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">patch_user_name</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">PatchNameUser</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">patch_user_name</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">PatchNameUser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="n">patched</span> <span class="o">=</span> <span class="n">patch_user_name</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">PatchUserName</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;New Name&quot;</span><span class="p">))</span>
 
 <span class="c1"># DELETE that returns an empty response body</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">delete_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">delete_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="n">delete_user</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -1699,17 +1721,17 @@
 <p>The <code>result</code> parameter defines <strong>what response you get from the API</strong>, but your function's return value is independent. This gives you flexibility:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Return the result directly (most common)</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="c1"># Return a derived value</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user_email</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user_email</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">email</span>
 
 <span class="c1"># Return multiple values as a tuple</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/events&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_event</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">EventIn</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">EventOut</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">EventOut</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_event</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">EventOut</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">EventIn</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">EventOut</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created event </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="s2">&quot;success&quot;</span>
 </code></pre></div>
@@ -1719,6 +1741,23 @@
 <li><code>result</code>: an instance of the type specified in the <code>result</code> parameter annotation. This parameter is <strong>mandatory</strong> and its type annotation determines how the response is parsed. Can be a Pydantic model or a TypedDict.</li>
 <li><code>response</code>: the <code>httpx.Response</code> - useful for logging, debugging etc. (optional)</li>
 </ul>
+<p><strong>Both <code>result</code> and <code>response</code> must be declared first in your function signature</strong>, before any caller-supplied parameters (path params, query params, <code>data</code>). This is required for type checker support (see below).</p>
+<h2 id="typing-support-for-injected-parameters">Typing support for injected parameters</h2>
+<p>Clientele does some Python typing magic to give type checkers (mypy, pyright, ty) a correct view of your decorated functions.</p>
+<p>The decorator type signature says: <em>"I accept a function whose first parameter(s) are injected values, and I return a new callable with those parameters removed."</em> This means type checkers see the public API — for example <code>get_user</code> is typed as <code>(user_id: int) -&gt; User</code>, with <code>result</code> invisible to callers.</p>
+<p>For this to work, <strong><code>result</code> and <code>response</code> must appear first</strong> in the parameter list:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Correct — injected params first, type checker sees: (user_id: int) -&gt; User</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Incorrect — result is not first, typing will not work correctly</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<p>At runtime, Clientele also patches the function's signature to hide <code>result</code> and <code>response</code> from introspection tools (IDEs, <code>inspect.signature()</code>, the cache key generator). This uses the same ordering rule: injected params are identified by name, stripped from the public signature, and injected automatically when the HTTP response arrives.</p>
+<p>If you use the <a href="../mypy/">mypy plugin</a>, mypy will also strip injected parameters by name regardless of position — but for other type checkers (pyright, ty) the position-first rule is required.</p>
 <h2 id="response-parsing-rules">Response parsing rules</h2>
 <ul>
 <li>If the response has a JSON content type, the payload is decoded from JSON.</li>
@@ -1751,7 +1790,7 @@
 
 <span class="c1"># Annotate the decorate to use, `result` type must match</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">custom_parser</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user_custom_response</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">CustomResponseParserResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user_custom_response</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">CustomResponseParserResponse</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">other_value</span>
 </code></pre></div>
 <h2 id="handling-multiple-response-bodies-and-status-codes">Handling multiple response bodies and status codes</h2>
@@ -1777,7 +1816,7 @@
         <span class="mi">404</span><span class="p">:</span> <span class="n">NotFoundError</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span> <span class="o">|</span> <span class="n">NotFoundError</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span> <span class="o">|</span> <span class="n">NotFoundError</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span> <span class="o">|</span> <span class="n">NotFoundError</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span> <span class="o">|</span> <span class="n">NotFoundError</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="c1"># Returns User for 200 responses</span>
@@ -1814,7 +1853,7 @@
     <span class="p">}</span>
 <span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span> <span class="o">|</span> <span class="n">ValidationError</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">User</span> <span class="o">|</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">User</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span> <span class="o">|</span> <span class="n">ValidationError</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 

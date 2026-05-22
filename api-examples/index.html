@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -2016,7 +2016,7 @@
 <span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <ul>
@@ -2036,7 +2036,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">PokemonInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PokemonInfo</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">PokemonInfo</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PokemonInfo</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <ul>
@@ -2050,7 +2050,7 @@
 <span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
 </code></pre></div>
 <ul>
@@ -2098,7 +2098,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/post&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">post_input_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">post_input_data</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <ul>
@@ -2118,7 +2118,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/post&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">post_input_data</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">InputData</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InputData</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">post_input_data</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">InputData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InputData</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <ul>
@@ -2133,7 +2133,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Response</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
@@ -2156,7 +2156,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">parse_response_myself</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;my_custom_key&quot;</span><span class="p">]</span>
 </code></pre></div>
 <ul>
@@ -2184,7 +2184,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">parse_response_myself</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">MyResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">MyResult</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">custom_key</span>
 </code></pre></div>
 <h3 id="using-a-map">Using a map</h3>
@@ -2204,7 +2204,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">200</span><span class="p">:</span> <span class="n">OkResult</span><span class="p">,</span> <span class="mi">404</span><span class="p">:</span> <span class="n">NotFoundResult</span><span class="p">})</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">OkResult</span> <span class="o">|</span> <span class="n">NotFoundResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">OkResult</span> <span class="o">|</span> <span class="n">NotFoundResult</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
 </code></pre></div>
 <ul>
@@ -2225,7 +2225,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_name}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_map</span><span class="o">=</span><span class="p">{</span><span class="mi">500</span><span class="p">:</span> <span class="n">OnlyErrorResult</span><span class="p">})</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">OnlyErrorResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_info</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">OnlyErrorResult</span><span class="p">,</span> <span class="n">pokemon_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
 
 
@@ -2290,7 +2290,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_name</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_name</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span>
 
 
@@ -2314,7 +2314,7 @@
 
 <span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>  <span class="c1"># Cache for 5 minutes</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># First call - hits the API</span>
@@ -2330,7 +2330,7 @@
 
 <span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">list_pokemon</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_pokemon</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Each limit/offset combination is cached separately</span>
@@ -2345,7 +2345,7 @@
 
 <span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/ability&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">list_abilities</span><span class="p">(</span><span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_abilities</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Different query params = different cache entries</span>
@@ -2363,7 +2363,7 @@
     <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">pokemon_id</span><span class="p">,</span> <span class="n">version_id</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;pokemon:</span><span class="si">{</span><span class="n">pokemon_id</span><span class="si">}</span><span class="s2">:version:</span><span class="si">{</span><span class="n">version_id</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="p">)</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_version</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">version_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_version</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">version_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="c1"># Custom key ensures different versions are cached separately</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
@@ -2379,7 +2379,7 @@
 <span class="c1"># Cache for just 10 seconds to reduce burst traffic</span>
 <span class="nd">@cache</span><span class="o">.</span><span class="n">memoize</span><span class="p">(</span><span class="n">ttl</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{pokemon_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_burst</span><span class="p">(</span><span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_burst</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pokemon_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># Multiple rapid calls within 10 seconds use cache</span>
@@ -2403,7 +2403,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/stream/</span><span class="si">{n}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_events</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_events</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">],</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="k">await</span> <span class="n">stream_events</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>

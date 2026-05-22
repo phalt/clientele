@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -1376,15 +1376,15 @@
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/books&quot;</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span>
-    <span class="n">data</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span>
     <span class="n">result</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookResponse</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 
 <span class="c1"># Mix sync and async functions in the same client</span>
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/book/</span><span class="si">{book_id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_book</span><span class="p">(</span><span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">BookResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BookResponse</span><span class="p">:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_book</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">BookResponse</span><span class="p">,</span> <span class="n">book_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BookResponse</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <h2 id="async-and-sync-usage">Async and sync usage</h2>

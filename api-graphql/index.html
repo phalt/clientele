@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -1534,7 +1534,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">repository</span>
 
 <span class="n">repo</span> <span class="o">=</span> <span class="n">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="s2">&quot;phalt&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;clientele&quot;</span><span class="p">)</span>
@@ -1577,7 +1577,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_issue</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">CreateIssueMutationResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Issue</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_issue</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">CreateIssueMutationResponse</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Issue</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">createIssue</span><span class="o">.</span><span class="n">issue</span>
 
 <span class="n">issue</span> <span class="o">=</span> <span class="n">create_issue</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Bug report&quot;</span><span class="p">,</span> <span class="n">body</span><span class="o">=</span><span class="s2">&quot;Something is broken&quot;</span><span class="p">)</span>
@@ -1609,7 +1609,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">search_repos</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoriesQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Repository</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">search_repos</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">RepositoriesQueryResponse</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Repository</span><span class="p">]:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">repositories</span>
 
 <span class="c1"># Call without optional parameter - language is omitted from variables</span>
@@ -1644,7 +1644,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">repository</span>
 
 <span class="c1"># Use with await</span>
@@ -1679,7 +1679,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_issue</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">CreateIssueMutationResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Issue</span><span class="p">:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_issue</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">CreateIssueMutationResponse</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">body</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Issue</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">createIssue</span><span class="o">.</span><span class="n">issue</span>
 
 <span class="c1"># Use with await</span>
@@ -1709,7 +1709,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="n">Response</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Headers: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">repository</span>
@@ -1730,7 +1730,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span><span class="s2">&quot;repository&quot;</span><span class="p">]</span>
 
 <span class="n">repo</span> <span class="o">=</span> <span class="n">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="s2">&quot;phalt&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;clientele&quot;</span><span class="p">)</span>

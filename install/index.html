@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -529,6 +529,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#core-install-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core install (default)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core install (default)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#uv" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -538,8 +550,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#pip" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -547,6 +559,50 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI install
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#uv_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pip_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pip
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1334,6 +1390,18 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#core-install-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core install (default)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core install (default)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#uv" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1343,8 +1411,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#pip" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1352,6 +1420,50 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-install" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI install
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI install">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#uv_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pip_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pip
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1387,20 +1499,56 @@
 
 
 <h1 id="install">🚀 Install</h1>
-<h2 id="uv">uv</h2>
+<p>Clientele has two installation options:</p>
+<table>
+<thead>
+<tr>
+<th>Extra</th>
+<th>What's included</th>
+<th>Use when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>clientele</code> or <code>clientele[core]</code></td>
+<td><code>httpx</code>, <code>pydantic</code>, <code>pydantic-settings</code>, <code>stamina</code></td>
+<td>Writing API clients in your own code</td>
+</tr>
+<tr>
+<td><code>clientele[cli]</code></td>
+<td>everything above + <code>click</code>, <code>rich</code>, <code>cicerone</code>, <code>jinja2</code>, <code>ruff</code>, <code>pyyaml</code></td>
+<td>Generating clients from OpenAPI schemas</td>
+</tr>
+</tbody>
+</table>
+<h2 id="core-install-default">Core install (default)</h2>
+<p>Install the core library to write and run API clients:</p>
+<h3 id="uv">uv</h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span>clientele
+<span class="c1"># or explicitly:</span>
+uv<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;clientele[core]&quot;</span>
 </code></pre></div>
-<h2 id="pip">pip</h2>
+<h3 id="pip">pip</h3>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>clientele
+<span class="c1"># or explicitly:</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;clientele[core]&quot;</span>
 </code></pre></div>
-<p>Once installed, you can run <code>clientele version</code> to make sure you have the latest version:</p>
+<h2 id="cli-install">CLI install</h2>
+<p>Install with the <code>cli</code> extra to use the <code>clientele</code> command-line tool and generate clients from OpenAPI schemas:</p>
+<h3 id="uv_1">uv</h3>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>add<span class="w"> </span><span class="s2">&quot;clientele[cli]&quot;</span>
+</code></pre></div>
+<h3 id="pip_1">pip</h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;clientele[cli]&quot;</span>
+</code></pre></div>
+<p>Once installed, you can run <code>clientele version</code> to confirm:</p>
 <div class="highlight"><pre><span></span><code>&gt;<span class="w"> </span>clientele<span class="w"> </span>version
-clientele<span class="w"> </span><span class="m">1</span>.11.1
+clientele<span class="w"> </span><span class="m">2</span>.0.0
 </code></pre></div>
 <h2 id="next-steps">Next steps</h2>
 <ul>
 <li><a href="../api-overview/">Clientele API guide</a> to write your own API client</li>
-<li><a href="../openapi-cli/">Client creator</a> to quick start an API client</li>
+<li><a href="../openapi-cli/">Client creator</a> to quick start an API client from an OpenAPI schema (requires <code>clientele[cli]</code>)</li>
 <li><a href="../server-fastapi/">API server integration</a> to learn how to integrate with popular Python API servers</li>
 </ul>
 

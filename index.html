@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.2">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
@@ -1524,7 +1524,7 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_name</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Pokemon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_name</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">Pokemon</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
 </code></pre></div>
 <p><a href="https://docs.clientele.dev/api-examples/">See more examples</a></p>
@@ -1542,7 +1542,7 @@
 </ul>
 <h2 id="async-support">Async support</h2>
 <div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/</span><span class="si">{id}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_name</span><span class="p">(</span><span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Pokemon</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_name</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">Pokemon</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span>
 </code></pre></div>
 <h2 id="automatic-data-validation">Automatic data validation</h2>
@@ -1553,7 +1553,7 @@
 
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/books&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">create_book</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">CreateBookRequest</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookResponse</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_book</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">CreateBookResponse</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">CreateBookRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CreateBookResponse</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <h2 id="graphql-support">GraphQL support</h2>
@@ -1580,7 +1580,7 @@
 <span class="s2">        }</span>
 <span class="s2">    }</span>
 <span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">RepositoryQueryResponse</span><span class="p">,</span> <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">repository</span>
 </code></pre></div>
 <h2 id="works-with-python-api-frameworks">Works with Python API frameworks</h2>
