@@ -19,6 +19,7 @@ This release includes many breaking changes, improved type support, and dependen
 - Configuration options for httpx have been removed from `BaseConfig`.
   - This is the final step in moving to the HttpBackends interface.
 - Cleaned up tests for the old style APIClients (before the Clientele framework was introduced).
+- Handle generic alias reponse types better (#240).
 
 ## 1.11.1
 
