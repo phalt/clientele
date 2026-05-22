@@ -57,6 +57,21 @@ class TestHttpxHTTPBackend:
 
         await httpx_backend_instance.aclose()
 
+    @pytest.mark.httpx2(base_url=BASE_URL)
+    def test_full_clientele_integration(self, httpx2_mock: respx.Router):
+        httpx2_mock.get("/users/1").respond(200, json={"id": 1, "name": "Alice"})
+
+        config = api_config.BaseConfig(base_url=BASE_URL)
+        client = api_client.APIClient(config=config)
+
+        @client.get("/users/{user_id}")
+        def get_user(result: dict, user_id: int) -> dict:
+            return result
+
+        result = get_user(1)
+        assert result == {"id": 1, "name": "Alice"}
+        client.close()
+
     @pytest.mark.asyncio
     @pytest.mark.httpx2(base_url=BASE_URL)
     async def test_async_real_request(self, httpx2_mock: respx.Router):

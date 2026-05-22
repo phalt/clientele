@@ -59,6 +59,9 @@ dev = [
     "mypy>=1.19.1",
     "requests>=2.32.0",
     "aiohttp>=3.9.0",
+    "aioresponses>=0.7.0",
+    "niquests>=3.0.0",
+    "responses>=0.25.0",
 ]
 
 [build-system]

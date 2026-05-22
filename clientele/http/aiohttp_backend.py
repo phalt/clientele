@@ -79,7 +79,7 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
             status_code=native_response.status,
             headers=dict(native_response.headers),
             content=content,
-            request_method=native_response.method,
+            request_method=native_response.method.upper(),
             request_url=str(native_response.url),
         )
 

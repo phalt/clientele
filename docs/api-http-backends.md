@@ -187,7 +187,7 @@ http_backend = RequestsHTTPBackend(
 cfg = config.BaseConfig(
     base_url="https://api.example.com",
     http_backend=http_backend,
-)
+)   
 
 api = client.APIClient(config=cfg)
 
@@ -268,6 +268,62 @@ async def get_user(result: dict, user_id: int) -> dict:
 - **Async only** — sync methods raise `NotImplementedError`
 - **No CA bundle path** — `verify` only accepts `bool`; to use a custom CA bundle, pass a custom `ssl.SSLContext` via a connector directly on the session
 - **No HTTP/2** — `aiohttp` does not support HTTP/2 natively
+
+### NiquestsHTTPBackend
+
+A full sync **and** async backend using the [niquests](https://niquests.readthedocs.io/) library — a modern drop-in replacement for `requests` with HTTP/2 support and native async.
+
+!!! note "niquests is not installed by default"
+    This backend requires `niquests` to be installed separately:
+    ```
+    pip install niquests
+    ```
+    Importing `clientele.http.niquests_backend` without `niquests` installed will raise an `ImportError` with instructions.
+
+#### Usage
+
+```python
+from clientele.http.niquests_backend import NiquestsHTTPBackend
+from clientele.api import config, client
+
+http_backend = NiquestsHTTPBackend(
+    base_url="https://api.example.com",
+    headers={"Authorization": "Bearer my-token"},
+    timeout=30.0,
+    follow_redirects=True,
+    verify=True,
+)
+
+cfg = config.BaseConfig(
+    base_url="https://api.example.com",
+    http_backend=http_backend,
+)
+
+api = client.APIClient(config=cfg)
+
+# Works with both sync and async decorated functions
+@api.get("/users/{user_id}")
+def get_user(result: dict, user_id: int) -> dict:
+    return result
+
+@api.get("/users/{user_id}")
+async def get_user_async(result: dict, user_id: int) -> dict:
+    return result
+```
+
+#### Options
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `base_url` | `str` | `""` | Base URL prepended to all relative paths |
+| `headers` | `dict` | `{}` | Default headers sent on every request |
+| `timeout` | `float \| None` | `5.0` | Timeout in seconds. `None` disables timeout |
+| `follow_redirects` | `bool` | `False` | Whether to follow HTTP redirects |
+| `verify` | `bool \| str` | `True` | SSL verification. `False` to disable, or path to CA bundle |
+
+#### When to use niquests vs httpx
+
+Both backends support sync and async. Prefer `niquests` if your project already uses it or if you need `requests`-compatible behaviour. Prefer `HttpxHTTPBackend` (the default) for HTTP/2 with `http2=True` or if you are already in an httpx-based stack.
 
 ## Creating Custom Backends
 
