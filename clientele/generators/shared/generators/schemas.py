@@ -54,12 +54,19 @@ class SchemasGenerator:
             sanitized_arg = utils.snake_case_prop(arg)
             arg_type = utils.get_type(arg_details)
             is_optional = required and arg not in required
+            has_default = "default" in arg_details
 
             needs_alias = sanitized_arg != arg
             if needs_alias:
                 has_aliases = True
 
-            if is_optional and not arg_type.startswith("typing.Optional["):
+            if has_default:
+                py_default = repr(arg_details["default"])
+                if needs_alias:
+                    type_string = f'{arg_type} = pydantic.Field(default={py_default}, alias="{arg}")'
+                else:
+                    type_string = f"{arg_type} = {py_default}"
+            elif is_optional and not arg_type.startswith("typing.Optional["):
                 if needs_alias:
                     type_string = f'typing.Optional[{arg_type}] = pydantic.Field(default=None, alias="{arg}")'
                 else:
