@@ -139,3 +139,25 @@ def test_get_schema_from_ref_basic():
             # Should return a dict
             assert result is not None
             assert isinstance(result, dict)
+
+
+def test_resolve_forward_refs_for_client():
+    """Test that forward references are replaced with schemas module references."""
+    assert utils.resolve_forward_refs_for_client('"ActionStatus"') == "schemas.ActionStatus"
+    assert (
+        utils.resolve_forward_refs_for_client('typing.Union["ActionStatus", None]')
+        == "typing.Union[schemas.ActionStatus, None]"
+    )
+    assert utils.resolve_forward_refs_for_client('list["MyModel"]') == "list[schemas.MyModel]"
+    assert utils.resolve_forward_refs_for_client("str") == "str"
+    assert utils.resolve_forward_refs_for_client("int") == "int"
+
+
+def test_strip_none_from_type():
+    """Test stripping None/Optional wrapping from type strings."""
+    assert utils.strip_none_from_type("typing.Optional[str]") == "str"
+    assert utils.strip_none_from_type("typing.Union[schemas.ActionStatus, None]") == "schemas.ActionStatus"
+    assert utils.strip_none_from_type("schemas.ActionStatus | None") == "schemas.ActionStatus"
+    assert utils.strip_none_from_type("str") == "str"
+    assert utils.strip_none_from_type("typing.Optional[list[str]]") == "list[str]"
+    assert utils.strip_none_from_type("typing.Union[dict[str, int], None]") == "dict[str, int]"

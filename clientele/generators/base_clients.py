@@ -143,16 +143,20 @@ class BaseClientsGenerator:
             required = param.get("required", False) or in_ != "query"
             if in_ == "query":
                 # URL query string values
+                param_type = utils.resolve_forward_refs_for_client(utils.get_type(param["schema"]))
                 if required:
-                    query_args[clean_key] = utils.get_type(param["schema"])
+                    query_args[clean_key] = param_type
                 else:
-                    query_args[clean_key] = f"typing.Optional[{utils.get_type(param['schema'])}]"
+                    param_type = utils.strip_none_from_type(param_type)
+                    query_args[clean_key] = f"typing.Optional[{param_type}]"
             elif in_ == "path":
                 # Function arguments
+                param_type = utils.resolve_forward_refs_for_client(utils.get_type(param["schema"]))
                 if required:
-                    path_args[clean_key] = utils.get_type(param["schema"])
+                    path_args[clean_key] = param_type
                 else:
-                    path_args[clean_key] = f"typing.Optional[{utils.get_type(param['schema'])}]"
+                    param_type = utils.strip_none_from_type(param_type)
+                    path_args[clean_key] = f"typing.Optional[{param_type}]"
             elif in_ == "header":
                 # Header object arguments
                 headers_args[param["name"]] = utils.get_type(param["schema"])
