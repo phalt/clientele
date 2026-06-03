@@ -195,6 +195,10 @@ def schema_to_dict(schema) -> dict:
     if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "default" in schema.__pydantic_extra__:
         result["default"] = schema.__pydantic_extra__["default"]
 
+    # Handle const - it's in the extra fields
+    if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "const" in schema.__pydantic_extra__:
+        result["const"] = schema.__pydantic_extra__["const"]
+
     # Handle properties
     if hasattr(schema, "properties") and schema.properties:
         result["properties"] = {k: schema_to_dict(v) for k, v in schema.properties.items()}

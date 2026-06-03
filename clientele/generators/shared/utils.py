@@ -97,6 +97,9 @@ def get_func_name(operation: dict, path: str) -> str:
 
 
 def get_type(t):
+    if "const" in t:
+        return f"typing.Literal[{repr(t['const'])}]"
+
     t_type = t.get("type")
     t_format = t.get("format")
     t_nullable = t.get("nullable", False)
