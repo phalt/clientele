@@ -167,3 +167,67 @@ def test_generate_class_properties_no_required_array_with_defaults():
         assert "count: int = 0\n" in result
         assert "enabled: bool = True\n" in result
         assert "typing.Optional" not in result
+
+
+def test_generate_class_properties_with_const():
+    """Test that const values generate typing.Literal types."""
+    spec = load_spec("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_schemas"
+        output_dir.mkdir(parents=True)
+
+        generator = _make_generator(spec, output_dir)
+
+        properties = {
+            "action": {"type": "string", "const": "create"},
+            "name": {"type": "string"},
+        }
+
+        result = generator.generate_class_properties(properties, required=["action", "name"])
+
+        assert "action: typing.Literal['create']\n" in result
+        assert "name: str\n" in result
+
+
+def test_generate_class_properties_const_with_default():
+    """Test that const + default generates Literal type with default value."""
+    spec = load_spec("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_schemas"
+        output_dir.mkdir(parents=True)
+
+        generator = _make_generator(spec, output_dir)
+
+        properties = {
+            "action": {"type": "string", "const": "add-user", "default": "add-user"},
+            "message": {"type": "string"},
+        }
+
+        result = generator.generate_class_properties(properties, required=["message"])
+
+        assert "action: typing.Literal['add-user'] = 'add-user'\n" in result
+        assert "message: str\n" in result
+
+
+def test_generate_class_properties_const_with_alias():
+    """Test that const field with alias uses pydantic.Field."""
+    spec = load_spec("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_schemas"
+        output_dir.mkdir(parents=True)
+
+        generator = _make_generator(spec, output_dir)
+
+        properties = {
+            "action-type": {"type": "string", "const": "delete", "default": "delete"},
+        }
+
+        result = generator.generate_class_properties(properties, required=[])
+
+        assert (
+            "action_type: typing.Literal['delete'] = pydantic.Field(default='delete', alias=\"action-type\")" in result
+        )
+        assert "model_config = pydantic.ConfigDict(populate_by_name=True)" in result
