@@ -94,3 +94,76 @@ def test_schemas_generator_handles_allof_with_object_properties():
         generator.make_schema_class("TestAllOfObject", schema_with_allof_object)
 
         assert "TestAllOfObject" in generator.schemas
+
+
+def test_generate_class_properties_with_defaults():
+    """Test that explicit default values from OpenAPI specs are rendered."""
+    spec = load_spec("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_schemas"
+        output_dir.mkdir(parents=True)
+
+        generator = _make_generator(spec, output_dir)
+
+        properties = {
+            "name": {"type": "string"},
+            "tags": {"type": "array", "items": {"type": "string"}, "default": []},
+            "count": {"type": "integer", "default": 0},
+            "enabled": {"type": "boolean", "default": False},
+            "label": {"type": "string", "default": ""},
+            "description": {"type": "string", "default": None},
+        }
+
+        result = generator.generate_class_properties(properties, required=["name"])
+
+        assert "name: str\n" in result
+        assert "tags: list[str] = []\n" in result
+        assert "count: int = 0\n" in result
+        assert "enabled: bool = False\n" in result
+        assert "label: str = ''\n" in result
+        assert "description: str = None\n" in result
+
+
+def test_generate_class_properties_default_with_alias():
+    """Test that fields with both alias and default use pydantic.Field."""
+    spec = load_spec("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_schemas"
+        output_dir.mkdir(parents=True)
+
+        generator = _make_generator(spec, output_dir)
+
+        properties = {
+            "my-field": {"type": "integer", "default": 42},
+        }
+
+        result = generator.generate_class_properties(properties, required=[])
+
+        assert 'my_field: int = pydantic.Field(default=42, alias="my-field")' in result
+        assert "model_config = pydantic.ConfigDict(populate_by_name=True)" in result
+
+
+def test_generate_class_properties_no_required_array_with_defaults():
+    """Test schema with no required array where all fields have defaults."""
+    spec = load_spec("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_schemas"
+        output_dir.mkdir(parents=True)
+
+        generator = _make_generator(spec, output_dir)
+
+        properties = {
+            "tags": {"type": "array", "items": {"type": "string"}, "default": []},
+            "count": {"type": "integer", "default": 0},
+            "enabled": {"type": "boolean", "default": True},
+        }
+
+        result = generator.generate_class_properties(properties, required=None)
+
+        assert "tags: list[str] = []\n" in result
+        assert "count: int = 0\n" in result
+        assert "enabled: bool = True\n" in result
+        assert "typing.Optional" not in result
