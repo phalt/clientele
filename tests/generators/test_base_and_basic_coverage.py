@@ -82,6 +82,48 @@ def test_clients_generator_handles_optional_path_parameters():
         assert "Optional" in result.query_args["filter"]
 
 
+def test_clients_generator_resolves_schema_refs_in_parameters():
+    """Test that $ref schema types in parameters use schemas.X prefix."""
+    spec = load_spec("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_client"
+        output_dir.mkdir(parents=True)
+
+        from clientele.generators.api import writer as api_writer
+        from clientele.generators.shared.generators.schemas import SchemasGenerator
+
+        schemas_gen = SchemasGenerator(spec=spec, output_dir=str(output_dir), writer=api_writer)
+
+        generator = api_clients.ClientsGenerator(
+            spec=spec,
+            output_dir=str(output_dir),
+            schemas_generator=schemas_gen,
+            asyncio=False,
+        )
+
+        parameters = [
+            {
+                "name": "status",
+                "in": "query",
+                "required": False,
+                "schema": {
+                    "anyOf": [
+                        {"$ref": "#/components/schemas/ActionStatus"},
+                        {"type": "null"},
+                    ],
+                },
+            }
+        ]
+
+        result = generator.generate_parameters(parameters, [])
+
+        assert "status" in result.query_args
+        param_type = result.query_args["status"]
+        assert "schemas.ActionStatus" in param_type
+        assert param_type.count("None") <= 1
+
+
 def test_clients_generator_handles_multiple_input_classes():
     """Test that clients generator handles multiple input classes."""
     spec = load_spec("simple.json")

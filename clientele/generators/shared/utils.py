@@ -280,8 +280,21 @@ def remove_forward_ref_quotes(type_string: str) -> str:
     This is used for type aliases where forward references are not needed
     because all types are defined in the same module and model_rebuild() is called.
     """
-    import re
-
-    # Replace quoted strings within type annotations
-    # Pattern: matches quoted strings that are type names (alphanumeric + underscore)
     return re.sub(r'"([A-Za-z_][A-Za-z0-9_]*)"', r"\1", type_string)
+
+
+def resolve_forward_refs_for_client(type_string: str) -> str:
+    """Replace forward references with schemas module references for client.py context."""
+    return re.sub(r'"([A-Za-z_][A-Za-z0-9_]*)"', r"schemas.\1", type_string)
+
+
+def strip_none_from_type(type_string: str) -> str:
+    """Strip None/Optional wrapping so the caller can re-wrap without duplication."""
+    if type_string.startswith("typing.Optional[") and type_string.endswith("]"):
+        return type_string[len("typing.Optional[") : -1]
+    m = re.match(r"^typing\.Union\[(.+),\s*None\]$", type_string)
+    if m:
+        return m.group(1)
+    if type_string.endswith(" | None"):
+        return type_string[: -len(" | None")]
+    return type_string
