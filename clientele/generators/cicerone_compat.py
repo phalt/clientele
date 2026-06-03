@@ -191,6 +191,10 @@ def schema_to_dict(schema) -> dict:
     if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "enum" in schema.__pydantic_extra__:
         result["enum"] = schema.__pydantic_extra__["enum"]
 
+    # Handle default - it's in the extra fields; use "in" check since defaults can be falsy
+    if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "default" in schema.__pydantic_extra__:
+        result["default"] = schema.__pydantic_extra__["default"]
+
     # Handle properties
     if hasattr(schema, "properties") and schema.properties:
         result["properties"] = {k: schema_to_dict(v) for k, v in schema.properties.items()}
