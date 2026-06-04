@@ -1,6 +1,11 @@
 # Change log
 
-## 2.1.0 UNRELEASED
+## 2.2.0
+
+- Support OpenAPI `default` and `const` in schema generation ([#247](https://github.com/phalt/clientele/pull/247)).
+- Fix `$ref` parameter types and double-nullable handling in client generation ([#247](https://github.com/phalt/clientele/pull/247)).
+
+## 2.1.0
 
 - Introduce `RequestsHTTPBackend` for making HTTP requests using the `requests` library.
   - This backend implements synchronous HTTP requests only.
