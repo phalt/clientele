@@ -295,8 +295,8 @@ class TestArrayResponses:
     """Test top-level array response handling."""
 
     @pytest.mark.parametrize("client_generator", [APIGenerator])
-    def test_array_response_generates_type_alias(self, tmp_path, client_generator):
-        """Test that top-level array responses generate type aliases, not empty classes."""
+    def test_array_response_generates_root_model(self, tmp_path, client_generator):
+        """Top-level array responses must emit a pydantic.RootModel subclass, not a plain type alias."""
         spec = load_spec("complex_schemas.json")
         spec_path = get_spec_path("complex_schemas.json")
         generator = client_generator(
@@ -312,7 +312,8 @@ class TestArrayResponses:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        assert "ResponseListUsers = list[User]" in schemas_content
+        assert "class ResponseListUsers(pydantic.RootModel[list[User]]):" in schemas_content
+        assert "ResponseListUsers = list[User]" not in schemas_content
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
         assert "class User(pydantic.BaseModel):" in schemas_content
         assert "id: int" in schemas_content
@@ -320,8 +321,8 @@ class TestArrayResponses:
         assert "email: str" in schemas_content
 
     @pytest.mark.parametrize("client_generator", [APIGenerator])
-    def test_array_response_without_title_generates_type_alias(self, tmp_path, client_generator):
-        """Test that array responses without title also generate type aliases correctly."""
+    def test_array_response_without_title_generates_root_model(self, tmp_path, client_generator):
+        """Array responses without a title must also become RootModel subclasses."""
         spec = load_spec("complex_schemas.json")
         spec_path = get_spec_path("complex_schemas.json")
         generator = client_generator(
@@ -337,8 +338,10 @@ class TestArrayResponses:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        assert "ListUsersNoTitleListUsersNoTitleGet200Response = list[User]" in schemas_content
-        assert "class ListUsersNoTitleListUsersNoTitleGet200Response(pydantic.BaseModel):" not in schemas_content
+        assert (
+            "class ListUsersNoTitleListUsersNoTitleGet200Response(pydantic.RootModel[list[User]]):" in schemas_content
+        )
+        assert "ListUsersNoTitleListUsersNoTitleGet200Response = list[User]" not in schemas_content
         assert "test: list[" not in schemas_content
 
 

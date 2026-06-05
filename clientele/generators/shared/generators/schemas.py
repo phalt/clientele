@@ -135,10 +135,14 @@ class SchemasGenerator:
             return
 
         if schema.get("type") == "array":
+            # Emit a pydantic.RootModel subclass rather than a plain type alias.
+            # list[...] is a GenericAlias, not a type, so pydantic rejects it
+            # when it appears in response_map: dict[int, type[Any]].  A RootModel
+            # subclass is a proper class and satisfies that constraint.
             array_type = utils.get_type(schema)
             array_type = utils.remove_forward_ref_quotes(array_type)
-            template = self.writer.templates.get_template("schema_type_alias.jinja2")
-            content = template.render(class_name=schema_key, union_type=array_type)
+            template = self.writer.templates.get_template("schema_root_model.jinja2")
+            content = template.render(class_name=schema_key, inner_type=array_type)
             self.writer.write_to_schemas(content, output_dir=self.output_dir)
             self.schemas[schema_key] = ""
             return
