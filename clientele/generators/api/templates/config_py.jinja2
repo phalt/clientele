@@ -19,14 +19,12 @@ class Config(clientele_api.BaseConfig):
 
     Example:
         # From environment variables
-        export API_BASE_URL="https://api.example.com"
-        export BEARER_TOKEN="my-secret-token"
+        export BASE_URL="https://api.example.com"
         config = Config()
 
         # Direct instantiation
         config = Config(
-            api_base_url="https://api.example.com",
-            bearer_token="my-token",
+            base_url="https://api.example.com",
             timeout=10.0
         )
     """
