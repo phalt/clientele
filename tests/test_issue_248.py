@@ -70,7 +70,7 @@ class TestBug2ArrayResponseRootModel:
         )
 
     def test_array_response_rootmodel_is_valid_type(self, tmp_path):
-        """The generated array response class must satisfy isinstance(cls, type) so pydantic accepts it in response_map."""
+        """Generated array response class must satisfy isinstance(cls, type) so pydantic accepts it in response_map."""
         generator = _make_generator(tmp_path)
         generator.generate()
 
