@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Issue 248 Reproduction",
+    "description": "Reproduces Bug 2 (array RootModel) and Bug 3 (config env var name) from issue #248",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {"url": "https://api.example.com"}
+  ],
+  "paths": {
+    "/faces": {
+      "get": {
+        "summary": "Get Faces",
+        "operationId": "get_faces",
+        "parameters": [
+          {
+            "name": "faces_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {"$ref": "#/components/schemas/FaceTypeEnum"}
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/FaceItem"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload-faces": {
+      "post": {
+        "summary": "Upload Faces",
+        "operationId": "upload_faces",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/FaceItem"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {"$ref": "#/components/schemas/FaceItem"}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FaceTypeEnum": {
+        "type": "string",
+        "enum": ["FRONT", "SIDE", "BACK"],
+        "title": "FaceTypeEnum"
+      },
+      "FaceItem": {
+        "type": "object",
+        "title": "FaceItem",
+        "properties": {
+          "id": {"type": "integer"},
+          "name": {"type": "string"}
+        },
+        "required": ["id", "name"]
+      }
+    }
+  }
+}
