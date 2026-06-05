@@ -65,8 +65,8 @@ class TestBug2ArrayResponseRootModel:
             "schemas.py emitted a plain type alias for an array response; "
             "it should emit a pydantic.RootModel subclass instead"
         )
-        assert "class UploadFaces200Response(pydantic.RootModel[list[FaceItem]]):" in schemas_content, (
-            "schemas.py should emit a pydantic.RootModel subclass for array responses"
+        assert "class UploadFaces200Response(ListResponse[FaceItem]):" in schemas_content, (
+            "schemas.py should emit a ListResponse subclass for array responses"
         )
 
     def test_array_response_rootmodel_is_valid_type(self, tmp_path):

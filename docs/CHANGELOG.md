@@ -4,7 +4,7 @@
 
 - Support OpenAPI `default` and `const` in schema generation ([#247](https://github.com/phalt/clientele/pull/247)).
 - Fix `$ref` parameter types and double-nullable handling in client generation ([#247](https://github.com/phalt/clientele/pull/247)).
-- Fix array response schemas being emitted as plain type aliases (`list[...]`) which pydantic rejects in `response_map` — they are now emitted as `pydantic.RootModel` subclasses ([#248](https://github.com/phalt/clientele/issues/248)).
+- Fix array response schemas being emitted as plain type aliases (`list[...]`) which pydantic rejects in `response_map` — they are now emitted as `clientele.schemas.ListResponse` subclasses, which support `len()`, indexing, and iteration directly ([#248](https://github.com/phalt/clientele/issues/248)).
 - Fix generated `config.py` documenting `API_BASE_URL` as the environment variable name when pydantic-settings reads `BASE_URL` — the example now uses the correct name ([#248](https://github.com/phalt/clientele/issues/248)).
 
 ## 2.1.0

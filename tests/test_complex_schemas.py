@@ -312,7 +312,7 @@ class TestArrayResponses:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        assert "class ResponseListUsers(pydantic.RootModel[list[User]]):" in schemas_content
+        assert "class ResponseListUsers(ListResponse[User]):" in schemas_content
         assert "ResponseListUsers = list[User]" not in schemas_content
         assert "class ResponseListUsers(pydantic.BaseModel):" not in schemas_content
         assert "class User(pydantic.BaseModel):" in schemas_content
@@ -338,9 +338,7 @@ class TestArrayResponses:
         schemas_file = tmp_path / "schemas.py"
         schemas_content = schemas_file.read_text()
 
-        assert (
-            "class ListUsersNoTitleListUsersNoTitleGet200Response(pydantic.RootModel[list[User]]):" in schemas_content
-        )
+        assert "class ListUsersNoTitleListUsersNoTitleGet200Response(ListResponse[User]):" in schemas_content
         assert "ListUsersNoTitleListUsersNoTitleGet200Response = list[User]" not in schemas_content
         assert "test: list[" not in schemas_content
 
@@ -370,7 +368,7 @@ class TestNoContentResponses:
 
     def test_array_response_handle_response_runtime(self):
         """Test that handle_response works correctly with array type aliases at runtime."""
-        from server_examples.fastapi.client import client
+        from server_examples.fastapi.client import client, schemas
 
         fake_backend = configure_client_for_testing(client.client)
 
@@ -386,7 +384,7 @@ class TestNoContentResponses:
 
         result = client.list_users()
 
-        assert isinstance(result, list)
+        assert isinstance(result, schemas.ResponseListUsers)
         assert len(result) == 2
         assert hasattr(result[0], "id")
         assert hasattr(result[0], "name")

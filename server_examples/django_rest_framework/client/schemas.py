@@ -5,6 +5,8 @@ import typing
 
 import pydantic
 
+from clientele.schemas import ListResponse  # noqa
+
 
 class PatchedUser(pydantic.BaseModel):
     id: int
@@ -25,7 +27,8 @@ class UserRequest(pydantic.BaseModel):
     email: str
 
 
-ListUsers200Response = list[User]
+class ListUsers200Response(ListResponse[User]):
+    pass
 
 
 def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:

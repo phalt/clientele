@@ -5,6 +5,8 @@ import typing
 
 import pydantic
 
+from clientele.schemas import ListResponse  # noqa
+
 
 class UserOut(pydantic.BaseModel):
     id: int
@@ -19,7 +21,8 @@ class UserIn(pydantic.BaseModel):
     age: int
 
 
-Response = list[UserOut]
+class Response(ListResponse[UserOut]):
+    pass
 
 
 def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:

@@ -7,6 +7,8 @@ import typing
 
 import pydantic
 
+from clientele.schemas import ListResponse  # noqa
+
 
 class AnotherModel(pydantic.BaseModel):
     key: str

@@ -5,6 +5,8 @@ import typing
 
 import pydantic
 
+from clientele.schemas import ListResponse  # noqa
+
 
 class CreateUserRequest(pydantic.BaseModel):
     name: str
@@ -29,7 +31,8 @@ class ValidationError(pydantic.BaseModel):
     model_config = pydantic.ConfigDict(populate_by_name=True)
 
 
-ResponseListUsers = list[UserResponse]
+class ResponseListUsers(ListResponse[UserResponse]):
+    pass
 
 
 def get_subclasses_from_same_file() -> list[typing.Type[pydantic.BaseModel]]:
