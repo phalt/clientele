@@ -1260,10 +1260,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#210-unreleased" class="md-nav__link">
+  <a href="#220" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.1.0 UNRELEASED
+        2.2.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.0
       
     </span>
   </a>
@@ -2129,10 +2140,21 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#210-unreleased" class="md-nav__link">
+  <a href="#220" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2.1.0 UNRELEASED
+        2.2.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#210" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1.0
       
     </span>
   </a>
@@ -2984,7 +3006,15 @@
 
 
 <h1 id="change-log">Change log</h1>
-<h2 id="210-unreleased">2.1.0 UNRELEASED</h2>
+<h2 id="220">2.2.0</h2>
+<ul>
+<li>Support OpenAPI <code>default</code> and <code>const</code> in schema generation (<a href="https://github.com/phalt/clientele/pull/247">#247</a>).</li>
+<li>Fix <code>$ref</code> parameter types and double-nullable handling in client generation (<a href="https://github.com/phalt/clientele/pull/247">#247</a>).</li>
+<li>Fix array response schemas being emitted as plain type aliases (<code>list[...]</code>) which pydantic rejects in <code>response_map</code> — they are now emitted as <code>clientele.schemas.ListResponse</code> subclasses, which support <code>len()</code>, indexing, and iteration directly (<a href="https://github.com/phalt/clientele/issues/248">#248</a>).</li>
+<li>Fix generated <code>config.py</code> documenting <code>API_BASE_URL</code> as the environment variable name when pydantic-settings reads <code>BASE_URL</code> — the example now uses the correct name (<a href="https://github.com/phalt/clientele/issues/248">#248</a>).</li>
+<li>Initial CI support for Python 3.15</li>
+</ul>
+<h2 id="210">2.1.0</h2>
 <ul>
 <li>Introduce <code>RequestsHTTPBackend</code> for making HTTP requests using the <code>requests</code> library.</li>
 <li>This backend implements synchronous HTTP requests only.</li>
