@@ -124,6 +124,30 @@ def test_standard_generator_with_yaml_spec():
         assert (output_dir / "schemas.py").exists()
 
 
+def test_post_without_request_body_omits_data_parameter():
+    """POST/PUT/PATCH endpoints without a request body must not generate a `data` parameter."""
+    spec = load_spec("best.json")
+    spec_path = get_spec_path("best.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "no_body_client"
+
+        generator = APIGenerator(
+            spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
+        )
+        generator.generate()
+
+        client_content = (output_dir / "client.py").read_text()
+        assert "def post_without_body(" in client_content
+        # Extract the full function signature (may span multiple lines until ->)
+        sig_start = client_content.index("def post_without_body(")
+        sig_end = client_content.index("->", sig_start)
+        signature = client_content[sig_start:sig_end]
+        assert "data:" not in signature, f"Unexpected 'data' parameter in: {signature}"
+        assert "item_id: str" in signature
+        assert "force:" in signature
+
+
 def test_standard_generator_creates_manifest():
     """Test that generator creates proper MANIFEST.md."""
     spec = load_spec("simple.json")

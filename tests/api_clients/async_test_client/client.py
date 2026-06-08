@@ -151,6 +151,17 @@ async def deprecated_endpoint_deprecated_endpoint_get(result: schemas.SimpleResp
     return result
 
 
+@client.post("/post-without-body/{item_id}")
+async def post_without_body(
+    result: schemas.SimpleResponse, item_id: str, force: typing.Optional[bool] = None
+) -> schemas.SimpleResponse:
+    """Post Without Body
+
+    A POST endpoint that has path and query parameters but no request body
+    """
+    return result
+
+
 @client.post("/nullable-fields", response_map={200: schemas.NullableFieldsResponse, 422: schemas.HTTPValidationError})
 async def nullable_fields_nullable_fields_post(
     result: schemas.HTTPValidationError | schemas.NullableFieldsResponse, data: schemas.NullableFieldsRequest
