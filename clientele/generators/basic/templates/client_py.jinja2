@@ -8,7 +8,6 @@ from clientele import api
 {% if client_project_directory_path %}from {{client_project_directory_path}}.config import config
 {% else %}from .config import config
 {% endif %}
-
 client = api.APIClient(config=config)
 
 # Declare your API functions here.

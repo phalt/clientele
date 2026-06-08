@@ -2,7 +2,10 @@ import pathlib
 
 import jinja2
 
-templates = jinja2.Environment(loader=jinja2.PackageLoader("clientele", "generators/basic/templates/"))
+templates = jinja2.Environment(
+    loader=jinja2.PackageLoader("clientele", "generators/basic/templates/"),
+    keep_trailing_newline=True,
+)
 
 
 def write_to_schemas(content: str, output_dir: str) -> None:
