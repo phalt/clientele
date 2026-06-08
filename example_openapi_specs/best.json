@@ -799,6 +799,46 @@
                 }
             }
         },
+        "/post-without-body/{item_id}": {
+            "post": {
+                "summary": "Post Without Body",
+                "description": "A POST endpoint that has path and query parameters but no request body",
+                "operationId": "post_without_body",
+                "parameters": [
+                    {
+                        "name": "item_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Item ID"
+                        }
+                    },
+                    {
+                        "name": "force",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "Force"
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SimpleResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/nullable-fields": {
             "post": {
                 "summary": "Nullable Fields Request",

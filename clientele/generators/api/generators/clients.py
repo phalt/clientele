@@ -111,7 +111,7 @@ class ClientsGenerator(base_clients.BaseClientsGenerator):
         api_url = utils.replace_path_parameters(url, function_arguments.param_name_map)
 
         if method in ["post", "put", "patch"] and not operation.get("requestBody"):
-            data_class_name = "None"
+            data_class_name = None
         elif method in ["post", "put", "patch"]:
             data_class_name = self.generate_input_types(operation.get("requestBody", {}), func_name=func_name)
         else:
