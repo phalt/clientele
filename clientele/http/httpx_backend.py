@@ -124,11 +124,13 @@ class HttpxHTTPBackend(backends.HTTPBackend):
         """Close the synchronous httpx client."""
         if self._sync_client is not None:
             self._sync_client.close()
+            self._sync_client = None
 
     async def aclose(self) -> None:
         """Asynchronously close the async httpx client."""
         if self._async_client is not None:
             await self._async_client.aclose()
+            self._async_client = None
 
     def handle_sync_stream(
         self,

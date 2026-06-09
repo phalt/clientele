@@ -91,6 +91,59 @@ async def test_aclose_method_works() -> None:
     assert client.config.http_backend is fake_backend
 
 
+def test_sync_request_works_after_close() -> None:
+    """Test that sync requests work after close() by rebuilding the client."""
+    client = APIClient(base_url=BASE_URL)
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Ada"}),
+    )
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Ada"}),
+    )
+
+    @client.get("/users/{user_id}")
+    def get_user(result: User, user_id: int) -> User:
+        return result
+
+    user = get_user(1)
+    assert user.id == 1
+
+    client.close()
+
+    user = get_user(1)
+    assert user.id == 1
+
+
+@pytest.mark.asyncio
+async def test_async_request_works_after_aclose() -> None:
+    """Test that async requests work after aclose() by rebuilding the client."""
+    client = APIClient(base_url=BASE_URL)
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Ada"}),
+    )
+    fake_backend.queue_response(
+        path="/users/1",
+        response_obj=ResponseFactory.ok(data={"id": 1, "name": "Ada"}),
+    )
+
+    @client.get("/users/{user_id}")
+    async def get_user(result: User, user_id: int) -> User:
+        return result
+
+    user = await get_user(1)
+    assert user.id == 1
+
+    await client.aclose()
+
+    user = await get_user(1)
+    assert user.id == 1
+
+
 def test_can_reconfigure_with_base_url() -> None:
     """Test that base_url can be reconfigured."""
     client = APIClient(base_url="whatever")
