@@ -1,5 +1,10 @@
 # Change log
 
+## 2.3.0 UNRELEASED
+
+- Major refactoring of the project structure including removing of redundant code paths (mostly left over from the old generator logic).
+- Reorganisation of the tests and their files to mirror the codebase more.
+
 ## 2.2.2
 
 - Fix `HttpxHTTPBackend.close()`/`aclose()` not resetting the client reference — a closed-but-non-None client was returned on subsequent requests, causing `RuntimeError: Cannot send a request, as the client has been closed`.
