@@ -109,3 +109,61 @@ def test_framework_generator_handles_ruff_not_found():
 
             # Verify client was still generated despite missing ruff
             assert (Path(output_dir) / "client.py").exists()
+
+
+def test_framework_generator_removes_existing_files():
+    """Test that the generator removes existing files before regenerating."""
+    spec = load_spec("simple.json")
+    spec_path = get_spec_path("simple.json")
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_client"
+
+        generator = APIGenerator(
+            spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
+        )
+        generator.generate()
+
+        assert (output_dir / "client.py").exists()
+
+        test_file = output_dir / "schemas.py"
+        test_file.write_text("# Old content")
+
+        generator2 = APIGenerator(
+            spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=str(spec_path)
+        )
+        generator2.generate()
+
+        assert test_file.exists()
+        assert "# Old content" not in test_file.read_text()
+
+
+def test_framework_generator_uses_server_url_from_spec():
+    """Test that the base URL from the spec servers ends up in config.py."""
+    from cicerone import parse as cicerone_parse
+
+    spec = cicerone_parse.parse_spec_from_dict(
+        {
+            "openapi": "3.0.0",
+            "info": {"title": "Test API", "version": "1.0.0"},
+            "servers": [{"url": "https://api.example.com"}],
+            "paths": {
+                "/test": {
+                    "get": {
+                        "operationId": "test_get",
+                        "responses": {"200": {"description": "Success"}},
+                    }
+                }
+            },
+        }
+    )
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_client"
+
+        generator = APIGenerator(spec=spec, asyncio=False, regen=True, output_dir=str(output_dir), url=None, file=None)
+        generator.generate()
+
+        assert (output_dir / "config.py").exists()
+        config_content = (output_dir / "config.py").read_text()
+        assert "api.example.com" in config_content
