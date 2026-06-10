@@ -175,29 +175,6 @@ def get_type(t):
     return base_type if base_type else "typing.Any"
 
 
-def create_query_args(query_args: list[str]) -> str:
-    return "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
-
-
-def create_query_args_with_mapping(sanitized_names: list[str], param_name_map: dict[str, str]) -> str:
-    """
-    Create query string using original API parameter names in the URL,
-    but sanitized Python variable names in the f-string interpolation.
-
-    Args:
-        sanitized_names: List of sanitized Python parameter names
-        param_name_map: Mapping from sanitized names to original API names
-
-    Returns:
-        Query string like "?originalName={sanitized_name}&other={other_var}"
-    """
-    parts = []
-    for sanitized in sanitized_names:
-        original = param_name_map.get(sanitized, sanitized)
-        parts.append(f"{original}=" + "{" + sanitized + "}")
-    return "?" + "&".join(parts)
-
-
 def replace_path_parameters(url: str, param_name_map: dict[str, str]) -> str:
     """
     Replace path parameters in a URL with their sanitized Python variable names.

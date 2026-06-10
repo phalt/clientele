@@ -60,7 +60,6 @@ class APIGenerator(generators.Generator):
         )
 
     def generate_templates_files(self) -> None:
-        new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
 
         # Extract base_url from OpenAPI spec servers
@@ -83,7 +82,6 @@ class APIGenerator(generators.Generator):
             template = writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
-                new_unions=new_unions,
                 base_url=base_url,
             )
             write_func(content, output_dir=self.output_dir)

@@ -58,8 +58,6 @@ def test_clients_generator_handles_optional_path_parameters():
 
         schemas_gen = SchemasGenerator(spec=spec, output_dir=str(output_dir), writer=api_writer)
 
-        api_clients.FrameworkHTTPPlaceholder()
-
         generator = api_clients.ClientsGenerator(
             spec=spec,
             output_dir=str(output_dir),
