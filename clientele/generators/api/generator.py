@@ -7,9 +7,9 @@ from os import path
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
-from clientele import generators, settings, utils
+from clientele import generators, settings
 from clientele.generators.api import clients, writer
-from clientele.generators.shared import schemas
+from clientele.generators.shared import schemas, utils
 
 console = rich_console.Console()
 

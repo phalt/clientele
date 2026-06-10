@@ -1,6 +1,6 @@
 """Tests for utility functions."""
 
-from clientele.utils import get_client_project_directory_path
+from clientele.generators.shared.utils import get_client_project_directory_path
 
 
 def test_get_client_project_directory_path():
