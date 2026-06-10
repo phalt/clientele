@@ -7,7 +7,7 @@ import typing
 
 import pydantic
 
-from clientele.schemas import ListResponse  # noqa
+from clientele.schemas import DictResponse, ListResponse  # noqa
 
 
 class AnotherModel(pydantic.BaseModel):
@@ -15,7 +15,7 @@ class AnotherModel(pydantic.BaseModel):
 
 
 class ComplexModelResponse(pydantic.BaseModel):
-    a_dict_response: dict[str, typing.Any]
+    a_dict_response: dict[str, str]
     a_enum: "ExampleEnum"
     a_list_of_enums: list["ExampleEnum"]
     a_list_of_numbers: list[int]

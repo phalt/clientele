@@ -79,6 +79,21 @@ class APIClient:
         if self.config.http_backend is None:
             self.config.http_backend = httpx_backend.HttpxHTTPBackend.from_config(self.config)
 
+    def _resolve_config(self, config_override: api_config.BaseConfig | None) -> api_config.BaseConfig:
+        """
+        Resolve the configuration for a single call.
+
+        Returns the per-call override when one was passed, otherwise the
+        client-wide config. An override without an http_backend gets one
+        lazily, cached on the override itself so that each config keeps
+        its own connection pool (e.g. one per tenant).
+        """
+        if config_override is None:
+            return self.config
+        if config_override.http_backend is None:
+            config_override.http_backend = httpx_backend.HttpxHTTPBackend.from_config(config_override)
+        return config_override
+
     def close(self) -> None:
         """Close the synchronous HTTP client."""
         if self.config.http_backend is not None:
@@ -98,6 +113,7 @@ class APIClient:
         data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
         query: dict[str, typing.Any] | None = None,
         headers: dict[str, str] | None = None,
+        config: api_config.BaseConfig | None = None,
         **path_params: typing.Any,
     ) -> typing.Any:
         """
@@ -112,6 +128,7 @@ class APIClient:
             data: Request body payload (for POST, PUT, etc.)
             query: Query parameters (optional)
             headers: Additional request headers (optional)
+            config: Per-call config override (optional); uses the client config when omitted
             **path_params: Path parameters to substitute in the URL path
         """
         url_path = self._substitute_path(path, path_params)
@@ -123,6 +140,7 @@ class APIClient:
             data_payload=data_payload,
             headers_override=headers,
             response_map=response_map,
+            config=self._resolve_config(config),
         )
         return self._parse_response(
             response=response,
@@ -139,6 +157,7 @@ class APIClient:
         data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
         query: dict[str, typing.Any] | None = None,
         headers: dict[str, str] | None = None,
+        config: api_config.BaseConfig | None = None,
         **path_params: typing.Any,
     ) -> typing.Any:
         """
@@ -153,6 +172,7 @@ class APIClient:
             data: Request body payload (for POST, PUT, etc.)
             query: Query parameters (optional)
             headers: Additional request headers (optional)
+            config: Per-call config override (optional); uses the client config when omitted
             **path_params: Path parameters to substitute in the URL path
         """
         url_path = self._substitute_path(path, path_params)
@@ -164,6 +184,7 @@ class APIClient:
             data_payload=data_payload,
             headers_override=headers,
             response_map=response_map,
+            config=self._resolve_config(config),
         )
         return self._parse_response(
             response=response,
@@ -332,6 +353,7 @@ class APIClient:
         # Extract reserved keywords that control request behavior
         query_override = kwargs_copy.pop("query", None) if "query" not in context.signature.parameters else None
         headers_override = kwargs_copy.pop("headers", None) if "headers" not in context.signature.parameters else None
+        config_override = kwargs_copy.pop("config", None) if "config" not in context.signature.parameters else None
 
         recognized_kwargs = {k: v for k, v in kwargs_copy.items() if k in context.signature.parameters}
         extra_kwargs = {k: v for k, v in kwargs_copy.items() if k not in context.signature.parameters}
@@ -409,6 +431,7 @@ class APIClient:
             data_payload=data_payload,
             headers_override=headers_override,
             result_annotation=result_annotation,
+            config_override=config_override,
         )
 
     def _execute_sync(
@@ -422,6 +445,7 @@ class APIClient:
             data_payload=prepared.data_payload,
             headers_override=prepared.headers_override,
             response_map=context.response_map,
+            config=self._resolve_config(prepared.config_override),
         )
         result = self._finalise_call(prepared=prepared, response=response)
         return result
@@ -437,6 +461,7 @@ class APIClient:
             data_payload=prepared.data_payload,
             headers_override=prepared.headers_override,
             response_map=context.response_map,
+            config=self._resolve_config(prepared.config_override),
         )
         result = self._finalise_call(prepared=prepared, response=response)
         return await result
@@ -449,12 +474,13 @@ class APIClient:
         """
 
         prepared = self._prepare_call(context, args, kwargs)
+        config = self._resolve_config(prepared.config_override)
 
         # Extract the inner type from AsyncIterator[T]
         inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
 
         # Build request kwargs
-        headers = {**self.config.headers, **(prepared.headers_override or {})}
+        headers = {**config.headers, **(prepared.headers_override or {})}
         request_kwargs: dict[str, typing.Any] = {
             "params": prepared.query_params,
             "headers": headers,
@@ -462,8 +488,8 @@ class APIClient:
         if prepared.data_payload is not None:
             request_kwargs["json"] = prepared.data_payload
 
-        if self.config.logger is not None:
-            self.config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
+        if config.logger is not None:
+            config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
 
         # For streaming, response_parser must accept str, not Response.
         # Cast is safe: streaming endpoints only accept Callable[[str], Any] parsers,
@@ -472,9 +498,9 @@ class APIClient:
             typing.Callable[[str], typing.Any] | None, context.response_parser
         )
 
-        if not self.config.http_backend:
+        if not config.http_backend:
             raise RuntimeError("HTTP backend is not configured.")
-        stream_generator = self.config.http_backend.handle_async_stream(
+        stream_generator = config.http_backend.handle_async_stream(
             method=context.method,
             url=prepared.url_path,
             inner_type=inner_type,
@@ -508,15 +534,16 @@ class APIClient:
         """
 
         prepared = self._prepare_call(context, args, kwargs)
+        config = self._resolve_config(prepared.config_override)
 
         # Extract the inner type from Iterator[T]
         inner_type = type_utils.get_streaming_inner_type(prepared.result_annotation)
 
-        if self.config.http_backend is None:
+        if config.http_backend is None:
             raise RuntimeError("HTTP backend is not configured.")
 
         # Build request kwargs
-        headers = {**self.config.headers, **(prepared.headers_override or {})}
+        headers = {**config.headers, **(prepared.headers_override or {})}
         request_kwargs: dict[str, typing.Any] = {
             "params": prepared.query_params,
             "headers": headers,
@@ -524,8 +551,8 @@ class APIClient:
         if prepared.data_payload is not None:
             request_kwargs["json"] = prepared.data_payload
 
-        if self.config.logger is not None:
-            self.config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
+        if config.logger is not None:
+            config.logger.debug(f"HTTP Streaming Request: {context.method} {prepared.url_path}")
 
         # For streaming, response_parser must accept str, not Response.
         # Cast is safe: streaming endpoints only accept Callable[[str], Any] parsers,
@@ -534,7 +561,7 @@ class APIClient:
             typing.Callable[[str], typing.Any] | None, context.response_parser
         )
 
-        stream_generator = self.config.http_backend.handle_sync_stream(
+        stream_generator = config.http_backend.handle_sync_stream(
             method=context.method,
             url=prepared.url_path,
             inner_type=inner_type,
@@ -587,30 +614,32 @@ class APIClient:
         data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
         response_map: dict[int, type[typing.Any]] | None = None,
+        config: api_config.BaseConfig | None = None,
     ) -> http_response.Response:
-        headers = {**self.config.headers, **(headers_override or {})}
+        config = config or self.config
+        headers = {**config.headers, **(headers_override or {})}
 
         request_kwargs: dict[str, typing.Any] = {"params": query_params, "headers": headers}
         if data_payload is not None:
             request_kwargs["json"] = data_payload
 
-        if self.config.http_backend is None:
+        if config.http_backend is None:
             raise RuntimeError("HTTP backend is not configured.")
 
-        if self.config.logger:
-            self.config.logger.debug(f"HTTP Request: {method} {url}")
-            self.config.logger.debug(f"Request Query Params: {query_params}")
-            self.config.logger.debug(f"Request Payload: {data_payload}")
-            self.config.logger.debug(f"Request Headers: {headers}")
+        if config.logger:
+            config.logger.debug(f"HTTP Request: {method} {url}")
+            config.logger.debug(f"Request Query Params: {query_params}")
+            config.logger.debug(f"Request Payload: {data_payload}")
+            config.logger.debug(f"Request Headers: {headers}")
 
         start_time = time.perf_counter()
-        response = self.config.http_backend.send_sync_request(method, url, **request_kwargs)
+        response = config.http_backend.send_sync_request(method, url, **request_kwargs)
         elapsed_time = time.perf_counter() - start_time
 
-        if self.config.logger:
-            self.config.logger.debug(f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)")
-            self.config.logger.debug(f"Response Content: {response.text}")
-            self.config.logger.debug(f"Response Headers: {response.headers}")
+        if config.logger:
+            config.logger.debug(f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)")
+            config.logger.debug(f"Response Content: {response.text}")
+            config.logger.debug(f"Response Headers: {response.headers}")
 
         # Only raise for status if we don't have a response_map
         # If we have a response_map, we want to handle error responses
@@ -627,25 +656,27 @@ class APIClient:
         data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
         response_map: dict[int, type[typing.Any]] | None = None,
+        config: api_config.BaseConfig | None = None,
     ) -> http_response.Response:
-        headers = {**self.config.headers, **(headers_override or {})}
+        config = config or self.config
+        headers = {**config.headers, **(headers_override or {})}
 
         request_kwargs: dict[str, typing.Any] = {"params": query_params, "headers": headers}
         if data_payload is not None:
             request_kwargs["json"] = data_payload
 
-        if self.config.http_backend is None:
+        if config.http_backend is None:
             raise RuntimeError("HTTP backend is not configured.")
 
-        if self.config.logger is not None:
-            self.config.logger.debug(f"HTTP Request: {method} {url}")
+        if config.logger is not None:
+            config.logger.debug(f"HTTP Request: {method} {url}")
 
         start_time = time.perf_counter()
-        response = await self.config.http_backend.send_async_request(method, url, **request_kwargs)
+        response = await config.http_backend.send_async_request(method, url, **request_kwargs)
         elapsed_time = time.perf_counter() - start_time
 
-        if self.config.logger:
-            self.config.logger.debug(
+        if config.logger:
+            config.logger.debug(
                 f"HTTP Response: {method} {url} -> {response.status_code} ({elapsed_time:.3f}s)\n"
                 f"Content: {response.text}"
             )

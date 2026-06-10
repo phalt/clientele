@@ -2,7 +2,9 @@
 This file will never be updated on subsequent clientele runs.
 Use it as a space to store configuration and constants.
 """
-
+{% if auth and auth.basic %}
+import base64
+{% endif %}
 from pydantic import Field
 
 from clientele import api as clientele_api
@@ -30,8 +32,40 @@ class Config(clientele_api.BaseConfig):
     """
 
     base_url: str = "{{ base_url }}"
+{% if auth %}{% if auth.bearer %}
+    # HTTP bearer authentication ("{{ auth.bearer.scheme_name }}" in the OpenAPI spec).
+    # When set, sends the "Authorization: Bearer <token>" header.
+    bearer_token: str = ""
+{% endif %}{% if auth.basic %}
+    # HTTP basic authentication ("{{ auth.basic.scheme_name }}" in the OpenAPI spec).
+    # When set, sends the "Authorization: Basic <credentials>" header.
+    basic_username: str = ""
+    basic_password: str = ""
+{% endif %}{% for key in auth.api_keys %}
+    # API key authentication ("{{ key.scheme_name }}" in the OpenAPI spec).
+    # When set, sends the "{{ key.header_name }}" header.
+    {{ key.field_name }}: str = ""
+{% endfor %}{% for scheme in auth.unsupported %}
+    # Note: security scheme "{{ scheme.scheme_name }}" ({{ scheme.description }}) cannot be
+    # generated automatically. Configure it manually, e.g. via the headers field.
+{% endfor %}{% endif %}
     headers: dict[str, str] = Field(default_factory=dict)
     timeout: float | None = 5.0
     follow_redirects: bool = False
     verify: bool | str = True
     http2: bool = False
+{% if auth and (auth.bearer or auth.basic or auth.api_keys) %}
+    def model_post_init(self, context, /) -> None:
+        """Inject configured credentials into headers, without overriding explicit ones."""
+        super().model_post_init(context)
+{% if auth.bearer %}
+        if self.bearer_token:
+            self.headers.setdefault("Authorization", f"Bearer {self.bearer_token}")
+{% endif %}{% if auth.basic %}
+        if self.basic_username or self.basic_password:
+            credentials = base64.b64encode(f"{self.basic_username}:{self.basic_password}".encode()).decode()
+            self.headers.setdefault("Authorization", f"Basic {credentials}")
+{% endif %}{% for key in auth.api_keys %}
+        if self.{{ key.field_name }}:
+            self.headers.setdefault("{{ key.header_name }}", self.{{ key.field_name }})
+{% endfor %}{% endif %}

@@ -69,6 +69,9 @@ def normalize_openapi_31_schema(schema_dict: dict) -> dict:
     if "items" in normalized:
         normalized["items"] = normalize_openapi_31_schema(normalized["items"])
 
+    if "additionalProperties" in normalized and isinstance(normalized["additionalProperties"], dict):
+        normalized["additionalProperties"] = normalize_openapi_31_schema(normalized["additionalProperties"])
+
     if "allOf" in normalized and isinstance(normalized["allOf"], list):
         normalized["allOf"] = [normalize_openapi_31_schema(s) for s in normalized["allOf"]]
 
@@ -198,6 +201,11 @@ def schema_to_dict(schema) -> dict:
     # Handle const - it's in the extra fields
     if hasattr(schema, "__pydantic_extra__") and schema.__pydantic_extra__ and "const" in schema.__pydantic_extra__:
         result["const"] = schema.__pydantic_extra__["const"]
+
+    # Handle additionalProperties - it's in the extra fields as a raw dict or bool
+    additional_properties = get_pydantic_extra(schema, "additionalProperties")
+    if additional_properties is not None:
+        result["additionalProperties"] = additional_properties
 
     # Handle properties
     if hasattr(schema, "properties") and schema.properties:

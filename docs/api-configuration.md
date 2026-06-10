@@ -83,3 +83,38 @@ if __name__ == "__main__":
 ```
 
 The `configure` method accepts the same parameters as the `APIClient` constructor.
+
+## Per-call configuration
+
+Every decorated function (and the direct `request`/`arequest` methods) accepts a reserved `config` keyword argument that overrides the client-wide configuration for that single call. This is the right tool when one API specification is served by many hosts — for example multi-tenant platforms or industry protocols where several parties expose the same endpoints:
+
+```python
+from clientele import api as clientele_api
+
+client = clientele_api.APIClient(base_url="https://default.example.com")
+
+@client.get("/users/{user_id}")
+def get_user(result: User, user_id: int) -> User:
+    return result
+
+# One config per party / tenant
+party_a = clientele_api.BaseConfig(
+    base_url="https://party-a.example.com",
+    headers={"Authorization": "Bearer <token-for-a>"},
+)
+party_b = clientele_api.BaseConfig(
+    base_url="https://party-b.example.com",
+    headers={"Authorization": "Bearer <token-for-b>"},
+)
+
+user_from_a = get_user(user_id=1, config=party_a)
+user_from_b = get_user(user_id=1, config=party_b)
+```
+
+Unlike `configure()`, a per-call `config` never mutates the client-wide configuration, so concurrent calls with different overrides are safe — there is no shared state to race on. Each override config lazily creates and caches its own HTTP backend, so every tenant keeps its own connection pool. Reuse config objects between calls rather than building a new one per request.
+
+This works in generated clients too: every generated function accepts `config=` without regeneration.
+
+!!! note
+
+    Like the reserved `query` and `headers` keywords, `config` is only treated as an override when the decorated function does not declare its own `config` parameter. If it does, the declared parameter wins.
