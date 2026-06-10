@@ -5,7 +5,7 @@ import functools
 import inspect
 import typing
 
-from clientele.api import APIClient, requests
+from clientele.api import APIClient, request_context
 
 _P = typing.ParamSpec("_P")
 _R = typing.TypeVar("_R")
@@ -85,7 +85,7 @@ class GraphQLClient(APIClient):
         """
 
         def decorator(func: typing.Any) -> typing.Any:
-            context = requests.build_request_context(
+            context = request_context.build_request_context(
                 method=method,
                 path="",  # GraphQL uses a single endpoint
                 func=func,
@@ -112,7 +112,7 @@ class GraphQLClient(APIClient):
 
     def _execute_graphql_sync(
         self,
-        context: requests.RequestContext,
+        context: request_context.RequestContext,
         graphql_string: str,
         args: tuple[typing.Any, ...],
         kwargs: dict[str, typing.Any],
@@ -153,7 +153,7 @@ class GraphQLClient(APIClient):
 
     async def _execute_graphql_async(
         self,
-        context: requests.RequestContext,
+        context: request_context.RequestContext,
         graphql_string: str,
         args: tuple[typing.Any, ...],
         kwargs: dict[str, typing.Any],
@@ -194,7 +194,7 @@ class GraphQLClient(APIClient):
 
     def _extract_variables(
         self,
-        context: requests.RequestContext,
+        context: request_context.RequestContext,
         args: tuple[typing.Any, ...],
         kwargs: dict[str, typing.Any],
     ) -> dict[str, typing.Any]:

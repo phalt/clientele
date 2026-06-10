@@ -11,7 +11,7 @@ import pydantic
 
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
-from clientele.api import requests, type_utils
+from clientele.api import request_context, type_utils
 from clientele.http import httpx_backend
 from clientele.http import response as http_response
 
@@ -281,7 +281,7 @@ class APIClient:
         streaming_response: bool = False,
     ) -> typing.Callable[[typing.Any], typing.Any]:
         def decorator(func: typing.Any) -> typing.Any:
-            context = requests.build_request_context(
+            context = request_context.build_request_context(
                 method,
                 path,
                 func,
@@ -319,8 +319,8 @@ class APIClient:
         return decorator
 
     def _prepare_call(
-        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
-    ) -> requests.PreparedCall:
+        self, context: request_context.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+    ) -> request_context.PreparedCall:
         """
         Parse function arguments into an HTTP request specification.
 
@@ -400,7 +400,7 @@ class APIClient:
         url_path = self._substitute_path(context.path_template, path_params)
         result_annotation = context.type_hints.get("result", inspect._empty)
 
-        return requests.PreparedCall(
+        return request_context.PreparedCall(
             context=context,
             bound_arguments=bound_arguments,
             call_arguments=call_arguments,
@@ -412,7 +412,7 @@ class APIClient:
         )
 
     def _execute_sync(
-        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+        self, context: request_context.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
     ) -> typing.Any:
         prepared = self._prepare_call(context, args, kwargs)
         response = self._send_request(
@@ -427,7 +427,7 @@ class APIClient:
         return result
 
     async def _execute_async(
-        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+        self, context: request_context.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
     ) -> typing.Any:
         prepared = self._prepare_call(context, args, kwargs)
         response = await self._send_request_async(
@@ -442,7 +442,7 @@ class APIClient:
         return await result
 
     async def _execute_async_stream(
-        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+        self, context: request_context.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
     ) -> typing.Any:
         """
         Execute an async streaming request.
@@ -495,7 +495,7 @@ class APIClient:
         return result
 
     def _execute_sync_stream(
-        self, context: requests.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
+        self, context: request_context.RequestContext, args: tuple[typing.Any, ...], kwargs: dict[str, typing.Any]
     ) -> typing.Any:
         """
         Execute a sync streaming request.
@@ -658,7 +658,7 @@ class APIClient:
 
     def _finalise_call(
         self,
-        prepared: requests.PreparedCall,
+        prepared: request_context.PreparedCall,
         response: http_response.Response,
     ) -> typing.Any:
         parsed_result = self._parse_response(
