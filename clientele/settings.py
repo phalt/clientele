@@ -1,10 +1,5 @@
-import platform
+import sys
 
 VERSION = "2.2.2"
 
-
-def split_ver():
-    return [int(v) for v in platform.python_version().split(".")]
-
-
-PY_VERSION = split_ver()
+PY_VERSION = sys.version_info
