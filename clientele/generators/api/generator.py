@@ -16,9 +16,9 @@ console = rich_console.Console()
 
 class APIGenerator(generators.Generator):
     """
-    The framework Clientele generator.
+    The API Clientele generator.
 
-    Produces a decorator-based Python HTTP Client library using the clientele framework.
+    Produces a decorator-based Python HTTP Client library using the clientele runtime.
     """
 
     spec: cicerone_openapi_spec.OpenAPISpec
@@ -52,7 +52,7 @@ class APIGenerator(generators.Generator):
         self.output_dir = output_dir
         self.file = file
         self.url = url
-        # Framework generator only needs client, config, and schemas (no http.py)
+        # The api generator only needs client, config, and schemas (no http.py)
         self.file_name_writer_tuple = (
             ("config.py", "config_py.jinja2", writer.write_to_config),
             ("client.py", "client_py.jinja2", writer.write_to_client),

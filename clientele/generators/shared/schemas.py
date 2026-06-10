@@ -63,8 +63,6 @@ class SchemasGenerator:
         self.output_dir = output_dir
         self.writer = writer
 
-    generated_response_class_names: list[str] = []
-
     def generate_enum_properties(self, properties: dict) -> str:
         lines = [
             f"    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"

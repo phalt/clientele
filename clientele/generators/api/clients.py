@@ -13,6 +13,15 @@ from clientele.generators.shared import schemas, utils
 
 console = rich_console.Console()
 
+# Template used for each HTTP method when rendering client functions
+METHOD_TEMPLATE_MAP = {
+    "get": "api_get_method.jinja2",
+    "delete": "api_get_method.jinja2",
+    "post": "api_post_method.jinja2",
+    "put": "api_post_method.jinja2",
+    "patch": "api_post_method.jinja2",
+}
+
 
 class ParametersResponse(pydantic.BaseModel):
     # Parameters that need to be passed in the URL query
@@ -49,7 +58,6 @@ class ClientsGenerator:
     This generates decorator-based client functions instead of traditional functions.
     """
 
-    method_template_map: dict[str, str]
     results: dict[str, int]
     spec: cicerone_openapi_spec.OpenAPISpec
     output_dir: str
@@ -70,14 +78,6 @@ class ClientsGenerator:
         self.schemas_generator = schemas_generator
         self.asyncio = asyncio
         self.function_and_status_codes_bundle = {}
-        self.writer = writer
-        self.method_template_map = dict(
-            get="api_get_method.jinja2",
-            delete="api_get_method.jinja2",
-            post="api_post_method.jinja2",
-            put="api_post_method.jinja2",
-            patch="api_post_method.jinja2",
-        )
 
     def generate_paths(self) -> None:
         # Check if the spec has paths
@@ -299,7 +299,7 @@ class ClientsGenerator:
         else:
             data_class_name = None
         self.results[method] += 1
-        template = self.writer.templates.get_template(self.method_template_map[method])
+        template = writer.templates.get_template(METHOD_TEMPLATE_MAP[method])
         if headers := function_arguments.headers_args:
             header_class_name = self.schemas_generator.generate_headers_class(
                 properties=headers,
@@ -325,12 +325,12 @@ class ClientsGenerator:
             deprecated=operation.get("deprecated", False),
             response_map=response_map,
         )
-        self.writer.write_to_client(content=content, output_dir=self.output_dir)
+        writer.write_to_client(content=content, output_dir=self.output_dir)
 
     def write_path_to_client(self, path: tuple[str, dict]) -> None:
         url, operations = path
         for method, operation in operations.items():
-            if method.lower() in self.method_template_map.keys():
+            if method.lower() in METHOD_TEMPLATE_MAP:
                 self.generate_function(
                     operation=operation,
                     method=method,
