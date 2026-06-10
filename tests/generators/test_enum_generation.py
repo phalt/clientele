@@ -29,6 +29,10 @@ from tests.generators.integration_utils import get_spec_path, load_spec
 
 @contextmanager
 def _import_generated_schemas(tmp_path):
+    # Purge any generated modules cached by earlier tests before importing
+    for mod in list(sys.modules):
+        if mod in ("schemas", "client", "config"):
+            del sys.modules[mod]
     sys.path.insert(0, str(tmp_path))
     try:
         yield
@@ -179,7 +183,7 @@ class TestMemberNameCollisions:
 
     def test_colliding_names_get_suffixes(self, tmp_path):
         from clientele.generators.api import writer
-        from clientele.generators.shared.generators.schemas import SchemasGenerator
+        from clientele.generators.shared.schemas import SchemasGenerator
 
         spec = load_spec("enums.json")
         generator = SchemasGenerator(spec=spec, output_dir=str(tmp_path), writer=writer)

@@ -9,6 +9,7 @@ import yaml
 from click.testing import CliRunner
 
 from clientele import cli
+from tests.generators.integration_utils import get_spec_path
 
 
 @pytest.fixture
@@ -101,17 +102,37 @@ def test_load_openapi_spec_requires_url_or_file():
         cli._load_openapi_spec()
 
 
-def test_load_openapi_spec_raises_value_error_when_no_params():
-    """Test that _load_openapi_spec raises ValueError when neither url nor file provided."""
-    # The function has an assert, but if that's removed it should raise ValueError
-    # Test the else branch that raises ValueError
-    try:
-        # This will hit the assert first, but we're testing the logic
-        cli._load_openapi_spec(url=None, file=None)
-        assert False, "Should have raised an error"
-    except (AssertionError, ValueError):
-        # Either assertion or ValueError is acceptable
-        pass
+def test_load_openapi_spec_normalizes_openapi_31(write_spec_file):
+    """Test that _load_openapi_spec normalizes OpenAPI 3.1 specs."""
+    openapi_31_spec = {
+        "openapi": "3.1.0",
+        "info": {"title": "Test API", "version": "1.0.0"},
+        "paths": {
+            "/test": {
+                "get": {
+                    "operationId": "test_get",
+                    "responses": {
+                        "200": {
+                            "description": "Success",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": ["string", "null"],  # OpenAPI 3.1 nullable syntax
+                                    }
+                                }
+                            },
+                        }
+                    },
+                }
+            }
+        },
+    }
+
+    spec_file = write_spec_file(".json", spec=openapi_31_spec)
+    spec = cli._load_openapi_spec(file=str(spec_file))
+    # Should successfully load and normalize the spec
+    assert spec is not None
+    assert spec.info.title == "Test API"
 
 
 @pytest.mark.parametrize(
@@ -135,6 +156,29 @@ def test_load_openapi_spec_from_url(simple_openapi_spec, httpserver, content_typ
     assert spec.info.title == "Test API"
 
 
+def test_prepare_spec_returns_none_for_old_version(write_spec_file):
+    """Test that _prepare_spec returns None for OpenAPI version < 3.0."""
+    from rich.console import Console
+
+    openapi_v2_spec = {
+        "openapi": "2.9.0",
+        "info": {"title": "Old API", "version": "1.0.0"},
+        "paths": {
+            "/test": {
+                "get": {
+                    "operationId": "test_get",
+                    "responses": {"200": {"description": "Success"}},
+                }
+            }
+        },
+    }
+
+    spec_file = write_spec_file(".json", spec=openapi_v2_spec)
+    spec = cli._prepare_spec(console=Console(), file=str(spec_file))
+    # Should return None for version < 3.0
+    assert spec is None
+
+
 @pytest.mark.parametrize(
     "command,regen_arg,expected_output",
     [
@@ -143,11 +187,8 @@ def test_load_openapi_spec_from_url(simple_openapi_spec, httpserver, content_typ
 )
 def test_generate_commands_with_valid_spec(runner, command, regen_arg, expected_output):
     """Test that all generate commands create client successfully with valid spec."""
-    import tempfile
-    from pathlib import Path
-
     # Use the simple spec from example_openapi_specs
-    spec_path = Path(__file__).parent.parent / "example_openapi_specs" / "simple.json"
+    spec_path = get_spec_path("simple.json")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
@@ -162,9 +203,35 @@ def test_generate_commands_with_valid_spec(runner, command, regen_arg, expected_
         assert expected_output.lower() in result.output.lower()
 
 
-def test_cli_main_block():
-    """Test the CLI main block can be imported without running."""
-    # Just importing the module should work without executing main
-    import clientele.cli as cli_module
+def test_start_api_command_with_swagger_spec(runner, write_spec_file):
+    """Test start-api command with Swagger 2.0 spec (gets auto-converted to 3.0).
 
-    assert hasattr(cli_module, "cli_group")
+    Note: Cicerone automatically converts Swagger 2.0 to OpenAPI 3.0, so the
+    pre-3.0 version check would only trigger for malformed specs, not valid
+    Swagger 2.0.
+    """
+    swagger_v2_spec = {
+        "swagger": "2.0",
+        "info": {"title": "Old API", "version": "1.0.0"},
+        "paths": {
+            "/test": {
+                "get": {
+                    "operationId": "test_get",
+                    "responses": {"200": {"description": "Success"}},
+                }
+            }
+        },
+    }
+
+    spec_file = write_spec_file(".json", spec=swagger_v2_spec)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "test_client"
+
+        result = runner.invoke(
+            cli.cli_group,
+            ["start-api", "--file", str(spec_file), "--output", str(output_dir), "--regen"],
+        )
+
+        # Should succeed (Swagger 2.0 is auto-converted to 3.0)
+        assert result.exit_code == 0

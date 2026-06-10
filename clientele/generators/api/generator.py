@@ -7,19 +7,18 @@ from os import path
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from rich import console as rich_console
 
-from clientele import generators, settings, utils
-from clientele.generators.api import writer
-from clientele.generators.api.generators import clients, schemas
-from clientele.generators.shared import security
+from clientele import generators, settings
+from clientele.generators.api import clients, writer
+from clientele.generators.shared import schemas, security, utils
 
 console = rich_console.Console()
 
 
 class APIGenerator(generators.Generator):
     """
-    The framework Clientele generator.
+    The API Clientele generator.
 
-    Produces a decorator-based Python HTTP Client library using the clientele framework.
+    Produces a decorator-based Python HTTP Client library using the clientele runtime.
     """
 
     spec: cicerone_openapi_spec.OpenAPISpec
@@ -53,7 +52,7 @@ class APIGenerator(generators.Generator):
         self.output_dir = output_dir
         self.file = file
         self.url = url
-        # Framework generator only needs client, config, and schemas (no http.py)
+        # The api generator only needs client, config, and schemas (no http.py)
         self.file_name_writer_tuple = (
             ("config.py", "config_py.jinja2", writer.write_to_config),
             ("client.py", "client_py.jinja2", writer.write_to_client),
@@ -61,7 +60,6 @@ class APIGenerator(generators.Generator):
         )
 
     def generate_templates_files(self) -> None:
-        new_unions = settings.PY_VERSION[1] > 10
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
 
         # Extract base_url from OpenAPI spec servers
@@ -92,7 +90,6 @@ class APIGenerator(generators.Generator):
             template = writer.templates.get_template(client_template_file)
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
-                new_unions=new_unions,
                 base_url=base_url,
                 auth=auth,
             )

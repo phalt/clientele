@@ -30,6 +30,10 @@ from tests.generators.integration_utils import get_spec_path, load_spec
 
 @contextmanager
 def _import_generated_schemas(tmp_path):
+    # Purge any generated modules cached by earlier tests before importing
+    for mod in list(sys.modules):
+        if mod in ("schemas", "client", "config"):
+            del sys.modules[mod]
     sys.path.insert(0, str(tmp_path))
     try:
         yield

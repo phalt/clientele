@@ -33,6 +33,10 @@ from clientele.generators.api.generator import APIGenerator
 
 @contextmanager
 def _import_generated_config(tmp_path):
+    # Purge any generated modules cached by earlier tests before importing
+    for mod in list(sys.modules):
+        if mod in ("schemas", "client", "config"):
+            del sys.modules[mod]
     sys.path.insert(0, str(tmp_path))
     try:
         yield importlib.import_module("config")

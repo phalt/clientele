@@ -1,10 +1,10 @@
-"""Additional tests for schema generators to increase coverage."""
+"""Tests for the shared SchemasGenerator (clientele/generators/shared/schemas.py)."""
 
 import tempfile
 from pathlib import Path
 
 from clientele.generators.api import writer as api_writer
-from clientele.generators.shared.generators.schemas import SchemasGenerator
+from clientele.generators.shared.schemas import SchemasGenerator
 from tests.generators.integration_utils import load_spec
 
 
@@ -231,3 +231,42 @@ def test_generate_class_properties_const_with_alias():
             "action_type: typing.Literal['delete'] = pydantic.Field(default='delete', alias=\"action-type\")" in result
         )
         assert "model_config = pydantic.ConfigDict(populate_by_name=True)" in result
+
+
+def test_schemas_generator_no_components():
+    """Test schemas generator with no components in spec."""
+    from cicerone import parse as cicerone_parse
+
+    spec = cicerone_parse.parse_spec_from_dict(
+        {
+            "openapi": "3.0.0",
+            "info": {"title": "Test API", "version": "1.0.0"},
+            "paths": {},
+        }
+    )
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        generator = _make_generator(spec, tmpdir)
+
+        # Should complete without error
+        generator.generate_schema_classes()
+
+
+def test_schemas_generator_no_schemas_in_components():
+    """Test schemas generator with components but no schemas."""
+    from cicerone import parse as cicerone_parse
+
+    spec = cicerone_parse.parse_spec_from_dict(
+        {
+            "openapi": "3.0.0",
+            "info": {"title": "Test API", "version": "1.0.0"},
+            "components": {},
+            "paths": {},
+        }
+    )
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        generator = _make_generator(spec, tmpdir)
+
+        # Should complete without error
+        generator.generate_schema_classes()

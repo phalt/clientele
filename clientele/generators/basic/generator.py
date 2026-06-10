@@ -1,8 +1,9 @@
 import os
 import pathlib
 
-from clientele import generators, settings, utils
+from clientele import generators, settings
 from clientele.generators.basic import writer
+from clientele.generators.shared import utils
 
 
 class BasicGenerator(generators.Generator):

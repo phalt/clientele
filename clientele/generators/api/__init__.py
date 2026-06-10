@@ -1,1 +1,1 @@
-# Framework generator for decorator-based clients
+# API generator for decorator-based clients

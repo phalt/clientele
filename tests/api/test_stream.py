@@ -5,7 +5,7 @@ from typing import AsyncIterator, Iterator
 import pytest
 from pydantic import BaseModel
 
-from clientele.api import requests
+from clientele.api import request_context
 from clientele.api.client import APIClient
 from clientele.api.exceptions import HTTPStatusError
 from clientele.testing import ResponseFactory, configure_client_for_testing
@@ -242,7 +242,9 @@ class TestStreamDecorators:
             return result
 
         with pytest.raises(TypeError, match="cannot use response_map"):
-            requests.build_request_context("GET", "/events", dummy_func, response_map={200: Token}, streaming=True)
+            request_context.build_request_context(
+                "GET", "/events", dummy_func, response_map={200: Token}, streaming=True
+            )
 
     @pytest.mark.asyncio
     async def test_stream_with_response_parser(self):

@@ -8,6 +8,9 @@ from cicerone import parse as cicerone_parse
 
 from clientele.generators.api.generator import APIGenerator
 
+# Repository root, used to resolve the fixture paths below
+REPO_ROOT = Path(__file__).parents[3]
+
 
 def load_fixture_spec(spec_path: Path):
     """Load an OpenAPI spec from a fixture file."""
@@ -16,13 +19,13 @@ def load_fixture_spec(spec_path: Path):
 
 def get_regression_schemas() -> list[str]:
     """Discover all schema files in the regressions fixture directory."""
-    regressions_dir = Path(__file__).parent / "fixtures" / "regression"
+    regressions_dir = REPO_ROOT / "tests" / "fixtures" / "regression"
     if not regressions_dir.exists():
         return []
     schemas = []
     for ext in ["*.yaml", "*.yml", "*.json"]:
         schemas.extend(regressions_dir.glob(ext))
-    return [str(p.relative_to(Path(__file__).parent.parent)) for p in sorted(schemas)]
+    return [str(p.relative_to(REPO_ROOT)) for p in sorted(schemas)]
 
 
 # Define all fixture schemas to test
@@ -74,8 +77,7 @@ def validate_generated_python_file(file_path: Path, file_content: str, fixture_p
 @pytest.mark.parametrize("client_generator", [APIGenerator])
 def test_fixture_schema_generates_client(fixture_path, client_generator) -> None:
     """Test that each fixture schema can generate a working client."""
-    base_path = Path(__file__).parent.parent
-    spec_path = base_path / fixture_path
+    spec_path = REPO_ROOT / fixture_path
 
     # Skip if file doesn't exist or is empty
     if not spec_path.exists() or spec_path.stat().st_size == 0:

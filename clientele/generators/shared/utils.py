@@ -1,5 +1,6 @@
 import functools
 import keyword
+import os
 import re
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
@@ -9,6 +10,43 @@ from clientele.generators import cicerone_compat
 
 # Pre-computed set of Python reserved words for efficient lookup
 RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(keyword.softkwlist))
+
+
+def get_client_project_directory_path(output_dir: str) -> str:
+    """
+    Returns a dot-notation path for the client directory.
+    Assumes that the `clientele` command is being run in the
+    project root directory.
+
+    For absolute paths, returns an empty string (which will result in
+    relative imports being used).
+    """
+    # If it's an absolute path, return empty string for relative imports
+    if os.path.isabs(output_dir):
+        return ""
+
+    # Check if path has trailing slash
+    has_trailing_slash = output_dir.endswith(os.sep)
+
+    # Split the path by separator
+    parts = output_dir.split(os.sep)
+
+    # Filter out empty parts
+    parts = [p for p in parts if p]
+
+    # If no trailing slash, remove the last component (the directory name)
+    # If trailing slash, include all components
+    if not has_trailing_slash and len(parts) > 1:
+        parts = parts[:-1]
+    elif not has_trailing_slash and len(parts) == 1:
+        # Single directory with no trailing slash means no parent
+        return ""
+
+    # Return the path as a Python module path
+    if parts:
+        return ".".join(parts)
+
+    return ""
 
 
 class DataType:
@@ -178,29 +216,6 @@ def get_type(t):
         return f"typing.Optional[{base_type}]"
 
     return base_type if base_type else "typing.Any"
-
-
-def create_query_args(query_args: list[str]) -> str:
-    return "?" + "&".join([f"{p}=" + "{" + p + "}" for p in query_args])
-
-
-def create_query_args_with_mapping(sanitized_names: list[str], param_name_map: dict[str, str]) -> str:
-    """
-    Create query string using original API parameter names in the URL,
-    but sanitized Python variable names in the f-string interpolation.
-
-    Args:
-        sanitized_names: List of sanitized Python parameter names
-        param_name_map: Mapping from sanitized names to original API names
-
-    Returns:
-        Query string like "?originalName={sanitized_name}&other={other_var}"
-    """
-    parts = []
-    for sanitized in sanitized_names:
-        original = param_name_map.get(sanitized, sanitized)
-        parts.append(f"{original}=" + "{" + sanitized + "}")
-    return "?" + "&".join(parts)
 
 
 def replace_path_parameters(url: str, param_name_map: dict[str, str]) -> str:

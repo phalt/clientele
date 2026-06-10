@@ -1,12 +1,14 @@
 # Change log
 
-## Unreleased
+## 2.3.0 UNRELEASED
 
 - Support non-string enums in schema generation. Integer enums generate `enum.IntEnum` classes, number and mixed-type enums generate plain `enum.Enum` classes with `VALUE_<n>` member names. Previously any non-string enum value crashed generation with `AttributeError: 'int' object has no attribute 'upper'`.
 - Support typed `additionalProperties` in schema generation. Map-valued properties now generate `dict[str, <type>]` instead of `dict[str, typing.Any]`, and component schemas that are purely maps generate `clientele.schemas.DictResponse` subclasses with dict-style access (`errors["email"]`, `len()`, `.keys()`, `.items()`). Free-form objects (`additionalProperties: true` or absent) keep the existing untyped behaviour.
 - New `clientele validate` command: a pre-flight compatibility check for OpenAPI schemas. Reports errors (unresolvable `$refs`) and warnings (cookie parameters, multipart bodies, missing responses or schemas) without generating any code, and exits non-zero on errors so it can gate CI.
 - Generate authentication config from `components.securitySchemes`. HTTP bearer schemes generate a `bearer_token` field, HTTP basic generates `basic_username`/`basic_password`, and header API keys generate an `api_key` field on the generated `Config` — each injecting the right header when set (without overriding explicit headers), with environment variable support for free via pydantic-settings. Unsupported schemes (`oauth2`, `openIdConnect`, query/cookie API keys) get an explanatory comment in `config.py` and a warning from `clientele validate`.
 - Per-call config overrides ([#233](https://github.com/phalt/clientele/issues/233)): decorated functions and the direct `request`/`arequest` methods accept a reserved `config` keyword argument that overrides the client-wide configuration for a single call — base URL, headers, logger, and HTTP backend. The client-wide config is never mutated, so concurrent calls against different hosts (multi-tenant APIs) are safe, and each override config caches its own HTTP backend/connection pool. Works in already-generated clients without regeneration.
+- Major refactoring of the project structure including removing of redundant code paths (mostly left over from the old generator logic).
+- Reorganisation of the tests and their files to mirror the codebase more.
 
 ## 2.2.2
 
