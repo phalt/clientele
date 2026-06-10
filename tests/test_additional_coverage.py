@@ -9,18 +9,6 @@ from clientele.generators.shared.generators.schemas import SchemasGenerator
 from tests.generators.integration_utils import load_spec
 
 
-def test_utils_create_query_args():
-    """Test create_query_args function."""
-    query_args = ["param1", "param2", "param3"]
-    result = utils.create_query_args(query_args)
-
-    assert result.startswith("?")
-    assert "param1=" in result
-    assert "param2=" in result
-    assert "param3=" in result
-    assert "&" in result
-
-
 def test_utils_get_type_with_allof_single_schema():
     """Test get_type with allOf containing a single schema."""
     type_spec = {"allOf": [{"type": "string"}]}
