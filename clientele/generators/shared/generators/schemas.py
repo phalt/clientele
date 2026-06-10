@@ -1,3 +1,4 @@
+import json
 import typing
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
@@ -28,11 +29,35 @@ class SchemasGenerator:
 
     generated_response_class_names: list[str] = []
 
-    def generate_enum_properties(self, properties: dict) -> str:
-        lines = [
-            f"    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"
-            for arg, arg_details in properties.items()
-        ]
+    def _enum_member_name(self, value: typing.Any) -> str:
+        if value is None:
+            return "NULL"
+        if isinstance(value, str):
+            return utils.snake_case_prop(value.upper())
+        # Non-string members (ints, floats, bools) cannot be used as
+        # identifiers directly, so synthesize a VALUE_<n> name.
+        name = f"VALUE_{value}".replace("-", "MINUS_").replace(".", "_")
+        return utils.snake_case_prop(name.upper())
+
+    def _enum_base_class(self, values: list) -> str:
+        if all(isinstance(v, str) for v in values):
+            return "str, enum.Enum"
+        # bool is a subclass of int but enum.IntEnum cannot hold it
+        if all(isinstance(v, int) and not isinstance(v, bool) for v in values):
+            return "enum.IntEnum"
+        return "enum.Enum"
+
+    def generate_enum_properties(self, values: list) -> str:
+        lines = []
+        seen: dict[str, int] = {}
+        for value in values:
+            name = self._enum_member_name(value)
+            count = seen.get(name, 0) + 1
+            seen[name] = count
+            if count > 1:
+                name = f"{name}_{count}"
+            py_value = json.dumps(value) if isinstance(value, str) else repr(value)
+            lines.append(f"    {name} = {py_value}\n")
         return "".join(lines)
 
     def generate_headers_class(self, properties: dict, func_name: str) -> str:
@@ -121,6 +146,7 @@ class SchemasGenerator:
     def make_schema_class(self, schema_key: str, schema: dict) -> None:
         schema_key = utils.class_name_titled(schema_key)
         enum = False
+        enum_base = "str, enum.Enum"
         properties: str = ""
 
         if one_of := schema.get("oneOf"):
@@ -173,9 +199,10 @@ class SchemasGenerator:
                             )
                         )
             properties = "".join(property_parts)
-        elif schema.get("enum"):
+        elif enum_values := schema.get("enum"):
             enum = True
-            properties = self.generate_enum_properties({v: {"type": f'"{v}"'} for v in schema["enum"]})
+            enum_base = self._enum_base_class(enum_values)
+            properties = self.generate_enum_properties(enum_values)
         else:
             properties = self.generate_class_properties(
                 properties=schema.get("properties", {}),
@@ -183,7 +210,7 @@ class SchemasGenerator:
             )
         self.schemas[schema_key] = properties
         template = self.writer.templates.get_template("schema_class.jinja2")
-        content = template.render(class_name=schema_key, properties=properties, enum=enum)
+        content = template.render(class_name=schema_key, properties=properties, enum=enum, enum_base=enum_base)
         self.writer.write_to_schemas(content, output_dir=self.output_dir)
 
     def write_helpers(self) -> None:

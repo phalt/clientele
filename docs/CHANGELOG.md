@@ -1,5 +1,9 @@
 # Change log
 
+## Unreleased
+
+- Support non-string enums in schema generation. Integer enums generate `enum.IntEnum` classes, number and mixed-type enums generate plain `enum.Enum` classes with `VALUE_<n>` member names. Previously any non-string enum value crashed generation with `AttributeError: 'int' object has no attribute 'upper'`.
+
 ## 2.2.2
 
 - Fix `HttpxHTTPBackend.close()`/`aclose()` not resetting the client reference — a closed-but-non-None client was returned on subsequent requests, causing `RuntimeError: Cannot send a request, as the client has been closed`.

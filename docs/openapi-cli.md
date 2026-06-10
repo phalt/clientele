@@ -63,3 +63,40 @@ If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) clien
 ```sh
 clientele start-api -f path/to/file.json -o my_client/ --asyncio
 ```
+
+## Generated code
+
+### Enums
+
+OpenAPI `enum` schemas are generated as Python `enum` classes in `schemas.py`. The base class is chosen from the member values:
+
+| Enum values | Generated base class | Member naming |
+| ----------- | -------------------- | ------------- |
+| All strings | `str, enum.Enum` | Upper-cased value, e.g. `RED = "red"` |
+| All integers | `enum.IntEnum` | `VALUE_<n>`, e.g. `VALUE_1 = 1` |
+| Numbers or mixed types | `enum.Enum` | Strings as above, others `VALUE_<n>` |
+
+For example, this schema:
+
+```json
+{
+  "StatusCode": { "type": "integer", "enum": [1, 2, 3] },
+  "Colour": { "type": "string", "enum": ["red", "green"] }
+}
+```
+
+Generates:
+
+```python
+class StatusCode(enum.IntEnum):
+    VALUE_1 = 1
+    VALUE_2 = 2
+    VALUE_3 = 3
+
+
+class Colour(str, enum.Enum):
+    RED = "red"
+    GREEN = "green"
+```
+
+Negative numbers use `MINUS_` (`VALUE_MINUS_12 = -12`) and decimal points become underscores (`VALUE_0_5 = 0.5`). If two values sanitise to the same member name, later members get a numeric suffix (`YES = "YES"`, `YES_2 = "yes"`).

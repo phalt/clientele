@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Enums Test API",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost" }],
+  "paths": {
+    "/devices": {
+      "get": {
+        "operationId": "listDevices",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Device" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Device": {
+        "type": "object",
+        "required": ["status", "colour"],
+        "properties": {
+          "status": { "$ref": "#/components/schemas/StatusCode" },
+          "colour": { "$ref": "#/components/schemas/Colour" },
+          "priority": { "$ref": "#/components/schemas/Priority" },
+          "offset": { "$ref": "#/components/schemas/TimezoneOffset" },
+          "sample_rate": { "$ref": "#/components/schemas/SampleRate" }
+        }
+      },
+      "StatusCode": {
+        "type": "integer",
+        "enum": [1, 2, 3]
+      },
+      "Colour": {
+        "type": "string",
+        "enum": ["red", "green", "blue"]
+      },
+      "Priority": {
+        "enum": ["low", 1, 2]
+      },
+      "TimezoneOffset": {
+        "type": "integer",
+        "enum": [-12, 0, 12]
+      },
+      "SampleRate": {
+        "type": "number",
+        "enum": [0.5, 1.0, 2.5]
+      }
+    }
+  }
+}
