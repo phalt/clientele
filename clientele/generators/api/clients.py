@@ -9,8 +9,7 @@ from rich import console as rich_console
 
 from clientele.generators import cicerone_compat
 from clientele.generators.api import writer
-from clientele.generators.api.generators import schemas
-from clientele.generators.shared import utils
+from clientele.generators.shared import schemas, utils
 
 console = rich_console.Console()
 

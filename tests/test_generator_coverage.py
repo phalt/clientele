@@ -9,7 +9,7 @@ import pytest
 from clientele.generators.api import writer as api_writer
 from clientele.generators.api.generator import APIGenerator
 from clientele.generators.cicerone_compat import normalize_openapi_31_schema, normalize_openapi_31_spec
-from clientele.generators.shared.generators.schemas import SchemasGenerator
+from clientele.generators.shared.schemas import SchemasGenerator
 
 
 def test_normalize_openapi_31_schema_only_null_type():

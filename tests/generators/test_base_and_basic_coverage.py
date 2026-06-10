@@ -4,7 +4,7 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
-from clientele.generators.api.generators import clients as api_clients
+from clientele.generators.api import clients as api_clients
 from clientele.generators.basic.generator import BasicGenerator
 from tests.generators.integration_utils import load_spec
 
@@ -54,7 +54,7 @@ def test_clients_generator_handles_optional_path_parameters():
         output_dir.mkdir(parents=True)
 
         from clientele.generators.api import writer as api_writer
-        from clientele.generators.shared.generators.schemas import SchemasGenerator
+        from clientele.generators.shared.schemas import SchemasGenerator
 
         schemas_gen = SchemasGenerator(spec=spec, output_dir=str(output_dir), writer=api_writer)
 
@@ -89,7 +89,7 @@ def test_clients_generator_resolves_schema_refs_in_parameters():
         output_dir.mkdir(parents=True)
 
         from clientele.generators.api import writer as api_writer
-        from clientele.generators.shared.generators.schemas import SchemasGenerator
+        from clientele.generators.shared.schemas import SchemasGenerator
 
         schemas_gen = SchemasGenerator(spec=spec, output_dir=str(output_dir), writer=api_writer)
 
@@ -131,7 +131,7 @@ def test_clients_generator_handles_multiple_input_classes():
         output_dir.mkdir(parents=True)
 
         from clientele.generators.api import writer as api_writer
-        from clientele.generators.shared.generators.schemas import SchemasGenerator
+        from clientele.generators.shared.schemas import SchemasGenerator
 
         schemas_gen = SchemasGenerator(spec=spec, output_dir=str(output_dir), writer=api_writer)
 
