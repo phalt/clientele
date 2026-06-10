@@ -44,7 +44,7 @@ def test_load_openapi_spec_no_normalization_needed(openapi_30_spec):
 def test_schemas_generator_no_schemas_branch():
     """Test schemas generator when components has no schemas attribute."""
     from clientele.generators.api import writer as api_writer
-    from clientele.generators.shared.generators.schemas import SchemasGenerator
+    from clientele.generators.shared.schemas import SchemasGenerator
 
     spec_dict = {
         "openapi": "3.0.0",

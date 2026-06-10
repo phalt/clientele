@@ -4,7 +4,7 @@ import tempfile
 from pathlib import Path
 
 from clientele.generators.api import writer as api_writer
-from clientele.generators.shared.generators.schemas import SchemasGenerator
+from clientele.generators.shared.schemas import SchemasGenerator
 from tests.generators.integration_utils import load_spec
 
 
