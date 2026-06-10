@@ -1,4 +1,4 @@
-"""Tests for clientele.api.requests module."""
+"""Tests for clientele.api.request_context module."""
 
 import inspect
 import typing
@@ -6,7 +6,7 @@ import typing
 import pytest
 from pydantic import BaseModel
 
-from clientele.api import requests
+from clientele.api import request_context
 from clientele.http import response as http_response
 
 
@@ -36,7 +36,7 @@ class TestValidateResultParameter:
         type_hints = typing.get_type_hints(func_without_result)
 
         with pytest.raises(TypeError, match="must have a 'result' parameter"):
-            requests.validate_result_parameter(func_without_result, sig, type_hints)
+            request_context.validate_result_parameter(func_without_result, sig, type_hints)
 
     def test_validate_result_parameter_no_annotation(self):
         """Test that result parameter without annotation raises TypeError."""
@@ -48,7 +48,7 @@ class TestValidateResultParameter:
         type_hints = {}
 
         with pytest.raises(TypeError, match="lacks a type annotation"):
-            requests.validate_result_parameter(func_no_annotation, sig, type_hints)
+            request_context.validate_result_parameter(func_no_annotation, sig, type_hints)
 
     def test_validate_result_parameter_valid(self):
         """Test that valid result parameter passes validation."""
@@ -60,7 +60,7 @@ class TestValidateResultParameter:
         type_hints = typing.get_type_hints(func_valid)
 
         # Should not raise
-        requests.validate_result_parameter(func_valid, sig, type_hints)
+        request_context.validate_result_parameter(func_valid, sig, type_hints)
 
     def test_validate_result_parameter_streaming_valid(self):
         """Test streaming validation with AsyncIterator."""
@@ -72,7 +72,7 @@ class TestValidateResultParameter:
         type_hints = typing.get_type_hints(func_stream, include_extras=True)
 
         # Should not raise
-        requests.validate_result_parameter(func_stream, sig, type_hints, expect_streaming=True)
+        request_context.validate_result_parameter(func_stream, sig, type_hints, expect_streaming=True)
 
     def test_validate_result_parameter_streaming_invalid_type(self):
         """Test that non-streaming type raises error when expect_streaming=True."""
@@ -84,7 +84,7 @@ class TestValidateResultParameter:
         type_hints = typing.get_type_hints(func_not_stream)
 
         with pytest.raises(TypeError, match="must have a streaming result type"):
-            requests.validate_result_parameter(func_not_stream, sig, type_hints, expect_streaming=True)
+            request_context.validate_result_parameter(func_not_stream, sig, type_hints, expect_streaming=True)
 
     def test_validate_result_parameter_streaming_no_inner_type(self):
         """Test that AsyncIterator without inner type raises error."""
@@ -96,7 +96,7 @@ class TestValidateResultParameter:
         type_hints = typing.get_type_hints(func_no_inner, include_extras=True)
 
         with pytest.raises(TypeError, match="no inner type specified"):
-            requests.validate_result_parameter(func_no_inner, sig, type_hints, expect_streaming=True)
+            request_context.validate_result_parameter(func_no_inner, sig, type_hints, expect_streaming=True)
 
     def test_validate_result_parameter_async_func_with_iterator(self):
         """Test async function with Iterator (should be AsyncIterator) raises error."""
@@ -108,7 +108,7 @@ class TestValidateResultParameter:
         type_hints = typing.get_type_hints(func_wrong_type, include_extras=True)
 
         with pytest.raises(TypeError, match="must use AsyncIterator, not Iterator"):
-            requests.validate_result_parameter(func_wrong_type, sig, type_hints, expect_streaming=True)
+            request_context.validate_result_parameter(func_wrong_type, sig, type_hints, expect_streaming=True)
 
     def test_validate_result_parameter_sync_func_with_async_iterator(self):
         """Test sync function with AsyncIterator (should be Iterator) raises error."""
@@ -120,7 +120,7 @@ class TestValidateResultParameter:
         type_hints = typing.get_type_hints(func_wrong_type, include_extras=True)
 
         with pytest.raises(TypeError, match="must use Iterator, not AsyncIterator"):
-            requests.validate_result_parameter(func_wrong_type, sig, type_hints, expect_streaming=True)
+            request_context.validate_result_parameter(func_wrong_type, sig, type_hints, expect_streaming=True)
 
 
 class TestBuildRequestContext:
@@ -130,7 +130,7 @@ class TestBuildRequestContext:
         def func(result: dict) -> dict:
             return result
 
-        context = requests.build_request_context("GET", "/test", func)
+        context = request_context.build_request_context("GET", "/test", func)
 
         assert context.method == "GET"
         assert context.path_template == "/test"
@@ -146,7 +146,7 @@ class TestBuildRequestContext:
             return result
 
         response_map = {200: SampleModel, 404: ErrorModel}
-        context = requests.build_request_context("GET", "/test", func, response_map=response_map)
+        context = request_context.build_request_context("GET", "/test", func, response_map=response_map)
 
         assert context.response_map == response_map
 
@@ -156,7 +156,7 @@ class TestBuildRequestContext:
         async def func(result: typing.AsyncIterator[str]) -> typing.AsyncIterator[str]:
             return result
 
-        context = requests.build_request_context("GET", "/stream", func, streaming=True)
+        context = request_context.build_request_context("GET", "/stream", func, streaming=True)
 
         assert context.streaming is True
 
@@ -167,7 +167,9 @@ class TestBuildRequestContext:
             return result
 
         with pytest.raises(TypeError, match="cannot use response_map"):
-            requests.build_request_context("GET", "/stream", func, response_map={200: SampleModel}, streaming=True)
+            request_context.build_request_context(
+                "GET", "/stream", func, response_map={200: SampleModel}, streaming=True
+            )
 
     def test_build_request_context_both_response_map_and_parser_raises(self):
         """Test that having both response_map and response_parser raises error."""
@@ -179,7 +181,7 @@ class TestBuildRequestContext:
             return SampleModel(name="test", value=1)
 
         with pytest.raises(TypeError, match="cannot have both"):
-            requests.build_request_context(
+            request_context.build_request_context(
                 "GET", "/test", func, response_map={200: SampleModel}, response_parser=parser
             )
 
@@ -194,7 +196,7 @@ class TestBuildRequestContext:
         func.__annotations__ = {"result": "SomeForwardRef", "return": "SomeForwardRef"}
 
         # This should fall back to using __annotations__ when get_type_hints raises NameError
-        context = requests.build_request_context("GET", "/test", func)
+        context = request_context.build_request_context("GET", "/test", func)
 
         assert context.type_hints is not None
         assert "result" in context.type_hints
@@ -211,7 +213,7 @@ class TestValidateResponseMap:
         response_map = {200: SampleModel, 404: ErrorModel}
 
         # Should not raise
-        requests._validate_response_map(response_map, func, type_hints)
+        request_context._validate_response_map(response_map, func, type_hints)
 
     def test_validate_response_map_invalid_status_code(self):
         """Test that invalid status code raises ValueError."""
@@ -223,7 +225,7 @@ class TestValidateResponseMap:
         response_map = {999: SampleModel}  # Invalid status code
 
         with pytest.raises(ValueError, match="Invalid status code 999"):
-            requests._validate_response_map(response_map, func, type_hints)
+            request_context._validate_response_map(response_map, func, type_hints)
 
     def test_validate_response_map_non_pydantic_model(self):
         """Test that non-Pydantic model in response_map raises ValueError."""
@@ -235,7 +237,7 @@ class TestValidateResponseMap:
         response_map = {200: str}  # Not a Pydantic model or TypedDict
 
         with pytest.raises(ValueError, match="must be a Pydantic BaseModel subclass or TypedDict"):
-            requests._validate_response_map(response_map, func, type_hints)
+            request_context._validate_response_map(response_map, func, type_hints)
 
     def test_validate_response_map_model_not_in_result_type(self):
         """Test that model not in result type raises ValueError."""
@@ -247,7 +249,7 @@ class TestValidateResponseMap:
         response_map = {200: SampleModel, 404: ErrorModel}  # ErrorModel not in result type
 
         with pytest.raises(ValueError, match="is not in the 'result' parameter's type annotation"):
-            requests._validate_response_map(response_map, func, type_hints)
+            request_context._validate_response_map(response_map, func, type_hints)
 
     def test_validate_response_map_with_typeddict(self):
         """Test response_map with TypedDict models."""
@@ -259,7 +261,7 @@ class TestValidateResponseMap:
         response_map = {200: SampleTypedDict}
 
         # Should not raise
-        requests._validate_response_map(response_map, func, type_hints)
+        request_context._validate_response_map(response_map, func, type_hints)
 
     def test_validate_response_map_with_list_type_alias_issue_240(self):
         """Confirm correct behaviour for https://github.com/phalt/clientele/issues/240.
@@ -283,7 +285,7 @@ class TestValidateResponseMap:
         response_map = {200: list_type}
 
         # Must not raise — importing the generated client should succeed
-        requests._validate_response_map(response_map, func, type_hints)
+        request_context._validate_response_map(response_map, func, type_hints)
 
 
 class TestValidateResponseParser:
@@ -299,7 +301,7 @@ class TestValidateResponseParser:
         type_hints = typing.get_type_hints(func)
 
         # Should not raise
-        requests._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
+        request_context._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
 
     def test_validate_response_parser_no_return_annotation(self):
         """Test that parser without return annotation raises TypeError."""
@@ -313,7 +315,7 @@ class TestValidateResponseParser:
         type_hints = typing.get_type_hints(func)
 
         with pytest.raises(TypeError, match="must have a return type annotation"):
-            requests._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
+            request_context._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
 
     def test_validate_response_parser_mismatched_types(self):
         """Test that mismatched parser and result types raise TypeError."""
@@ -327,7 +329,7 @@ class TestValidateResponseParser:
         type_hints = typing.get_type_hints(func)
 
         with pytest.raises(TypeError, match="does not match the type"):
-            requests._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
+            request_context._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
 
     def test_validate_response_parser_union_types(self):
         """Test response_parser with Union types."""
@@ -343,7 +345,7 @@ class TestValidateResponseParser:
         type_hints = typing.get_type_hints(func)
 
         # Should not raise
-        requests._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
+        request_context._validate_response_parser_return_type_matches_result_return_type(parser, func, type_hints)
 
 
 class TestGetResultTypesFromTypeHints:
@@ -354,7 +356,7 @@ class TestGetResultTypesFromTypeHints:
             return result
 
         type_hints = typing.get_type_hints(func)
-        result_types = requests._get_result_types_from_type_hints(type_hints)
+        result_types = request_context._get_result_types_from_type_hints(type_hints)
 
         assert result_types == [SampleModel]
 
@@ -365,7 +367,7 @@ class TestGetResultTypesFromTypeHints:
             return result
 
         type_hints = typing.get_type_hints(func)
-        result_types = requests._get_result_types_from_type_hints(type_hints)
+        result_types = request_context._get_result_types_from_type_hints(type_hints)
 
         assert len(result_types) == 2
         assert SampleModel in result_types
@@ -376,7 +378,7 @@ class TestGetResultTypesFromTypeHints:
         type_hints = {}
 
         with pytest.raises(ValueError, match="must have a 'result' parameter with a type annotation"):
-            requests._get_result_types_from_type_hints(type_hints)
+            request_context._get_result_types_from_type_hints(type_hints)
 
     def test_get_result_types_old_style_union(self):
         """Test Union with typing.Union (not | syntax)."""
@@ -385,7 +387,7 @@ class TestGetResultTypesFromTypeHints:
             return result
 
         type_hints = typing.get_type_hints(func)
-        result_types = requests._get_result_types_from_type_hints(type_hints)
+        result_types = request_context._get_result_types_from_type_hints(type_hints)
 
         assert len(result_types) == 2
         assert SampleModel in result_types
@@ -399,11 +401,11 @@ class TestPreparedCall:
         def func(result: dict) -> dict:
             return result
 
-        context = requests.build_request_context("GET", "/test", func)
+        context = request_context.build_request_context("GET", "/test", func)
         sig = inspect.signature(func)
         bound_args = sig.bind(result={})
 
-        prepared = requests.PreparedCall(
+        prepared = request_context.PreparedCall(
             context=context,
             bound_arguments=bound_args,
             call_arguments={"result": {}},
@@ -429,7 +431,7 @@ class TestRequestContext:
         sig = inspect.signature(func)
         type_hints = typing.get_type_hints(func)
 
-        context = requests.RequestContext(
+        context = request_context.RequestContext(
             method="POST",
             path_template="/api/test",
             func=func,
