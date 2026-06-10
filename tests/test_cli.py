@@ -9,6 +9,7 @@ import yaml
 from click.testing import CliRunner
 
 from clientele import cli
+from tests.generators.integration_utils import get_spec_path
 
 
 @pytest.fixture
@@ -187,7 +188,7 @@ def test_prepare_spec_returns_none_for_old_version(write_spec_file):
 def test_generate_commands_with_valid_spec(runner, command, regen_arg, expected_output):
     """Test that all generate commands create client successfully with valid spec."""
     # Use the simple spec from example_openapi_specs
-    spec_path = Path(__file__).parent.parent / "example_openapi_specs" / "simple.json"
+    spec_path = get_spec_path("simple.json")
 
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "test_client"
