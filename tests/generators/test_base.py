@@ -16,7 +16,7 @@ def test_basic_generator_inherits_from_generator():
     assert issubclass(BasicGenerator, Generator)
 
 
-def test_framework_generator_inherits_from_generator():
+def test_api_generator_inherits_from_generator():
     """Test that APIGenerator inherits from Generator ABC."""
     assert issubclass(APIGenerator, Generator)
 
