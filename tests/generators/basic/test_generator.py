@@ -7,7 +7,7 @@ from clientele.generators.basic.generator import BasicGenerator
 
 
 def test_basic_generator_removes_existing_manifest():
-    """Test that basic generator removes existing MANIFEST.md (line 32)."""
+    """Test that basic generator replaces an existing MANIFEST.md."""
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "basic_client"
         output_dir.mkdir(parents=True)
@@ -25,7 +25,7 @@ def test_basic_generator_removes_existing_manifest():
 
 
 def test_basic_generator_removes_existing_files():
-    """Test that basic generator removes existing files (line 43)."""
+    """Test that basic generator removes existing files before regenerating."""
     with tempfile.TemporaryDirectory() as tmpdir:
         output_dir = Path(tmpdir) / "basic_client"
         output_dir.mkdir(parents=True)
