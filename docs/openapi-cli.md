@@ -100,3 +100,52 @@ class Colour(str, enum.Enum):
 ```
 
 Negative numbers use `MINUS_` (`VALUE_MINUS_12 = -12`) and decimal points become underscores (`VALUE_0_5 = 0.5`). If two values sanitise to the same member name, later members get a numeric suffix (`YES = "YES"`, `YES_2 = "yes"`).
+
+### Map types (additionalProperties)
+
+Object schemas with a schema-valued `additionalProperties` describe maps — objects whose values all match one schema, such as error maps or translations. These are generated as typed dictionaries.
+
+A map-valued property generates a typed `dict`:
+
+```json
+{
+  "Report": {
+    "type": "object",
+    "properties": {
+      "scores": {
+        "type": "object",
+        "additionalProperties": { "type": "integer" }
+      }
+    }
+  }
+}
+```
+
+```python
+class Report(pydantic.BaseModel):
+    scores: typing.Optional[dict[str, int]] = None
+```
+
+A component schema that is purely a map (no `properties` of its own) generates a `DictResponse` class — a real type that validates its values and can be used in `response_map`, with dict-style access:
+
+```json
+{
+  "ErrorMap": {
+    "type": "object",
+    "additionalProperties": { "$ref": "#/components/schemas/Error" }
+  }
+}
+```
+
+```python
+class ErrorMap(DictResponse[Error]):
+    pass
+```
+
+```python
+errors = schemas.ErrorMap.model_validate({"email": {"message": "invalid"}})
+errors["email"].message  # "invalid"
+len(errors), errors.keys(), errors.items()  # dict-style access
+```
+
+Objects with `additionalProperties: true`, `{}`, or no `additionalProperties` at all keep the untyped `dict[str, typing.Any]` behaviour, and objects that declare their own `properties` are generated as regular models.

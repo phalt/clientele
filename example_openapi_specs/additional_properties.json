@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Additional Properties Test API",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "http://localhost" }],
+  "paths": {
+    "/report": {
+      "get": {
+        "operationId": "getReport",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Report" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scores": {
+      "get": {
+        "operationId": "getScores",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ScoreMap" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": ["message"],
+        "properties": {
+          "message": { "type": "string" }
+        }
+      },
+      "ScoreMap": {
+        "type": "object",
+        "additionalProperties": { "type": "integer" }
+      },
+      "ErrorMap": {
+        "type": "object",
+        "additionalProperties": { "$ref": "#/components/schemas/Error" }
+      },
+      "FreeForm": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "Report": {
+        "type": "object",
+        "required": ["scores"],
+        "properties": {
+          "scores": {
+            "type": "object",
+            "additionalProperties": { "type": "integer" }
+          },
+          "errors_by_field": {
+            "type": "object",
+            "additionalProperties": { "$ref": "#/components/schemas/Error" }
+          },
+          "metadata": { "type": "object" },
+          "tag_groups": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

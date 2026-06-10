@@ -143,7 +143,12 @@ def get_type(t):
     elif t_type == DataType.BOOLEAN:
         base_type = "bool"
     elif t_type == DataType.OBJECT:
-        base_type = "dict[str, typing.Any]"
+        additional_properties = t.get("additionalProperties")
+        if isinstance(additional_properties, dict) and additional_properties and not t.get("properties"):
+            # A map schema: object whose values all match one schema
+            base_type = f"dict[str, {get_type(additional_properties)}]"
+        else:
+            base_type = "dict[str, typing.Any]"
     elif t_type == DataType.NULL:
         # OpenAPI 3.1.0 uses {"type": "null"} for null values
         # In Python, this should be None

@@ -169,7 +169,24 @@ class SchemasGenerator:
             item_type = utils.get_type(items_schema) if items_schema else "typing.Any"
             item_type = utils.remove_forward_ref_quotes(item_type)
             template = self.writer.templates.get_template("schema_root_model.jinja2")
-            content = template.render(class_name=schema_key, inner_type=item_type)
+            content = template.render(class_name=schema_key, inner_type=item_type, base_class="ListResponse")
+            self.writer.write_to_schemas(content, output_dir=self.output_dir)
+            self.schemas[schema_key] = ""
+            return
+
+        additional_properties = schema.get("additionalProperties")
+        if (
+            schema.get("type") == "object"
+            and isinstance(additional_properties, dict)
+            and additional_properties
+            and not schema.get("properties")
+        ):
+            # A pure map schema (additionalProperties, no properties) gets the
+            # same root-model treatment as arrays so it is a real type that
+            # validates its values.
+            value_type = utils.remove_forward_ref_quotes(utils.get_type(additional_properties))
+            template = self.writer.templates.get_template("schema_root_model.jinja2")
+            content = template.render(class_name=schema_key, inner_type=value_type, base_class="DictResponse")
             self.writer.write_to_schemas(content, output_dir=self.output_dir)
             self.schemas[schema_key] = ""
             return

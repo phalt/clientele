@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Support non-string enums in schema generation. Integer enums generate `enum.IntEnum` classes, number and mixed-type enums generate plain `enum.Enum` classes with `VALUE_<n>` member names. Previously any non-string enum value crashed generation with `AttributeError: 'int' object has no attribute 'upper'`.
+- Support typed `additionalProperties` in schema generation. Map-valued properties now generate `dict[str, <type>]` instead of `dict[str, typing.Any]`, and component schemas that are purely maps generate `clientele.schemas.DictResponse` subclasses with dict-style access (`errors["email"]`, `len()`, `.keys()`, `.items()`). Free-form objects (`additionalProperties: true` or absent) keep the existing untyped behaviour.
 
 ## 2.2.2
 
