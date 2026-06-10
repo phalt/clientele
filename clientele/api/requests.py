@@ -6,6 +6,7 @@ import typing
 
 import pydantic
 
+from clientele.api import config as api_config
 from clientele.api import type_utils
 from clientele.http import response as http_response
 from clientele.http import status_codes
@@ -29,6 +30,7 @@ class PreparedCall(pydantic.BaseModel):
     data_payload: dict[str, typing.Any] | None
     headers_override: dict[str, str] | None
     result_annotation: typing.Any
+    config_override: api_config.BaseConfig | None = None
 
 
 class RequestContext(pydantic.BaseModel):
