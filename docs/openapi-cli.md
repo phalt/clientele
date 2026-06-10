@@ -64,6 +64,32 @@ If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) clien
 clientele start-api -f path/to/file.json -o my_client/ --asyncio
 ```
 
+## Validating a schema
+
+The `validate` command checks an OpenAPI schema for clientele compatibility before you generate a client:
+
+```sh
+clientele validate -f path/to/file.json
+# or
+clientele validate -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json
+```
+
+It walks the schema and reports two kinds of findings:
+
+- **Errors** — constructs that break client generation or produce broken code, such as `$ref` references to schemas or parameters that do not exist in `components`.
+- **Warnings** — constructs that degrade to less useful code:
+    - `$ref` references that are not component references (these become `typing.Any`)
+    - cookie parameters (not supported; skipped during generation)
+    - `multipart/form-data` request bodies (generated as plain models; file upload fields are not supported)
+    - operations with no `responses` (a default 200 response is assumed)
+    - response content with no schema (becomes `typing.Any`)
+
+The command exits with status `1` if any errors are found and `0` otherwise (warnings do not fail it), so you can use it to gate CI:
+
+```sh
+clientele validate -f openapi.json && clientele start-api -f openapi.json -o my_client/ --regen
+```
+
 ## Generated code
 
 ### Enums

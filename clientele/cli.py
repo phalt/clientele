@@ -187,8 +187,54 @@ def start_api(url, file, output, asyncio=False, regen=False):
         scaffold_api(url=url, file=file, output=output, asyncio=asyncio, regen=regen)
 
 
+@click.command()
+@click.option("-u", "--url", help="URL to openapi schema (URL)", required=False)
+@click.option("-f", "--file", help="Path to openapi schema (json or yaml file)", required=False)
+def validate(url, file):
+    """
+    Check an OpenAPI schema for clientele compatibility.
+
+    Walks the schema and reports errors (constructs that break client
+    generation, like unresolvable $refs) and warnings (constructs that
+    degrade, like cookie parameters or multipart bodies).
+
+    Exits with status 1 if any errors are found, so it can gate CI.
+    """
+    from rich.console import Console
+
+    console = Console()
+
+    if not url and not file:
+        raise click.UsageError("Provide a schema with -u/--url or -f/--file")
+
+    from clientele.generators.validation import SpecValidator
+
+    try:
+        spec = _prepare_spec(console=console, url=url, file=file)
+    except Exception as exc:
+        console.print(f"[red]Could not parse OpenAPI schema: {exc}")
+        sys.exit(1)
+    if not spec:
+        sys.exit(1)
+
+    findings = SpecValidator(spec=spec).validate()
+    if not findings:
+        console.print("[green]⚜️ No issues found - this schema is ready to generate! ⚜️")
+        return
+
+    errors = [f for f in findings if f.severity == "error"]
+    warnings = [f for f in findings if f.severity == "warning"]
+    for finding in findings:
+        colour = "red" if finding.severity == "error" else "yellow"
+        console.print(f"[{colour}]{finding.severity.upper()}[/{colour}] {finding.location}: {finding.message}")
+    console.print(f"\n{len(errors)} error(s), {len(warnings)} warning(s)")
+    if errors:
+        sys.exit(1)
+
+
 cli_group.add_command(version)
 cli_group.add_command(start_api)
+cli_group.add_command(validate)
 
 if __name__ == "__main__":
     cli_group()
