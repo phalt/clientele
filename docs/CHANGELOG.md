@@ -1,5 +1,13 @@
 # Change log
 
+## 2.2.2
+
+- Fix `HttpxHTTPBackend.close()`/`aclose()` not resetting the client reference — a closed-but-non-None client was returned on subsequent requests, causing `RuntimeError: Cannot send a request, as the client has been closed`.
+
+## 2.2.1
+
+- Fix POST/PUT/PATCH endpoints without a request body generating a required `data: None` parameter — the `data` parameter is now omitted entirely when the endpoint has no request body.
+
 ## 2.2.0
 
 - Support OpenAPI `default` and `const` in schema generation ([#247](https://github.com/phalt/clientele/pull/247)).
