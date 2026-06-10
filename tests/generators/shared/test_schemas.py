@@ -1,4 +1,4 @@
-"""Additional tests for schema generators to increase coverage."""
+"""Tests for the shared SchemasGenerator (clientele/generators/shared/schemas.py)."""
 
 import tempfile
 from pathlib import Path
