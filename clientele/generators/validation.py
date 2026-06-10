@@ -17,6 +17,7 @@ import dataclasses
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
 
 from clientele.generators import cicerone_compat
+from clientele.generators.shared import security
 
 SCHEMA_REF_PREFIX = "#/components/schemas/"
 PARAMETER_REF_PREFIX = "#/components/parameters/"
@@ -47,9 +48,21 @@ class SpecValidator:
 
     def validate(self) -> list[Finding]:
         self.findings = []
+        self._check_security_schemes()
         self._check_component_schemas()
         self._check_paths()
         return self.findings
+
+    def _check_security_schemes(self) -> None:
+        auth = security.classify_security_schemes(self.spec)
+        if not auth:
+            return
+        for scheme in auth["unsupported"]:
+            self._warning(
+                f"security scheme '{scheme['scheme_name']}' ({scheme['description']}) cannot be "
+                "generated automatically; configure authentication manually in config.py",
+                f"components.securitySchemes.{scheme['scheme_name']}",
+            )
 
     def _error(self, message: str, location: str) -> None:
         self.findings.append(Finding(severity="error", location=location, message=message))

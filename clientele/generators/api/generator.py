@@ -10,6 +10,7 @@ from rich import console as rich_console
 from clientele import generators, settings, utils
 from clientele.generators.api import writer
 from clientele.generators.api.generators import clients, schemas
+from clientele.generators.shared import security
 
 console = rich_console.Console()
 
@@ -69,6 +70,14 @@ class APIGenerator(generators.Generator):
             base_url = self.spec.servers[0].url
             console.log(f"[cyan]Detected base URL from spec: {base_url}[/cyan]")
 
+        auth = security.classify_security_schemes(self.spec)
+        if auth:
+            for scheme in auth["unsupported"]:
+                console.log(
+                    f"[yellow]Security scheme '{scheme['scheme_name']}' ({scheme['description']}) "
+                    "cannot be generated automatically - configure it manually in config.py[/yellow]"
+                )
+
         writer.write_to_init(output_dir=self.output_dir)
         for (
             client_file,
@@ -85,6 +94,7 @@ class APIGenerator(generators.Generator):
                 client_project_directory_path=client_project_directory_path,
                 new_unions=new_unions,
                 base_url=base_url,
+                auth=auth,
             )
             write_func(content, output_dir=self.output_dir)
         # Manifest file

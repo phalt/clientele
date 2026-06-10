@@ -205,6 +205,41 @@ class TestSpecValidatorResponses:
         assert _validate(spec) == []
 
 
+class TestSpecValidatorSecuritySchemes:
+    def test_supported_schemes_have_no_findings(self):
+        spec = _base_spec()
+        spec["components"]["securitySchemes"] = {
+            "bearerAuth": {"type": "http", "scheme": "bearer"},
+            "basicAuth": {"type": "http", "scheme": "basic"},
+            "apiKeyAuth": {"type": "apiKey", "in": "header", "name": "X-API-Key"},
+        }
+        assert _validate(spec) == []
+
+    def test_oauth2_scheme_is_a_warning(self):
+        spec = _base_spec()
+        spec["components"]["securitySchemes"] = {
+            "oauth": {
+                "type": "oauth2",
+                "flows": {"clientCredentials": {"tokenUrl": "https://example.com/token", "scopes": {}}},
+            }
+        }
+        findings = _validate(spec)
+        warnings = [f for f in findings if f.severity == "warning"]
+        assert len(warnings) == 1
+        assert "oauth" in warnings[0].message
+        assert "components.securitySchemes" in warnings[0].location
+
+    def test_api_key_in_query_is_a_warning(self):
+        spec = _base_spec()
+        spec["components"]["securitySchemes"] = {
+            "queryKey": {"type": "apiKey", "in": "query", "name": "api_key"},
+        }
+        findings = _validate(spec)
+        warnings = [f for f in findings if f.severity == "warning"]
+        assert len(warnings) == 1
+        assert "queryKey" in warnings[0].message
+
+
 class TestValidateCommand:
     def test_requires_url_or_file(self, runner):
         result = runner.invoke(cli.cli_group, ["validate"])
