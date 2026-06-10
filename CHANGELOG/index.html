@@ -1260,6 +1260,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#222" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#221" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#220" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2140,6 +2162,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#222" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#221" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#220" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3006,6 +3050,14 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="222">2.2.2</h2>
+<ul>
+<li>Fix <code>HttpxHTTPBackend.close()</code>/<code>aclose()</code> not resetting the client reference — a closed-but-non-None client was returned on subsequent requests, causing <code>RuntimeError: Cannot send a request, as the client has been closed</code>.</li>
+</ul>
+<h2 id="221">2.2.1</h2>
+<ul>
+<li>Fix POST/PUT/PATCH endpoints without a request body generating a required <code>data: None</code> parameter — the <code>data</code> parameter is now omitted entirely when the endpoint has no request body.</li>
+</ul>
 <h2 id="220">2.2.0</h2>
 <ul>
 <li>Support OpenAPI <code>default</code> and <code>const</code> in schema generation (<a href="https://github.com/phalt/clientele/pull/247">#247</a>).</li>
