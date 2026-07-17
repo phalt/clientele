@@ -32,23 +32,21 @@ class ParametersResponse(pydantic.BaseModel):
     headers_args: dict[str, str]
     # Mapping from sanitized Python name to original API parameter name
     param_name_map: dict[str, str] = {}
+    # Keys (from path_args/query_args) that are optional. Tracked explicitly rather than
+    # sniffed from the type string, since aliased query args wrap their type in
+    # `typing.Annotated[...]`, which would otherwise hide a `typing.Optional[` prefix.
+    optional_keys: set[str] = set()
 
     def get_required_args_as_string(self) -> str:
-        """Get only required parameters (those without Optional wrapper)."""
+        """Get only required parameters (those not in optional_keys)."""
         args = list(self.path_args.items()) + list(self.query_args.items())
-        required_args = []
-        for k, v in args:
-            if not v.startswith("typing.Optional["):
-                required_args.append(f"{k}: {v}")
+        required_args = [f"{k}: {v}" for k, v in args if k not in self.optional_keys]
         return ", ".join(required_args) if required_args else ""
 
     def get_optional_args_as_string(self) -> str:
-        """Get only optional parameters (those with Optional wrapper)."""
+        """Get only optional parameters (those in optional_keys)."""
         args = list(self.path_args.items()) + list(self.query_args.items())
-        optional_args = []
-        for k, v in args:
-            if v.startswith("typing.Optional["):
-                optional_args.append(f"{k}: {v} = None")
+        optional_args = [f"{k}: {v} = None" for k, v in args if k in self.optional_keys]
         return ", ".join(optional_args) if optional_args else ""
 
 
@@ -101,6 +99,7 @@ class ClientsGenerator:
         path_args = {}
         headers_args = {}
         param_name_map = {}  # Maps sanitized name to original name
+        optional_keys: set[str] = set()
         all_parameters = parameters + additional_parameters
         for param in all_parameters:
             if param.get("$ref"):
@@ -118,11 +117,15 @@ class ClientsGenerator:
             if in_ == "query":
                 # URL query string values
                 param_type = utils.resolve_forward_refs_for_client(utils.get_type(param["schema"]))
-                if required:
-                    query_args[clean_key] = param_type
-                else:
-                    param_type = utils.strip_none_from_type(param_type)
-                    query_args[clean_key] = f"typing.Optional[{param_type}]"
+                if not required:
+                    param_type = f"typing.Optional[{utils.strip_none_from_type(param_type)}]"
+                    optional_keys.add(clean_key)
+                if clean_key != original_name:
+                    # The sanitized Python name differs from the name the API expects, so
+                    # record it via Query(alias=...) to keep the request sent with the correct
+                    # wire-format name (see clientele.api.request_context.query_alias_map).
+                    param_type = f'typing.Annotated[{param_type}, clientele_api.Query(alias="{original_name}")]'
+                query_args[clean_key] = param_type
             elif in_ == "path":
                 # Function arguments
                 param_type = utils.resolve_forward_refs_for_client(utils.get_type(param["schema"]))
@@ -131,6 +134,7 @@ class ClientsGenerator:
                 else:
                     param_type = utils.strip_none_from_type(param_type)
                     path_args[clean_key] = f"typing.Optional[{param_type}]"
+                    optional_keys.add(clean_key)
             elif in_ == "header":
                 # Header object arguments
                 headers_args[param["name"]] = utils.get_type(param["schema"])
@@ -140,6 +144,7 @@ class ClientsGenerator:
             path_args=path_args,
             headers_args=headers_args,
             param_name_map=param_name_map,
+            optional_keys=optional_keys,
         )
 
     def get_response_class_names(self, responses: dict, func_name: str) -> list[str]:

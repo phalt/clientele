@@ -124,3 +124,33 @@ def test_fixture_schema_generates_client(fixture_path, client_generator) -> None
         # Verify the generated files are valid Python
         validate_generated_python_file(output_dir / "client.py", client_content, fixture_path)
         validate_generated_python_file(output_dir / "schemas.py", schemas_content, fixture_path)
+
+
+def test_camel_case_query_parameter_gets_query_alias() -> None:
+    """A camelCase query parameter must be sanitized to snake_case *and* keep its wire-format name.
+
+    Regression fixture: tests/fixtures/regression/dep_query_alias.json declares an optional
+    query parameter named `aliasName`. The generated Python parameter must be `alias_name`
+    (so it satisfies ruff's N803), annotated with `clientele_api.Query(alias="aliasName")` so
+    the request is still sent with the API's expected name.
+    """
+    spec_path = REPO_ROOT / "tests/fixtures/regression/dep_query_alias.json"
+    spec = load_fixture_spec(spec_path)
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        output_dir = Path(tmpdir) / "generated_client"
+        generator = APIGenerator(
+            spec=spec,
+            asyncio=False,
+            regen=True,
+            output_dir=str(output_dir),
+            url=None,
+            file=str(spec_path),
+        )
+        generator.generate()
+        client_content = (output_dir / "client.py").read_text()
+
+    assert (
+        'alias_name: typing.Annotated[typing.Optional[str], clientele_api.Query(alias="aliasName")] = None'
+        in client_content
+    )

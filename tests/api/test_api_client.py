@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import typing
+
 import pytest
 from pydantic import BaseModel
 
-from clientele.api import APIClient, APIException, BaseConfig
+from clientele.api import APIClient, APIException, BaseConfig, Query
 from clientele.testing import ResponseFactory, configure_client_for_testing
 
 BASE_URL = "https://api.example.com"
@@ -934,6 +936,57 @@ def test_optional_query_param_provided_is_included() -> None:
     user = get_user(user_id=3, include_details=True)
 
     assert user.id == 3
+
+    client.close()
+
+
+def test_query_param_alias_uses_wire_name() -> None:
+    """A snake_case Python parameter aliased via Query(alias=...) must send the alias over the wire.
+
+    This satisfies ruff's N803 (non-lowercase argument name) for camelCase API query parameters
+    while still calling the API with the name it actually expects.
+    """
+    client = APIClient(base_url=BASE_URL)
+
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/pokemon/",
+        response_obj=ResponseFactory.ok(data={"count": 1}),
+    )
+
+    @client.get("/pokemon/")
+    def get_pokemon_page(result: dict, order_by: typing.Annotated[str, Query(alias="orderBy")]) -> dict:
+        return result
+
+    get_pokemon_page(order_by="name")
+
+    params = fake_backend.requests[0]["kwargs"].get("params") or {}
+    assert params == {"orderBy": "name"}
+    assert "order_by" not in params
+
+    client.close()
+
+
+def test_optional_query_param_alias_none_is_omitted() -> None:
+    """An optional aliased query parameter left as None must not appear in the request at all."""
+    client = APIClient(base_url=BASE_URL)
+
+    fake_backend = configure_client_for_testing(client)
+    fake_backend.queue_response(
+        path="/pokemon/",
+        response_obj=ResponseFactory.ok(data={"count": 1}),
+    )
+
+    @client.get("/pokemon/")
+    def get_pokemon_page(
+        result: dict, order_by: typing.Annotated[typing.Optional[str], Query(alias="orderBy")] = None
+    ) -> dict:
+        return result
+
+    get_pokemon_page()
+
+    params = fake_backend.requests[0]["kwargs"].get("params") or {}
+    assert params == {}
 
     client.close()
 

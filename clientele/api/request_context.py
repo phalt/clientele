@@ -7,6 +7,7 @@ import typing
 import pydantic
 
 from clientele.api import type_utils
+from clientele.api.params import Query
 from clientele.http import response as http_response
 from clientele.http import status_codes
 
@@ -52,6 +53,7 @@ class RequestContext(pydantic.BaseModel):
         typing.Callable[[http_response.Response], typing.Any] | typing.Callable[[str], typing.Any] | None
     ) = None
     streaming: bool = False
+    query_alias_map: dict[str, str] = {}
 
 
 def validate_result_parameter(
@@ -124,6 +126,23 @@ def validate_result_parameter(
             )
 
 
+def _extract_query_alias_map(type_hints: dict[str, typing.Any]) -> dict[str, str]:
+    """
+    Scans resolved type hints for `Annotated[X, Query(alias=...)]` metadata.
+
+    Returns a mapping from the Python parameter name to the wire-format query
+    parameter name declared via `Query(alias=...)`.
+    """
+    alias_map: dict[str, str] = {}
+    for name, annotation in type_hints.items():
+        if typing.get_origin(annotation) is not typing.Annotated:
+            continue
+        for meta in getattr(annotation, "__metadata__", ()):
+            if isinstance(meta, Query):
+                alias_map[name] = meta.alias
+    return alias_map
+
+
 def build_request_context(
     method: str,
     path: str,
@@ -175,6 +194,7 @@ def build_request_context(
         response_map=response_map,
         response_parser=response_parser,
         streaming=streaming,
+        query_alias_map=_extract_query_alias_map(type_hints),
     )
 
 

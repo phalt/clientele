@@ -373,6 +373,8 @@ class APIClient:
         else:
             query_params = {k: v for k, v in request_arguments.items() if k != "data"}
             query_params.update(extra_kwargs)
+            if context.query_alias_map:
+                query_params = {context.query_alias_map.get(k, k): v for k, v in query_params.items()}
 
         # Filter out None values from query params to avoid adding empty parameters to the URL
         if query_params:

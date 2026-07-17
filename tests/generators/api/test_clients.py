@@ -63,6 +63,44 @@ def test_clients_generator_resolves_schema_refs_in_parameters(tmp_path):
     assert param_type.count("None") <= 1
 
 
+def test_clients_generator_adds_query_alias_for_camel_case_names(tmp_path):
+    """A camelCase query parameter must become a snake_case arg annotated with Query(alias=...)."""
+    generator = _make_clients_generator(load_spec("simple.json"), tmp_path)
+
+    parameters = [
+        {
+            "name": "orderBy",
+            "in": "query",
+            "required": True,
+            "schema": {"type": "string"},
+        }
+    ]
+
+    result = generator.generate_parameters(parameters, [])
+
+    assert "order_by" in result.query_args
+    assert "order_by" not in result.optional_keys
+    assert result.query_args["order_by"] == 'typing.Annotated[str, clientele_api.Query(alias="orderBy")]'
+
+
+def test_clients_generator_skips_query_alias_for_already_snake_case_names(tmp_path):
+    """A query parameter that already matches its sanitized name needs no alias annotation."""
+    generator = _make_clients_generator(load_spec("simple.json"), tmp_path)
+
+    parameters = [
+        {
+            "name": "limit",
+            "in": "query",
+            "required": True,
+            "schema": {"type": "integer"},
+        }
+    ]
+
+    result = generator.generate_parameters(parameters, [])
+
+    assert result.query_args["limit"] == "int"
+
+
 def test_clients_generator_handles_multiple_input_classes(tmp_path):
     """Test that clients generator handles multiple input classes."""
     generator = _make_clients_generator(load_spec("simple.json"), tmp_path)

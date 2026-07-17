@@ -98,6 +98,30 @@ get_pokemon_page(query={"limit": 10, "offset": 30})
 - You can pass a dict `query` to achieve the same results.
 - This does not need to be declared in your decorated function.
 
+### Using aliases
+
+Some APIs use query parameter names that aren't valid, idiomatic Python identifiers (e.g. camelCase), which would trip up linters like ruff's `N803`. Use `Annotated` with `api.Query(alias=...)` to give the parameter a Python-friendly name while still sending the API's expected name over the wire:
+
+```python
+from typing import Annotated
+
+from clientele import api
+
+client = api.APIClient(base_url="https://pokeapi.co/api/v2")
+
+
+@client.get("/pokemon/")
+def get_pokemon_page(result: dict, order_by: Annotated[str, api.Query(alias="orderBy")]) -> dict:
+    return result
+```
+
+```python
+get_pokemon_page(order_by="name")
+```
+
+- The function is called with `order_by`, but the request is sent as `?orderBy=name`.
+- Clients generated from an OpenAPI spec add this automatically whenever a query parameter's name isn't already valid snake_case.
+
 ## Simple POST request
 
 ```python
