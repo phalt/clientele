@@ -653,6 +653,15 @@
                             "title": "Your Input",
                             "type": "string"
                         }
+                    },
+                    {
+                        "in": "query",
+                        "name": "pageSize",
+                        "required": false,
+                        "schema": {
+                            "title": "Page Size",
+                            "type": "integer"
+                        }
                     }
                 ],
                 "responses": {

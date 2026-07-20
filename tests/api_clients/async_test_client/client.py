@@ -94,7 +94,9 @@ async def security_required_request_security_required_get(
     "/simple-query", response_map={200: schemas.SimpleQueryParametersResponse, 422: schemas.HTTPValidationError}
 )
 async def query_request_simple_query_get(
-    result: schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse, your_input: str
+    result: schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse,
+    your_input: typing.Annotated[str, clientele_api.Query(alias="yourInput")],
+    page_size: typing.Annotated[typing.Optional[int], clientele_api.Query(alias="pageSize")] = None,
 ) -> schemas.HTTPValidationError | schemas.SimpleQueryParametersResponse:
     """Query Request
 
@@ -108,7 +110,7 @@ async def query_request_simple_query_get(
 )
 async def query_request_optional_query_get(
     result: schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse,
-    your_input: typing.Optional[str] = None,
+    your_input: typing.Annotated[typing.Optional[str], clientele_api.Query(alias="yourInput")] = None,
 ) -> schemas.HTTPValidationError | schemas.OptionalQueryParametersResponse:
     """Optional Query Request
 
