@@ -1260,6 +1260,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#230" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#222" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2162,6 +2173,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#230" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#222" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3050,6 +3072,13 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="230">2.3.0</h2>
+<ul>
+<li>Add <code>clientele.api.Query(alias=...)</code> for annotating a query parameter with its wire-format name via <code>typing.Annotated</code>, so a Python-friendly (snake_case) parameter name can be used without breaking the actual HTTP request. Clients generated from an OpenAPI spec now apply this automatically whenever a query parameter's name isn't already valid snake_case (e.g. <code>orderBy</code> → <code>order_by</code>).</li>
+<li>Fix generated/decorated functions sending query parameters under their sanitized Python name instead of the original API name whenever that name required sanitization (e.g. a spec's <code>yourInput</code> query parameter was sent as <code>?your_input=...</code> instead of <code>?yourInput=...</code>).</li>
+<li>Major refactoring of the project structure including removing of redundant code paths (mostly left over from the old generator logic).</li>
+<li>Reorganisation of the tests and their files to mirror the codebase more.</li>
+</ul>
 <h2 id="222">2.2.2</h2>
 <ul>
 <li>Fix <code>HttpxHTTPBackend.close()</code>/<code>aclose()</code> not resetting the client reference — a closed-but-non-None client was returned on subsequent requests, causing <code>RuntimeError: Cannot send a request, as the client has been closed</code>.</li>

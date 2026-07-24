@@ -708,6 +708,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#using-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using aliases
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1711,6 +1722,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#using-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using aliases
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2090,6 +2112,25 @@
 <ul>
 <li>You can pass a dict <code>query</code> to achieve the same results.</li>
 <li>This does not need to be declared in your decorated function.</li>
+</ul>
+<h3 id="using-aliases">Using aliases</h3>
+<p>Some APIs use query parameter names that aren't valid, idiomatic Python identifiers (e.g. camelCase), which would trip up linters like ruff's <code>N803</code>. Use <code>Annotated</code> with <code>api.Query(alias=...)</code> to give the parameter a Python-friendly name while still sending the API's expected name over the wire:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://pokeapi.co/api/v2&quot;</span><span class="p">)</span>
+
+
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/pokemon/&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_pokemon_page</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">order_by</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">api</span><span class="o">.</span><span class="n">Query</span><span class="p">(</span><span class="n">alias</span><span class="o">=</span><span class="s2">&quot;orderBy&quot;</span><span class="p">)])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">get_pokemon_page</span><span class="p">(</span><span class="n">order_by</span><span class="o">=</span><span class="s2">&quot;name&quot;</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>The function is called with <code>order_by</code>, but the request is sent as <code>?orderBy=name</code>.</li>
+<li>Clients generated from an OpenAPI spec add this automatically whenever a query parameter's name isn't already valid snake_case.</li>
 </ul>
 <h2 id="simple-post-request">Simple POST request</h2>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
