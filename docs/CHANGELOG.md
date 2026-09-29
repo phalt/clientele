@@ -1,5 +1,9 @@
 # Change log
 
+## 2.3.1 UNRELEASED
+
+- Fix paths with request bodies in multiple formats (e.g. `application/json` and `application/x-www-form-urlencoded`) generating duplicate input classes with the name of the final format listed in the spec, rather than one for each format.
+
 ## 2.3.0
 
 - Add `clientele.api.Query(alias=...)` for annotating a query parameter with its wire-format name via `typing.Annotated`, so a Python-friendly (snake_case) parameter name can be used without breaking the actual HTTP request. Clients generated from an OpenAPI spec now apply this automatically whenever a query parameter's name isn't already valid snake_case (e.g. `orderBy` → `order_by`).
