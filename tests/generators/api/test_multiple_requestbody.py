@@ -1,4 +1,3 @@
-import pytest
 
 from clientele.generators.api import clients as api_clients
 from clientele.generators.api import writer as api_writer
@@ -23,6 +22,5 @@ def test_clients_generator_multiple_requestbody(tmp_path):
 
     generator.generate_paths()
 
-    assert len([1 for s in generator.schemas_generator.schemas if s == 'TestInputApplicationJson']) == 1
-    assert len([1 for s in generator.schemas_generator.schemas if s == 'TestInputApplicationXWwwFormUrlencoded']) == 1
-
+    assert len([1 for s in generator.schemas_generator.schemas if s == "TestInputApplicationJson"]) == 1
+    assert len([1 for s in generator.schemas_generator.schemas if s == "TestInputApplicationXWwwFormUrlencoded"]) == 1

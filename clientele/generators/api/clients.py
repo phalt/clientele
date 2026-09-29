@@ -238,7 +238,9 @@ class ClientsGenerator:
         for input_class in input_class_names:
             if input_class not in self.schemas_generator.schemas.keys():
                 # It doesn't exist! Generate the schema for it
-                self.schemas_generator.generate_input_class(schema=request_body, func_name=func_name, input_class=input_class)
+                self.schemas_generator.generate_input_class(
+                    schema=request_body, func_name=func_name, input_class=input_class
+                )
         if len(input_class_names) > 1:
             return utils.union_for_py_ver([f"schemas.{r}" for r in input_class_names])
         elif len(input_class_names) == 0:
