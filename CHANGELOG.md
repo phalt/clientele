@@ -1,5 +1,10 @@
 # Change log
 
+## 2.3.1 UNRELEASED
+
+- Models with aliases are now serialized using their alias names instead of the field names, ensuring that the output matches the expected API format.
+- Models are now serialized with `exclude_unset=True`, meaning fields that were not explicitly set will be omitted from the serialized output rather than being included as `null` or their default value.
+
 ## 2.3.0
 
 - Add `clientele.api.Query(alias=...)` for annotating a query parameter with its wire-format name via `typing.Annotated`, so a Python-friendly (snake_case) parameter name can be used without breaking the actual HTTP request. Clients generated from an OpenAPI spec now apply this automatically whenever a query parameter's name isn't already valid snake_case (e.g. `orderBy` → `order_by`).
