@@ -119,7 +119,7 @@ class SchemasGenerator:
             lines.append(f"    {sanitized_arg}: {type_string}\n")
 
         if has_aliases:
-            lines.append("\n    model_config = pydantic.ConfigDict(populate_by_name=True)\n")
+            lines.append("\n    model_config = pydantic.ConfigDict(populate_by_name=True, serialize_by_alias=True)\n")
 
         return "".join(lines)
 
