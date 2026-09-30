@@ -142,7 +142,7 @@ def test_generate_class_properties_default_with_alias():
         result = generator.generate_class_properties(properties, required=[])
 
         assert 'my_field: int = pydantic.Field(default=42, alias="my-field")' in result
-        assert "model_config = pydantic.ConfigDict(populate_by_name=True)" in result
+        assert "model_config = pydantic.ConfigDict(populate_by_name=True, serialize_by_alias=True)" in result
 
 
 def test_generate_class_properties_no_required_array_with_defaults():
@@ -230,7 +230,7 @@ def test_generate_class_properties_const_with_alias():
         assert (
             "action_type: typing.Literal['delete'] = pydantic.Field(default='delete', alias=\"action-type\")" in result
         )
-        assert "model_config = pydantic.ConfigDict(populate_by_name=True)" in result
+        assert "model_config = pydantic.ConfigDict(populate_by_name=True, serialize_by_alias=True)" in result
 
 
 def test_schemas_generator_no_components():
