@@ -1,6 +1,6 @@
 # Change log
 
-## 2.3.1 UNRELEASED
+## 2.3.1
 
 - Models with aliases are now serialized using their alias names instead of the field names, ensuring that the output matches the expected API format.
 - Models are now serialized with `exclude_unset=True`, meaning fields that were not explicitly set will be omitted from the serialized output rather than being included as `null` or their default value.

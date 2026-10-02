@@ -47,7 +47,7 @@ Once installed, you can run `clientele version` to confirm:
 
 ```sh
 > clientele version
-clientele 2.3.0
+clientele 2.3.1
 ```
 
 ## Next steps
