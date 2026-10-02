@@ -175,7 +175,7 @@ class APIClient:
         self, data: dict[str, typing.Any] | pydantic.BaseModel | None
     ) -> dict[str, typing.Any] | None:
         if isinstance(data, pydantic.BaseModel):
-            return data.model_dump(mode="json")
+            return data.model_dump(mode="json", exclude_unset=True)
 
         return data
 
@@ -567,11 +567,11 @@ class APIClient:
             return payload
 
         if isinstance(payload, pydantic.BaseModel):
-            return payload.model_dump(mode="json")
+            return payload.model_dump(mode="json", exclude_unset=True)
 
         if type_utils.is_pydantic_model(annotation):
             model_instance = annotation.model_validate(payload)
-            return model_instance.model_dump(mode="json")
+            return model_instance.model_dump(mode="json", exclude_unset=True)
 
         if type_utils.is_typeddict(annotation):
             if not isinstance(payload, dict):
