@@ -1,4 +1,3 @@
-
 from clientele.generators.api import clients as api_clients
 from clientele.generators.api import writer as api_writer
 from clientele.generators.shared.schemas import SchemasGenerator
