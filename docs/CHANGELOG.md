@@ -1,5 +1,9 @@
 # Change log
 
+## 2.3.2 UNRELEASED
+
+- Fix paths with request bodies in multiple formats (e.g. `application/json` and `application/x-www-form-urlencoded`) generating duplicate input classes with the name of the final format listed in the spec, rather than one for each format.
+
 ## 2.3.1
 
 - Models with aliases are now serialized using their alias names instead of the field names, ensuring that the output matches the expected API format.
