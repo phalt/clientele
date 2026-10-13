@@ -1,5 +1,6 @@
+import importlib.metadata
 import sys
 
-VERSION = "2.3.1"
+VERSION = importlib.metadata.version("clientele")
 
 PY_VERSION = sys.version_info
