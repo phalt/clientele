@@ -123,7 +123,7 @@ class SchemasGenerator:
 
         return "".join(lines)
 
-    def generate_input_class(self, schema: dict, func_name: str) -> None:
+    def generate_input_class(self, schema: dict, func_name: str, input_class: str | None = None) -> None:
         if content := schema.get("content"):
             for encoding, input_schema in content.items():
                 class_name = ""
@@ -133,13 +133,18 @@ class SchemasGenerator:
                     class_name = utils.class_name_titled(title)
                 else:
                     class_name = utils.class_name_titled(f"{func_name}_{encoding}")
+
+                if input_class is not None and class_name != input_class:
+                    continue
+
                 properties = self.generate_class_properties(
                     properties=input_schema["schema"].get("properties", {}),
                     required=input_schema["schema"].get("required", None),
                 )
                 template = self.writer.templates.get_template("schema_class.jinja2")
                 out_content = template.render(class_name=class_name, properties=properties, enum=False)
-            self.writer.write_to_schemas(out_content, output_dir=self.output_dir)
+                self.writer.write_to_schemas(out_content, output_dir=self.output_dir)
+                self.schemas[class_name] = properties
 
     def _create_union_type_alias(
         self,
