@@ -21,6 +21,9 @@ release:  ## Build a new version and release it
 ty: ## Run a static syntax check
 	uv run ty check .
 
+lint-imports: ## Check the import contracts in pyproject.toml
+	uv run lint-imports
+
 format: ## Format the code correctly
 	uv run ruff format .
 	uv run ruff check --fix .
@@ -29,6 +32,7 @@ clean:  ## Clear any cache files and test files
 	rm -rf .ty_cache
 	rm -rf .pytest_cache
 	rm -rf .ruff_cache
+	rm -rf .import_linter_cache
 	rm -rf test_output
 	rm -rf site/
 	rm -rf dist/

@@ -62,6 +62,7 @@ dev = [
     "aioresponses>=0.7.0",
     "niquests>=3.0.0",
     "responses>=0.25.0",
+    "import-linter>=2.15",
 ]
 
 [build-system]
@@ -115,3 +116,210 @@ addopts = ["-p pytest_httpx2"]
 # Exclude the mypy-specific test directory (intentional type errors for mypy plugin
 # verification) and server_examples (Django ORM patterns ty cannot resolve).
 exclude = ["tests/mypy", "server_examples"]
+
+# ---------------------------------------------------------------------------
+# Import Linter: architectural contracts. Run with `make lint-imports`.
+#
+# The contracts describe the structure we want. Where the code doesn't match yet,
+# the existing imports are listed under `ignore_imports` with a "DEBT" comment so
+# the gap is visible and can't grow. Fixing one of them makes its entry unmatched,
+# which import-linter reports as an error: delete the entry in the same change.
+# ---------------------------------------------------------------------------
+[tool.importlinter]
+root_package = "clientele"
+include_external_packages = true
+
+# --- Package-wide structure ------------------------------------------------
+
+[[tool.importlinter.contracts]]
+id = "runtime-layers"
+name = "Runtime layers: features -> api -> http"
+type = "layers"
+layers = [
+    "clientele.testing",
+    "clientele.graphql | clientele.retries | clientele.cache",
+    "clientele.api",
+    "clientele.http",
+]
+ignore_imports = [
+    # DEBT: the HTTP transport raises the api layer's exceptions. Move APIException and
+    # HTTPStatusError into clientele.http (re-exported from clientele.api.exceptions) to fix.
+    "clientele.http.response -> clientele.api.exceptions",
+    "clientele.http.httpx_backend -> clientele.api.exceptions",
+    "clientele.http.aiohttp_backend -> clientele.api.exceptions",
+    "clientele.http.requests_backend -> clientele.api.exceptions",
+    "clientele.http.niquests_backend -> clientele.api.exceptions",
+    "clientele.http.fake_backend -> clientele.api.exceptions",
+    # DEBT: the HTTP transport turns streamed lines into return types. Have backends yield raw
+    # lines and let the api layer hydrate them, so http doesn't need to know about types.
+    "clientele.http.httpx_backend -> clientele.api.stream",
+    "clientele.http.aiohttp_backend -> clientele.api.stream",
+    "clientele.http.requests_backend -> clientele.api.stream",
+    "clientele.http.niquests_backend -> clientele.api.stream",
+    "clientele.http.fake_backend -> clientele.api.stream",
+    # DEBT: BaseConfig names the cache backend type, so api depends on cache while
+    # cache.decorator depends on api. Move the CacheBackend protocol below the api layer.
+    "clientele.api.config -> clientele.cache.types",
+]
+broken_contract_guidance = """
+clientele.http is the transport: it sends requests and returns Responses. clientele.api builds
+clients on top of it, and the optional features build on clientele.api. Lower layers must not
+import higher ones. If you need something from a higher layer, move it down or pass it in.
+"""
+
+[[tool.importlinter.contracts]]
+id = "runtime-independent-of-codegen"
+name = "The runtime doesn't depend on the code generator, CLI or mypy plugin"
+type = "forbidden"
+source_modules = [
+    "clientele.api",
+    "clientele.http",
+    "clientele.cache",
+    "clientele.retries",
+    "clientele.graphql",
+    "clientele.testing",
+    "clientele.schemas",
+]
+forbidden_modules = [
+    "clientele.cli",
+    "clientele.generators",
+    "clientele.mypy",
+]
+broken_contract_guidance = """
+Generated clients import the runtime, and are installed without the [cli] extra. The runtime
+must work without the generator, so it can't import it.
+"""
+
+[[tool.importlinter.contracts]]
+id = "codegen-independent-of-runtime"
+name = "The code generator and CLI don't depend on the runtime"
+type = "forbidden"
+source_modules = [
+    "clientele.cli",
+    "clientele.generators",
+]
+forbidden_modules = [
+    "clientele.api",
+    "clientele.http",
+    "clientele.cache",
+    "clientele.retries",
+    "clientele.graphql",
+    "clientele.testing",
+    "clientele.schemas",
+]
+broken_contract_guidance = """
+The generator writes source code that imports the runtime; it never needs the runtime itself.
+Keeping them apart lets either change without the other.
+"""
+
+[[tool.importlinter.contracts]]
+id = "runtime-base-dependencies"
+name = "The runtime only imports its base (non-optional) dependencies"
+type = "forbidden"
+source_modules = [
+    "clientele.api",
+    "clientele.http",
+    "clientele.cache",
+    "clientele.retries",
+    "clientele.graphql",
+    "clientele.testing",
+    "clientele.schemas",
+]
+forbidden_modules = [
+    # The [cli] extra
+    "click",
+    "rich",
+    "cicerone",
+    "jinja2",
+    "yaml",
+    # Optional HTTP clients, and mypy, which only runs our plugin
+    "aiohttp",
+    "requests",
+    "niquests",
+    "mypy",
+]
+ignore_imports = [
+    # ALLOWED: each optional backend wraps its own client library. Nothing else may import these
+    # backends (see the opt-in-modules contract), so `import clientele` never needs them.
+    "clientele.http.aiohttp_backend -> aiohttp",
+    "clientele.http.requests_backend -> requests",
+    "clientele.http.niquests_backend -> niquests",
+]
+broken_contract_guidance = """
+`pip install clientele` only installs httpx2, pydantic, pydantic-settings and stamina. Anything
+else imported by the runtime fails for users who didn't install the extra. Add the dependency to
+[project.dependencies] if it's really needed, or keep the import inside an opt-in module.
+"""
+
+[[tool.importlinter.contracts]]
+id = "opt-in-modules"
+name = "Opt-in modules are only imported by the user"
+type = "protected"
+protected_modules = [
+    "clientele.http.aiohttp_backend",
+    "clientele.http.requests_backend",
+    "clientele.http.niquests_backend",
+    "clientele.mypy",
+]
+allowed_importers = []
+broken_contract_guidance = """
+These modules import packages that aren't base dependencies (aiohttp, requests, niquests, mypy).
+Users opt in by importing them directly, or mypy loads the plugin. Importing one from elsewhere in
+clientele would make every user need that package.
+"""
+
+# --- Inside packages -------------------------------------------------------
+
+[[tool.importlinter.contracts]]
+id = "api-layers"
+name = "api: client -> request handling -> building blocks"
+type = "layers"
+containers = ["clientele.api"]
+layers = [
+    "client",
+    "request_context | config",
+    "stream | params | exceptions",
+    "type_utils",
+]
+
+[[tool.importlinter.contracts]]
+id = "http-layers"
+name = "http: backends build on HTTPBackend and are independent"
+type = "layers"
+layers = [
+    "clientele.http.httpx_backend | clientele.http.aiohttp_backend | clientele.http.requests_backend | clientele.http.niquests_backend | clientele.http.fake_backend",
+    "clientele.http.backends",
+    "clientele.http.response",
+]
+broken_contract_guidance = """
+Each backend depends only on the HTTPBackend interface and Response, so backends can be added,
+removed or swapped without touching each other.
+"""
+
+[[tool.importlinter.contracts]]
+id = "codegen-layers"
+name = "Code generation: CLI -> generators -> shared -> OpenAPI compatibility"
+type = "layers"
+layers = [
+    "clientele.cli",
+    "clientele.generators.api | clientele.generators.basic",
+    "clientele.generators.shared",
+    "clientele.generators.cicerone_compat",
+]
+broken_contract_guidance = """
+Code shared by the api and basic generators belongs in clientele.generators.shared, not in one
+generator imported by the other.
+"""
+
+[[tool.importlinter.contracts]]
+id = "no-cycles"
+name = "No import cycles inside subpackages"
+type = "acyclic_siblings"
+# The top level is covered by runtime-layers and the forbidden contracts above, so its known
+# cycles are only listed once.
+ancestors = [
+    "clientele.api",
+    "clientele.cache",
+    "clientele.generators",
+    "clientele.http",
+]

@@ -2,6 +2,7 @@
 .ty_cache/
 env.ini
 .ruff_cache/
+.import_linter_cache/
 .pytest_cache/
 .idea/
 __pycache__

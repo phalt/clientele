@@ -107,6 +107,14 @@ make format
 
 The generated code is automatically formatted with Ruff, which provides both code formatting and linting fixes.
 
+Check the import contracts:
+
+```sh
+make lint-imports
+```
+
+[Import Linter](https://import-linter.readthedocs.io/) checks that modules only import in the directions we want: `clientele.http` is the transport, `clientele.api` builds on it, and the optional features (`cache`, `retries`, `graphql`, `testing`) build on `clientele.api`. The runtime and the code generator (`cli`, `generators`) never import each other, and the runtime only imports its base dependencies. The contracts, and the reasons for them, are under `[tool.importlinter]` in `pyproject.toml`. If one breaks, change the import rather than the contract. Imports listed as `DEBT` there are known exceptions we want to remove; when you remove one, delete its entry too.
+
 Make sure you add to `CHANGELOG.md` and `docs/CHANGELOG.md` what changes you have made.
 
 Make sure you add your name to `CONTRIBUTORS.md` as well!
