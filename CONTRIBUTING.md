@@ -113,7 +113,7 @@ Check the import contracts:
 make lint-imports
 ```
 
-[Import Linter](https://import-linter.readthedocs.io/) checks that modules only import in the directions we want: `clientele.http` is the transport, `clientele.api` builds on it, and the optional features (`cache`, `retries`, `graphql`, `testing`) build on `clientele.api`. The runtime and the code generator (`cli`, `generators`) never import each other, and the runtime only imports its base dependencies. The contracts, and the reasons for them, are under `[tool.importlinter]` in `pyproject.toml`. If one breaks, change the import rather than the contract. Imports listed as `DEBT` there are known exceptions we want to remove; when you remove one, delete its entry too.
+[Import Linter](https://import-linter.readthedocs.io/) checks that modules only import in the directions we want: `clientele.http` is the transport, `clientele.api` builds on it, and the optional features (`cache`, `retries`, `graphql`, `testing`) build on `clientele.api`. A layer never imports one above it. For example, the HTTP backends raise `clientele.http.HTTPStatusError` and stream raw lines, and `clientele.api` turns those lines into return types. The runtime and the code generator (`cli`, `generators`) never import each other, and the runtime only imports its base dependencies. The contracts, and the reasons for them, are under `[tool.importlinter]` in `pyproject.toml`. If one breaks, change the import rather than the contract: move what you need down a layer, or pass it in from above.
 
 Make sure you add to `CHANGELOG.md` and `docs/CHANGELOG.md` what changes you have made.
 

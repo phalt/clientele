@@ -295,10 +295,8 @@ class FakeHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.Generator[typing.Any, None, None]:
+    ) -> typing.Generator[str, None, None]:
         """Handle synchronous streaming for testing.
 
         Yields queued mock stream data, or empty iterator if no data queued.
@@ -306,16 +304,11 @@ class FakeHTTPBackend(backends.HTTPBackend):
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
-            inner_type: The type to hydrate each streamed item to
-            response_parser: Optional custom parser for each line
             **kwargs: Additional request parameters (stored but not used)
 
         Yields:
-            Parsed items of inner_type
+            Each non-empty queued line
         """
-        from clientele.api import exceptions as api_exceptions
-        from clientele.api.stream import hydrate_content
-
         # Capture the request
         request_details = {
             "method": method,
@@ -342,7 +335,7 @@ class FakeHTTPBackend(backends.HTTPBackend):
                 request_method=method,
                 request_url=url,
             )
-            raise api_exceptions.HTTPStatusError(
+            raise response.HTTPStatusError(
                 response=error_response,
                 reason=f"HTTP {status_code}",
             )
@@ -352,19 +345,14 @@ class FakeHTTPBackend(backends.HTTPBackend):
             if not line:
                 continue
 
-            if response_parser is not None:
-                yield response_parser(line)
-            else:
-                yield hydrate_content(line, inner_type)
+            yield line
 
     async def handle_async_stream(
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[typing.Any, None]:
+    ) -> typing.AsyncGenerator[str, None]:
         """Handle asynchronous streaming for testing.
 
         Yields queued mock stream data, or empty async iterator if no data queued.
@@ -372,16 +360,11 @@ class FakeHTTPBackend(backends.HTTPBackend):
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
-            inner_type: The type to hydrate each streamed item to
-            response_parser: Optional custom parser for each line
             **kwargs: Additional request parameters (stored but not used)
 
         Yields:
-            Parsed items of inner_type
+            Each non-empty queued line
         """
-        from clientele.api import exceptions as api_exceptions
-        from clientele.api.stream import hydrate_content
-
         # Capture the request
         request_details = {
             "method": method,
@@ -408,7 +391,7 @@ class FakeHTTPBackend(backends.HTTPBackend):
                 request_method=method,
                 request_url=url,
             )
-            raise api_exceptions.HTTPStatusError(
+            raise response.HTTPStatusError(
                 response=error_response,
                 reason=f"HTTP {status_code}",
             )
@@ -418,7 +401,4 @@ class FakeHTTPBackend(backends.HTTPBackend):
             if not line:
                 continue
 
-            if response_parser is not None:
-                yield response_parser(line)
-            else:
-                yield hydrate_content(line, inner_type)
+            yield line

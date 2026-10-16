@@ -9,8 +9,6 @@ except ImportError as exc:
         "The RequestsHTTPBackend requires the 'requests' library. Install it with: pip install requests"
     ) from exc
 
-from clientele.api import exceptions as api_exceptions
-from clientele.api.stream import hydrate_content
 from clientele.http import backends, response
 
 
@@ -110,10 +108,8 @@ class RequestsHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.Generator[typing.Any, None, None]:
+    ) -> typing.Generator[str, None, None]:
         session = self.build_client()
         requests_response = session.request(
             method,
@@ -126,17 +122,14 @@ class RequestsHTTPBackend(backends.HTTPBackend):
         try:
             if 400 <= requests_response.status_code < 600:
                 generic_response = self.convert_to_response(requests_response)
-                raise api_exceptions.HTTPStatusError(
+                raise response.HTTPStatusError(
                     response=generic_response,
                     reason=f"HTTP {requests_response.status_code}",
                 )
             for line in requests_response.iter_lines(decode_unicode=True):
                 if not line:
                     continue
-                if response_parser is not None:
-                    yield response_parser(line)
-                else:
-                    yield hydrate_content(line, inner_type)
+                yield line
         finally:
             requests_response.close()
 
@@ -144,10 +137,8 @@ class RequestsHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[typing.Any, None]:
+    ) -> typing.AsyncGenerator[str, None]:
         raise NotImplementedError("RequestsHTTPBackend does not support async. Use HttpxHTTPBackend instead.")
         yield  # type: ignore[misc]  # required to make this an async generator
 

@@ -90,27 +90,26 @@ class HTTPBackend(abc.ABC):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.Generator[typing.Any, None, None]:
+    ) -> typing.Generator[str, None, None]:
         """Handle synchronous streaming HTTP response without buffering.
 
         This method streams the response body line-by-line without buffering
-        the entire response into memory. Each line is yielded immediately
-        after being parsed.
+        the entire response into memory. Each line is yielded as soon as it
+        is received; clientele.api turns the lines into the return type.
 
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
-            inner_type: The type to hydrate each streamed item to
-            response_parser: Optional custom parser for each line
             **kwargs: Additional request parameters (headers, params, json, etc.)
 
         Yields:
-            Parsed items of inner_type, one per line
+            Each non-empty line of the response body
+
+        Raises:
+            HTTPStatusError: If status code is 4xx or 5xx
         """
-        yield  # pragma: no cover
+        yield ""  # pragma: no cover
         raise NotImplementedError
 
     @abc.abstractmethod
@@ -118,25 +117,24 @@ class HTTPBackend(abc.ABC):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[typing.Any, None]:
+    ) -> typing.AsyncGenerator[str, None]:
         """Handle asynchronous streaming HTTP response without buffering.
 
         This method streams the response body line-by-line without buffering
-        the entire response into memory. Each line is yielded immediately
-        after being parsed.
+        the entire response into memory. Each line is yielded as soon as it
+        is received; clientele.api turns the lines into the return type.
 
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
-            inner_type: The type to hydrate each streamed item to
-            response_parser: Optional custom parser for each line
             **kwargs: Additional request parameters (headers, params, json, etc.)
 
         Yields:
-            Parsed items of inner_type, one per line
+            Each non-empty line of the response body
+
+        Raises:
+            HTTPStatusError: If status code is 4xx or 5xx
         """
-        yield  # pragma: no cover
+        yield ""  # pragma: no cover
         raise NotImplementedError

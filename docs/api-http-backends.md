@@ -66,22 +66,18 @@ class HTTPBackend(abc.ABC):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.Generator[typing.Any, None, None]:
-        """ Handle streaming responses """
+    ) -> typing.Generator[str, None, None]:
+        """ Stream the response body, one line at a time """
 
     @abc.abstractmethod
     async def handle_async_stream(
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[typing.Any, None]:
-        """ Handle async streaming responses """
+    ) -> typing.AsyncGenerator[str, None]:
+        """ Stream the response body asynchronously, one line at a time """
 
     @staticmethod
     @abc.abstractmethod
@@ -328,6 +324,8 @@ Both backends support sync and async. Prefer `niquests` if your project already 
 ## Creating Custom Backends
 
 To implement your own backend, subclass `clientele.http.backends.HTTPBackend` and implement all abstract methods. Backends that only support one mode (sync or async) should raise `NotImplementedError` in the unsupported methods — see `RequestsHTTPBackend` (sync-only) and `AiohttpHTTPBackend` (async-only) in the source for reference implementations.
+
+The streaming methods should yield each non-empty line of the response body as a `str`; clientele turns the lines into your function's return type, or passes them to your `response_parser`. For a 4xx or 5xx response, raise `clientele.http.HTTPStatusError` before yielding anything.
 
 ### Default Behavior
 

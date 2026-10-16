@@ -4,8 +4,6 @@ import typing
 
 import httpx2
 
-from clientele.api import exceptions as api_exceptions
-from clientele.api.stream import hydrate_content
 from clientele.http import backends, response
 
 
@@ -136,10 +134,8 @@ class HttpxHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.Generator[typing.Any, None, None]:
+    ) -> typing.Generator[str, None, None]:
         """Handle synchronous streaming response without buffering.
 
         Uses httpx2.Client.stream()
@@ -152,7 +148,7 @@ class HttpxHTTPBackend(backends.HTTPBackend):
                     # For error responses, read the full response then raise
                     httpx_response.read()  # Read the stream before accessing content
                     generic_response = self.convert_to_response(httpx_response)
-                    raise api_exceptions.HTTPStatusError(
+                    raise response.HTTPStatusError(
                         response=generic_response,
                         reason=f"HTTP {httpx_response.status_code}",
                     )
@@ -161,10 +157,7 @@ class HttpxHTTPBackend(backends.HTTPBackend):
                     if not line:
                         continue
 
-                    if response_parser is not None:
-                        yield response_parser(line)
-                    else:
-                        yield hydrate_content(line, inner_type)
+                    yield line
             finally:
                 pass
 
@@ -172,10 +165,8 @@ class HttpxHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[typing.Any, None]:
+    ) -> typing.AsyncGenerator[str, None]:
         """Handle asynchronous streaming response without buffering.
 
         Uses httpx2.AsyncClient.stream()
@@ -189,7 +180,7 @@ class HttpxHTTPBackend(backends.HTTPBackend):
                     # For error responses, read the full response then raise
                     await httpx_response.aread()  # Read the stream before accessing content
                     generic_response = self.convert_to_response(httpx_response)
-                    raise api_exceptions.HTTPStatusError(
+                    raise response.HTTPStatusError(
                         response=generic_response,
                         reason=f"HTTP {httpx_response.status_code}",
                     )
@@ -198,9 +189,6 @@ class HttpxHTTPBackend(backends.HTTPBackend):
                     if not line:
                         continue
 
-                    if response_parser is not None:
-                        yield response_parser(line)
-                    else:
-                        yield hydrate_content(line, inner_type)
+                    yield line
             finally:
                 pass

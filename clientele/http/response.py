@@ -64,13 +64,33 @@ class Response:
             HTTPStatusError: If status code is 4xx or 5xx
         """
         if 400 <= self.status_code < 600:
-            # Import here to avoid circular dependency
-            from clientele.api import exceptions as api_exceptions
-
-            raise api_exceptions.HTTPStatusError(
+            raise HTTPStatusError(
                 response=self,
                 reason=f"HTTP {self.status_code}",
             )
 
     def __repr__(self) -> str:
         return f"<Clientele HTTP Response [{self.status_code}]>"
+
+
+# The exceptions live here, beside Response, because the HTTP backends raise them.
+# clientele.api.exceptions re-exports them.
+
+
+class APIException(Exception):
+    """Could not match API response to return type of this function."""
+
+    reason: str
+    response: Response
+
+    def __init__(self, response: Response, reason: str, *args: object) -> None:
+        self.response = response
+        self.reason = reason
+        super().__init__(*args)
+
+
+class HTTPStatusError(APIException):
+    """HTTP response returned an error status code (4xx or 5xx)."""
+
+    def __init__(self, response: Response, reason: str, *args: object) -> None:
+        super().__init__(response, reason, *args)
