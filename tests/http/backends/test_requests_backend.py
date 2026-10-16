@@ -64,7 +64,7 @@ class TestRequestsHTTPBackend:
     async def test_handle_async_stream_raises(self):
         backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
         with pytest.raises(NotImplementedError):
-            async for _ in backend.handle_async_stream("GET", "/stream", str):
+            async for _ in backend.handle_async_stream("GET", "/stream"):
                 pass
 
     def test_from_config(self):
@@ -141,7 +141,7 @@ class TestRequestsHTTPBackend:
         )
 
         backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
-        results = list(backend.handle_sync_stream("GET", "/stream", str, response_parser=lambda x: x))
+        results = list(backend.handle_sync_stream("GET", "/stream"))
         backend.close()
 
         assert results == ["line one", "line two", "line three"]
@@ -152,7 +152,7 @@ class TestRequestsHTTPBackend:
 
         backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
         with pytest.raises(api_exceptions.HTTPStatusError):
-            list(backend.handle_sync_stream("GET", "/missing", str))
+            list(backend.handle_sync_stream("GET", "/missing"))
         backend.close()
 
     @responses_lib.activate

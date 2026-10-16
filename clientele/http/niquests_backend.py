@@ -9,8 +9,6 @@ except ImportError as exc:
         "The NiquestsHTTPBackend requires the 'niquests' library. Install it with: pip install niquests"
     ) from exc
 
-from clientele.api import exceptions as api_exceptions
-from clientele.api.stream import hydrate_content
 from clientele.http import backends, response
 
 
@@ -122,10 +120,8 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.Generator[typing.Any, None, None]:
+    ) -> typing.Generator[str, None, None]:
         session = self.build_client()
         resp = session.request(
             method,
@@ -138,17 +134,14 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
         try:
             if resp.status_code is not None and 400 <= resp.status_code < 600:
                 generic_response = self.convert_to_response(resp)
-                raise api_exceptions.HTTPStatusError(
+                raise response.HTTPStatusError(
                     response=generic_response,
                     reason=f"HTTP {resp.status_code}",
                 )
             for line in resp.iter_lines(decode_unicode=True):
                 if not line:
                     continue
-                if response_parser is not None:
-                    yield response_parser(line)
-                else:
-                    yield hydrate_content(line, inner_type)
+                yield line
         finally:
             resp.close()
 
@@ -156,10 +149,8 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[typing.Any, None]:
+    ) -> typing.AsyncGenerator[str, None]:
         session = self.build_async_client()
         # stream=True returns AsyncResponse with async content/text/close
         resp = await session.request(
@@ -187,7 +178,7 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
                     request_method=request_method,
                     request_url=request_url,
                 )
-                raise api_exceptions.HTTPStatusError(
+                raise response.HTTPStatusError(
                     response=generic_response,
                     reason=f"HTTP {resp.status_code}",
                 )
@@ -198,10 +189,7 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
             async for line in resp_any.iter_lines(decode_unicode=True):
                 if not line:
                     continue
-                if response_parser is not None:
-                    yield response_parser(line)
-                else:
-                    yield hydrate_content(line, inner_type)
+                yield line
         finally:
             await resp.close()
 

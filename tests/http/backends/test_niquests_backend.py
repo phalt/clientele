@@ -102,7 +102,7 @@ class TestNiquestsHTTPBackendSync:
         )
 
         backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
-        results = list(backend.handle_sync_stream("GET", "/stream", str, response_parser=lambda x: x))
+        results = list(backend.handle_sync_stream("GET", "/stream"))
         backend.close()
 
         assert results == ["line one", "line two", "line three"]
@@ -112,7 +112,7 @@ class TestNiquestsHTTPBackendSync:
 
         backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
         with pytest.raises(api_exceptions.HTTPStatusError):
-            list(backend.handle_sync_stream("GET", "/missing", str))
+            list(backend.handle_sync_stream("GET", "/missing"))
         backend.close()
 
     def test_full_clientele_integration(self, httpserver):
@@ -201,7 +201,7 @@ class TestNiquestsHTTPBackendAsync:
 
         backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
         results = []
-        async for item in backend.handle_async_stream("GET", "/stream", str, response_parser=lambda x: x):
+        async for item in backend.handle_async_stream("GET", "/stream"):
             results.append(item)
         await backend.aclose()
 
@@ -230,6 +230,6 @@ class TestNiquestsHTTPBackendAsync:
 
         backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
         with pytest.raises(api_exceptions.HTTPStatusError):
-            async for _ in backend.handle_async_stream("GET", "/missing", str):
+            async for _ in backend.handle_async_stream("GET", "/missing"):
                 pass
         await backend.aclose()

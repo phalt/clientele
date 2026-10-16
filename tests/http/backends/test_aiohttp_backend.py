@@ -29,7 +29,7 @@ class TestAiohttpHTTPBackend:
     def test_handle_sync_stream_raises(self):
         backend = aiohttp_backend.AiohttpHTTPBackend(base_url=BASE_URL)
         with pytest.raises(NotImplementedError):
-            list(backend.handle_sync_stream("GET", "/stream", str))
+            list(backend.handle_sync_stream("GET", "/stream"))
 
     def test_close_is_noop(self):
         backend = aiohttp_backend.AiohttpHTTPBackend(base_url=BASE_URL)
@@ -188,7 +188,7 @@ class TestAiohttpHTTPBackend:
             m.get(f"{BASE_URL}/stream", body=b"line one\nline two\nline three\n", status=200)
             backend = aiohttp_backend.AiohttpHTTPBackend(base_url=BASE_URL)
             results = []
-            async for item in backend.handle_async_stream("GET", "/stream", str, response_parser=lambda x: x):
+            async for item in backend.handle_async_stream("GET", "/stream"):
                 results.append(item)
             await backend.aclose()
 
@@ -217,6 +217,6 @@ class TestAiohttpHTTPBackend:
             m.get(f"{BASE_URL}/missing", payload={"error": "not found"}, status=404)
             backend = aiohttp_backend.AiohttpHTTPBackend(base_url=BASE_URL)
             with pytest.raises(api_exceptions.HTTPStatusError):
-                async for _ in backend.handle_async_stream("GET", "/missing", str):
+                async for _ in backend.handle_async_stream("GET", "/missing"):
                     pass
             await backend.aclose()

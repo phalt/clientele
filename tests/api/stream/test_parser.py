@@ -105,3 +105,66 @@ class TestHydrateContent:
         content = "null"
         result = parser.hydrate_content(content, object)
         assert result is None
+
+
+class TestHydrateSyncStream:
+    def test_hydrates_each_line_to_inner_type(self):
+        lines = (line for line in ['{"text": "a", "id": 1}', '{"text": "b", "id": 2}'])
+        result = list(parser.hydrate_sync_stream(lines, Token))
+        assert result == [Token(text="a", id=1), Token(text="b", id=2)]
+
+    def test_uses_response_parser_instead_of_inner_type(self):
+        lines = (line for line in ["a", "b"])
+        result = list(parser.hydrate_sync_stream(lines, Token, response_parser=str.upper))
+        assert result == ["A", "B"]
+
+    def test_closes_lines_when_stopped_early(self):
+        closed = []
+
+        def lines():
+            try:
+                yield "a"
+                yield "b"
+            finally:
+                closed.append(True)
+
+        stream = parser.hydrate_sync_stream(lines(), str)
+        assert next(stream) == "a"
+        stream.close()
+        assert closed == [True]
+
+
+class TestHydrateAsyncStream:
+    @pytest.mark.asyncio
+    async def test_hydrates_each_line_to_inner_type(self):
+        async def lines():
+            yield '{"text": "a", "id": 1}'
+            yield '{"text": "b", "id": 2}'
+
+        result = [item async for item in parser.hydrate_async_stream(lines(), Token)]
+        assert result == [Token(text="a", id=1), Token(text="b", id=2)]
+
+    @pytest.mark.asyncio
+    async def test_uses_response_parser_instead_of_inner_type(self):
+        async def lines():
+            yield "a"
+            yield "b"
+
+        result = [item async for item in parser.hydrate_async_stream(lines(), Token, response_parser=str.upper)]
+        assert result == ["A", "B"]
+
+    @pytest.mark.asyncio
+    async def test_closes_lines_when_stopped_early(self):
+        closed = []
+
+        async def lines():
+            try:
+                yield "a"
+                yield "b"
+            finally:
+                closed.append(True)
+
+        stream = parser.hydrate_async_stream(lines(), str)
+        assert await anext(stream) == "a"
+        await stream.aclose()
+        assert closed == [True]

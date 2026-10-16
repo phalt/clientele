@@ -9,8 +9,6 @@ except ImportError as exc:
         "The AiohttpHTTPBackend requires the 'aiohttp' library. Install it with: pip install aiohttp"
     ) from exc
 
-from clientele.api import exceptions as api_exceptions
-from clientele.api.stream import hydrate_content
 from clientele.http import backends, response
 
 
@@ -113,10 +111,8 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.Generator[typing.Any, None, None]:
+    ) -> typing.Generator[str, None, None]:
         raise NotImplementedError("AiohttpHTTPBackend does not support sync requests. Use HttpxHTTPBackend instead.")
         yield  # type: ignore[misc]
 
@@ -124,10 +120,8 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
         self,
         method: str,
         url: str,
-        inner_type: typing.Any,
-        response_parser: typing.Callable[[str], typing.Any] | None = None,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[typing.Any, None]:
+    ) -> typing.AsyncGenerator[str, None]:
         session = self.build_async_client()
         async with session.request(
             method,
@@ -140,7 +134,7 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
             if 400 <= resp.status < 600:
                 await resp.read()
                 generic_response = self.convert_to_response(resp)
-                raise api_exceptions.HTTPStatusError(
+                raise response.HTTPStatusError(
                     response=generic_response,
                     reason=f"HTTP {resp.status}",
                 )
@@ -151,10 +145,7 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
                 decoded = line.decode("utf-8").rstrip("\r\n")
                 if not decoded:
                     continue
-                if response_parser is not None:
-                    yield response_parser(decoded)
-                else:
-                    yield hydrate_content(decoded, inner_type)
+                yield decoded
 
     def close(self) -> None:
         pass

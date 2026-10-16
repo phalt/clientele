@@ -1,5 +1,10 @@
 # Change log
 
+## 2.4.0 UNRELEASED
+
+- **Custom HTTP backends:** `handle_sync_stream` and `handle_async_stream` no longer take `inner_type` or `response_parser`. They now yield each line as a `str`, and clientele turns the lines into the return type. Built-in backends are updated; custom backends need the same change.
+- `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`. They can still be imported from their old locations.
+
 ## 2.3.1
 
 - Models with aliases are now serialized using their alias names instead of the field names, ensuring that the output matches the expected API format.

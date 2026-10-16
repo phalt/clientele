@@ -11,7 +11,7 @@ import pydantic
 
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
-from clientele.api import request_context, type_utils
+from clientele.api import request_context, stream, type_utils
 from clientele.http import httpx_backend
 from clientele.http import response as http_response
 
@@ -476,13 +476,12 @@ class APIClient:
 
         if not self.config.http_backend:
             raise RuntimeError("HTTP backend is not configured.")
-        stream_generator = self.config.http_backend.handle_async_stream(
+        lines = self.config.http_backend.handle_async_stream(
             method=context.method,
             url=prepared.url_path,
-            inner_type=inner_type,
-            response_parser=streaming_parser,
             **request_kwargs,
         )
+        stream_generator = stream.hydrate_async_stream(lines, inner_type, streaming_parser)
 
         # Inject the generator as 'result' and call the user's function
         prepared.call_arguments["result"] = stream_generator
@@ -536,13 +535,12 @@ class APIClient:
             typing.Callable[[str], typing.Any] | None, context.response_parser
         )
 
-        stream_generator = self.config.http_backend.handle_sync_stream(
+        lines = self.config.http_backend.handle_sync_stream(
             method=context.method,
             url=prepared.url_path,
-            inner_type=inner_type,
-            response_parser=streaming_parser,
             **request_kwargs,
         )
+        stream_generator = stream.hydrate_sync_stream(lines, inner_type, streaming_parser)
 
         # Inject the generator as 'result' and call the user's function
         prepared.call_arguments["result"] = stream_generator

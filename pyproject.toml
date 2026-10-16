@@ -120,10 +120,10 @@ exclude = ["tests/mypy", "server_examples"]
 # ---------------------------------------------------------------------------
 # Import Linter: architectural contracts. Run with `make lint-imports`.
 #
-# The contracts describe the structure we want. Where the code doesn't match yet,
-# the existing imports are listed under `ignore_imports` with a "DEBT" comment so
-# the gap is visible and can't grow. Fixing one of them makes its entry unmatched,
-# which import-linter reports as an error: delete the entry in the same change.
+# The contracts describe the structure we want. If one breaks, change the import,
+# not the contract. Any import that is deliberately exempt is listed under
+# `ignore_imports` with a comment saying why. import-linter reports an entry that
+# no longer matches anything as an error, so delete it when the import goes away.
 # ---------------------------------------------------------------------------
 [tool.importlinter]
 root_package = "clientele"
@@ -140,26 +140,6 @@ layers = [
     "clientele.graphql | clientele.retries | clientele.cache",
     "clientele.api",
     "clientele.http",
-]
-ignore_imports = [
-    # DEBT: the HTTP transport raises the api layer's exceptions. Move APIException and
-    # HTTPStatusError into clientele.http (re-exported from clientele.api.exceptions) to fix.
-    "clientele.http.response -> clientele.api.exceptions",
-    "clientele.http.httpx_backend -> clientele.api.exceptions",
-    "clientele.http.aiohttp_backend -> clientele.api.exceptions",
-    "clientele.http.requests_backend -> clientele.api.exceptions",
-    "clientele.http.niquests_backend -> clientele.api.exceptions",
-    "clientele.http.fake_backend -> clientele.api.exceptions",
-    # DEBT: the HTTP transport turns streamed lines into return types. Have backends yield raw
-    # lines and let the api layer hydrate them, so http doesn't need to know about types.
-    "clientele.http.httpx_backend -> clientele.api.stream",
-    "clientele.http.aiohttp_backend -> clientele.api.stream",
-    "clientele.http.requests_backend -> clientele.api.stream",
-    "clientele.http.niquests_backend -> clientele.api.stream",
-    "clientele.http.fake_backend -> clientele.api.stream",
-    # DEBT: BaseConfig names the cache backend type, so api depends on cache while
-    # cache.decorator depends on api. Move the CacheBackend protocol below the api layer.
-    "clientele.api.config -> clientele.cache.types",
 ]
 broken_contract_guidance = """
 clientele.http is the transport: it sends requests and returns Responses. clientele.api builds
