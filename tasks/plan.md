@@ -1,5 +1,7 @@
 # Implementation Plan: SSE runtime (`sse-runtime`)
 
+Status: approved 20 October 2026. Next: Task 1.
+
 Spec: [specs/SPEC-sse-runtime.md](../specs/SPEC-sse-runtime.md) (approved 20 October 2026). Tasks: [tasks/todo.md](todo.md).
 
 ## Overview
