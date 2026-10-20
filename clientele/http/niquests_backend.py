@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import inspect
 import typing
 
 try:
@@ -116,12 +118,13 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
         )
         return self.convert_to_response(resp)
 
-    def handle_sync_stream(
+    @contextlib.contextmanager
+    def open_sync_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
+    ) -> typing.Generator[backends.StreamResponse, None, None]:
         session = self.build_client()
         resp = session.request(
             method,
@@ -132,27 +135,27 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
             **kwargs,
         )
         try:
-            if resp.status_code is not None and 400 <= resp.status_code < 600:
-                generic_response = self.convert_to_response(resp)
-                raise response.HTTPStatusError(
-                    response=generic_response,
-                    reason=f"HTTP {resp.status_code}",
-                )
-            for line in resp.iter_lines(decode_unicode=True):
-                if not line:
-                    continue
-                yield line
+            request_method, request_url = _request_line(resp, method, self._full_url(url))
+            yield backends.StreamResponse(
+                status_code=resp.status_code or 0,
+                headers=_str_headers(resp.headers),
+                request_method=request_method,
+                request_url=request_url,
+                # niquests documents chunk_size=-1 as "receive chunks as they come".
+                chunks=typing.cast(typing.Iterator[bytes], resp.iter_content(chunk_size=-1)),
+            )
         finally:
             resp.close()
 
-    async def handle_async_stream(
+    @contextlib.asynccontextmanager
+    async def open_async_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
+    ) -> typing.AsyncGenerator[backends.AsyncStreamResponse, None]:
         session = self.build_async_client()
-        # stream=True returns AsyncResponse with async content/text/close
+        # stream=True returns an AsyncResponse with async content, iteration and close.
         resp = await session.request(
             method,
             self._full_url(url),
@@ -162,34 +165,20 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
             **kwargs,
         )
         try:
-            if resp.status_code is not None and 400 <= resp.status_code < 600:
-                content = await resp.content or b""
-                text = await resp.text or ""
-                headers: dict[str, str] = {
-                    k: v if isinstance(v, str) else v.decode("latin-1") for k, v in resp.headers.items()
-                }
-                request_method = (resp.request.method or "GET") if resp.request is not None else "GET"
-                request_url = (resp.request.url or "") if resp.request is not None else ""
-                generic_response = response.Response(
-                    status_code=resp.status_code,
-                    headers=headers,
-                    content=content,
-                    text=text,
-                    request_method=request_method,
-                    request_url=request_url,
-                )
-                raise response.HTTPStatusError(
-                    response=generic_response,
-                    reason=f"HTTP {resp.status_code}",
-                )
-            # AsyncResponse.iter_lines is annotated as a coroutine returning AsyncGenerator,
-            # but niquests implements it as an async generator function (runtime discrepancy).
-            # Assigning to Any lets us iterate correctly at runtime without misrepresenting types.
+            # AsyncResponse.iter_content is a coroutine that returns an async generator in
+            # current niquests; older releases implemented it as an async generator function.
             resp_any: typing.Any = resp
-            async for line in resp_any.iter_lines(decode_unicode=True):
-                if not line:
-                    continue
-                yield line
+            chunks = resp_any.iter_content(chunk_size=-1)
+            if inspect.isawaitable(chunks):
+                chunks = await chunks
+            request_method, request_url = _request_line(resp, method, self._full_url(url))
+            yield backends.AsyncStreamResponse(
+                status_code=resp.status_code or 0,
+                headers=_str_headers(resp.headers),
+                request_method=request_method,
+                request_url=request_url,
+                chunks=chunks,
+            )
         finally:
             await resp.close()
 
@@ -202,3 +191,16 @@ class NiquestsHTTPBackend(backends.HTTPBackend):
         if self._async_client is not None:
             await self._async_client.close()
             self._async_client = None
+
+
+def _str_headers(headers: typing.Any) -> dict[str, str]:
+    """Return headers as str values; niquests may expose raw bytes values."""
+    return {name: value if isinstance(value, str) else value.decode("latin-1") for name, value in headers.items()}
+
+
+def _request_line(resp: typing.Any, method: str, url: str) -> tuple[str, str]:
+    """Return the sent request's method and URL, falling back to what was requested."""
+    request = resp.request
+    if request is None:
+        return method, url
+    return request.method or method, request.url or url

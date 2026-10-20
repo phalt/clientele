@@ -65,16 +65,18 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 ## Task 3: requests and niquests backends on the new contract
 
-**Description:** Implement `open_sync_stream` on requests and both methods on niquests using `stream=True` + `iter_content(chunk_size=None)` (and the niquests async equivalent). Confirm chunks arrive incrementally rather than buffered.
+**Description:** Implement `open_sync_stream` on requests and both methods on niquests using `stream=True` + `iter_content`: urllib3 `read1` for requests, `chunk_size=-1` for niquests (its documented "as they come" value; the async variant is awaited to get the generator). Confirm chunks arrive incrementally rather than buffered.
+
+**Status:** Done. requests reads with urllib3 `read1()` with no size (falls back to `iter_content` on urllib3 < 2.3); a size makes urllib3-future, which replaces urllib3 whenever niquests is installed, wait for that many bytes: `iter_content(chunk_size=None)` buffers a non-chunked body to EOF, which the pytest-httpserver test caught. Also fixes the requests backend yielding `bytes` lines for responses without a declared charset. Verified locally against requests 2.34, niquests 3.18.8 (source) and real pytest-httpserver/pytest-asyncio.
 
 **Acceptance criteria:**
-- [ ] Both backends return status, headers and raw chunks without raising on status
-- [ ] A slow stream from `pytest-httpserver` yields its first item before the server finishes
-- [ ] Existing stream tests for both backends pass unchanged in behaviour
+- [x] Both backends return status, headers and raw chunks without raising on status
+- [x] A slow stream from `pytest-httpserver` yields its first item before the server finishes
+- [x] Existing stream tests for both backends pass unchanged in behaviour
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/http/backends/test_requests_backend.py tests/http/backends/test_niquests_backend.py -vv`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/http/backends/test_requests_backend.py tests/http/backends/test_niquests_backend.py -vv`
+- [x] Checks pass
 
 **Dependencies:** 2
 

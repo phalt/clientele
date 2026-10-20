@@ -47,7 +47,7 @@ Full task blocks (acceptance criteria, verification, files, size) are in [todo.m
 ### Phase 1: Stream contract (PR 1)
 - [x] Task 1: Core line splitter over byte chunks
 - [x] Task 2: Stream contract, httpx2 backend and client switch
-- [ ] Task 3: requests and niquests backends on the new contract
+- [x] Task 3: requests and niquests backends on the new contract
 - [ ] Task 4: aiohttp backend on the new contract, with a read timeout for streams
 - [ ] Task 5: Fake backend `queue_stream`
 - [ ] Task 6: Remove the shim; make `open_*_stream` abstract
