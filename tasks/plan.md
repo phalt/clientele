@@ -1,6 +1,6 @@
 # Implementation Plan: SSE runtime (`sse-runtime`)
 
-Status: approved 20 October 2026. Next: Task 1.
+Status: approved 20 October 2026. In progress on `feat/stream-contract`.
 
 Spec: [specs/SPEC-sse-runtime.md](../specs/SPEC-sse-runtime.md) (approved 20 October 2026). Tasks: [tasks/todo.md](todo.md).
 
@@ -45,7 +45,7 @@ Build bottom-up: splitter, contract, backends, decoder, stream objects, SSE, the
 Full task blocks (acceptance criteria, verification, files, size) are in [todo.md](todo.md).
 
 ### Phase 1: Stream contract (PR 1)
-- [ ] Task 1: Core line splitter over byte chunks
+- [x] Task 1: Core line splitter over byte chunks
 - [ ] Task 2: Stream contract, httpx2 backend and client switch
 - [ ] Task 3: requests and niquests backends on the new contract
 - [ ] Task 4: aiohttp backend on the new contract, with a read timeout for streams

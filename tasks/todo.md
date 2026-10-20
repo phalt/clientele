@@ -16,15 +16,17 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Add `clientele/api/stream/lines.py` with sync and async splitters that turn byte chunks into `str` lines: split on `\n`, strip a trailing `\r`, decode UTF-8 incrementally across chunk boundaries, drop blank lines, flush a final unterminated line. Pure functions, not wired in yet. Write the U+2028 test first to confirm the httpx2 `iter_lines` bug.
 
+**Status:** Done (228d66f). httpx2 2.13.1 `iter_lines` reproduced the U+2028 split.
+
 **Acceptance criteria:**
-- [ ] A JSON string containing U+2028 or U+2029 stays on one line
-- [ ] Output is identical however the input bytes are split, including mid UTF-8 sequence
-- [ ] `\r\n` and `\n` both terminate lines; a trailing line with no newline is yielded
+- [x] A JSON string containing U+2028 or U+2029 stays on one line
+- [x] Output is identical however the input bytes are split, including mid UTF-8 sequence
+- [x] `\r\n` and `\n` both terminate lines; a trailing line with no newline is yielded
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/api/stream/test_lines.py -vv`
-- [ ] Checks pass
-- [ ] Manual check: note whether the U+2028 case fails against httpx2 `iter_lines` today, and record the result in the PR
+- [x] Tests pass: `uv run pytest tests/api/stream/test_lines.py -vv`
+- [x] Checks pass (ruff locally; ty and import-linter in CI)
+- [x] Manual check: note whether the U+2028 case fails against httpx2 `iter_lines` today, and record the result in the PR
 
 **Dependencies:** None
 
