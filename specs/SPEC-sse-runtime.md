@@ -1,6 +1,6 @@
 # Spec: SSE runtime (`sse-runtime`)
 
-Status: draft, awaiting approval. Target release: 2.4.0. Decisions settled 20 October 2026.
+Status: approved 20 October 2026. Target release: 2.4.0. Plan: [tasks/plan.md](../tasks/plan.md).
 
 See [capability-map.md](capability-map.md) for the related `cicerone-oas32` and `sse-generator` modules.
 
@@ -58,6 +58,7 @@ clientele/api/stream/__init__.py
 clientele/api/stream/parser.py      → existing; line and SSE hydration
 clientele/api/stream/lines.py       → core line splitter over byte chunks
 clientele/api/stream/_sse_decoder.py → vendored httpx2 decoder, MIT header + upstream commit hash
+clientele/api/stream/sse.py         → public SSE types: SSE, SSEEvent, ServerSentEvent
 clientele/api/stream/stream.py      → Stream / AsyncStream
 clientele/api/exceptions.py         → StreamError tree
 clientele/testing.py                → ResponseFactory.sse
@@ -284,7 +285,9 @@ APIException                     # clientele/http/response.py (unchanged)
 
 ### Timeouts
 
-In httpx2, `BaseConfig.timeout` (default 5 s) acts as the read timeout between chunks. FastAPI sends a keep-alive comment every 15 s, so a quiet stream dies under the default. `SSE(read_timeout=...)` overrides it per endpoint, and the docs flag this prominently. The global default does not change.
+In httpx2, `BaseConfig.timeout` (default 5 s) acts as the read timeout between chunks. FastAPI sends a keep-alive comment every 15 s, so a quiet stream dies under the default. The default stays 5 s and is changeable in code at two levels: `BaseConfig(timeout=...)` for the whole client, and `SSE(read_timeout=...)` per endpoint. The docs flag this prominently.
+
+The aiohttp backend currently uses `ClientTimeout(total=timeout)`, which caps a whole stream at 5 s even while data flows. Streams switch to `ClientTimeout(total=None, sock_read=timeout)` so every backend treats the value as a read timeout.
 
 ## Testing Strategy
 
@@ -400,7 +403,7 @@ Settled 20 October 2026.
 | `ignore_unknown` | Skips `union_tag_invalid` only, default off |
 | Mid-stream errors | `StreamValidationError` carrying the raw event, then close |
 | Content type | Checked at call time, no opt-out |
-| Timeouts | `SSE(read_timeout=...)`, inherits config by default |
+| Timeouts | 5 s default kept; `BaseConfig(timeout=...)` globally, `SSE(read_timeout=...)` per endpoint; aiohttp streams use `sock_read` |
 | Line mode | Core splitter, blank lines still dropped |
 | Testing | `queue_stream` + `ResponseFactory.sse`; old fallback deprecated |
 | Exceptions | `StreamError` tree in `clientele/api/exceptions.py`, synthesised `Response` |
@@ -411,8 +414,8 @@ Settled 20 October 2026.
 
 ## Open Questions
 
-- [ ] SSE `read_timeout` default: inherit the 5 s config timeout (current decision), or a stream-specific default such as 60 s?
-- [ ] mypy plugin: not yet read closely; it may need no changes or more than one PR's worth. Check before PR 4.
+- [x] SSE `read_timeout` default: inherit the 5 s config timeout, overridable via `BaseConfig(timeout=...)` and `SSE(read_timeout=...)` (decided 20 October 2026).
+- [x] mypy plugin: it only strips the injected `result` / `response` parameters, so `Stream[T]` return types should need tests, not plugin code (Task 14).
 - [ ] Per-request read timeout on every backend: httpx2 `Timeout`, requests/niquests `(connect, read)` tuple, aiohttp `ClientTimeout(sock_read=...)`. Confirm each can be set per stream.
 - [ ] U+2028 split: write the failing test first in PR 1; report upstream to httpx2 if it reproduces.
 - [ ] Chunk semantics: confirm `iter_content(chunk_size=None)` (requests, niquests) and `iter_any()` (aiohttp) yield data as it arrives.
