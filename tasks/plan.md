@@ -50,7 +50,7 @@ Full task blocks (acceptance criteria, verification, files, size) are in [todo.m
 - [x] Task 3: requests and niquests backends on the new contract
 - [x] Task 4: aiohttp backend on the new contract, with a read timeout for streams
 - [x] Task 5: Fake backend `queue_stream`
-- [ ] Task 6: Remove the shim; make `open_*_stream` abstract
+- [x] Task 6: Remove the shim; make `open_*_stream` abstract
 
 ### Checkpoint A: Contract
 - [ ] Full suite, ruff, ty and import-linter green on every supported Python

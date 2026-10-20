@@ -139,14 +139,16 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Delete `handle_sync_stream` / `handle_async_stream` from the ABC and every backend, remove the transitional default, and mark `open_sync_stream` / `open_async_stream` abstract. Backends that only support one mode raise `NotImplementedError` from the other, as they do today.
 
+**Status:** Done. Also corrected the unreleased 2.4.0 CHANGELOG entry and the `HTTPBackend` interface in `docs/api-http-backends.md`, which described the removed methods; the full docs pass is still Task 17.
+
 **Acceptance criteria:**
-- [ ] `grep -rn "handle_sync_stream\|handle_async_stream" clientele` returns nothing
-- [ ] A backend subclass missing either method cannot be instantiated
-- [ ] Full suite green
+- [x] `grep -rn "handle_sync_stream\|handle_async_stream" clientele` returns nothing
+- [x] A backend subclass missing either method cannot be instantiated
+- [x] Full suite green
 
 **Verification:**
-- [ ] Full suite passes: `uv run pytest`
-- [ ] Checks pass
+- [x] Full suite passes: `uv run pytest`
+- [x] Checks pass
 
 **Dependencies:** 3, 4, 5
 

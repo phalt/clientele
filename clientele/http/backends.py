@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import abc
 import codecs
-import contextlib
 import dataclasses
 import email.message
 import typing
@@ -162,6 +161,7 @@ class HTTPBackend(abc.ABC):
     async def aclose(self) -> None:
         """Asynchronously close the async HTTP client and release resources."""
 
+    @abc.abstractmethod
     def open_sync_stream(
         self,
         method: str,
@@ -177,17 +177,18 @@ class HTTPBackend(abc.ABC):
 
         Implementations must not raise on 4xx/5xx statuses, must not buffer or
         split the body, and must close the response on exit even if the body
-        was not fully read.
+        was not fully read. clientele.api checks the status and parses the body.
+
+        A backend that cannot stream synchronously should raise
+        NotImplementedError from this method.
 
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
             **kwargs: Additional request parameters (headers, params, json, etc.)
         """
-        # Transitional default: adapts the legacy line-based handle_sync_stream
-        # until every backend implements this method directly.
-        return _legacy_sync_stream(self, method, url, **kwargs)
 
+    @abc.abstractmethod
     def open_async_stream(
         self,
         method: str,
@@ -199,68 +200,11 @@ class HTTPBackend(abc.ABC):
         The asynchronous counterpart of open_sync_stream: returns an async
         context manager that yields an AsyncStreamResponse.
 
+        A backend that cannot stream asynchronously should raise
+        NotImplementedError from this method.
+
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
             **kwargs: Additional request parameters (headers, params, json, etc.)
         """
-        # Transitional default: adapts the legacy line-based handle_async_stream
-        # until every backend implements this method directly.
-        return _legacy_async_stream(self, method, url, **kwargs)
-
-    def handle_sync_stream(
-        self,
-        method: str,
-        url: str,
-        **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
-        """Legacy line-based streaming, superseded by open_sync_stream."""
-        raise NotImplementedError
-
-    def handle_async_stream(
-        self,
-        method: str,
-        url: str,
-        **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
-        """Legacy line-based streaming, superseded by open_async_stream."""
-        raise NotImplementedError
-
-
-@contextlib.contextmanager
-def _legacy_sync_stream(
-    backend: HTTPBackend, method: str, url: str, **kwargs: typing.Any
-) -> typing.Generator[StreamResponse, None, None]:
-    lines = backend.handle_sync_stream(method, url, **kwargs)
-    try:
-        yield StreamResponse(
-            status_code=200,
-            headers={},
-            request_method=method,
-            request_url=url,
-            chunks=(f"{line}\n".encode() for line in lines),
-        )
-    finally:
-        lines.close()
-
-
-@contextlib.asynccontextmanager
-async def _legacy_async_stream(
-    backend: HTTPBackend, method: str, url: str, **kwargs: typing.Any
-) -> typing.AsyncGenerator[AsyncStreamResponse, None]:
-    lines = backend.handle_async_stream(method, url, **kwargs)
-
-    async def chunks() -> typing.AsyncGenerator[bytes, None]:
-        async for line in lines:
-            yield f"{line}\n".encode()
-
-    try:
-        yield AsyncStreamResponse(
-            status_code=200,
-            headers={},
-            request_method=method,
-            request_url=url,
-            chunks=chunks(),
-        )
-    finally:
-        await lines.aclose()

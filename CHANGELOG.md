@@ -2,7 +2,12 @@
 
 ## 2.4.0 UNRELEASED
 
-- **Custom HTTP backends:** `handle_sync_stream` and `handle_async_stream` no longer take `inner_type` or `response_parser`. They now yield each line as a `str`, and clientele turns the lines into the return type. Built-in backends are updated; custom backends need the same change.
+- **Custom HTTP backends:** `handle_sync_stream` and `handle_async_stream` are replaced by the abstract `open_sync_stream` and `open_async_stream`. Each returns a context manager yielding a `StreamResponse` / `AsyncStreamResponse` (status, headers, request method and URL, and the raw body as byte chunks). Backends no longer raise on error statuses or split lines; clientele does both. Built-in backends are updated; custom backends must implement the new methods.
+- **Streaming:** a streamed request is sent when the decorated function is called, so `HTTPStatusError` is raised by `fn()` / `await fn()` rather than on first iteration.
+- **Streaming:** lines are split only on `\n` (with an optional `\r`). A raw U+2028 or U+2029 inside a JSON string no longer splits a JSONL record in two.
+- **Streaming, requests backend:** lines are always `str` (they were `bytes` for responses without a declared charset), and data is delivered as it arrives rather than in 512-byte blocks.
+- **Streaming, aiohttp backend:** the timeout limits the wait for each read instead of the whole stream, so long-lived streams no longer die after the timeout with `asyncio.CancelledError`.
+- **Testing:** `FakeHTTPBackend.queue_stream(path, chunks, *, status_code, headers)` queues a streaming response. Streaming a response queued with `queue_response` is deprecated.
 - `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`. They can still be imported from their old locations.
 
 ## 2.3.1

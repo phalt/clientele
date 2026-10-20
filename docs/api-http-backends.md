@@ -62,22 +62,22 @@ class HTTPBackend(abc.ABC):
         """Send async request"""
 
     @abc.abstractmethod
-    def handle_sync_stream(
+    def open_sync_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
-        """ Stream the response body, one line at a time """
+    ) -> typing.ContextManager[StreamResponse]:
+        """Send a streaming request; yield its status, headers and raw byte chunks"""
 
     @abc.abstractmethod
-    async def handle_async_stream(
+    def open_async_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
-        """ Stream the response body asynchronously, one line at a time """
+    ) -> typing.AsyncContextManager[AsyncStreamResponse]:
+        """Async version of open_sync_stream"""
 
     @staticmethod
     @abc.abstractmethod
@@ -163,7 +163,7 @@ A synchronous-only backend using the popular [requests](https://requests.readthe
 
 !!! warning "Async not supported"
     `RequestsHTTPBackend` only supports synchronous requests. Calling any async method
-    (`send_async_request`, `handle_async_stream`, `build_async_client`) will raise
+    (`send_async_request`, `open_async_stream`, `build_async_client`) will raise
     `NotImplementedError`. Use `HttpxHTTPBackend` if you need async support.
 
 #### Usage
@@ -220,7 +220,7 @@ An asynchronous-only backend using the popular [aiohttp](https://docs.aiohttp.or
 
 !!! warning "Sync not supported"
     `AiohttpHTTPBackend` only supports asynchronous requests. Calling any sync method
-    (`send_sync_request`, `handle_sync_stream`, `build_client`) will raise
+    (`send_sync_request`, `open_sync_stream`, `build_client`) will raise
     `NotImplementedError`. Use `HttpxHTTPBackend` if you need sync support.
 
 #### Usage
