@@ -40,15 +40,17 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Add `StreamResponse` / `AsyncStreamResponse` and `open_sync_stream` / `open_async_stream` to `HTTPBackend`, with a temporary default implementation that adapts the legacy `handle_*_stream` (lines re-encoded as chunks, `status_code=200`, empty headers). Implement both methods properly on the httpx2 backend (`client.stream` + `iter_bytes` / `aiter_bytes`, no status raising). Switch `_execute_sync_stream` / `_execute_async_stream` in `client.py` to open the stream at call time, raise `HTTPStatusError` there on 4xx/5xx with a buffered body, and feed chunks through Task 1's splitter into the existing hydration.
 
+**Status:** Done. Real-socket check: first item at 0.1 s of a 1.3 s body, sync and async; 25 early-closed streams left no requests in the httpx2 pool.
+
 **Acceptance criteria:**
-- [ ] httpx2 sync and async line streams behave as before for 2xx responses
-- [ ] 4xx/5xx raise `HTTPStatusError` when the decorated function is called, not on first iteration, for sync and async
-- [ ] Other backends still pass their existing stream tests through the shim
+- [x] httpx2 sync and async line streams behave as before for 2xx responses
+- [x] 4xx/5xx raise `HTTPStatusError` when the decorated function is called, not on first iteration, for sync and async
+- [x] Other backends still pass their existing stream tests through the shim
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/api/test_stream.py tests/api/test_stream_httpx.py tests/http/backends -vv`
-- [ ] Full suite passes: `uv run pytest -x`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/api/test_stream.py tests/api/test_stream_httpx.py tests/http/backends -vv`
+- [x] Full suite passes: `uv run pytest -x`
+- [x] Checks pass
 
 **Dependencies:** 1
 
