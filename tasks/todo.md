@@ -159,8 +159,8 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 **Estimated scope:** S (many files, deletion only)
 
 ## Checkpoint A: Contract
-- [ ] Full suite, ruff, ty and import-linter green on every supported Python
-- [ ] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend
+- [x] Full suite, ruff, ty and import-linter green on every supported Python (CI on 78bba42: 3.10 to 3.15-dev)
+- [x] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend (httpx2, requests and niquests sync; httpx2, niquests and aiohttp async; first item while the server holds the rest; on `main` requests waited 5 s)
 - [ ] Human review before PR 1 merges
 
 ---
