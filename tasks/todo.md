@@ -115,14 +115,16 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Add public `FakeHTTPBackend.queue_stream(path, chunks: Sequence[bytes | str], *, status_code: int = 200, headers: Mapping[str, str] | None = None)` and implement `open_*_stream` from it. Keep the fallback that builds a stream from a queued response's text, but emit `DeprecationWarning`. pytest has no `filterwarnings` config today, so this will not fail the suite, but move Clientele's own tests to `queue_stream` anyway.
 
+**Status:** Done. Each queued chunk is delivered separately so tests control chunk boundaries. The fallback's warning points at the caller's line on Python 3.12+ (`skip_file_prefixes`). `tests/api/test_stream.py` moved to `queue_stream`; the suite passes with the deprecation promoted to an error.
+
 **Acceptance criteria:**
-- [ ] `queue_stream` drives both sync and async streams, with status and headers visible to the API layer
-- [ ] The text fallback still works and warns once per use
-- [ ] No internal test relies on the deprecated fallback
+- [x] `queue_stream` drives both sync and async streams, with status and headers visible to the API layer
+- [x] The text fallback still works and warns once per use
+- [x] No internal test relies on the deprecated fallback
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/http/backends/test_fake_backend.py tests/test_testing.py -vv`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/http/backends/test_fake_backend.py tests/test_testing.py -vv`
+- [x] Checks pass
 
 **Dependencies:** 2
 

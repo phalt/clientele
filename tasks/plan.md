@@ -49,7 +49,7 @@ Full task blocks (acceptance criteria, verification, files, size) are in [todo.m
 - [x] Task 2: Stream contract, httpx2 backend and client switch
 - [x] Task 3: requests and niquests backends on the new contract
 - [x] Task 4: aiohttp backend on the new contract, with a read timeout for streams
-- [ ] Task 5: Fake backend `queue_stream`
+- [x] Task 5: Fake backend `queue_stream`
 - [ ] Task 6: Remove the shim; make `open_*_stream` abstract
 
 ### Checkpoint A: Contract
