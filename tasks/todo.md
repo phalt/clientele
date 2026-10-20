@@ -92,14 +92,16 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Implement `open_async_stream` on aiohttp using `resp.content.iter_any()`. Streams currently use `ClientTimeout(total=timeout)`, which kills any stream after 5 s even while data flows; use `ClientTimeout(total=None, sock_read=timeout)` for streams.
 
+**Status:** Done. Before the fix, a stream still receiving data died at the total timeout with a raw `asyncio.CancelledError`. Verified locally against aiohttp 3.13.5 (source, pure-Python mode) over real sockets: a 1.5 s stream under a 1.0 s timeout completes, a quiet one raises `SocketTimeoutError`, early-closed streams release their connections.
+
 **Acceptance criteria:**
-- [ ] A stream that runs longer than the configured timeout, sending data more often than the timeout, completes
-- [ ] A stream that goes quiet for longer than the timeout raises a timeout
-- [ ] Chunks arrive incrementally (`pytest-httpserver` or aiohttp test server)
+- [x] A stream that runs longer than the configured timeout, sending data more often than the timeout, completes
+- [x] A stream that goes quiet for longer than the timeout raises a timeout
+- [x] Chunks arrive incrementally (`pytest-httpserver` or aiohttp test server)
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/http/backends/test_aiohttp_backend.py -vv`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/http/backends/test_aiohttp_backend.py -vv`
+- [x] Checks pass
 
 **Dependencies:** 2
 
