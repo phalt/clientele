@@ -172,6 +172,37 @@ class TestSyncStreamCallTime:
         typing.cast(typing.Generator[str, None, None], lines).close()
         assert body.closed is True
 
+    def test_response_is_closed_when_consumer_raises(self):
+        body = ClosingSyncStream([b"a\n", b"b\n"])
+        client = make_client(Recorder(stream=body))
+
+        @client.get("/events", streaming_response=True)
+        def stream_lines(result: Iterator[str]) -> Iterator[str]:
+            return result
+
+        lines = stream_lines()
+        with pytest.raises(RuntimeError):
+            for _ in lines:
+                raise RuntimeError
+        typing.cast(typing.Generator[str, None, None], lines).close()
+        assert body.closed is True
+
+    def test_connection_error_raises_on_call_not_iteration(self):
+        def refuse(request: httpx2.Request) -> httpx2.Response:
+            raise httpx2.ConnectError("refused", request=request)
+
+        backend = httpx_backend.HttpxHTTPBackend(
+            client_options={"base_url": BASE_URL, "transport": httpx2.MockTransport(refuse)}
+        )
+        client = api_client.APIClient(config=api_config.BaseConfig(base_url=BASE_URL, http_backend=backend))
+
+        @client.get("/events", streaming_response=True)
+        def stream_lines(result: Iterator[str]) -> Iterator[str]:
+            return result
+
+        with pytest.raises(httpx2.ConnectError):
+            stream_lines()
+
 
 class TestAsyncStreamCallTime:
     @pytest.mark.asyncio
@@ -253,3 +284,20 @@ class TestAsyncStreamCallTime:
         assert body.closed is False
         await typing.cast(typing.AsyncGenerator[str, None], lines).aclose()
         assert body.closed is True
+
+    @pytest.mark.asyncio
+    async def test_connection_error_raises_on_await_not_iteration(self):
+        def refuse(request: httpx2.Request) -> httpx2.Response:
+            raise httpx2.ConnectError("refused", request=request)
+
+        backend = httpx_backend.HttpxHTTPBackend(
+            client_options={"base_url": BASE_URL, "transport": httpx2.MockTransport(refuse)}
+        )
+        client = api_client.APIClient(config=api_config.BaseConfig(base_url=BASE_URL, http_backend=backend))
+
+        @client.get("/events", streaming_response=True)
+        async def stream_lines(result: AsyncIterator[str]) -> AsyncIterator[str]:
+            return result
+
+        with pytest.raises(httpx2.ConnectError):
+            await stream_lines()

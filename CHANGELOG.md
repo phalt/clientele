@@ -3,12 +3,14 @@
 ## 2.4.0 UNRELEASED
 
 - **Custom HTTP backends:** `handle_sync_stream` and `handle_async_stream` are replaced by the abstract `open_sync_stream` and `open_async_stream`. Each returns a context manager yielding a `StreamResponse` / `AsyncStreamResponse` (status, headers, request method and URL, and the raw body as byte chunks). Backends no longer raise on error statuses or split lines; clientele does both. Built-in backends are updated; custom backends must implement the new methods.
-- **Streaming:** a streamed request is sent when the decorated function is called, so `HTTPStatusError` is raised by `fn()` / `await fn()` rather than on first iteration.
+- **Streaming:** a streamed request is sent when the decorated function is called, so `HTTPStatusError` is raised by `fn()` / `await fn()` rather than on first iteration. So are the backend's errors for failing to connect (refused, DNS) and timeouts waiting for the response headers; errors while reading the body are still raised during iteration.
 - **Streaming:** lines are split only on `\n` (with an optional `\r`). A raw U+2028 or U+2029 inside a JSON string no longer splits a JSONL record in two.
-- **Streaming, requests backend:** lines are always `str` (they were `bytes` for responses without a declared charset), and data is delivered as it arrives rather than in 512-byte blocks.
-- **Streaming, aiohttp backend:** the timeout limits the wait for each read instead of the whole stream, so long-lived streams no longer die after the timeout with `asyncio.CancelledError`.
+- **Streaming, requests backend:** lines are always `str` (they were `bytes` for responses without a declared charset), and data is delivered as it arrives rather than in 512-byte blocks. One exception: with `niquests` installed (which replaces `urllib3` with `urllib3-future`), gzip- or deflate-compressed streams can still arrive late; send `Accept-Encoding: identity` if the server compresses them.
+- **Streaming, aiohttp backend:** the timeout limits the wait for each read instead of the whole stream, so long-lived streams no longer die after the timeout. A stream that goes quiet for longer than the timeout raises `aiohttp.SocketTimeoutError` (a subclass of `asyncio.TimeoutError`) instead of a bare `asyncio.TimeoutError`.
 - **Testing:** `FakeHTTPBackend.queue_stream(path, chunks, *, status_code, headers)` queues a streaming response. Streaming a response queued with `queue_response` is deprecated.
 - `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`. They can still be imported from their old locations.
+- `typing_extensions.TypedDict` classes are now treated as TypedDicts, so they work in `response_map` and get the same "Expected dict" `TypeError` as `typing.TypedDict`. On Python 3.11, use them for TypedDicts nested in other types, such as `list[UserDict]`. `typing-extensions` is now a declared dependency; it was already installed with pydantic.
+- Generated clients get the same field names whichever Python runs `clientele generate`: a property named `type` is now `type_` on 3.11 too, as it already was on 3.12 and later.
 
 ## 2.3.1
 

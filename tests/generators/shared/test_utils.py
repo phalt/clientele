@@ -16,6 +16,10 @@ from tests.generators.integration_utils import load_spec
         ("some.property.name", "some_property_name"),
         # Reserved words get an underscore suffix
         ("from", "from_"),
+        # The same on every Python: `type` is a soft keyword only from 3.12, `lazy` from 3.15
+        ("type", "type_"),
+        ("match", "match_"),
+        ("lazy", "lazy"),
         # Empty (or empty after sanitization) inputs get a placeholder
         ("", "EMPTY"),
         ("!@#$%^&*()", "EMPTY"),

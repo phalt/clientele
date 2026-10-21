@@ -159,8 +159,8 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 **Estimated scope:** S (many files, deletion only)
 
 ## Checkpoint A: Contract
-- [x] Full suite, ruff, ty and import-linter green on every supported Python (CI on 78bba42: 3.10 to 3.15-dev)
-- [x] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend (httpx2, requests and niquests sync; httpx2, niquests and aiohttp async; first item while the server holds the rest; on `main` requests waited 5 s)
+- [x] Full suite, ruff, ty and import-linter green on every supported Python. Correction (21 October 2026): CI on 78bba42 ran 3.14 in every job, because uv followed `.python-version`; CI now sets `UV_PYTHON` for 3.11 to 3.13. 3.10 is not fixed (dropped in Task 7) and has the same 2 pre-existing failures as `main`.
+- [x] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend (httpx2, requests and niquests sync; httpx2, niquests and aiohttp async; first item while the server holds the rest; on `main` requests waited 5 s). Exception: requests with urllib3-future (installed by niquests) holds back small gzip/deflate chunks; documented, with `Accept-Encoding: identity` as the workaround.
 - [ ] Human review before PR 1 merges
 
 ---
@@ -252,6 +252,7 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 - [ ] `result: Iterator[T]` and `result: Stream[T]` both work; `isinstance(result, Iterator)` holds
 - [ ] Breaking out of a loop inside `with` closes the backend response
 - [ ] A leaked, unexhausted stream emits `ResourceWarning`; closed or exhausted ones do not
+- [ ] `close()` / `aclose()` before the first item releases the connection (today's generator holds it until GC on every backend, because closing an unstarted generator runs none of its code)
 
 **Verification:**
 - [ ] Tests pass: `uv run pytest tests/api/stream tests/api/test_stream.py tests/api/test_type_utils.py -vv`

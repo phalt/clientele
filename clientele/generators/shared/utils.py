@@ -8,8 +8,11 @@ from cicerone.spec import openapi_spec as cicerone_openapi_spec
 from clientele import settings
 from clientele.generators import cicerone_compat
 
-# Pre-computed set of Python reserved words for efficient lookup
-RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(keyword.softkwlist))
+# Soft keywords are pinned rather than read from keyword.softkwlist, which differs by
+# interpreter ("type" from 3.12, "lazy" from 3.15): generated names must not depend on
+# the Python running the CLI. These are 3.12's, which generated clients already use.
+_SOFT_KEYWORDS = ("_", "case", "match", "type")
+RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(_SOFT_KEYWORDS))
 
 
 def get_client_project_directory_path(output_dir: str) -> str:
