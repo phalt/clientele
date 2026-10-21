@@ -1,9 +1,85 @@
 from __future__ import annotations
 
 import abc
+import codecs
+import dataclasses
+import email.message
 import typing
 
 from clientele.http import response as http_response
+
+
+@dataclasses.dataclass(frozen=True, slots=True)
+class StreamResponse:
+    """An open, unread streaming HTTP response returned by a synchronous backend.
+
+    Backends report the status and headers as received and expose the body
+    as raw byte chunks. They do not raise on error statuses or split the body
+    into lines; clientele.api does both.
+
+    Attributes:
+        status_code: HTTP status code
+        headers: Response headers
+        request_method: HTTP method of the request
+        request_url: Full URL of the request
+        chunks: The response body as it arrives, unmodified
+    """
+
+    status_code: int
+    headers: typing.Mapping[str, str]
+    request_method: str
+    request_url: str
+    chunks: typing.Iterator[bytes]
+
+    def to_response(self, content: bytes) -> http_response.Response:
+        """Build a buffered Response from this stream's metadata and its body."""
+        return _buffered_response(self, content)
+
+
+@dataclasses.dataclass(frozen=True, slots=True)
+class AsyncStreamResponse:
+    """An open, unread streaming HTTP response returned by an asynchronous backend.
+
+    The asynchronous counterpart of StreamResponse: chunks is an async iterator.
+    """
+
+    status_code: int
+    headers: typing.Mapping[str, str]
+    request_method: str
+    request_url: str
+    chunks: typing.AsyncIterator[bytes]
+
+    def to_response(self, content: bytes) -> http_response.Response:
+        """Build a buffered Response from this stream's metadata and its body."""
+        return _buffered_response(self, content)
+
+
+def _buffered_response(stream_response: StreamResponse | AsyncStreamResponse, content: bytes) -> http_response.Response:
+    return http_response.Response(
+        status_code=stream_response.status_code,
+        headers=dict(stream_response.headers),
+        content=content,
+        text=content.decode(_charset(stream_response.headers), errors="replace"),
+        request_method=stream_response.request_method,
+        request_url=stream_response.request_url,
+    )
+
+
+def _charset(headers: typing.Mapping[str, str]) -> str:
+    """Return the charset declared in Content-Type, or utf-8 if missing or unknown."""
+    for name, value in headers.items():
+        if name.lower() == "content-type":
+            message = email.message.Message()
+            message["content-type"] = value
+            charset = message.get_content_charset()
+            if charset:
+                try:
+                    codecs.lookup(charset)
+                except LookupError:
+                    break
+                return charset
+            break
+    return "utf-8"
 
 
 class HTTPBackend(abc.ABC):
@@ -86,55 +162,49 @@ class HTTPBackend(abc.ABC):
         """Asynchronously close the async HTTP client and release resources."""
 
     @abc.abstractmethod
-    def handle_sync_stream(
+    def open_sync_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
-        """Handle synchronous streaming HTTP response without buffering.
+    ) -> typing.ContextManager[StreamResponse]:
+        """Open a synchronous streaming request.
 
-        This method streams the response body line-by-line without buffering
-        the entire response into memory. Each line is yielded as soon as it
-        is received; clientele.api turns the lines into the return type.
+        Returns a context manager. Entering it sends the request and yields a
+        StreamResponse once the status and headers have arrived; the body is
+        read lazily through StreamResponse.chunks. Exiting it closes the
+        response.
+
+        Implementations must not raise on 4xx/5xx statuses, must not buffer or
+        split the body, and must close the response on exit even if the body
+        was not fully read. clientele.api checks the status and parses the body.
+
+        A backend that cannot stream synchronously should raise
+        NotImplementedError from this method.
 
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
             **kwargs: Additional request parameters (headers, params, json, etc.)
-
-        Yields:
-            Each non-empty line of the response body
-
-        Raises:
-            HTTPStatusError: If status code is 4xx or 5xx
         """
-        yield ""  # pragma: no cover
-        raise NotImplementedError
 
     @abc.abstractmethod
-    async def handle_async_stream(
+    def open_async_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
-        """Handle asynchronous streaming HTTP response without buffering.
+    ) -> typing.AsyncContextManager[AsyncStreamResponse]:
+        """Open an asynchronous streaming request.
 
-        This method streams the response body line-by-line without buffering
-        the entire response into memory. Each line is yielded as soon as it
-        is received; clientele.api turns the lines into the return type.
+        The asynchronous counterpart of open_sync_stream: returns an async
+        context manager that yields an AsyncStreamResponse.
+
+        A backend that cannot stream asynchronously should raise
+        NotImplementedError from this method.
 
         Args:
             method: HTTP method (GET, POST, etc.)
             url: URL to request
             **kwargs: Additional request parameters (headers, params, json, etc.)
-
-        Yields:
-            Each non-empty line of the response body
-
-        Raises:
-            HTTPStatusError: If status code is 4xx or 5xx
         """
-        yield ""  # pragma: no cover
-        raise NotImplementedError

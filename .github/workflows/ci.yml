@@ -12,6 +12,16 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12", "3.13", "3.14", "3.15-dev"]
+        include:
+          - python-version: "3.11"
+            uv-python: "3.11"
+          - python-version: "3.12"
+            uv-python: "3.12"
+          - python-version: "3.13"
+            uv-python: "3.13"
+    # Without UV_PYTHON, uv uses .python-version (3.14) instead of the matrix interpreter.
+    env:
+      UV_PYTHON: ${{ matrix.uv-python }}
     steps:
       #----------------------------------------------
       #       check-out repo and set-up python
@@ -37,6 +47,8 @@ jobs:
       #----------------------------------------------
       - name: Install dependencies
         run: uv sync --frozen
+      - name: Show Python version
+        run: uv run python --version
       #----------------------------------------------
       # Run linting and tests
       #----------------------------------------------

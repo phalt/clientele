@@ -75,6 +75,7 @@ How body-based methods (POST, PUT, PATCH, DELETE) work with Clientele:
 - The `data` parameter can be a Pydantic model or a TypedDict.
 - For Pydantic models, the data is validated and serialized to JSON automatically.
 - For TypedDict, the data is sent as-is (because TypedDict provides type hints without runtime validation).
+- On Python 3.11, import `TypedDict` from `typing_extensions` if you nest it in another type, such as `result: list[UserDict]`. Pydantic does not support `typing.TypedDict` there before Python 3.12.
 - The **`result` parameter is mandatory** and determines how the response is parsed.
 
 ## PUT, PATCH, and DELETE examples

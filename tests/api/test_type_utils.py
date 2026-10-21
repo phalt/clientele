@@ -3,6 +3,7 @@
 import typing
 
 import pytest
+import typing_extensions
 from pydantic import BaseModel, ValidationError
 
 from clientele.api import type_utils
@@ -14,6 +15,11 @@ class SampleModel(BaseModel):
 
 
 class SampleTypedDict(typing.TypedDict):
+    name: str
+    value: int
+
+
+class ExtensionsTypedDict(typing_extensions.TypedDict):
     name: str
     value: int
 
@@ -49,6 +55,10 @@ class TestIsTypedDict:
     def test_is_typeddict_with_pydantic_model(self):
         """Test that Pydantic models are not TypedDicts."""
         assert type_utils.is_typeddict(SampleModel) is False
+
+    def test_is_typeddict_with_typing_extensions_typeddict(self):
+        """pydantic requires typing_extensions.TypedDict below Python 3.12, so it must be recognized too."""
+        assert type_utils.is_typeddict(ExtensionsTypedDict) is True
 
 
 class TestIsStreamingType:

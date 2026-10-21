@@ -1,6 +1,12 @@
 """Tests for the niquests HTTP backend."""
 
+import json
+import threading
+import time
+import typing
+
 import pytest
+import werkzeug
 
 from clientele.api import client as api_client
 from clientele.api import config as api_config
@@ -8,6 +14,24 @@ from clientele.api import exceptions as api_exceptions
 from clientele.http import niquests_backend
 
 BASE_URL = "https://api.example.com"
+
+
+class SlowBody:
+    """A werkzeug handler that sends one line, then waits until released before sending the next."""
+
+    def __init__(self) -> None:
+        self.released = threading.Event()
+
+    def __call__(self, request: werkzeug.Request) -> werkzeug.Response:
+        def body() -> typing.Iterator[bytes]:
+            yield b"first\n"
+            self.released.wait(timeout=5)
+            yield b"second\n"
+
+        return werkzeug.Response(body(), mimetype="application/x-ndjson")
+
+
+RAW_BODY = b"data: one\n\ndata: two\r\n\r\n"
 
 
 class TestNiquestsHTTPBackendSync:
@@ -95,25 +119,80 @@ class TestNiquestsHTTPBackendSync:
         backend.send_sync_request("GET", "/me")
         backend.close()
 
-    def test_handle_sync_stream_yields_lines(self, httpserver):
+    def test_open_sync_stream_reports_status_headers_and_raw_chunks(self, httpserver):
         httpserver.expect_request("/stream").respond_with_data(
-            "line one\nline two\nline three\n",
-            content_type="text/plain; charset=utf-8",
+            RAW_BODY, status=201, content_type="text/event-stream", headers={"x-id": "7"}
         )
 
-        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
-        results = list(backend.handle_sync_stream("GET", "/stream"))
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        with backend.open_sync_stream("GET", "/stream") as stream_response:
+            assert stream_response.status_code == 201
+            assert stream_response.headers["x-id"] == "7"
+            assert stream_response.headers["Content-Type"].startswith("text/event-stream")
+            assert stream_response.request_method == "GET"
+            assert stream_response.request_url == httpserver.url_for("/stream")
+            assert b"".join(stream_response.chunks) == RAW_BODY
         backend.close()
 
-        assert results == ["line one", "line two", "line three"]
-
-    def test_handle_sync_stream_error_raises(self, httpserver):
+    def test_open_sync_stream_does_not_raise_on_error_status(self, httpserver):
         httpserver.expect_request("/missing").respond_with_json({"error": "not found"}, status=404)
 
-        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
-        with pytest.raises(api_exceptions.HTTPStatusError):
-            list(backend.handle_sync_stream("GET", "/missing"))
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        with backend.open_sync_stream("GET", "/missing") as stream_response:
+            assert stream_response.status_code == 404
+            assert json.loads(b"".join(stream_response.chunks)) == {"error": "not found"}
         backend.close()
+
+    def test_open_sync_stream_yields_chunks_as_they_arrive(self, httpserver):
+        slow = SlowBody()
+        httpserver.expect_request("/slow").respond_with_handler(slow)
+
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        try:
+            with backend.open_sync_stream("GET", "/slow") as stream_response:
+                chunks = iter(stream_response.chunks)
+                started = time.monotonic()
+                first = next(chunks)
+                assert time.monotonic() - started < 2
+                assert first.startswith(b"first\n")
+                slow.released.set()
+                assert first + b"".join(chunks) == b"first\nsecond\n"
+        finally:
+            slow.released.set()
+            backend.close()
+
+    def test_stream_error_raises_when_called(self, httpserver):
+        httpserver.expect_request("/missing").respond_with_json({"error": "not found"}, status=404)
+
+        base_url = httpserver.url_for("").rstrip("/")
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=base_url)
+        client = api_client.APIClient(config=api_config.BaseConfig(base_url=base_url, http_backend=backend))
+
+        @client.get("/missing", streaming_response=True)
+        def stream_lines(result: typing.Iterator[str]) -> typing.Iterator[str]:
+            return result
+
+        with pytest.raises(api_exceptions.HTTPStatusError) as exc_info:
+            stream_lines()
+        assert exc_info.value.response.status_code == 404
+        assert exc_info.value.response.json() == {"error": "not found"}
+        client.close()
+
+    def test_stream_keeps_line_separator_inside_json_record(self, httpserver):
+        httpserver.expect_request("/stream").respond_with_data(
+            '{"text": "before\u2028after"}\n{"text": "next"}\n'.encode(), content_type="application/x-ndjson"
+        )
+
+        base_url = httpserver.url_for("").rstrip("/")
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=base_url)
+        client = api_client.APIClient(config=api_config.BaseConfig(base_url=base_url, http_backend=backend))
+
+        @client.get("/stream", streaming_response=True)
+        def stream_records(result: typing.Iterator[dict]) -> typing.Iterator[dict]:
+            return result
+
+        assert list(stream_records()) == [{"text": "before\u2028after"}, {"text": "next"}]
+        client.close()
 
     def test_full_clientele_integration(self, httpserver):
         httpserver.expect_request("/users/1").respond_with_json({"id": 1, "name": "Alice"})
@@ -193,19 +272,38 @@ class TestNiquestsHTTPBackendAsync:
         assert result.status_code == 201
 
     @pytest.mark.asyncio
-    async def test_handle_async_stream_yields_lines(self, httpserver):
+    async def test_open_async_stream_reports_status_headers_and_raw_chunks(self, httpserver):
         httpserver.expect_request("/stream").respond_with_data(
-            "line one\nline two\nline three\n",
-            content_type="text/plain; charset=utf-8",
+            RAW_BODY, status=201, content_type="text/event-stream", headers={"x-id": "7"}
         )
 
-        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
-        results = []
-        async for item in backend.handle_async_stream("GET", "/stream"):
-            results.append(item)
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        async with backend.open_async_stream("GET", "/stream") as stream_response:
+            assert stream_response.status_code == 201
+            assert stream_response.headers["x-id"] == "7"
+            assert stream_response.request_method == "GET"
+            assert stream_response.request_url == httpserver.url_for("/stream")
+            assert b"".join([chunk async for chunk in stream_response.chunks]) == RAW_BODY
         await backend.aclose()
 
-        assert results == ["line one", "line two", "line three"]
+    @pytest.mark.asyncio
+    async def test_open_async_stream_yields_chunks_as_they_arrive(self, httpserver):
+        slow = SlowBody()
+        httpserver.expect_request("/slow").respond_with_handler(slow)
+
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        try:
+            async with backend.open_async_stream("GET", "/slow") as stream_response:
+                chunks = aiter(stream_response.chunks)
+                started = time.monotonic()
+                first = await anext(chunks)
+                assert time.monotonic() - started < 2
+                assert first.startswith(b"first\n")
+                slow.released.set()
+                assert first + b"".join([chunk async for chunk in chunks]) == b"first\nsecond\n"
+        finally:
+            slow.released.set()
+            await backend.aclose()
 
     @pytest.mark.asyncio
     async def test_full_clientele_integration(self, httpserver):
@@ -225,11 +323,29 @@ class TestNiquestsHTTPBackendAsync:
         await client.aclose()
 
     @pytest.mark.asyncio
-    async def test_handle_async_stream_error_raises(self, httpserver):
+    async def test_open_async_stream_does_not_raise_on_error_status(self, httpserver):
         httpserver.expect_request("/missing").respond_with_json({"error": "not found"}, status=404)
 
-        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for(""))
-        with pytest.raises(api_exceptions.HTTPStatusError):
-            async for _ in backend.handle_async_stream("GET", "/missing"):
-                pass
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        async with backend.open_async_stream("GET", "/missing") as stream_response:
+            assert stream_response.status_code == 404
+            assert json.loads(b"".join([chunk async for chunk in stream_response.chunks])) == {"error": "not found"}
         await backend.aclose()
+
+    @pytest.mark.asyncio
+    async def test_stream_error_raises_when_awaited(self, httpserver):
+        httpserver.expect_request("/missing").respond_with_json({"error": "not found"}, status=404)
+
+        base_url = httpserver.url_for("").rstrip("/")
+        backend = niquests_backend.NiquestsHTTPBackend(base_url=base_url)
+        client = api_client.APIClient(config=api_config.BaseConfig(base_url=base_url, http_backend=backend))
+
+        @client.get("/missing", streaming_response=True)
+        async def stream_lines(result: typing.AsyncIterator[str]) -> typing.AsyncIterator[str]:
+            return result
+
+        with pytest.raises(api_exceptions.HTTPStatusError) as exc_info:
+            await stream_lines()
+        assert exc_info.value.response.status_code == 404
+        assert exc_info.value.response.json() == {"error": "not found"}
+        await client.aclose()

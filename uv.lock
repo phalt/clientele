@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.12'",
@@ -398,6 +398,7 @@ dependencies = [
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "stamina" },
+    { name = "typing-extensions" },
 ]
 
 [package.optional-dependencies]
@@ -451,6 +452,7 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'cli'", specifier = ">=0.15.5" },
     { name = "stamina", specifier = ">=25.2.0" },
     { name = "types-pyyaml", marker = "extra == 'cli'", specifier = ">=6.0.12.20250915" },
+    { name = "typing-extensions", specifier = ">=4.14.1" },
 ]
 provides-extras = ["core", "cli"]
 
