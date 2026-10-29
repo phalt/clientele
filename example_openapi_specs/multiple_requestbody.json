@@ -1,0 +1,38 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Example with multiple request body formats",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/foo": {
+            "post": {
+                "summary": "Test Input",
+                "description": "A POST API endpoint for testing",
+                "operationId": "test_input",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {}
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {}
+}
