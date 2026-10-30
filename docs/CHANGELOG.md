@@ -4,6 +4,7 @@
 
 - **Custom HTTP backends:** `handle_sync_stream` and `handle_async_stream` no longer take `inner_type` or `response_parser`. They now yield each line as a `str`, and clientele turns the lines into the return type. Built-in backends are updated; custom backends need the same change.
 - `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`. They can still be imported from their old locations.
+- Fix request bodies with more than one content type (e.g. JSON and form data) generating the wrong input classes. Only the last content type's class was written, sometimes more than once, and if that content type used a `$ref`, the class written was an empty copy that replaced the real model ([#273](https://github.com/phalt/clientele/pull/273)).
 
 ## 2.3.1
 
