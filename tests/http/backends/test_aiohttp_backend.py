@@ -133,6 +133,14 @@ class TestAiohttpHTTPBackend:
         backend = aiohttp_backend.AiohttpHTTPBackend(base_url=BASE_URL, verify=False)
         assert backend._ssl is False
 
+    def test_stream_timeout_limits_connecting_and_each_read(self):
+        backend = aiohttp_backend.AiohttpHTTPBackend(base_url=BASE_URL, timeout=2.0)
+        assert backend.stream_timeout == aiohttp.ClientTimeout(total=None, connect=2.0, sock_read=2.0)
+
+    def test_stream_timeout_none_means_no_limit(self):
+        backend = aiohttp_backend.AiohttpHTTPBackend(base_url=BASE_URL, timeout=None)
+        assert backend.stream_timeout == aiohttp.ClientTimeout(total=None, connect=None, sock_read=None)
+
     # --- convert_to_response ---
 
     @pytest.mark.asyncio

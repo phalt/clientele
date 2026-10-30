@@ -23,7 +23,7 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
         base_url: Base URL prepended to all relative request paths.
         headers: Default headers applied to every request.
         timeout: Request timeout in seconds. None means no timeout. Applies to the whole
-            request, except for streams, where it limits the wait for each read.
+            request, except for streams, where it limits connecting and the wait for each read.
         follow_redirects: Whether to follow HTTP redirects.
         verify: SSL certificate verification. False to disable; str CA bundle paths
             are not supported (use an ssl.SSLContext via a custom connector instead).
@@ -45,8 +45,9 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
             aiohttp_lib.ClientTimeout(total=timeout) if timeout is not None else aiohttp_lib.ClientTimeout(total=None)
         )
         # A stream can run indefinitely, so it gets no total limit: the timeout applies to
-        # each socket read instead, failing only when the server goes quiet for that long.
-        self.stream_timeout = aiohttp_lib.ClientTimeout(total=None, sock_read=timeout)
+        # connecting and to each socket read instead, failing only when the server goes quiet
+        # for that long. connect also covers waiting for a pooled connection, as httpx2's does.
+        self.stream_timeout = aiohttp_lib.ClientTimeout(total=None, connect=timeout, sock_read=timeout)
         self.follow_redirects = follow_redirects
         # aiohttp uses ssl=False to disable; str CA paths are not supported here
         self._ssl: bool | None = None if verify else False
