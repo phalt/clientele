@@ -287,7 +287,7 @@ APIException                     # clientele/http/response.py (unchanged)
 
 In httpx2, `BaseConfig.timeout` (default 5 s) acts as the read timeout between chunks. FastAPI sends a keep-alive comment every 15 s, so a quiet stream dies under the default. The default stays 5 s and is changeable in code at two levels: `BaseConfig(timeout=...)` for the whole client, and `SSE(read_timeout=...)` per endpoint. The docs flag this prominently.
 
-The aiohttp backend currently uses `ClientTimeout(total=timeout)`, which caps a whole stream at 5 s even while data flows. Streams switch to `ClientTimeout(total=None, sock_read=timeout)` so every backend treats the value as a read timeout.
+The aiohttp backend currently uses `ClientTimeout(total=timeout)`, which caps a whole stream at 5 s even while data flows. Streams switch to `ClientTimeout(total=None, connect=timeout, sock_read=timeout)` so every backend treats the value as a connect and read timeout.
 
 ## Testing Strategy
 

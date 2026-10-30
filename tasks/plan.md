@@ -1,6 +1,6 @@
 # Implementation Plan: SSE runtime (`sse-runtime`)
 
-Status: approved 20 October 2026. Next: Task 1.
+Status: approved 20 October 2026. In progress on `feat/stream-contract`.
 
 Spec: [specs/SPEC-sse-runtime.md](../specs/SPEC-sse-runtime.md) (approved 20 October 2026). Tasks: [tasks/todo.md](todo.md).
 
@@ -45,16 +45,16 @@ Build bottom-up: splitter, contract, backends, decoder, stream objects, SSE, the
 Full task blocks (acceptance criteria, verification, files, size) are in [todo.md](todo.md).
 
 ### Phase 1: Stream contract (PR 1)
-- [ ] Task 1: Core line splitter over byte chunks
-- [ ] Task 2: Stream contract, httpx2 backend and client switch
-- [ ] Task 3: requests and niquests backends on the new contract
-- [ ] Task 4: aiohttp backend on the new contract, with a read timeout for streams
-- [ ] Task 5: Fake backend `queue_stream`
-- [ ] Task 6: Remove the shim; make `open_*_stream` abstract
+- [x] Task 1: Core line splitter over byte chunks
+- [x] Task 2: Stream contract, httpx2 backend and client switch
+- [x] Task 3: requests and niquests backends on the new contract
+- [x] Task 4: aiohttp backend on the new contract, with a read timeout for streams
+- [x] Task 5: Fake backend `queue_stream`
+- [x] Task 6: Remove the shim; make `open_*_stream` abstract
 
 ### Checkpoint A: Contract
-- [ ] Full suite, ruff, ty and import-linter green on every supported Python
-- [ ] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend
+- [x] Full suite, ruff, ty and import-linter green on every supported Python (CI on 78bba42 actually ran 3.14 in every job; corrected in [todo.md](todo.md))
+- [x] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend (except compressed streams on requests with urllib3-future; see [todo.md](todo.md))
 - [ ] Human review before PR 1 merges
 
 ### Phase 2: Python floor (PR 2, parallel with Phase 1)

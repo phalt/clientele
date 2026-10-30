@@ -19,7 +19,7 @@ The backend abstraction follows these key principles:
 
 1. **Library Agnostic**: The core APIClient doesn't depend on any library-specific implementation.
 2. **Generic Response**: All backends return `clientele.http.Response`, not library-specific responses.
-3. **Simple Interface**: Backends only need to implement 6 methods.
+3. **Simple Interface**: Backends only need to implement 9 methods.
 4. **Conversion Layer**: Each backend converts its native response to the generic format.
 
 ## Generic Response
@@ -35,8 +35,6 @@ class Response:
     
     def json(self) -> Any: ...
     def raise_for_status(self) -> None: ...
-    def iter_lines(self) -> Iterator[str]: ...
-    def aiter_lines(self) -> AsyncIterator[str]: ...
 ```
 
 ## HTTPBackend Interface
@@ -62,22 +60,22 @@ class HTTPBackend(abc.ABC):
         """Send async request"""
 
     @abc.abstractmethod
-    def handle_sync_stream(
+    def open_sync_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
-        """ Stream the response body, one line at a time """
+    ) -> typing.ContextManager[StreamResponse]:
+        """Send a streaming request; yield its status, headers and raw byte chunks"""
 
     @abc.abstractmethod
-    async def handle_async_stream(
+    def open_async_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
-        """ Stream the response body asynchronously, one line at a time """
+    ) -> typing.AsyncContextManager[AsyncStreamResponse]:
+        """Async version of open_sync_stream"""
 
     @staticmethod
     @abc.abstractmethod
@@ -163,7 +161,7 @@ A synchronous-only backend using the popular [requests](https://requests.readthe
 
 !!! warning "Async not supported"
     `RequestsHTTPBackend` only supports synchronous requests. Calling any async method
-    (`send_async_request`, `handle_async_stream`, `build_async_client`) will raise
+    (`send_async_request`, `open_async_stream`, `build_async_client`) will raise
     `NotImplementedError`. Use `HttpxHTTPBackend` if you need async support.
 
 #### Usage
@@ -206,6 +204,7 @@ def get_user(result: dict, user_id: int) -> dict:
 
 - **Sync only** — async methods raise `NotImplementedError`
 - **No HTTP/2** — `requests` does not support HTTP/2; use `HttpxHTTPBackend` with `http2=True` if needed
+- **Compressed streams can arrive late when niquests is installed** — installing `niquests` replaces `urllib3` with `urllib3-future`, which holds back small gzip- or deflate-compressed stream chunks until more data arrives. If the server compresses streams, send `headers={"Accept-Encoding": "identity"}` with the request, or set it in `BaseConfig(headers=...)`
 
 ### AiohttpHTTPBackend
 
@@ -220,7 +219,7 @@ An asynchronous-only backend using the popular [aiohttp](https://docs.aiohttp.or
 
 !!! warning "Sync not supported"
     `AiohttpHTTPBackend` only supports asynchronous requests. Calling any sync method
-    (`send_sync_request`, `handle_sync_stream`, `build_client`) will raise
+    (`send_sync_request`, `open_sync_stream`, `build_client`) will raise
     `NotImplementedError`. Use `HttpxHTTPBackend` if you need sync support.
 
 #### Usage
@@ -325,7 +324,7 @@ Both backends support sync and async. Prefer `niquests` if your project already 
 
 To implement your own backend, subclass `clientele.http.backends.HTTPBackend` and implement all abstract methods. Backends that only support one mode (sync or async) should raise `NotImplementedError` in the unsupported methods — see `RequestsHTTPBackend` (sync-only) and `AiohttpHTTPBackend` (async-only) in the source for reference implementations.
 
-The streaming methods should yield each non-empty line of the response body as a `str`; clientele turns the lines into your function's return type, or passes them to your `response_parser`. For a 4xx or 5xx response, raise `clientele.http.HTTPStatusError` before yielding anything.
+The streaming methods return a context manager that sends the request on entry and yields a `StreamResponse` (or `AsyncStreamResponse`) with the status, headers and the body as raw byte chunks, read as they arrive. Do not raise on 4xx or 5xx statuses or split the body into lines: clientele raises `HTTPStatusError` and splits lines itself. Close the response on exit, even if the body was not fully read.
 
 ### Default Behavior
 
