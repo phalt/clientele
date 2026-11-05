@@ -1260,6 +1260,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#240-unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.0 UNRELEASED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#231" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2184,6 +2195,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#240-unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4.0 UNRELEASED
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#231" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3094,6 +3116,12 @@
 
 
 <h1 id="change-log">Change log</h1>
+<h2 id="240-unreleased">2.4.0 UNRELEASED</h2>
+<ul>
+<li><strong>Custom HTTP backends:</strong> <code>handle_sync_stream</code> and <code>handle_async_stream</code> no longer take <code>inner_type</code> or <code>response_parser</code>. They now yield each line as a <code>str</code>, and clientele turns the lines into the return type. Built-in backends are updated; custom backends need the same change.</li>
+<li><code>APIException</code> and <code>HTTPStatusError</code> now live in <code>clientele.http</code>, and <code>CacheBackend</code> in <code>clientele.api.config</code>. They can still be imported from their old locations.</li>
+<li>Fix request bodies with more than one content type (e.g. JSON and form data) generating the wrong input classes. Only the last content type's class was written, sometimes more than once, and if that content type used a <code>$ref</code>, the class written was an empty copy that replaced the real model (<a href="https://github.com/phalt/clientele/pull/273">#273</a>).</li>
+</ul>
 <h2 id="231">2.3.1</h2>
 <ul>
 <li>Models with aliases are now serialized using their alias names instead of the field names, ensuring that the output matches the expected API format.</li>

@@ -1146,6 +1146,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#regenerating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regenerating
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1417,6 +1428,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#regenerating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Regenerating
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1449,6 +1471,7 @@
 <p>To create a new clientele API client project just use the <code>start-api</code> command:</p>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>clientele<span class="w"> </span>start-api<span class="w"> </span>-o<span class="w"> </span>path/to/my_client
 </code></pre></div>
+<p><img alt="clientele start-api creating a basic API client project" src="../clientele_start_api_basic.svg" /></p>
 <p>This will create a new directory with the following file stucture:</p>
 <div class="highlight"><pre><span></span><code>my_client/
 <span class="w">    </span>config.py.<span class="w">  </span><span class="c1"># Client configuration</span>
@@ -1466,6 +1489,7 @@
 </ul>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>start-api<span class="w"> </span>-u<span class="w"> </span>https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json<span class="w"> </span>-o<span class="w"> </span>my_client/
 </code></pre></div>
+<p><img alt="clientele start-api generating a typed API client from an OpenAPI schema" src="../clientele_start_api.svg" /></p>
 <h3 id="from-a-url">From a URL</h3>
 <p>Use the <code>-u</code> or <code>--url</code> argument.</p>
 <p><code>-o</code> or <code>--output</code> is the target directory for the generated client.</p>
@@ -1479,6 +1503,12 @@
 <p>If you prefer an <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> client, just pass <code>--asyncio</code> to your command.</p>
 <div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--asyncio
 </code></pre></div>
+<h3 id="regenerating">Regenerating</h3>
+<p>When your API changes, run the same command again with <code>-r</code> or <code>--regen</code> to update the client in place. Without it, clientele won't overwrite an existing client and will warn you instead. The exact command is also written into your client's <code>MANIFEST.md</code>.</p>
+<div class="highlight"><pre><span></span><code>clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class="w"> </span>path/to/file.json<span class="w"> </span>-o<span class="w"> </span>my_client/<span class="w"> </span>--regen
+</code></pre></div>
+<p>Then review the git diff before you ship it. Here a new <code>/widgets/{widget_id}</code> endpoint was added to the schema:</p>
+<p><img alt="clientele regenerating a client and git diff showing the new function and model" src="../clientele_regen.svg" /></p>
 
 
 

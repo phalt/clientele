@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="787" height="532" viewBox="0 0 787 532" role="img" aria-label="After adding a widgets endpoint to the OpenAPI schema, clientele start-api --regen updates the client and git diff shows the new function and Pydantic model">
+<title>After adding a widgets endpoint to the OpenAPI schema, clientele start-api --regen updates the client and git diff shows the new function and Pydantic model</title>
+<style>
+text{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}
+.a{animation-duration:14.8s;animation-iteration-count:infinite;animation-timing-function:step-end;opacity:1}
+.caret{animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+@keyframes fade{0%{opacity:1}95.946%{opacity:1;animation-timing-function:ease}100%{opacity:0}}
+@keyframes l0{0%{opacity:0}2.703%,100%{opacity:1}}@keyframes t0c2{0%,3.716%{transform:translateX(0);animation-timing-function:steps(76,end)}18.581%,100%{transform:translateX(638.4px)}}@keyframes k0{0%{opacity:0}2.703%{opacity:1}21.959%,100%{opacity:0}}@keyframes l1{0%{opacity:0}21.959%,100%{opacity:1}}@keyframes l2{0%{opacity:0}22.432%,100%{opacity:1}}@keyframes l3{0%{opacity:0}22.905%,100%{opacity:1}}@keyframes l4{0%{opacity:0}23.378%,100%{opacity:1}}@keyframes l5{0%{opacity:0}23.851%,100%{opacity:1}}@keyframes l6{0%{opacity:0}24.324%,100%{opacity:1}}@keyframes l7{0%{opacity:0}24.797%,100%{opacity:1}}@keyframes l8{0%{opacity:0}25.270%,100%{opacity:1}}@keyframes l9{0%{opacity:0}25.743%,100%{opacity:1}}@keyframes l10{0%{opacity:0}26.216%,100%{opacity:1}}@keyframes l11{0%{opacity:0}32.770%,100%{opacity:1}}@keyframes t11c2{0%,33.784%{transform:translateX(0);animation-timing-function:steps(19,end)}38.378%,100%{transform:translateX(159.6px)}}@keyframes k11{0%{opacity:0}32.770%{opacity:1}39.723%,100%{opacity:0}}@keyframes l12{0%{opacity:0}39.723%,100%{opacity:1}}@keyframes l13{0%{opacity:0}40.534%,100%{opacity:1}}@keyframes l14{0%{opacity:0}41.345%,100%{opacity:1}}@keyframes l15{0%{opacity:0}42.155%,100%{opacity:1}}@keyframes l16{0%{opacity:0}42.966%,100%{opacity:1}}@keyframes l17{0%{opacity:0}43.777%,100%{opacity:1}}@keyframes l18{0%{opacity:0}44.588%,100%{opacity:1}}@keyframes l19{0%{opacity:0}45.399%,100%{opacity:1}}@keyframes l20{0%{opacity:0}46.209%,100%{opacity:1}}@keyframes l21{0%{opacity:0}47.020%,100%{opacity:1}}@keyframes l22{0%{opacity:0}47.831%,100%{opacity:1}}@keyframes l23{0%{opacity:0}48.642%,100%{opacity:1}}@keyframes l24{0%{opacity:0}49.453%,100%{opacity:1}}@keyframes l25{0%{opacity:0}50.264%,100%{opacity:1}}@keyframes l26{0%{opacity:0}51.074%,100%{opacity:1}}@keyframes l27{0%{opacity:0}51.885%,100%{opacity:1}}@keyframes l28{0%{opacity:0}52.696%,100%{opacity:1}}@keyframes l29{0%{opacity:0}53.507%,100%{opacity:1}}@keyframes l30{0%{opacity:0}54.318%,100%{opacity:1}}@keyframes l31{0%{opacity:0}55.128%,100%{opacity:1}}@keyframes l32{0%{opacity:0}55.939%,100%{opacity:1}}@keyframes l33{0%{opacity:0}56.750%,100%{opacity:1}}@keyframes l34{0%{opacity:0}57.561%,100%{opacity:1}}@keyframes l35{0%{opacity:0}58.372%,100%{opacity:1}}@keyframes l36{0%{opacity:0}59.182%,100%{opacity:1}}@keyframes l37{0%{opacity:0}66.074%,100%{opacity:1}}@keyframes k37{0%{opacity:0}66.074%{opacity:1}100.000%,100%{opacity:0}}
+@keyframes scroll{0%{transform:translateY(0)}47.831%{transform:translateY(calc(-1 * 21px))}48.642%{transform:translateY(calc(-2 * 21px))}49.453%{transform:translateY(calc(-3 * 21px))}50.264%{transform:translateY(calc(-4 * 21px))}51.074%{transform:translateY(calc(-5 * 21px))}51.885%{transform:translateY(calc(-6 * 21px))}52.696%{transform:translateY(calc(-7 * 21px))}53.507%{transform:translateY(calc(-8 * 21px))}54.318%{transform:translateY(calc(-9 * 21px))}55.128%{transform:translateY(calc(-10 * 21px))}55.939%{transform:translateY(calc(-11 * 21px))}56.750%{transform:translateY(calc(-12 * 21px))}57.561%{transform:translateY(calc(-13 * 21px))}58.372%{transform:translateY(calc(-14 * 21px))}59.182%{transform:translateY(calc(-15 * 21px))}66.074%{transform:translateY(calc(-16 * 21px))}100%{transform:translateY(calc(-16 * 21px))}}
+@media (prefers-reduced-motion:reduce){.a,.caret{animation:none!important}.cover,.k{display:none}}
+</style>
+<defs><clipPath id="screen"><rect x="0" y="52" width="787" height="462"/></clipPath></defs>
+<rect width="787" height="532" rx="10" fill="#1c1c1c"/>
+<path d="M0 10a10 10 0 0 1 10-10h767a10 10 0 0 1 10 10v24h-787z" fill="#2a2a2a"/>
+<circle cx="18" cy="17.0" r="5.5" fill="#555"/><circle cx="36" cy="17.0" r="5.5" fill="#555"/><circle cx="54" cy="17.0" r="5.5" fill="#555"/>
+<text x="393.5" y="22.0" text-anchor="middle" opacity=".5" fill="#d0d0d0" style="font-size:13px">~/my-project</text>
+<g clip-path="url(#screen)" fill="#d0d0d0"><g class="a" style="animation-name:fade"><g class="a" style="animation-name:scroll">
+<g class="a" style="animation-name:l0"><text x="24.0" y="67.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">$</text><text x="40.8" y="67.8" textLength="638.4" lengthAdjust="spacingAndGlyphs">clientele start-api -f example_openapi_specs/best.json -o my_client/ --regen</text>
+<g class="a cover" style="animation-name:t0c2"><rect x="40.8" y="52.0" width="646.8" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k0"><g class="a" style="animation-name:t0c2"><rect class="caret" x="40.8" y="54.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l1"><text x="24.0" y="88.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55" fill="#4fc6d6">[20:37:30]</text><text x="116.4" y="88.8" textLength="487.2" lengthAdjust="spacingAndGlyphs">Found API specification: Example OpenAPI schema server for</text><text x="687.6" y="88.8" textLength="50.4" lengthAdjust="spacingAndGlyphs" opacity=".55">cli.py</text><text x="738.0" y="88.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="746.4" y="88.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" opacity=".55">89</text>
+</g>
+<g class="a" style="animation-name:l2"><text x="116.4" y="109.8" textLength="226.8" lengthAdjust="spacingAndGlyphs">clientele testing | version</text><text x="351.6" y="109.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">0.1</text><text x="376.8" y="109.8" textLength="8.4" lengthAdjust="spacingAndGlyphs">.</text><text x="385.2" y="109.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">0</text>
+</g>
+<g class="a" style="animation-name:l3"><text x="24.0" y="130.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55" fill="#4fc6d6">[20:37:30]</text><text x="116.4" y="130.8" textLength="75.6" lengthAdjust="spacingAndGlyphs">Generated</text><text x="200.4" y="130.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">19</text><text x="225.6" y="130.8" textLength="58.8" lengthAdjust="spacingAndGlyphs">schemas</text><text x="284.4" y="130.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" fill="#e6e04a">...</text><text x="645.6" y="130.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55">schemas.py</text><text x="729.6" y="130.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="738.0" y="130.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" opacity=".55">241</text>
+</g>
+<g class="a" style="animation-name:l4"><text x="24.0" y="151.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55" fill="#4fc6d6">[20:37:30]</text><text x="116.4" y="151.8" textLength="75.6" lengthAdjust="spacingAndGlyphs">Generated</text><text x="200.4" y="151.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">10</text><text x="225.6" y="151.8" textLength="92.4" lengthAdjust="spacingAndGlyphs">GET methods</text><text x="318.0" y="151.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" fill="#e6e04a">...</text><text x="654.0" y="151.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55">clients.py</text><text x="738.0" y="151.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="746.4" y="151.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" opacity=".55">90</text>
+</g>
+<g class="a" style="animation-name:l5"><text x="116.4" y="172.8" textLength="75.6" lengthAdjust="spacingAndGlyphs">Generated</text><text x="200.4" y="172.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">4</text><text x="217.2" y="172.8" textLength="100.8" lengthAdjust="spacingAndGlyphs">POST methods</text><text x="318.0" y="172.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" fill="#e6e04a">...</text><text x="654.0" y="172.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55">clients.py</text><text x="738.0" y="172.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="746.4" y="172.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" opacity=".55">91</text>
+</g>
+<g class="a" style="animation-name:l6"><text x="116.4" y="193.8" textLength="75.6" lengthAdjust="spacingAndGlyphs">Generated</text><text x="200.4" y="193.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">1</text><text x="217.2" y="193.8" textLength="92.4" lengthAdjust="spacingAndGlyphs">PUT methods</text><text x="309.6" y="193.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" fill="#e6e04a">...</text><text x="654.0" y="193.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55">clients.py</text><text x="738.0" y="193.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="746.4" y="193.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" opacity=".55">92</text>
+</g>
+<g class="a" style="animation-name:l7"><text x="116.4" y="214.8" textLength="75.6" lengthAdjust="spacingAndGlyphs">Generated</text><text x="200.4" y="214.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">0</text><text x="217.2" y="214.8" textLength="109.2" lengthAdjust="spacingAndGlyphs">PATCH methods</text><text x="326.4" y="214.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" fill="#e6e04a">...</text><text x="654.0" y="214.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55">clients.py</text><text x="738.0" y="214.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="746.4" y="214.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" opacity=".55">93</text>
+</g>
+<g class="a" style="animation-name:l8"><text x="116.4" y="235.8" textLength="75.6" lengthAdjust="spacingAndGlyphs">Generated</text><text x="200.4" y="235.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#4fc6d6">1</text><text x="217.2" y="235.8" textLength="117.6" lengthAdjust="spacingAndGlyphs">DELETE methods</text><text x="334.8" y="235.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" fill="#e6e04a">...</text><text x="654.0" y="235.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55">clients.py</text><text x="738.0" y="235.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="746.4" y="235.8" textLength="16.8" lengthAdjust="spacingAndGlyphs" opacity=".55">94</text>
+</g>
+<g class="a" style="animation-name:l9"><text x="679.2" y="256.8" textLength="50.4" lengthAdjust="spacingAndGlyphs" opacity=".55">cli.py</text><text x="729.6" y="256.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="738.0" y="256.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" opacity=".55">160</text>
+</g>
+<g class="a" style="animation-name:l10"><text x="116.4" y="277.8" textLength="193.2" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">⚜️ client generated! ⚜️</text>
+</g>
+<g class="a" style="animation-name:l11"><text x="24.0" y="298.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">$</text><text x="40.8" y="298.8" textLength="159.6" lengthAdjust="spacingAndGlyphs">git diff my_client/</text>
+<g class="a cover" style="animation-name:t11c2"><rect x="40.8" y="283.0" width="168.0" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k11"><g class="a" style="animation-name:t11c2"><rect class="caret" x="40.8" y="285.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l12"><text x="24.0" y="319.8" textLength="453.6" lengthAdjust="spacingAndGlyphs" font-weight="700">diff --git a/my_client/client.py b/my_client/client.py</text>
+</g>
+<g class="a" style="animation-name:l13"><text x="24.0" y="340.8" textLength="243.6" lengthAdjust="spacingAndGlyphs" font-weight="700">index b9213de..2547010 100644</text>
+</g>
+<g class="a" style="animation-name:l14"><text x="24.0" y="361.8" textLength="210.0" lengthAdjust="spacingAndGlyphs" font-weight="700">--- a/my_client/client.py</text>
+</g>
+<g class="a" style="animation-name:l15"><text x="24.0" y="382.8" textLength="210.0" lengthAdjust="spacingAndGlyphs" font-weight="700">+++ b/my_client/client.py</text>
+</g>
+<g class="a" style="animation-name:l16"><text x="24.0" y="403.8" textLength="142.8" lengthAdjust="spacingAndGlyphs" fill="#4fc6d6">@@ -216 +216,7 @@</text><text x="175.2" y="403.8" textLength="344.4" lengthAdjust="spacingAndGlyphs">def nullable_fields_nullable_fields_post(</text>
+</g>
+<g class="a" style="animation-name:l17"><text x="66.0" y="424.8" textLength="109.2" lengthAdjust="spacingAndGlyphs">return result</text>
+</g>
+<g class="a" style="animation-name:l18"><text x="24.0" y="445.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text>
+</g>
+<g class="a" style="animation-name:l19"><text x="24.0" y="466.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text>
+</g>
+<g class="a" style="animation-name:l20"><text x="24.0" y="487.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="32.4" y="487.8" textLength="294.0" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">@client.get(&quot;/widgets/{widget_id}&quot;)</text>
+</g>
+<g class="a" style="animation-name:l21"><text x="24.0" y="508.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="32.4" y="508.8" textLength="680.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">def get_widget_widgets(result: schemas.Widget, widget_id: int) -&gt; schemas.Widget:</text>
+</g>
+<g class="a" style="animation-name:l22"><text x="24.0" y="529.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="66.0" y="529.8" textLength="134.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">&quot;&quot;&quot;Get Widget&quot;&quot;&quot;</text>
+</g>
+<g class="a" style="animation-name:l23"><text x="24.0" y="550.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="66.0" y="550.8" textLength="109.2" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">return result</text>
+</g>
+<g class="a" style="animation-name:l24"><text x="24.0" y="571.8" textLength="470.4" lengthAdjust="spacingAndGlyphs" font-weight="700">diff --git a/my_client/schemas.py b/my_client/schemas.py</text>
+</g>
+<g class="a" style="animation-name:l25"><text x="24.0" y="592.8" textLength="243.6" lengthAdjust="spacingAndGlyphs" font-weight="700">index d6c44e3..927afd6 100644</text>
+</g>
+<g class="a" style="animation-name:l26"><text x="24.0" y="613.8" textLength="218.4" lengthAdjust="spacingAndGlyphs" font-weight="700">--- a/my_client/schemas.py</text>
+</g>
+<g class="a" style="animation-name:l27"><text x="24.0" y="634.8" textLength="218.4" lengthAdjust="spacingAndGlyphs" font-weight="700">+++ b/my_client/schemas.py</text>
+</g>
+<g class="a" style="animation-name:l28"><text x="24.0" y="655.8" textLength="159.6" lengthAdjust="spacingAndGlyphs" fill="#4fc6d6">@@ -105,2 +105,8 @@</text><text x="192.0" y="655.8" textLength="411.6" lengthAdjust="spacingAndGlyphs">class NullableFieldsResponse(pydantic.BaseModel):</text>
+</g>
+<g class="a" style="animation-name:l29">
+</g>
+<g class="a" style="animation-name:l30"><text x="24.0" y="697.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="32.4" y="697.8" textLength="277.2" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">class Widget(pydantic.BaseModel):</text>
+</g>
+<g class="a" style="animation-name:l31"><text x="24.0" y="718.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="66.0" y="718.8" textLength="58.8" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">id: int</text>
+</g>
+<g class="a" style="animation-name:l32"><text x="24.0" y="739.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="66.0" y="739.8" textLength="75.6" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">name: str</text>
+</g>
+<g class="a" style="animation-name:l33"><text x="24.0" y="760.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text><text x="66.0" y="760.8" textLength="168.0" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">colour: str = &quot;pink&quot;</text>
+</g>
+<g class="a" style="animation-name:l34"><text x="24.0" y="781.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text>
+</g>
+<g class="a" style="animation-name:l35"><text x="24.0" y="802.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" fill="#2fcf7a">+</text>
+</g>
+<g class="a" style="animation-name:l36"><text x="32.4" y="823.8" textLength="529.2" lengthAdjust="spacingAndGlyphs">class HeaderRequestHeaderRequestGetHeaders(pydantic.BaseModel):</text>
+</g>
+<g class="a" style="animation-name:l37"><text x="24.0" y="844.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">$</text>
+</g>
+<g class="a k" style="animation-name:k37"><g><rect class="caret" x="40.8" y="831.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+</g></g></g>
+</svg>
