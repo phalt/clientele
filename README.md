@@ -33,6 +33,8 @@ def get_pokemon_name(id: int, result: Pokemon) -> str:
     return result.name
 ```
 
+![A Python REPL calling get_pokemon_name and getting back 'pikachu', 'bulbasaur' and 'eevee'](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_repl.svg)
+
 [See more examples](https://docs.clientele.dev/api-examples/)
 
 ## Why use Clientele?
