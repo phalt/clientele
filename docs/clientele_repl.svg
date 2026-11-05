@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="518" height="238" viewBox="0 0 518 238" role="img" aria-label="A Python REPL calling get_pokemon_name: 25 returns &#x27;pikachu&#x27;, 1 returns &#x27;bulbasaur&#x27;, 133 returns &#x27;eevee&#x27;">
+<title>A Python REPL calling get_pokemon_name: 25 returns &#x27;pikachu&#x27;, 1 returns &#x27;bulbasaur&#x27;, 133 returns &#x27;eevee&#x27;</title>
+<style>
+text{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}
+.a{animation-duration:13.5s;animation-iteration-count:infinite;animation-timing-function:step-end;opacity:1}
+.caret{animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+@keyframes fade{0%{opacity:1}95.556%{opacity:1;animation-timing-function:ease}100%{opacity:0}}
+@keyframes l0{0%{opacity:0}2.963%,100%{opacity:1}}@keyframes t0c2{0%,4.074%{transform:translateX(0);animation-timing-function:steps(20,end)}9.333%,100%{transform:translateX(168.0px)}}@keyframes k0{0%{opacity:0}2.963%{opacity:1}14.550%,100%{opacity:0}}@keyframes l1{0%{opacity:0}14.550%,100%{opacity:1}}@keyframes t1c4{0%,15.661%{transform:translateX(0);animation-timing-function:steps(20,end)}20.921%,100%{transform:translateX(168.0px)}}@keyframes k1{0%{opacity:0}14.550%{opacity:1}24.659%,100%{opacity:0}}@keyframes l2{0%{opacity:0}24.659%,100%{opacity:1}}@keyframes l3{0%{opacity:0}31.841%,100%{opacity:1}}@keyframes t3c4{0%,32.952%{transform:translateX(0);animation-timing-function:steps(19,end)}37.989%,100%{transform:translateX(159.6px)}}@keyframes k3{0%{opacity:0}31.841%{opacity:1}41.681%,100%{opacity:0}}@keyframes l4{0%{opacity:0}41.681%,100%{opacity:1}}@keyframes l5{0%{opacity:0}48.868%,100%{opacity:1}}@keyframes t5c4{0%,49.979%{transform:translateX(0);animation-timing-function:steps(21,end)}55.534%,100%{transform:translateX(176.4px)}}@keyframes k5{0%{opacity:0}48.868%{opacity:1}59.237%,100%{opacity:0}}@keyframes l6{0%{opacity:0}59.237%,100%{opacity:1}}@keyframes l7{0%{opacity:0}66.422%,100%{opacity:1}}@keyframes k7{0%{opacity:0}66.422%{opacity:1}100.000%,100%{opacity:0}}
+@keyframes scroll{0%{transform:translateY(0)}100%{transform:translateY(calc(-0 * 21px))}}
+@media (prefers-reduced-motion:reduce){.a,.caret{animation:none!important}.cover,.k{display:none}}
+</style>
+<defs><clipPath id="screen"><rect x="0" y="52" width="518" height="168"/></clipPath></defs>
+<rect width="518" height="238" rx="10" fill="#1c1c1c"/>
+<path d="M0 10a10 10 0 0 1 10-10h498a10 10 0 0 1 10 10v24h-518z" fill="#2a2a2a"/>
+<circle cx="18" cy="17.0" r="5.5" fill="#555"/><circle cx="36" cy="17.0" r="5.5" fill="#555"/><circle cx="54" cy="17.0" r="5.5" fill="#555"/>
+<text x="259.0" y="22.0" text-anchor="middle" opacity=".5" fill="#d0d0d0" style="font-size:13px">~/pokemon</text>
+<g clip-path="url(#screen)" fill="#d0d0d0"><g class="a" style="animation-name:fade"><g class="a" style="animation-name:scroll">
+<g class="a" style="animation-name:l0"><text x="24.0" y="67.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">$</text><text x="40.8" y="67.8" textLength="168.0" lengthAdjust="spacingAndGlyphs">python -i pokemon.py</text>
+<g class="a cover" style="animation-name:t0c2"><rect x="40.8" y="52.0" width="176.4" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k0"><g class="a" style="animation-name:t0c2"><rect class="caret" x="40.8" y="54.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l1"><text x="24.0" y="88.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#c678dd">&gt;&gt;&gt;</text><text x="57.6" y="88.8" textLength="168.0" lengthAdjust="spacingAndGlyphs">get_pokemon_name(25)</text>
+<g class="a cover" style="animation-name:t1c4"><rect x="57.6" y="73.0" width="176.4" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k1"><g class="a" style="animation-name:t1c4"><rect class="caret" x="57.6" y="75.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l2"><text x="24.0" y="109.8" textLength="75.6" lengthAdjust="spacingAndGlyphs">&#x27;pikachu&#x27;</text>
+</g>
+<g class="a" style="animation-name:l3"><text x="24.0" y="130.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#c678dd">&gt;&gt;&gt;</text><text x="57.6" y="130.8" textLength="159.6" lengthAdjust="spacingAndGlyphs">get_pokemon_name(1)</text>
+<g class="a cover" style="animation-name:t3c4"><rect x="57.6" y="115.0" width="168.0" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k3"><g class="a" style="animation-name:t3c4"><rect class="caret" x="57.6" y="117.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l4"><text x="24.0" y="151.8" textLength="92.4" lengthAdjust="spacingAndGlyphs">&#x27;bulbasaur&#x27;</text>
+</g>
+<g class="a" style="animation-name:l5"><text x="24.0" y="172.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#c678dd">&gt;&gt;&gt;</text><text x="57.6" y="172.8" textLength="176.4" lengthAdjust="spacingAndGlyphs">get_pokemon_name(133)</text>
+<g class="a cover" style="animation-name:t5c4"><rect x="57.6" y="157.0" width="184.8" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k5"><g class="a" style="animation-name:t5c4"><rect class="caret" x="57.6" y="159.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l6"><text x="24.0" y="193.8" textLength="58.8" lengthAdjust="spacingAndGlyphs">&#x27;eevee&#x27;</text>
+</g>
+<g class="a" style="animation-name:l7"><text x="24.0" y="214.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" font-weight="700" fill="#c678dd">&gt;&gt;&gt;</text>
+</g>
+<g class="a k" style="animation-name:k7"><g><rect class="caret" x="57.6" y="201.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+</g></g></g>
+</svg>
