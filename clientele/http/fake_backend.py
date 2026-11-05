@@ -1,8 +1,38 @@
 from __future__ import annotations
 
+import contextlib
+import dataclasses
+import os
+import sys
 import typing
+import warnings
 
 from clientele.http import backends, response
+
+_QUEUE_RESPONSE_STREAM_DEPRECATION = (
+    "Streaming a response queued with FakeHTTPBackend.queue_response() is deprecated; use queue_stream() instead."
+)
+
+# Frames inside clientele and the standard library (contextlib, asyncio) sit between the
+# user's call and the warning; skipping them points the warning at the user's code.
+_INTERNAL_PREFIXES = (
+    os.path.dirname(os.path.dirname(__file__)) + os.sep,
+    os.path.dirname(contextlib.__file__) + os.sep,
+)
+
+
+def _warn_queue_response_stream() -> None:
+    if sys.version_info >= (3, 12):
+        warnings.warn(_QUEUE_RESPONSE_STREAM_DEPRECATION, DeprecationWarning, skip_file_prefixes=_INTERNAL_PREFIXES)
+    else:
+        warnings.warn(_QUEUE_RESPONSE_STREAM_DEPRECATION, DeprecationWarning, stacklevel=2)
+
+
+@dataclasses.dataclass(frozen=True, slots=True)
+class _QueuedStream:
+    chunks: tuple[bytes, ...]
+    status_code: int
+    headers: dict[str, str]
 
 
 class FakeHTTPBackend(backends.HTTPBackend):
@@ -53,9 +83,8 @@ class FakeHTTPBackend(backends.HTTPBackend):
         # Map request paths to lists of Response objects (FIFO queue per path)
         self._response_map: dict[str, list[response.Response]] = {}
 
-        # Map request paths to lists of streaming data (for streaming requests)
-        # Each entry is a list of lines to stream
-        self._stream_map: dict[str, list[list[str]]] = {}
+        # Map request paths to queued streaming responses (FIFO queue per path)
+        self._stream_map: dict[str, list[_QueuedStream]] = {}
 
         # Map request paths to lists of Exceptions (FIFO queue per path)
         self._error_map: dict[str, list[Exception]] = {}
@@ -101,6 +130,33 @@ class FakeHTTPBackend(backends.HTTPBackend):
         if path not in self._response_map:
             self._response_map[path] = []
         self._response_map[path].append(response_obj)
+
+    def queue_stream(
+        self,
+        path: str,
+        chunks: typing.Sequence[bytes | str],
+        *,
+        status_code: int = 200,
+        headers: typing.Mapping[str, str] | None = None,
+    ) -> None:
+        """Queue a streaming response for a request path.
+
+        Each chunk is delivered separately, exactly as given, so tests can
+        control where chunk boundaries fall. str chunks are encoded as UTF-8.
+        Streams are consumed in FIFO order for each path.
+
+        Args:
+            path: The request path (e.g., "/events")
+            chunks: The response body, as the chunks a server would send
+            status_code: HTTP status code of the response
+            headers: Response headers
+        """
+        queued = _QueuedStream(
+            chunks=tuple(chunk.encode("utf-8") if isinstance(chunk, str) else chunk for chunk in chunks),
+            status_code=status_code,
+            headers=dict(headers or {}),
+        )
+        self._stream_map.setdefault(path, []).append(queued)
 
     def queue_error(self, path: str, error: Exception) -> None:
         """Queue an error to raise for requests to a path.
@@ -258,147 +314,67 @@ class FakeHTTPBackend(backends.HTTPBackend):
         self._stream_map.clear()
         self._error_map.clear()
 
-    def _get_next_stream(self, url: str) -> tuple[list[str], int] | None:
-        """Get the next stream for the given URL path or None if no queued streams.
+    def _get_next_stream(self, url: str) -> _QueuedStream:
+        """Get the next queued stream for the URL.
 
-        If no explicit stream is queued, checks if a Response is queued and
-        converts its content to lines for backward compatibility with tests.
-
-        Args:
-            url: The request URL
-
-        Returns:
-            A tuple of (lines, status_code) if data is queued for this URL, otherwise None
+        Falls back to a queued Response (deprecated), then to an empty 200 stream.
         """
-        # Try to find a matching path in the stream map
         for path in self._stream_map:
             if path in url:
                 streams = self._stream_map[path]
                 if streams:
-                    return (streams.pop(0), 200)  # Default to 200 for queued streams
+                    return streams.pop(0)
 
-        # Fallback: check if a Response is queued and convert it to stream lines
-        for path in self._response_map:
-            if path in url:
-                responses = self._response_map[path]
-                if responses:
-                    response = responses.pop(0)
-                    # Convert response text to lines for streaming
-                    lines = response.text.splitlines()
-                    # Filter out empty lines to match streaming behavior
-                    filtered_lines = [line for line in lines if line]
-                    return (filtered_lines, response.status_code)
+        queued_response = self._get_next_response(url)
+        if queued_response is not None:
+            _warn_queue_response_stream()
+            return _QueuedStream(
+                chunks=(queued_response.content,),
+                status_code=queued_response.status_code,
+                headers=dict(queued_response.headers),
+            )
 
-        return None
+        return _QueuedStream(chunks=(), status_code=200, headers={})
 
-    def handle_sync_stream(
+    def _record_stream_request(self, method: str, url: str, kwargs: dict[str, typing.Any]) -> _QueuedStream:
+        self.requests.append({"method": method, "url": url, "kwargs": kwargs, "streaming": True})
+        return self._get_next_stream(url)
+
+    @contextlib.contextmanager
+    def open_sync_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
-        """Handle synchronous streaming for testing.
+    ) -> typing.Generator[backends.StreamResponse, None, None]:
+        """Open a fake synchronous stream from the next queued stream for the URL."""
+        queued = self._record_stream_request(method, url, kwargs)
+        yield backends.StreamResponse(
+            status_code=queued.status_code,
+            headers=dict(queued.headers),
+            request_method=method,
+            request_url=url,
+            chunks=iter(queued.chunks),
+        )
 
-        Yields queued mock stream data, or empty iterator if no data queued.
-
-        Args:
-            method: HTTP method (GET, POST, etc.)
-            url: URL to request
-            **kwargs: Additional request parameters (stored but not used)
-
-        Yields:
-            Each non-empty queued line
-        """
-        # Capture the request
-        request_details = {
-            "method": method,
-            "url": url,
-            "kwargs": kwargs,
-            "streaming": True,
-        }
-        self.requests.append(request_details)
-
-        # Get queued stream data or return empty
-        stream_data = self._get_next_stream(url)
-        if stream_data is None:
-            return
-
-        stream_lines, status_code = stream_data
-
-        # Check status code before streaming
-        if 400 <= status_code < 600:
-            # For error responses, create a Response and raise
-            error_response = response.Response(
-                status_code=status_code,
-                content=b"",
-                headers={},
-                request_method=method,
-                request_url=url,
-            )
-            raise response.HTTPStatusError(
-                response=error_response,
-                reason=f"HTTP {status_code}",
-            )
-
-        # Yield each line
-        for line in stream_lines:
-            if not line:
-                continue
-
-            yield line
-
-    async def handle_async_stream(
+    @contextlib.asynccontextmanager
+    async def open_async_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
-        """Handle asynchronous streaming for testing.
+    ) -> typing.AsyncGenerator[backends.AsyncStreamResponse, None]:
+        """Open a fake asynchronous stream from the next queued stream for the URL."""
+        queued = self._record_stream_request(method, url, kwargs)
 
-        Yields queued mock stream data, or empty async iterator if no data queued.
+        async def chunks() -> typing.AsyncGenerator[bytes, None]:
+            for chunk in queued.chunks:
+                yield chunk
 
-        Args:
-            method: HTTP method (GET, POST, etc.)
-            url: URL to request
-            **kwargs: Additional request parameters (stored but not used)
-
-        Yields:
-            Each non-empty queued line
-        """
-        # Capture the request
-        request_details = {
-            "method": method,
-            "url": url,
-            "kwargs": kwargs,
-            "streaming": True,
-        }
-        self.requests.append(request_details)
-
-        # Get queued stream data or return empty
-        stream_data = self._get_next_stream(url)
-        if stream_data is None:
-            return
-
-        stream_lines, status_code = stream_data
-
-        # Check status code before streaming
-        if 400 <= status_code < 600:
-            # For error responses, create a Response and raise
-            error_response = response.Response(
-                status_code=status_code,
-                content=b"",
-                headers={},
-                request_method=method,
-                request_url=url,
-            )
-            raise response.HTTPStatusError(
-                response=error_response,
-                reason=f"HTTP {status_code}",
-            )
-
-        # Yield each line
-        for line in stream_lines:
-            if not line:
-                continue
-
-            yield line
+        yield backends.AsyncStreamResponse(
+            status_code=queued.status_code,
+            headers=dict(queued.headers),
+            request_method=method,
+            request_url=url,
+            chunks=chunks(),
+        )

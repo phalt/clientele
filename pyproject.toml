@@ -11,6 +11,7 @@ dependencies = [
     "pydantic>=2.12.5",
     "pydantic-settings>=2.12.0",
     "stamina>=25.2.0",
+    "typing-extensions>=4.14.1",
 ]
 
 [project.optional-dependencies]
@@ -226,7 +227,8 @@ ignore_imports = [
     "clientele.http.niquests_backend -> niquests",
 ]
 broken_contract_guidance = """
-`pip install clientele` only installs httpx2, pydantic, pydantic-settings and stamina. Anything
+`pip install clientele` only installs httpx2, pydantic, pydantic-settings, stamina and
+typing-extensions (and their dependencies). Anything
 else imported by the runtime fails for users who didn't install the extra. Add the dependency to
 [project.dependencies] if it's really needed, or keep the import inside an opt-in module.
 """

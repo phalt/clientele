@@ -476,9 +476,11 @@ class APIClient:
 
         if not self.config.http_backend:
             raise RuntimeError("HTTP backend is not configured.")
-        lines = self.config.http_backend.handle_async_stream(
-            method=context.method,
-            url=prepared.url_path,
+        # Sends the request and raises HTTPStatusError now, not on first iteration.
+        lines = await stream.open_async_lines(
+            self.config.http_backend,
+            context.method,
+            prepared.url_path,
             **request_kwargs,
         )
         stream_generator = stream.hydrate_async_stream(lines, inner_type, streaming_parser)
@@ -535,9 +537,11 @@ class APIClient:
             typing.Callable[[str], typing.Any] | None, context.response_parser
         )
 
-        lines = self.config.http_backend.handle_sync_stream(
-            method=context.method,
-            url=prepared.url_path,
+        # Sends the request and raises HTTPStatusError now, not on first iteration.
+        lines = stream.open_sync_lines(
+            self.config.http_backend,
+            context.method,
+            prepared.url_path,
             **request_kwargs,
         )
         stream_generator = stream.hydrate_sync_stream(lines, inner_type, streaming_parser)

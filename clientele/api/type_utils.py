@@ -4,10 +4,12 @@ import inspect
 import typing
 
 import pydantic
+import typing_extensions
 
 
 def is_typeddict(annotation: typing.Any) -> bool:
-    return typing.is_typeddict(annotation)
+    # typing.is_typeddict misses typing_extensions.TypedDict, which pydantic requires below 3.12.
+    return typing_extensions.is_typeddict(annotation)
 
 
 def is_pydantic_model(annotation: typing.Any) -> bool:

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import typing
 
 try:
@@ -15,13 +16,14 @@ from clientele.http import backends, response
 class AiohttpHTTPBackend(backends.HTTPBackend):
     """Asynchronous-only HTTP backend using the aiohttp library.
 
-    Sync methods (build_client, send_sync_request, handle_sync_stream) raise
+    Sync methods (build_client, send_sync_request, open_sync_stream) raise
     NotImplementedError. Use HttpxHTTPBackend for sync support.
 
     Args:
         base_url: Base URL prepended to all relative request paths.
         headers: Default headers applied to every request.
-        timeout: Request timeout in seconds. None means no timeout.
+        timeout: Request timeout in seconds. None means no timeout. Applies to the whole
+            request, except for streams, where it limits connecting and the wait for each read.
         follow_redirects: Whether to follow HTTP redirects.
         verify: SSL certificate verification. False to disable; str CA bundle paths
             are not supported (use an ssl.SSLContext via a custom connector instead).
@@ -42,6 +44,10 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
         self.aiohttp_timeout = (
             aiohttp_lib.ClientTimeout(total=timeout) if timeout is not None else aiohttp_lib.ClientTimeout(total=None)
         )
+        # A stream can run indefinitely, so it gets no total limit: the timeout applies to
+        # connecting and to each socket read instead, failing only when the server goes quiet
+        # for that long. connect also covers waiting for a pooled connection, as httpx2's does.
+        self.stream_timeout = aiohttp_lib.ClientTimeout(total=None, connect=timeout, sock_read=timeout)
         self.follow_redirects = follow_redirects
         # aiohttp uses ssl=False to disable; str CA paths are not supported here
         self._ssl: bool | None = None if verify else False
@@ -107,45 +113,38 @@ class AiohttpHTTPBackend(backends.HTTPBackend):
             await resp.read()
             return self.convert_to_response(resp)
 
-    def handle_sync_stream(
+    def open_sync_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
+    ) -> typing.ContextManager[backends.StreamResponse]:
         raise NotImplementedError("AiohttpHTTPBackend does not support sync requests. Use HttpxHTTPBackend instead.")
-        yield  # type: ignore[misc]
 
-    async def handle_async_stream(
+    @contextlib.asynccontextmanager
+    async def open_async_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
+    ) -> typing.AsyncGenerator[backends.AsyncStreamResponse, None]:
         session = self.build_async_client()
         async with session.request(
             method,
             self._full_url(url),
-            timeout=self.aiohttp_timeout,
+            timeout=self.stream_timeout,
             allow_redirects=self.follow_redirects,
             ssl=self._ssl,
             **kwargs,
         ) as resp:
-            if 400 <= resp.status < 600:
-                await resp.read()
-                generic_response = self.convert_to_response(resp)
-                raise response.HTTPStatusError(
-                    response=generic_response,
-                    reason=f"HTTP {resp.status}",
-                )
-            while True:
-                line = await resp.content.readline()
-                if not line:
-                    break
-                decoded = line.decode("utf-8").rstrip("\r\n")
-                if not decoded:
-                    continue
-                yield decoded
+            yield backends.AsyncStreamResponse(
+                status_code=resp.status,
+                headers=dict(resp.headers),
+                request_method=resp.method.upper(),
+                request_url=str(resp.url),
+                # iter_any yields whatever has been received, without waiting for a full buffer.
+                chunks=resp.content.iter_any(),
+            )
 
     def close(self) -> None:
         pass

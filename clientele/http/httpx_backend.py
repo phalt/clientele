@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import typing
 
 import httpx2
@@ -130,65 +131,38 @@ class HttpxHTTPBackend(backends.HTTPBackend):
             await self._async_client.aclose()
             self._async_client = None
 
-    def handle_sync_stream(
+    @contextlib.contextmanager
+    def open_sync_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.Generator[str, None, None]:
-        """Handle synchronous streaming response without buffering.
-
-        Uses httpx2.Client.stream()
-        """
+    ) -> typing.Generator[backends.StreamResponse, None, None]:
+        """Open a synchronous streaming request with httpx2.Client.stream()."""
         client = self.build_client()
         with client.stream(method, url, **kwargs) as httpx_response:
-            try:
-                # Check status code before starting to stream
-                if 400 <= httpx_response.status_code < 600:
-                    # For error responses, read the full response then raise
-                    httpx_response.read()  # Read the stream before accessing content
-                    generic_response = self.convert_to_response(httpx_response)
-                    raise response.HTTPStatusError(
-                        response=generic_response,
-                        reason=f"HTTP {httpx_response.status_code}",
-                    )
+            yield backends.StreamResponse(
+                status_code=httpx_response.status_code,
+                headers=dict(httpx_response.headers),
+                request_method=httpx_response.request.method,
+                request_url=str(httpx_response.request.url),
+                chunks=httpx_response.iter_bytes(),
+            )
 
-                for line in httpx_response.iter_lines():
-                    if not line:
-                        continue
-
-                    yield line
-            finally:
-                pass
-
-    async def handle_async_stream(
+    @contextlib.asynccontextmanager
+    async def open_async_stream(
         self,
         method: str,
         url: str,
         **kwargs: typing.Any,
-    ) -> typing.AsyncGenerator[str, None]:
-        """Handle asynchronous streaming response without buffering.
-
-        Uses httpx2.AsyncClient.stream()
-        """
-
+    ) -> typing.AsyncGenerator[backends.AsyncStreamResponse, None]:
+        """Open an asynchronous streaming request with httpx2.AsyncClient.stream()."""
         client = self.build_async_client()
         async with client.stream(method, url, **kwargs) as httpx_response:
-            try:
-                # Check status code before starting to stream
-                if 400 <= httpx_response.status_code < 600:
-                    # For error responses, read the full response then raise
-                    await httpx_response.aread()  # Read the stream before accessing content
-                    generic_response = self.convert_to_response(httpx_response)
-                    raise response.HTTPStatusError(
-                        response=generic_response,
-                        reason=f"HTTP {httpx_response.status_code}",
-                    )
-
-                async for line in httpx_response.aiter_lines():
-                    if not line:
-                        continue
-
-                    yield line
-            finally:
-                pass
+            yield backends.AsyncStreamResponse(
+                status_code=httpx_response.status_code,
+                headers=dict(httpx_response.headers),
+                request_method=httpx_response.request.method,
+                request_url=str(httpx_response.request.url),
+                chunks=httpx_response.aiter_bytes(),
+            )

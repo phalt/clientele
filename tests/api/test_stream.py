@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from clientele.api import request_context
 from clientele.api.client import APIClient
 from clientele.api.exceptions import HTTPStatusError
-from clientele.testing import ResponseFactory, configure_client_for_testing
+from clientele.testing import configure_client_for_testing
 
 
 class Token(BaseModel):
@@ -29,12 +29,10 @@ class TestStreamDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b'{"text": "hello"}\n\n{"text": "world"}\n\n{"text": "test"}\n\n',
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b'{"text": "hello"}\n\n{"text": "world"}\n\n{"text": "test"}\n\n'],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -59,12 +57,10 @@ class TestStreamDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b'{"key": "value1"}\n\n{"key": "value2"}\n\n',
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b'{"key": "value1"}\n\n{"key": "value2"}\n\n'],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -88,12 +84,10 @@ class TestStreamDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b"hello\n\nworld\n\n",
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b"hello\n\nworld\n\n"],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -157,12 +151,10 @@ class TestStreamDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b'{"text": "first"}\n\n\n\n\n\n{"text": "second"}\n\n',
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b'{"text": "first"}\n\n\n\n\n\n{"text": "second"}\n\n'],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -185,12 +177,11 @@ class TestStreamDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.not_found(
-                data=b"Not Found",
-                headers={"content-type": "text/plain"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b"Not Found"],
+            status_code=404,
+            headers={"content-type": "text/plain"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -209,12 +200,10 @@ class TestStreamDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/generate",
-            response_obj=ResponseFactory.ok(
-                data=b'{"text": "response1"}\n\n{"text": "response2"}\n\n{"text": "response3"}\n\n',
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/generate",
+            [b'{"text": "response1"}\n\n{"text": "response2"}\n\n{"text": "response3"}\n\n'],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.post("/generate", streaming_response=True)
@@ -252,12 +241,10 @@ class TestStreamDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b"line1,data1\n\nline2,data2\n\nline3,data3\n\n",
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b"line1,data1\n\nline2,data2\n\nline3,data3\n\n"],
+            headers={"content-type": "text/event-stream"},
         )
 
         def custom_parser(line: str) -> dict:
@@ -288,12 +275,10 @@ class TestStreamingSyncDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b'{"text": "hello"}\n\n{"text": "world"}\n\n',
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b'{"text": "hello"}\n\n{"text": "world"}\n\n'],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -316,12 +301,10 @@ class TestStreamingSyncDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b'{"key": "value1"}\n\n{"key": "value2"}\n\n',
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b'{"key": "value1"}\n\n{"key": "value2"}\n\n'],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -344,12 +327,10 @@ class TestStreamingSyncDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b"hello\n\nworld\n\n",
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b"hello\n\nworld\n\n"],
+            headers={"content-type": "text/event-stream"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -372,12 +353,10 @@ class TestStreamingSyncDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.ok(
-                data=b"a:1\n\nb:2\n\n",
-                headers={"content-type": "text/event-stream"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b"a:1\n\nb:2\n\n"],
+            headers={"content-type": "text/event-stream"},
         )
 
         def custom_parser(line: str) -> dict:
@@ -403,12 +382,11 @@ class TestStreamingSyncDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.not_found(
-                data=b"Not Found",
-                headers={"content-type": "text/plain"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b"Not Found"],
+            status_code=404,
+            headers={"content-type": "text/plain"},
         )
 
         @client.get("/events", streaming_response=True)
@@ -426,12 +404,11 @@ class TestStreamingSyncDecorators:
         client = APIClient(base_url="http://localhost:8000")
 
         fake_backend = configure_client_for_testing(client)
-        fake_backend.queue_response(
-            path="/events",
-            response_obj=ResponseFactory.internal_server_error(
-                data=b"Internal Server Error",
-                headers={"content-type": "text/plain"},
-            ),
+        fake_backend.queue_stream(
+            "/events",
+            [b"Internal Server Error"],
+            status_code=500,
+            headers={"content-type": "text/plain"},
         )
 
         @client.get("/events", streaming_response=True)

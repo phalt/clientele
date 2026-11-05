@@ -1,8 +1,14 @@
 from __future__ import annotations
 
-from typing import TypedDict
+import sys
 
 import pytest
+
+# pydantic rejects typing.TypedDict nested in list[...] etc. below Python 3.12.
+if sys.version_info >= (3, 12):
+    from typing import TypedDict
+else:
+    from typing_extensions import TypedDict
 
 from clientele.api import APIClient
 from clientele.testing import ResponseFactory, configure_client_for_testing

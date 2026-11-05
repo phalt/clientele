@@ -1,6 +1,8 @@
 """Tests for the requests HTTP backend."""
 
 import json
+import time
+import typing
 
 import pytest
 import responses as responses_lib
@@ -60,12 +62,10 @@ class TestRequestsHTTPBackend:
         with pytest.raises(NotImplementedError):
             await backend.send_async_request("GET", "/get")
 
-    @pytest.mark.asyncio
-    async def test_handle_async_stream_raises(self):
+    def test_open_async_stream_raises(self):
         backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
         with pytest.raises(NotImplementedError):
-            async for _ in backend.handle_async_stream("GET", "/stream"):
-                pass
+            backend.open_async_stream("GET", "/stream")
 
     def test_from_config(self):
         config = api_config.BaseConfig(
@@ -132,28 +132,172 @@ class TestRequestsHTTPBackend:
         assert "Bearer token" in sent.headers.get("Authorization", "")
 
     @responses_lib.activate
-    def test_handle_sync_stream_yields_lines(self):
+    def test_open_sync_stream_reports_status_headers_and_raw_chunks(self):
+        body = b"data: one\n\ndata: two\r\n\r\n"
         responses_lib.get(
             f"{BASE_URL}/stream",
-            body=b"line one\nline two\nline three\n",
-            status=200,
+            body=body,
+            status=201,
+            headers={"x-id": "7"},
+            content_type="text/event-stream",
             stream=True,
         )
 
         backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
-        results = list(backend.handle_sync_stream("GET", "/stream"))
+        with backend.open_sync_stream("GET", "/stream", params={"q": "1"}) as stream_response:
+            assert stream_response.status_code == 201
+            assert stream_response.headers["x-id"] == "7"
+            assert stream_response.headers["Content-Type"] == "text/event-stream"
+            assert stream_response.request_method == "GET"
+            assert stream_response.request_url == f"{BASE_URL}/stream?q=1"
+            assert b"".join(stream_response.chunks) == body
         backend.close()
 
-        assert results == ["line one", "line two", "line three"]
-
     @responses_lib.activate
-    def test_handle_sync_stream_error_raises(self):
+    def test_open_sync_stream_does_not_raise_on_error_status(self):
         responses_lib.get(f"{BASE_URL}/missing", json={"error": "not found"}, status=404)
 
         backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
-        with pytest.raises(api_exceptions.HTTPStatusError):
-            list(backend.handle_sync_stream("GET", "/missing"))
+        with backend.open_sync_stream("GET", "/missing") as stream_response:
+            assert stream_response.status_code == 404
+            assert json.loads(b"".join(stream_response.chunks)) == {"error": "not found"}
         backend.close()
+
+    @responses_lib.activate
+    def test_open_sync_stream_closes_response_on_exit(self, monkeypatch: pytest.MonkeyPatch):
+        import requests
+
+        closed: list[requests.Response] = []
+        original_close = requests.Response.close
+
+        def recording_close(self: requests.Response) -> None:
+            closed.append(self)
+            original_close(self)
+
+        monkeypatch.setattr(requests.Response, "close", recording_close)
+        responses_lib.get(f"{BASE_URL}/stream", body=b"a\nb\n", stream=True)
+
+        backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
+        with backend.open_sync_stream("GET", "/stream") as stream_response:
+            next(iter(stream_response.chunks))
+            assert closed == []
+        assert len(closed) == 1
+        backend.close()
+
+    def test_open_sync_stream_yields_chunks_as_they_arrive(self, httpserver):
+        """The first chunk must be readable while the server is still holding back the second."""
+        import threading
+
+        import werkzeug
+
+        released = threading.Event()
+
+        def handler(request: werkzeug.Request) -> werkzeug.Response:
+            def body() -> typing.Iterator[bytes]:
+                yield b"first\n"
+                released.wait(timeout=5)
+                yield b"second\n"
+
+            return werkzeug.Response(body(), mimetype="application/x-ndjson")
+
+        httpserver.expect_request("/slow").respond_with_handler(handler)
+        backend = requests_backend.RequestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        try:
+            with backend.open_sync_stream("GET", "/slow") as stream_response:
+                chunks = iter(stream_response.chunks)
+                started = time.monotonic()
+                first = next(chunks)
+                assert time.monotonic() - started < 2
+                assert first.startswith(b"first\n")
+                released.set()
+                assert (first + b"".join(chunks)) == b"first\nsecond\n"
+        finally:
+            released.set()
+            backend.close()
+
+    def test_open_sync_stream_decodes_content_encoding(self, httpserver):
+        import gzip
+
+        body = b"".join(f'{{"n": {index}}}\n'.encode() for index in range(200))
+        httpserver.expect_request("/gzip").respond_with_data(
+            gzip.compress(body), content_type="application/x-ndjson", headers={"Content-Encoding": "gzip"}
+        )
+        backend = requests_backend.RequestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        with backend.open_sync_stream("GET", "/gzip") as stream_response:
+            assert b"".join(stream_response.chunks) == body
+        backend.close()
+
+    def test_open_sync_stream_read_timeout_raises_requests_error(self, httpserver):
+        import threading
+
+        import requests
+        import werkzeug
+
+        released = threading.Event()
+
+        def handler(request: werkzeug.Request) -> werkzeug.Response:
+            def body() -> typing.Iterator[bytes]:
+                yield b"first\n"
+                released.wait(timeout=5)
+                yield b"second\n"
+
+            return werkzeug.Response(body(), mimetype="application/x-ndjson")
+
+        httpserver.expect_request("/quiet").respond_with_handler(handler)
+        backend = requests_backend.RequestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"), timeout=0.5)
+        try:
+            with backend.open_sync_stream("GET", "/quiet") as stream_response:
+                chunks = iter(stream_response.chunks)
+                next(chunks)
+                with pytest.raises(requests.exceptions.ConnectionError):
+                    next(chunks)
+        finally:
+            released.set()
+            backend.close()
+
+    def test_open_sync_stream_without_read1_falls_back_to_iter_content(self, httpserver, monkeypatch):
+        """urllib3 releases before 2.3 have no HTTPResponse.read1."""
+        import urllib3.response
+
+        monkeypatch.delattr(urllib3.response.HTTPResponse, "read1")
+        monkeypatch.delattr(urllib3.response.BaseHTTPResponse, "read1", raising=False)
+        httpserver.expect_request("/stream").respond_with_data(b"a\n\nb\n", content_type="text/event-stream")
+        backend = requests_backend.RequestsHTTPBackend(base_url=httpserver.url_for("").rstrip("/"))
+        with backend.open_sync_stream("GET", "/stream") as stream_response:
+            assert b"".join(stream_response.chunks) == b"a\n\nb\n"
+        backend.close()
+
+    @responses_lib.activate
+    def test_stream_error_raises_when_called(self):
+        responses_lib.get(f"{BASE_URL}/missing", json={"error": "not found"}, status=404)
+
+        backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
+        client = api_client.APIClient(config=api_config.BaseConfig(base_url=BASE_URL, http_backend=backend))
+
+        @client.get("/missing", streaming_response=True)
+        def stream_lines(result: typing.Iterator[str]) -> typing.Iterator[str]:
+            return result
+
+        with pytest.raises(api_exceptions.HTTPStatusError) as exc_info:
+            stream_lines()
+        assert exc_info.value.response.status_code == 404
+        assert exc_info.value.response.json() == {"error": "not found"}
+        client.close()
+
+    @responses_lib.activate
+    def test_stream_keeps_line_separator_inside_json_record(self):
+        body = '{"text": "before\u2028after"}\n{"text": "next"}\n'.encode()
+        responses_lib.get(f"{BASE_URL}/stream", body=body, stream=True)
+
+        backend = requests_backend.RequestsHTTPBackend(base_url=BASE_URL)
+        client = api_client.APIClient(config=api_config.BaseConfig(base_url=BASE_URL, http_backend=backend))
+
+        @client.get("/stream", streaming_response=True)
+        def stream_records(result: typing.Iterator[dict]) -> typing.Iterator[dict]:
+            return result
+
+        assert list(stream_records()) == [{"text": "before\u2028after"}, {"text": "next"}]
+        client.close()
 
     @responses_lib.activate
     def test_full_clientele_integration(self):

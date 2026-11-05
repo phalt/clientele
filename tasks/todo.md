@@ -16,15 +16,17 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Add `clientele/api/stream/lines.py` with sync and async splitters that turn byte chunks into `str` lines: split on `\n`, strip a trailing `\r`, decode UTF-8 incrementally across chunk boundaries, drop blank lines, flush a final unterminated line. Pure functions, not wired in yet. Write the U+2028 test first to confirm the httpx2 `iter_lines` bug.
 
+**Status:** Done (228d66f). httpx2 2.13.1 `iter_lines` reproduced the U+2028 split.
+
 **Acceptance criteria:**
-- [ ] A JSON string containing U+2028 or U+2029 stays on one line
-- [ ] Output is identical however the input bytes are split, including mid UTF-8 sequence
-- [ ] `\r\n` and `\n` both terminate lines; a trailing line with no newline is yielded
+- [x] A JSON string containing U+2028 or U+2029 stays on one line
+- [x] Output is identical however the input bytes are split, including mid UTF-8 sequence
+- [x] `\r\n` and `\n` both terminate lines; a trailing line with no newline is yielded
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/api/stream/test_lines.py -vv`
-- [ ] Checks pass
-- [ ] Manual check: note whether the U+2028 case fails against httpx2 `iter_lines` today, and record the result in the PR
+- [x] Tests pass: `uv run pytest tests/api/stream/test_lines.py -vv`
+- [x] Checks pass (ruff locally; ty and import-linter in CI)
+- [x] Manual check: note whether the U+2028 case fails against httpx2 `iter_lines` today, and record the result in the PR
 
 **Dependencies:** None
 
@@ -38,15 +40,17 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Add `StreamResponse` / `AsyncStreamResponse` and `open_sync_stream` / `open_async_stream` to `HTTPBackend`, with a temporary default implementation that adapts the legacy `handle_*_stream` (lines re-encoded as chunks, `status_code=200`, empty headers). Implement both methods properly on the httpx2 backend (`client.stream` + `iter_bytes` / `aiter_bytes`, no status raising). Switch `_execute_sync_stream` / `_execute_async_stream` in `client.py` to open the stream at call time, raise `HTTPStatusError` there on 4xx/5xx with a buffered body, and feed chunks through Task 1's splitter into the existing hydration.
 
+**Status:** Done. Real-socket check: first item at 0.1 s of a 1.3 s body, sync and async; 25 early-closed streams left no requests in the httpx2 pool.
+
 **Acceptance criteria:**
-- [ ] httpx2 sync and async line streams behave as before for 2xx responses
-- [ ] 4xx/5xx raise `HTTPStatusError` when the decorated function is called, not on first iteration, for sync and async
-- [ ] Other backends still pass their existing stream tests through the shim
+- [x] httpx2 sync and async line streams behave as before for 2xx responses
+- [x] 4xx/5xx raise `HTTPStatusError` when the decorated function is called, not on first iteration, for sync and async
+- [x] Other backends still pass their existing stream tests through the shim
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/api/test_stream.py tests/api/test_stream_httpx.py tests/http/backends -vv`
-- [ ] Full suite passes: `uv run pytest -x`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/api/test_stream.py tests/api/test_stream_httpx.py tests/http/backends -vv`
+- [x] Full suite passes: `uv run pytest -x`
+- [x] Checks pass
 
 **Dependencies:** 1
 
@@ -61,16 +65,18 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 ## Task 3: requests and niquests backends on the new contract
 
-**Description:** Implement `open_sync_stream` on requests and both methods on niquests using `stream=True` + `iter_content(chunk_size=None)` (and the niquests async equivalent). Confirm chunks arrive incrementally rather than buffered.
+**Description:** Implement `open_sync_stream` on requests and both methods on niquests using `stream=True` + `iter_content`: urllib3 `read1` for requests, `chunk_size=-1` for niquests (its documented "as they come" value; the async variant is awaited to get the generator). Confirm chunks arrive incrementally rather than buffered.
+
+**Status:** Done. requests reads with urllib3 `read1()` with no size (falls back to `iter_content` on urllib3 < 2.3); a size makes urllib3-future, which replaces urllib3 whenever niquests is installed, wait for that many bytes: `iter_content(chunk_size=None)` buffers a non-chunked body to EOF, which the pytest-httpserver test caught. Also fixes the requests backend yielding `bytes` lines for responses without a declared charset. Verified locally against requests 2.34, niquests 3.18.8 (source) and real pytest-httpserver/pytest-asyncio.
 
 **Acceptance criteria:**
-- [ ] Both backends return status, headers and raw chunks without raising on status
-- [ ] A slow stream from `pytest-httpserver` yields its first item before the server finishes
-- [ ] Existing stream tests for both backends pass unchanged in behaviour
+- [x] Both backends return status, headers and raw chunks without raising on status
+- [x] A slow stream from `pytest-httpserver` yields its first item before the server finishes
+- [x] Existing stream tests for both backends pass unchanged in behaviour
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/http/backends/test_requests_backend.py tests/http/backends/test_niquests_backend.py -vv`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/http/backends/test_requests_backend.py tests/http/backends/test_niquests_backend.py -vv`
+- [x] Checks pass
 
 **Dependencies:** 2
 
@@ -86,14 +92,16 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Implement `open_async_stream` on aiohttp using `resp.content.iter_any()`. Streams currently use `ClientTimeout(total=timeout)`, which kills any stream after 5 s even while data flows; use `ClientTimeout(total=None, sock_read=timeout)` for streams.
 
+**Status:** Done. Before the fix, a stream still receiving data died at the total timeout with a raw `asyncio.CancelledError`. Verified locally against aiohttp 3.13.5 (source, pure-Python mode) over real sockets: a 1.5 s stream under a 1.0 s timeout completes, a quiet one raises `SocketTimeoutError`, early-closed streams release their connections.
+
 **Acceptance criteria:**
-- [ ] A stream that runs longer than the configured timeout, sending data more often than the timeout, completes
-- [ ] A stream that goes quiet for longer than the timeout raises a timeout
-- [ ] Chunks arrive incrementally (`pytest-httpserver` or aiohttp test server)
+- [x] A stream that runs longer than the configured timeout, sending data more often than the timeout, completes
+- [x] A stream that goes quiet for longer than the timeout raises a timeout
+- [x] Chunks arrive incrementally (`pytest-httpserver` or aiohttp test server)
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/http/backends/test_aiohttp_backend.py -vv`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/http/backends/test_aiohttp_backend.py -vv`
+- [x] Checks pass
 
 **Dependencies:** 2
 
@@ -107,14 +115,16 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Add public `FakeHTTPBackend.queue_stream(path, chunks: Sequence[bytes | str], *, status_code: int = 200, headers: Mapping[str, str] | None = None)` and implement `open_*_stream` from it. Keep the fallback that builds a stream from a queued response's text, but emit `DeprecationWarning`. pytest has no `filterwarnings` config today, so this will not fail the suite, but move Clientele's own tests to `queue_stream` anyway.
 
+**Status:** Done. Each queued chunk is delivered separately so tests control chunk boundaries. The fallback's warning points at the caller's line on Python 3.12+ (`skip_file_prefixes`). `tests/api/test_stream.py` moved to `queue_stream`; the suite passes with the deprecation promoted to an error.
+
 **Acceptance criteria:**
-- [ ] `queue_stream` drives both sync and async streams, with status and headers visible to the API layer
-- [ ] The text fallback still works and warns once per use
-- [ ] No internal test relies on the deprecated fallback
+- [x] `queue_stream` drives both sync and async streams, with status and headers visible to the API layer
+- [x] The text fallback still works and warns once per use
+- [x] No internal test relies on the deprecated fallback
 
 **Verification:**
-- [ ] Tests pass: `uv run pytest tests/http/backends/test_fake_backend.py tests/test_testing.py -vv`
-- [ ] Checks pass
+- [x] Tests pass: `uv run pytest tests/http/backends/test_fake_backend.py tests/test_testing.py -vv`
+- [x] Checks pass
 
 **Dependencies:** 2
 
@@ -129,14 +139,16 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 
 **Description:** Delete `handle_sync_stream` / `handle_async_stream` from the ABC and every backend, remove the transitional default, and mark `open_sync_stream` / `open_async_stream` abstract. Backends that only support one mode raise `NotImplementedError` from the other, as they do today.
 
+**Status:** Done. Also corrected the unreleased 2.4.0 CHANGELOG entry and the `HTTPBackend` interface in `docs/api-http-backends.md`, which described the removed methods; the full docs pass is still Task 17.
+
 **Acceptance criteria:**
-- [ ] `grep -rn "handle_sync_stream\|handle_async_stream" clientele` returns nothing
-- [ ] A backend subclass missing either method cannot be instantiated
-- [ ] Full suite green
+- [x] `grep -rn "handle_sync_stream\|handle_async_stream" clientele` returns nothing
+- [x] A backend subclass missing either method cannot be instantiated
+- [x] Full suite green
 
 **Verification:**
-- [ ] Full suite passes: `uv run pytest`
-- [ ] Checks pass
+- [x] Full suite passes: `uv run pytest`
+- [x] Checks pass
 
 **Dependencies:** 3, 4, 5
 
@@ -147,8 +159,8 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 **Estimated scope:** S (many files, deletion only)
 
 ## Checkpoint A: Contract
-- [ ] Full suite, ruff, ty and import-linter green on every supported Python
-- [ ] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend
+- [x] Full suite, ruff, ty and import-linter green on every supported Python. Correction (21 October 2026): CI on 78bba42 ran 3.14 in every job, because uv followed `.python-version`; CI now sets `UV_PYTHON` for 3.11 to 3.13. 3.10 is not fixed (dropped in Task 7) and has the same 2 pre-existing failures as `main`.
+- [x] A JSONL stream from `pytest-httpserver` yields items incrementally on every backend (httpx2, requests and niquests sync; httpx2, niquests and aiohttp async; first item while the server holds the rest; on `main` requests waited 5 s). Exception: requests with urllib3-future (installed by niquests) holds back small gzip/deflate chunks; documented, with `Accept-Encoding: identity` as the workaround.
 - [ ] Human review before PR 1 merges
 
 ---
@@ -240,6 +252,7 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 - [ ] `result: Iterator[T]` and `result: Stream[T]` both work; `isinstance(result, Iterator)` holds
 - [ ] Breaking out of a loop inside `with` closes the backend response
 - [ ] A leaked, unexhausted stream emits `ResourceWarning`; closed or exhausted ones do not
+- [ ] `close()` / `aclose()` before the first item releases the connection (today's generator holds it until GC on every backend, because closing an unstarted generator runs none of its code)
 
 **Verification:**
 - [ ] Tests pass: `uv run pytest tests/api/stream tests/api/test_stream.py tests/api/test_type_utils.py -vv`
