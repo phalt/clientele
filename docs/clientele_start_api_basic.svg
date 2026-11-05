@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="787" height="175" viewBox="0 0 787 175" role="img" aria-label="clientele start-api creating a basic API client project, then listing the generated files">
+<title>clientele start-api creating a basic API client project, then listing the generated files</title>
+<style>
+text{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}
+.a{animation-duration:9.0s;animation-iteration-count:infinite;animation-timing-function:step-end;opacity:1}
+.caret{animation:blink 1s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+@keyframes fade{0%{opacity:1}93.333%{opacity:1;animation-timing-function:ease}100%{opacity:0}}
+@keyframes l0{0%{opacity:0}4.444%,100%{opacity:1}}@keyframes t0c2{0%,6.111%{transform:translateX(0);animation-timing-function:steps(33,end)}19.222%,100%{transform:translateX(277.2px)}}@keyframes k0{0%{opacity:0}4.444%{opacity:1}24.767%,100%{opacity:0}}@keyframes l1{0%{opacity:0}24.767%,100%{opacity:1}}@keyframes l2{0%{opacity:0}35.540%,100%{opacity:1}}@keyframes t2c2{0%,37.206%{transform:translateX(0);animation-timing-function:steps(13,end)}42.317%,100%{transform:translateX(109.2px)}}@keyframes k2{0%{opacity:0}35.540%{opacity:1}44.589%,100%{opacity:0}}@keyframes l3{0%{opacity:0}44.589%,100%{opacity:1}}@keyframes l4{0%{opacity:0}55.367%,100%{opacity:1}}@keyframes k4{0%{opacity:0}55.367%{opacity:1}100.000%,100%{opacity:0}}
+@keyframes scroll{0%{transform:translateY(0)}100%{transform:translateY(calc(-0 * 21px))}}
+@media (prefers-reduced-motion:reduce){.a,.caret{animation:none!important}.cover,.k{display:none}}
+</style>
+<defs><clipPath id="screen"><rect x="0" y="52" width="787" height="105"/></clipPath></defs>
+<rect width="787" height="175" rx="10" fill="#1c1c1c"/>
+<path d="M0 10a10 10 0 0 1 10-10h767a10 10 0 0 1 10 10v24h-787z" fill="#2a2a2a"/>
+<circle cx="18" cy="17.0" r="5.5" fill="#555"/><circle cx="36" cy="17.0" r="5.5" fill="#555"/><circle cx="54" cy="17.0" r="5.5" fill="#555"/>
+<text x="393.5" y="22.0" text-anchor="middle" opacity=".5" fill="#d0d0d0" style="font-size:13px">~/my-project</text>
+<g clip-path="url(#screen)" fill="#d0d0d0"><g class="a" style="animation-name:fade"><g class="a" style="animation-name:scroll">
+<g class="a" style="animation-name:l0"><text x="24.0" y="67.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">$</text><text x="40.8" y="67.8" textLength="277.2" lengthAdjust="spacingAndGlyphs">clientele start-api -o my_client/</text>
+<g class="a cover" style="animation-name:t0c2"><rect x="40.8" y="52.0" width="285.6" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k0"><g class="a" style="animation-name:t0c2"><rect class="caret" x="40.8" y="54.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l1"><text x="24.0" y="88.8" textLength="84.0" lengthAdjust="spacingAndGlyphs" opacity=".55" fill="#4fc6d6">[20:40:51]</text><text x="116.4" y="88.8" textLength="310.8" lengthAdjust="spacingAndGlyphs">Generating basic client at my_client/</text><text x="427.2" y="88.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" fill="#e6e04a">...</text><text x="679.2" y="88.8" textLength="50.4" lengthAdjust="spacingAndGlyphs" opacity=".55">cli.py</text><text x="729.6" y="88.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">:</text><text x="738.0" y="88.8" textLength="25.2" lengthAdjust="spacingAndGlyphs" opacity=".55">137</text>
+</g>
+<g class="a" style="animation-name:l2"><text x="24.0" y="109.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">$</text><text x="40.8" y="109.8" textLength="109.2" lengthAdjust="spacingAndGlyphs">ls my_client/</text>
+<g class="a cover" style="animation-name:t2c2"><rect x="40.8" y="94.0" width="117.6" height="21" fill="#1c1c1c"/></g>
+</g>
+<g class="a k" style="animation-name:k2"><g class="a" style="animation-name:t2c2"><rect class="caret" x="40.8" y="96.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+<g class="a" style="animation-name:l3"><text x="24.0" y="130.8" textLength="487.2" lengthAdjust="spacingAndGlyphs">MANIFEST.md  __init__.py  client.py  config.py  schemas.py</text>
+</g>
+<g class="a" style="animation-name:l4"><text x="24.0" y="151.8" textLength="8.4" lengthAdjust="spacingAndGlyphs" opacity=".55">$</text>
+</g>
+<g class="a k" style="animation-name:k4"><g><rect class="caret" x="40.8" y="138.0" width="8.4" height="17" fill="#d0d0d0"/></g></g>
+</g></g></g>
+</svg>

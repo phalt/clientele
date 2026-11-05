@@ -122,7 +122,7 @@ Clientele can create scaffolding for an API client from an OpenAPI schema with:
 - **Regeneration-friendly** - update your API, regenerate, review the git diff, then ship it!
 - **Formatted code** thanks to [Ruff](https://docs.astral.sh/ruff/).
 
-![generate_gif](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_generate.gif)
+![clientele start-api generating a typed API client from an OpenAPI schema](https://raw.githubusercontent.com/phalt/clientele/refs/heads/main/docs/clientele_start_api.svg)
 
 ## Getting Started
 

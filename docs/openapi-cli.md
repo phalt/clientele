@@ -13,6 +13,8 @@ To create a new clientele API client project just use the `start-api` command:
 uv run clientele start-api -o path/to/my_client
 ```
 
+![clientele start-api creating a basic API client project](clientele_start_api_basic.svg)
+
 This will create a new directory with the following file stucture:
 
 ```sh
@@ -37,6 +39,8 @@ If you provide a schema then the `start-api` command will generate the same proj
 ```sh
 clientele start-api -u https://raw.githubusercontent.com/phalt/clientele/main/example_openapi_specs/best.json -o my_client/
 ```
+
+![clientele start-api generating a typed API client from an OpenAPI schema](clientele_start_api.svg)
 
 ### From a URL
 
@@ -63,3 +67,15 @@ If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) clien
 ```sh
 clientele start-api -f path/to/file.json -o my_client/ --asyncio
 ```
+
+### Regenerating
+
+When your API changes, run the same command again with `-r` or `--regen` to update the client in place. Without it, clientele won't overwrite an existing client and will warn you instead. The exact command is also written into your client's `MANIFEST.md`.
+
+```sh
+clientele start-api -f path/to/file.json -o my_client/ --regen
+```
+
+Then review the git diff before you ship it. Here a new `/widgets/{widget_id}` endpoint was added to the schema:
+
+![clientele regenerating a client and git diff showing the new function and model](clientele_regen.svg)
