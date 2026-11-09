@@ -138,6 +138,16 @@ def get_type(t):
     if "const" in t:
         return f"typing.Literal[{repr(t['const'])}]"
 
+    # An inline enum (e.g. a property) becomes a Literal, like `const`, so it can be a
+    # discriminator. Top-level enum components are generated as enum.Enum classes elsewhere.
+    if (enum_values := t.get("enum")) and "$ref" not in t:
+        literal_values = [v for v in enum_values if v is not None]
+        if literal_values and all(isinstance(v, (str, int)) for v in literal_values):
+            literal = f"typing.Literal[{', '.join(repr(v) for v in literal_values)}]"
+            if t.get("nullable", False) or None in enum_values:
+                return f"typing.Optional[{literal}]"
+            return literal
+
     t_type = t.get("type")
     t_format = t.get("format")
     t_nullable = t.get("nullable", False)

@@ -91,11 +91,10 @@ def test_get_type_with_nested_arrays():
 
 
 def test_get_type_with_enum():
-    """Test type conversion with enum values."""
+    """An inline enum becomes a Literal of its values (#278)."""
     type_spec = {"type": "string", "enum": ["ONE", "TWO", "THREE"]}
     result = utils.get_type(type_spec)
-    # Should still return a string type
-    assert result == "str"
+    assert result == "typing.Literal['ONE', 'TWO', 'THREE']"
 
 
 def test_get_type_with_oneof():
