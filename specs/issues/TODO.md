@@ -31,7 +31,7 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Phase 5: generator ordering
 
-- [ ] [schema-order](schema-order.md): `schemas.py` fails to import when a `oneOf`/`anyOf` alias or array model comes before a component it references (no GitHub issue yet; found in #276)
+- [x] [#291](291.md): `schemas.py` fails to import when a `oneOf`/`anyOf` alias or array model comes before a component it references (found in #276)
 
 ## Phase 6: config (breaking)
 

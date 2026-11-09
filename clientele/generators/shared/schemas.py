@@ -1,3 +1,4 @@
+import heapq
 import typing
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
@@ -44,6 +45,80 @@ def build_union_type_string(
         return f'typing.Annotated[{union_str}, pydantic.Field(discriminator="{discriminator}")]'
 
     return union_str
+
+
+def _eager_refs(schema: dict) -> set[str]:
+    """
+    Class names a `oneOf`/`anyOf` alias or `type: array` RootModel needs defined before it.
+
+    These are evaluated at import time, so every `$ref` that ends up in the generated
+    expression counts: the members, and anything nested in inline members or `items`
+    (mirrors what `utils.get_type` renders). Other components have none: plain classes
+    use forward references and `model_rebuild()`, and `allOf` inlines properties.
+    """
+    if not (schema.get("oneOf") or schema.get("anyOf") or schema.get("type") == "array"):
+        return set()
+
+    refs: set[str] = set()
+
+    def walk(node: typing.Any) -> None:
+        if not isinstance(node, dict):
+            return
+        if ref := node.get("$ref"):
+            refs.add(utils.class_name_titled(utils.schema_ref(ref)))
+        for member in (node.get("oneOf") or []) + (node.get("anyOf") or []):
+            walk(member)
+        walk(node.get("items"))
+
+    walk(schema)
+    return refs
+
+
+def order_by_eager_refs(schemas: dict[str, dict]) -> list[str]:
+    """
+    Order component keys so each alias / array model comes after the components it references.
+
+    Stable: keeps spec order, except that a component moves just after its last eager
+    dependency. Components with no eager dependencies keep their relative order, so specs
+    that already imported generate the same file. A cycle among eager definitions can't be
+    expressed as module-level aliases; it falls back to spec order with a warning.
+    """
+    keys = list(schemas)
+    index_by_name: dict[str, list[int]] = {}
+    for i, key in enumerate(keys):
+        index_by_name.setdefault(utils.class_name_titled(key), []).append(i)
+
+    pending: list[set[int]] = []
+    dependents: list[list[int]] = [[] for _ in keys]
+    for i, key in enumerate(keys):
+        deps = {j for name in _eager_refs(schemas[key]) for j in index_by_name.get(name, [])}
+        pending.append(deps)
+        for j in deps:
+            dependents[j].append(i)
+
+    ready = [i for i, deps in enumerate(pending) if not deps]
+    heapq.heapify(ready)
+    emitted = [False] * len(keys)
+    order: list[str] = []
+    while len(order) < len(keys):
+        if ready:
+            i = heapq.heappop(ready)
+        else:
+            i = min(j for j, done in enumerate(emitted) if not done)
+            cycle = sorted(keys[j] for j, done in enumerate(emitted) if not done and pending[j])
+            console.log(
+                f"[yellow]Warning: reference cycle among schemas {', '.join(cycle)}; "
+                f"emitting {keys[i]} in spec order, schemas.py may not import"
+            )
+        if emitted[i]:
+            continue
+        emitted[i] = True
+        order.append(keys[i])
+        for d in dependents[i]:
+            pending[d].discard(i)
+            if not pending[d] and not emitted[d]:
+                heapq.heappush(ready, d)
+    return order
 
 
 def _admits_null(schema: dict) -> bool:
@@ -259,7 +334,11 @@ class SchemasGenerator:
             console.log("No schemas found in components, skipping schema generation...")
             return
 
-        for schema_key, schema in self.spec.components.schemas.items():
-            schema_dict = cicerone_compat.schema_to_dict(schema)
-            self.make_schema_class(schema_key=schema_key, schema=schema_dict)
+        schema_dicts = {
+            schema_key: cicerone_compat.schema_to_dict(schema)
+            for schema_key, schema in self.spec.components.schemas.items()
+        }
+        # Aliases and array models are evaluated at import time, so define what they reference first
+        for schema_key in order_by_eager_refs(schema_dicts):
+            self.make_schema_class(schema_key=schema_key, schema=schema_dicts[schema_key])
         console.log(f"Generated {len(self.schemas.items())} schemas...")
