@@ -1,5 +1,6 @@
 import os
 import pathlib
+import shutil
 import subprocess
 import typing
 from os import path
@@ -12,6 +13,19 @@ from clientele.generators.api import clients, writer
 from clientele.generators.shared import schemas, utils
 
 console = rich_console.Console()
+
+
+def find_ruff_bin() -> typing.Optional[str]:
+    """
+    Return the path to the ruff binary installed with `clientele[cli]`,
+    falling back to the first `ruff` on `PATH`, or `None` if neither exists.
+    """
+    try:
+        import ruff
+
+        return ruff.find_ruff_bin()
+    except (ImportError, FileNotFoundError):
+        return shutil.which("ruff")
 
 
 class APIGenerator(generators.Generator):
@@ -119,31 +133,23 @@ class APIGenerator(generators.Generator):
         return True
 
     def format_client(self) -> None:
-        directory = pathlib.Path(self.output_dir)
-        # Use Ruff to format all Python files in the directory
+        ruff_bin = find_ruff_bin()
+        if ruff_bin is None:
+            console.log("[yellow]Warning: Ruff not found, skipping formatting")
+            return
+        # Resolve the path to ensure it's absolute and normalized
+        resolved_dir = str(pathlib.Path(self.output_dir).resolve())
         try:
-            # Resolve the path to ensure it's absolute and normalized
-            resolved_dir = directory.resolve()
             # First, format the code
-            subprocess.run(
-                ["ruff", "format", str(resolved_dir)],
-                check=True,
-                capture_output=True,
-                text=True,
-            )
+            subprocess.run([ruff_bin, "format", resolved_dir], check=True, capture_output=True, text=True)
             # Then, fix auto-fixable linting issues
-            subprocess.run(
-                ["ruff", "check", "--fix", str(resolved_dir)],
-                check=True,
-                capture_output=True,
-                text=True,
-            )
+            subprocess.run([ruff_bin, "check", "--fix", resolved_dir], check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as e:
             # Sanitize stderr to prevent log injection
             error_msg = str(e.stderr).replace("\n", " ").replace("\r", " ")[:200]
             console.log(f"[yellow]Warning: Ruff formatting failed: {error_msg}")
         except FileNotFoundError:
-            console.log("[yellow]Warning: Ruff not found in PATH, skipping formatting")
+            console.log("[yellow]Warning: Ruff not found, skipping formatting")
 
     def generate(self) -> None:
         self.generate_templates_files()
