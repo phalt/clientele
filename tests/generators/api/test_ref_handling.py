@@ -74,7 +74,8 @@ class TestRefInSchemaProperties:
 
         schemas_content = (tmp_path / "schemas.py").read_text()
 
-        assert 'detail: list["ValidationError"]' in schemas_content
+        # HTTPValidationError has no `required` list, so `detail` is optional (#268)
+        assert 'detail: typing.Optional[list["ValidationError"]] = None' in schemas_content
 
 
 class TestRefInResponses:

@@ -12,7 +12,7 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Phase 1: quick bug fixes
 
-- [ ] [#268](268.md): fields are required when a schema has no `required` list
+- [x] [#268](268.md): fields are required when a schema has no `required` list
 - [ ] [#279](279.md): use the bundled ruff instead of the one on `PATH`
 - [ ] [#277](277.md): duplicate enum members from punctuation-only differences
 

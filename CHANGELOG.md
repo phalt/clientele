@@ -4,6 +4,7 @@
 
 - **Custom HTTP backends:** `handle_sync_stream` and `handle_async_stream` no longer take `inner_type` or `response_parser`. They now yield each line as a `str`, and clientele turns the lines into the return type. Built-in backends are updated; custom backends need the same change.
 - `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`. They can still be imported from their old locations.
+- Fix generated models treating every property as required when the schema has no `required` array, or an empty one. Per OpenAPI, those properties are optional, and they are now generated as `typing.Optional[...] = None`. This affects schemas such as DRF's `Patched*` models and FastAPI's `HTTPValidationError`. Optional properties that already allow `null` (e.g. `anyOf: [{type: string}, {type: "null"}]`) are no longer wrapped in `typing.Optional` a second time ([#268](https://github.com/phalt/clientele/issues/268)).
 
 ## 2.3.1
 

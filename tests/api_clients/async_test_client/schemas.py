@@ -42,7 +42,7 @@ class HeadersResponse(pydantic.BaseModel):
 
 
 class HTTPValidationError(pydantic.BaseModel):
-    detail: list["ValidationError"]
+    detail: typing.Optional[list["ValidationError"]] = None
 
 
 class OptionalParametersResponse(pydantic.BaseModel):
@@ -93,8 +93,8 @@ class ValidationError(pydantic.BaseModel):
 
 
 class NullableFieldsRequest(pydantic.BaseModel):
-    nullable_string: typing.Optional[str | None] = None
-    nullable_integer: typing.Optional[int | None] = None
+    nullable_string: str | None = None
+    nullable_integer: int | None = None
     required_field: str
 
 
