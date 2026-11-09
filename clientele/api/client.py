@@ -196,9 +196,14 @@ class APIClient:
         self, data: dict[str, typing.Any] | pydantic.BaseModel | None
     ) -> dict[str, typing.Any] | None:
         if isinstance(data, pydantic.BaseModel):
-            return data.model_dump(mode="json", exclude_unset=True)
+            return self._dump_body(data)
 
         return data
+
+    def _dump_body(self, model: pydantic.BaseModel) -> dict[str, typing.Any]:
+        """Serialise a request body model. Fields left at their defaults are included unless
+        `config.request_body_exclude_unset` is set."""
+        return model.model_dump(mode="json", exclude_unset=self.config.request_body_exclude_unset)
 
     def get(
         self,
@@ -586,11 +591,11 @@ class APIClient:
             return payload
 
         if isinstance(payload, pydantic.BaseModel):
-            return payload.model_dump(mode="json", exclude_unset=True)
+            return self._dump_body(payload)
 
         if type_utils.is_pydantic_model(annotation):
             model_instance = annotation.model_validate(payload)
-            return model_instance.model_dump(mode="json", exclude_unset=True)
+            return self._dump_body(model_instance)
 
         if type_utils.is_typeddict(annotation):
             if not isinstance(payload, dict):
