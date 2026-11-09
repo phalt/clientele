@@ -121,6 +121,9 @@ class BaseConfig(pydantic_settings.BaseSettings):
     follow_redirects: bool = False
     verify: bool | str = True
     http2: bool = False
+    # Request body serialisation: leave out fields that weren't explicitly set (PATCH-style partial
+    # updates). Off by default, so fields left at their defaults (e.g. discriminators) are sent.
+    request_body_exclude_unset: bool = False
     # Cache configuration
     cache_backend: CacheBackend | None = None
     # HTTP backend configuration
@@ -144,6 +147,7 @@ def get_default_config(base_url: str) -> BaseConfig:
         follow_redirects=False,
         verify=True,
         http2=False,
+        request_body_exclude_unset=False,
         cache_backend=None,
         http_backend=None,
         logger=None,

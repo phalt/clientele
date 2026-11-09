@@ -23,7 +23,7 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Phase 3: serialization semantics
 
-- [ ] [#276](276.md): include defaulted fields in request bodies again; make `exclude_unset` opt-in (after #268)
+- [x] [#276](276.md): include defaulted fields in request bodies again; make `exclude_unset` opt-in (after #268)
 
 ## Phase 4: response handling
 

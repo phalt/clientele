@@ -35,6 +35,7 @@ The `BaseConfig` class is powered by [pydantic-settings](https://docs.pydantic.d
 - `follow_redirects: bool = False` - if redirects should be followed.
 - `verify: bool | str = True` - if SSL connections should be verified.
 - `http2: bool = False` - if http2 should be used for making requests.
+- `request_body_exclude_unset: bool = False` - leave fields that weren't explicitly set out of request bodies (`model_dump(exclude_unset=True)`). Use it for PATCH-style partial updates, where sending `"field": null` or a default would overwrite server state. With it on, fields left at their defaults are also left out, including discriminators such as `action: Literal["add-user"] = "add-user"`, so pass those explicitly. Can be set with the `REQUEST_BODY_EXCLUDE_UNSET` environment variable.
 - `cache_backend` - the [cache backend](api-cache.md) you want to use when caching results.
 - `http_backend` - the [http backend](api-http-backends.md) you want to use when making HTTP requests.
 
