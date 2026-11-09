@@ -72,10 +72,17 @@ class SchemasGenerator:
         self.writer = writer
 
     def generate_enum_properties(self, properties: dict) -> str:
-        lines = [
-            f"    {utils.snake_case_prop(arg.upper())} = {utils.get_type(arg_details)}\n"
-            for arg, arg_details in properties.items()
-        ]
+        lines = []
+        taken: set[str] = set()
+        for arg, arg_details in properties.items():
+            base = utils.snake_case_prop(arg.upper())
+            # Values that differ only by dropped characters (e.g. "AAA" and "AA|A") get the
+            # same base name, so add a numeric suffix to keep every member unique.
+            name, suffix = base, 2
+            while name in taken:
+                name, suffix = f"{base}_{suffix}", suffix + 1
+            taken.add(name)
+            lines.append(f"    {name} = {utils.get_type(arg_details)}\n")
         return "".join(lines)
 
     def generate_headers_class(self, properties: dict, func_name: str) -> str:

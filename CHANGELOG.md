@@ -6,6 +6,7 @@
 - `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`. They can still be imported from their old locations.
 - Fix generated models treating every property as required when the schema has no `required` array, or an empty one. Per OpenAPI, those properties are optional, and they are now generated as `typing.Optional[...] = None`. This affects schemas such as DRF's `Patched*` models and FastAPI's `HTTPValidationError`. Optional properties that already allow `null` (e.g. `anyOf: [{type: string}, {type: "null"}]`) are no longer wrapped in `typing.Optional` a second time ([#268](https://github.com/phalt/clientele/issues/268)).
 - Fix generated clients being left unformatted when `ruff` isn't on `PATH` (e.g. running `.venv/bin/python -m clientele.cli` without activating the venv, or calling the generator via `subprocess`). The generator now runs the ruff installed with `clientele[cli]`, and only falls back to the `ruff` on `PATH` when that package isn't installed ([#279](https://github.com/phalt/clientele/issues/279)).
+- Fix generated `schemas.py` failing to import (`TypeError: 'AAA' already defined`) when enum values differ only by characters that are dropped from member names, e.g. `["AAA", "AA|A"]`. Later members that would collide now get a numeric suffix (`AAA`, `AAA_2`, `AAA_3`, …). Member values are unchanged, and enums without collisions keep their existing member names ([#277](https://github.com/phalt/clientele/issues/277)).
 
 ## 2.3.1
 
