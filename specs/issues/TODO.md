@@ -29,11 +29,15 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 - [ ] [#265](265.md): keep 204/no-content in `response_map` and dereference response `$ref`s
 
-## Phase 5: config (breaking)
+## Phase 5: generator ordering
+
+- [ ] [schema-order](schema-order.md): `schemas.py` fails to import when a `oneOf`/`anyOf` alias or array model comes before a component it references (no GitHub issue yet; found in #276)
+
+## Phase 6: config (breaking)
 
 - [ ] [#281](281.md): per-client `env_prefix` for generated `Config`
 
-## Phase 6: new generator option
+## Phase 7: new generator option
 
 - [ ] [#282](282.md): `--base-class` option for generated models
 
