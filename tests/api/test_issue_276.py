@@ -279,6 +279,13 @@ SPEC = {
     "components": {
         "schemas": {
             # Shape from the issue
+            "Notification": {
+                "oneOf": [
+                    {"$ref": "#/components/schemas/NotificationAddUser"},
+                    {"$ref": "#/components/schemas/NotificationRemoveUser"},
+                ],
+                "discriminator": {"propertyName": "action"},
+            },
             "NotificationAddUser": {
                 "type": "object",
                 "properties": {
@@ -294,15 +301,6 @@ SPEC = {
                     "message": {"type": "string"},
                 },
                 "required": ["message"],
-            },
-            # Listed after its members: the generator emits components in spec order, and the
-            # union alias is evaluated at import time.
-            "Notification": {
-                "oneOf": [
-                    {"$ref": "#/components/schemas/NotificationAddUser"},
-                    {"$ref": "#/components/schemas/NotificationRemoveUser"},
-                ],
-                "discriminator": {"propertyName": "action"},
             },
         }
     },
