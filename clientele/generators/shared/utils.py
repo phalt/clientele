@@ -49,6 +49,17 @@ def get_client_project_directory_path(output_dir: str) -> str:
     return ""
 
 
+# String `format`s that map to a Python type pydantic parses from the JSON string.
+# Any other format (including `uri`, `email`, ...) stays `str`.
+STRING_FORMAT_TYPES = {
+    "uuid": "uuid.UUID",
+    "date-time": "datetime.datetime",
+    "date": "datetime.date",
+    "time": "datetime.time",
+    "duration": "datetime.timedelta",
+}
+
+
 class DataType:
     INTEGER = "integer"
     NUMBER = "number"
@@ -179,7 +190,7 @@ def get_type(t):
     # Handle regular types
     base_type = None
     if t_type == DataType.STRING:
-        base_type = "str"
+        base_type = STRING_FORMAT_TYPES.get(t_format, "str") if isinstance(t_format, str) else "str"
     elif t_type == DataType.INTEGER:
         base_type = "int"
     elif t_type == DataType.NUMBER:
