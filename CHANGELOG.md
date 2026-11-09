@@ -1,6 +1,6 @@
 # Change log
 
-## 3.0.0 UNRELEASED
+## 3.0.0
 
 A major release: entries marked **Breaking**, **Behaviour change** or **Typing change** need attention when upgrading. Regenerate your clients and review the diff; an existing `config.py` is never overwritten.
 
