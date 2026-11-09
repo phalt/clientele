@@ -44,7 +44,7 @@ Types:          uv run ty check
 Import rules:   uv run lint-imports
 Tests:          uv run pytest -vv --cov=clientele --cov-branch --cov-report=term-missing --cov-config=pyproject.toml
 Focused tests:  uv run pytest tests/api/stream -vv
-Docs:           uv run mkdocs serve
+Docs:           uv run zensical serve
 Lock httpx2:    uv lock --upgrade-package httpx2
 ```
 

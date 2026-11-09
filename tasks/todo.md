@@ -405,10 +405,10 @@ uv run ruff format --check . && uv run ruff check . && uv run ty check && uv run
 **Acceptance criteria:**
 - [ ] Every code sample in the changed docs runs (or is covered by a test)
 - [ ] CHANGELOG lists all five breaking changes from the spec, each linking to its docs section
-- [ ] `uv run mkdocs build --strict` passes
+- [ ] `uv run zensical build --strict` passes
 
 **Verification:**
-- [ ] Docs build: `uv run mkdocs build --strict`
+- [ ] Docs build: `uv run zensical build --strict`
 - [ ] Manual check: read `api-stream.md` top to bottom as a new user
 
 **Dependencies:** 13, 14, 16

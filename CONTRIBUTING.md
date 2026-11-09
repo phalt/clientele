@@ -29,7 +29,7 @@ If you want to directly contribute you can do so in two ways:
 
 ### Documentation
 
-We use [mkdocs](https://www.mkdocs.org/) and [GitHub pages](https://pages.github.com/) to deploy our docs.
+We use [Zensical](https://zensical.org/) and [GitHub pages](https://pages.github.com/) to deploy our docs.
 
 Fixing grammar, spelling mistakes, or expanding the documentation to cover features that are not yet documented, are all valuable contributions.
 
