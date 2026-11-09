@@ -39,7 +39,7 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Phase 7: new generator option
 
-- [ ] [#282](282.md): `--base-class` option for generated models
+- [x] [#282](282.md): `--base-class` option for generated models
 
 ## Dropped
 

@@ -80,6 +80,27 @@ clientele start-api -f path/to/file.json -o billing_client/ --env-prefix BILLING
 
 The prefix is only used when `config.py` is created. `config.py` is never overwritten, so `--regen` keeps the prefix (or no prefix) your existing `config.py` has. To change it, edit `model_config = SettingsConfigDict(env_prefix=...)` in `config.py`.
 
+### Model base class
+
+Generated models subclass `pydantic.BaseModel`. To give them a shared base, for an app-wide `model_config` such as `extra="forbid"`, `frozen=True` or an `alias_generator`, pass a dotted path to your own `pydantic.BaseModel` subclass with `--base-class`:
+
+```python
+# my_app/models.py
+import pydantic
+
+
+class Base(pydantic.BaseModel):
+    model_config = pydantic.ConfigDict(extra="forbid", frozen=True)
+```
+
+```sh
+clientele start-api -f path/to/file.json -o my_client/ --base-class my_app.models.Base
+```
+
+`schemas.py` then imports it as `from my_app.models import Base as _ClienteleBase` and every generated model, including request, response and header models, subclasses it. Enums and list models (`ListResponse`) are unchanged. A model's own `model_config` (e.g. `populate_by_name=True, serialize_by_alias=True` on models with aliased fields) is merged over the base's.
+
+The path is checked for its format but not imported when generating, so the class only has to be importable where the client runs. The option is recorded in `MANIFEST.md`, so the regen command there keeps it. Response models are validated with the base's config too, so `extra="forbid"` makes a response with a field the spec doesn't list fail validation.
+
 ### Regenerating
 
 When your API changes, run the same command again with `-r` or `--regen` to update the client in place. Without it, clientele won't overwrite an existing client and will warn you instead. The exact command is also written into your client's `MANIFEST.md`.

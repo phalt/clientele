@@ -53,8 +53,11 @@ class APIGenerator(generators.Generator):
         url: typing.Optional[str],
         file: typing.Optional[str],
         env_prefix: typing.Optional[str] = None,
+        base_class: typing.Optional[str] = None,
     ) -> None:
-        self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir, writer=writer)
+        self.schemas_generator = schemas.SchemasGenerator(
+            spec=spec, output_dir=output_dir, writer=writer, base_class=base_class
+        )
         self.clients_generator = clients.ClientsGenerator(
             spec=spec,
             output_dir=output_dir,
@@ -67,6 +70,7 @@ class APIGenerator(generators.Generator):
         self.output_dir = output_dir
         self.file = file
         self.url = url
+        self.base_class = base_class
         # None derives the prefix from the output directory; "" turns it off
         self.env_prefix_option = env_prefix
         self.env_prefix = utils.default_env_prefix(output_dir) if env_prefix is None else env_prefix
@@ -108,6 +112,7 @@ class APIGenerator(generators.Generator):
                 client_project_directory_path=client_project_directory_path,
                 base_url=base_url,
                 env_prefix=self.env_prefix,
+                base_class=self.base_class,
             )
             write_func(content, output_dir=self.output_dir)
         # Manifest file
@@ -115,7 +120,7 @@ class APIGenerator(generators.Generator):
         if manifest_file.exists():
             os.remove(manifest_file)
         template = writer.templates.get_template("manifest.jinja2")
-        generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio' if self.asyncio else ''} --regen{self._env_prefix_arg()}"  # noqa
+        generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio' if self.asyncio else ''} --regen{self._env_prefix_arg()}{f' --base-class {self.base_class}' if self.base_class else ''}"  # noqa
         content = (
             template.render(
                 api_version=self.spec.info.version if self.spec.info else "N/A",
