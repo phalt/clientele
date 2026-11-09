@@ -18,7 +18,7 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Phase 2: generator type correctness
 
-- [ ] [#278](278.md): inline multi-value enums become `Literal` (fixes discriminated unions)
+- [x] [#278](278.md): inline multi-value enums become `Literal` (fixes discriminated unions)
 - [ ] [#280](280.md): `uuid` / `date-time` / `date` string formats map to Python types
 
 ## Phase 3: serialization semantics
