@@ -380,12 +380,38 @@
                 ],
                 "title": "NullableFieldsResponse",
                 "type": "object"
+            },
+            "ForbiddenResponse": {
+                "description": "Error body returned when the caller is not allowed to do something",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "detail"
+                ],
+                "title": "ForbiddenResponse",
+                "type": "object"
             }
         },
         "securitySchemes": {
             "HTTPBearer": {
                 "scheme": "bearer",
                 "type": "http"
+            }
+        },
+        "responses": {
+            "Forbidden": {
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ForbiddenResponse"
+                        }
+                    }
+                },
+                "description": "Forbidden"
             }
         }
     },
@@ -615,6 +641,42 @@
                     }
                 },
                 "summary": "Request Delete"
+            }
+        },
+        "/request-delete/{item_id}": {
+            "delete": {
+                "description": "A delete that returns 204 with no body on success, a shared `components/responses` 403, or a 422",
+                "operationId": "request_delete_no_content_request_delete__item_id__delete",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "item_id",
+                        "required": true,
+                        "schema": {
+                            "title": "Item Id",
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "403": {
+                        "$ref": "#/components/responses/Forbidden"
+                    },
+                    "422": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        },
+                        "description": "Validation Error"
+                    }
+                },
+                "summary": "Request Delete No Content"
             }
         },
         "/security-required": {

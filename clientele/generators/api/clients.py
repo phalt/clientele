@@ -157,6 +157,9 @@ class ClientsGenerator:
         status_code_map: dict[str, str] = {}
         response_classes = []
         for status_code, details in responses.items():
+            # Shared responses (`#/components/responses/...`) carry their content on the target
+            if ref := details.get("$ref"):
+                details = utils.get_response_from_ref(spec=self.spec, ref=ref)
             # Handle responses without content (e.g., 204 No Content)
             if "content" not in details or not details.get("content"):
                 # For no-content responses, use None as the response type
@@ -226,8 +229,12 @@ class ClientsGenerator:
 
     def generate_response_types(self, responses: dict, func_name: str) -> str:
         response_class_names = self.get_response_class_names(responses=responses, func_name=func_name)
-        if len(response_class_names) > 1:
-            return utils.union_for_py_ver([f"schemas.{r}" for r in response_class_names])
+        union_items = [f"schemas.{r}" for r in response_class_names]
+        if response_class_names and self._no_content_success_codes(func_name):
+            # A 2xx without a body (e.g. 204) mixed with content responses returns None
+            union_items.append("None")
+        if len(union_items) > 1:
+            return utils.union_for_py_ver(union_items)
         elif len(response_class_names) == 0:
             return "None"
         else:
@@ -248,6 +255,11 @@ class ClientsGenerator:
         else:
             return f"schemas.{input_class_names[0]}"
 
+    def _no_content_success_codes(self, func_name: str) -> set[str]:
+        """2xx status codes of this operation that have no response body (e.g. 204)."""
+        status_codes = self.function_and_status_codes_bundle.get(func_name, {})
+        return {code for code, schema in status_codes.items() if schema == "None" and code.startswith("2")}
+
     def get_response_map(self, func_name: str) -> typing.Optional[str]:
         """
         Generate response_map for decorator if there are multiple response types.
@@ -259,17 +271,23 @@ class ClientsGenerator:
         if len(status_codes) <= 1:
             return None
 
-        # Filter out None responses (no content responses)
-        valid_responses = {code: schema for code, schema in status_codes.items() if schema != "None"}
+        # Keep 2xx no-content responses (e.g. 204) as None so they don't raise at runtime.
+        # A no-content error code is left out, so it still raises instead of returning None.
+        no_content_success = self._no_content_success_codes(func_name)
+        valid_responses = {
+            code: schema for code, schema in status_codes.items() if schema != "None" or code in no_content_success
+        }
 
-        if len(valid_responses) <= 1:
+        # Only no-content codes: the function returns None and needs no response_map
+        if len(valid_responses) <= 1 or all(schema == "None" for schema in valid_responses.values()):
             return None
 
         # Build response_map dict with schemas. prefix
         response_map_parts = []
         for status_code, schema_name in sorted(valid_responses.items()):
             # Add schemas. prefix to match the response types
-            response_map_parts.append(f"{status_code}: schemas.{schema_name}")
+            value = "None" if schema_name == "None" else f"schemas.{schema_name}"
+            response_map_parts.append(f"{status_code}: {value}")
 
         return "{" + ", ".join(response_map_parts) + "}"
 
