@@ -239,8 +239,8 @@ except clientele_api.APIException as e:
 ### `response_map` requirements
 
 1. **Keys must be valid HTTP status codes**: Use the `codes` enum from `clientele.api` for reference, or any standard HTTP status code integers (100-599).
-2. **Values must be Pydantic models or TypedDict**: Each value must be a `BaseModel` subclass or a `TypedDict` class.
-3. **Result parameter type must include all models**: The `result` parameter's type annotation must be a Union containing all the Pydantic models or TypedDict classes used in `response_map`.
+2. **Values must be Pydantic models or TypedDict**: Each value must be a `BaseModel` subclass or a `TypedDict` class, or `None` for a status code with no response body (e.g. `{204: None, 403: ErrorResponse}`). A `None` status code returns `None` without validating the body.
+3. **Result parameter type must include all models**: The `result` parameter's type annotation must be a Union containing all the Pydantic models or TypedDict classes used in `response_map`, plus `None` if any value is `None` (e.g. `result: ErrorResponse | None`).
 4. **Unexpected status codes raise `APIException`**: If the server returns a status code not in the `response_map`, an `APIException` is raised with details about the unexpected status.
 5. **Precedence**: If `response_map` provides a model for the actual HTTP status code, that model is used. Otherwise, the `result` parameter annotation is used as the default for 2xx responses.
 

@@ -280,6 +280,19 @@ def get_param_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, param: dict) -> 
     return cicerone_compat.parameter_to_dict(param_obj)
 
 
+@functools.lru_cache(maxsize=128)
+def response_ref(ref: str) -> str:
+    return ref.replace("#/components/responses/", "")
+
+
+def get_response_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, ref: str) -> dict:
+    """Get a `#/components/responses/...` response and convert to dict using centralized compat layer."""
+    response_obj = spec.components.responses.get(response_ref(ref))
+    if response_obj is None:
+        return {}
+    return cicerone_compat.response_to_dict(response_obj)
+
+
 def get_schema_from_ref(spec: cicerone_openapi_spec.OpenAPISpec, ref: str) -> dict:
     """Get schema from reference and convert to dict using centralized compat layer."""
     stripped_name = schema_ref(ref)

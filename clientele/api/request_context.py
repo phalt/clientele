@@ -48,7 +48,7 @@ class RequestContext(pydantic.BaseModel):
     func: typing.Callable[..., typing.Any]
     signature: inspect.Signature
     type_hints: dict[str, typing.Any]
-    response_map: dict[int, type[typing.Any]] | None = None
+    response_map: typing.Mapping[int, type[typing.Any] | None] | None = None
     response_parser: (
         typing.Callable[[http_response.Response], typing.Any] | typing.Callable[[str], typing.Any] | None
     ) = None
@@ -147,7 +147,7 @@ def build_request_context(
     method: str,
     path: str,
     func: typing.Callable[..., typing.Any],
-    response_map: dict[int, type[typing.Any]] | None = None,
+    response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
     response_parser: typing.Callable[[http_response.Response], typing.Any]
     | typing.Callable[[str], typing.Any]
     | None = None,
@@ -199,7 +199,9 @@ def build_request_context(
 
 
 def _validate_response_map(
-    response_map: dict[int, type[typing.Any]], func: typing.Callable[..., typing.Any], type_hints: dict[str, typing.Any]
+    response_map: typing.Mapping[int, type[typing.Any] | None],
+    func: typing.Callable[..., typing.Any],
+    type_hints: dict[str, typing.Any],
 ) -> None:
     """
     Validates that response_map contains valid status codes and Pydantic models or TypedDicts,
@@ -210,8 +212,11 @@ def _validate_response_map(
         if not status_codes.codes.is_valid_status_code(status_code):
             raise ValueError(f"Invalid status code {status_code} in response_map")
 
-    # Validate all values are Pydantic BaseModel subclasses or TypedDict classes
+    # Validate all values are Pydantic BaseModel subclasses or TypedDict classes.
+    # None marks a status code with no response body (e.g. 204).
     for status_code, model_class in response_map.items():
+        if model_class is None:
+            continue
         if not (
             type_utils.is_pydantic_model(model_class)
             or type_utils.is_typeddict(model_class)
@@ -226,6 +231,16 @@ def _validate_response_map(
 
     # Check that all response_map models are in the result types
     for status_code, model_class in response_map.items():
+        if model_class is None:
+            # `X | None` and `Optional[X]` hold NoneType; a bare `None` annotation may stay None
+            if type(None) not in result_types and None not in result_types:
+                func_name = getattr(func, "__name__", "<function>")
+                raise ValueError(
+                    f"Response model 'None' for status code {status_code} "
+                    f"is not in the 'result' parameter's type annotation. "
+                    f"Please add 'None' to the 'result' parameter type of '{func_name}'."
+                )
+            continue
         if model_class not in result_types:
             missing_model = model_class.__name__
             func_name = getattr(func, "__name__", "<function>")

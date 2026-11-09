@@ -104,6 +104,10 @@ class NullableFieldsResponse(pydantic.BaseModel):
     required_field: str
 
 
+class ForbiddenResponse(pydantic.BaseModel):
+    detail: str
+
+
 class HeaderRequestHeaderRequestGetHeaders(pydantic.BaseModel):
     x_test: typing.Any = pydantic.Field(serialization_alias="x-test")
 

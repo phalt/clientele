@@ -115,7 +115,7 @@ class APIClient:
         method: str,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]],
+        response_map: typing.Mapping[int, type[typing.Any] | None],
         data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
         query: dict[str, typing.Any] | None = None,
         headers: dict[str, str] | None = None,
@@ -156,7 +156,7 @@ class APIClient:
         method: str,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]],
+        response_map: typing.Mapping[int, type[typing.Any] | None],
         data: dict[str, typing.Any] | pydantic.BaseModel | None = None,
         query: dict[str, typing.Any] | None = None,
         headers: dict[str, str] | None = None,
@@ -209,7 +209,7 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
         response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
@@ -227,7 +227,7 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
         response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
@@ -245,7 +245,7 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
         response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
@@ -263,7 +263,7 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
         response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
@@ -281,7 +281,7 @@ class APIClient:
         self,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
         response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
@@ -300,7 +300,7 @@ class APIClient:
         method: str,
         path: str,
         *,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
         response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
@@ -612,7 +612,7 @@ class APIClient:
         query_params: dict[str, typing.Any] | None,
         data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
     ) -> http_response.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -652,7 +652,7 @@ class APIClient:
         query_params: dict[str, typing.Any] | None,
         data_payload: dict[str, typing.Any] | None,
         headers_override: dict[str, str] | None,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
     ) -> http_response.Response:
         headers = {**self.config.headers, **(headers_override or {})}
 
@@ -707,7 +707,7 @@ class APIClient:
         self,
         response: http_response.Response,
         annotation: typing.Any,
-        response_map: dict[int, type[typing.Any]] | None = None,
+        response_map: typing.Mapping[int, type[typing.Any] | None] | None = None,
         response_parser: typing.Callable[[http_response.Response], typing.Any]
         | typing.Callable[[str], typing.Any]
         | None = None,
@@ -746,7 +746,8 @@ class APIClient:
                 )
             # Get the model for this status code and validate
             model_class = response_map[status_code]
-            if payload is None:
+            # None marks a no-content status code (e.g. 204): return None without validating
+            if model_class is None or payload is None:
                 return None
             if type_utils.is_pydantic_model(model_class):
                 return type_utils.validate_model(model_class, payload)

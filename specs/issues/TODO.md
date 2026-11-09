@@ -27,7 +27,7 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Phase 4: response handling
 
-- [ ] [#265](265.md): keep 204/no-content in `response_map` and dereference response `$ref`s
+- [x] [#265](265.md): keep 204/no-content in `response_map` and dereference response `$ref`s
 
 ## Phase 5: config (breaking)
 

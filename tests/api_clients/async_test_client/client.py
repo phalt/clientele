@@ -82,6 +82,20 @@ async def request_delete_request_delete_delete(result: schemas.DeleteResponse) -
     return result
 
 
+@client.delete(
+    "/request-delete/{item_id}",
+    response_map={204: None, 403: schemas.ForbiddenResponse, 422: schemas.HTTPValidationError},
+)
+async def request_delete_no_content_request_delete(
+    result: schemas.ForbiddenResponse | schemas.HTTPValidationError | None, item_id: int
+) -> schemas.ForbiddenResponse | schemas.HTTPValidationError | None:
+    """Request Delete No Content
+
+    A delete that returns 204 with no body on success, a shared `components/responses` 403, or a 422
+    """
+    return result
+
+
 @client.get("/security-required")
 async def security_required_request_security_required_get(
     result: schemas.SecurityRequiredResponse,
