@@ -11,6 +11,7 @@
         <link rel="canonical" href="https://docs.clientele.dev/CHANGELOG/">
       
       
+      
         <link rel="prev" href="../server-django-ninja/">
       
       
@@ -19,7 +20,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="zensical-0.1.0">
     
     
       
@@ -27,10 +28,15 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
       
       
 
@@ -44,12 +50,12 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -70,14 +76,11 @@
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#change-log" class="md-skip">
-          Skip to content
-        </a>
-      
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
     </div>
     <div data-md-component="announce">
       
@@ -88,14 +91,15 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Clientele" class="md-header__button md-logo" aria-label="Clientele" data-md-component="logo">
+    <a href="./.." title="Clientele" class="md-header__button md-logo" aria-label="Clientele" data-md-component="logo">
       
-  <img src="../favicon.png" alt="logo">
+  <img src="../favicon.png" alt="Clientele">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -149,57 +153,29 @@
       
         <label class="md-header__button md-icon" for="__search">
           
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
 </div>
       
     
-    
-      <div class="md-header__source">
+    <div class="md-header__source">
+      
         <a href="https://github.com/phalt/clientele" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     phalt/clientele
   </div>
 </a>
-      </div>
-    
+      
+    </div>
   </nav>
   
 </header>
@@ -220,11 +196,8 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="./.." class="md-tabs__link">
         
-  
-  
-    
   
   ⚜️ Home
 
@@ -239,11 +212,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../install/" class="md-tabs__link">
           
-  
   
   🚀 Install
 
@@ -259,11 +234,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../api-overview/" class="md-tabs__link">
           
-  
   
   📕 Documentation
 
@@ -279,11 +256,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../openapi-cli/" class="md-tabs__link">
           
-  
   
   📟 Command line tools
 
@@ -299,11 +278,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../server-fastapi/" class="md-tabs__link">
           
-  
   
   ⚡️ API Server Integrations
 
@@ -321,11 +302,8 @@
   
   
     <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+      <a href="././" class="md-tabs__link">
         
-  
-  
-    
   
   📝 Change Log
 
@@ -356,9 +334,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Clientele" class="md-nav__button md-logo" aria-label="Clientele" data-md-component="logo">
+    <a href="./.." title="Clientele" class="md-nav__button md-logo" aria-label="Clientele" data-md-component="logo">
       
-  <img src="../favicon.png" alt="logo">
+  <img src="../favicon.png" alt="Clientele">
 
     </a>
     Clientele
@@ -368,7 +346,7 @@
       <a href="https://github.com/phalt/clientele" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     phalt/clientele
@@ -385,15 +363,14 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="./.." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    ⚜️ Home
-  
+  ⚜️ Home
 
     
   </span>
@@ -433,8 +410,7 @@
   <span class="md-ellipsis">
     
   
-    🚀 Install
-  
+  🚀 Install
 
     
   </span>
@@ -444,19 +420,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    🚀 Install
-  
+  🚀 Install
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -469,8 +445,7 @@
   <span class="md-ellipsis">
     
   
-    Install
-  
+  Install
 
     
   </span>
@@ -481,10 +456,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -518,8 +494,7 @@
   <span class="md-ellipsis">
     
   
-    📕 Documentation
-  
+  📕 Documentation
 
     
   </span>
@@ -529,19 +504,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    📕 Documentation
-  
+  📕 Documentation
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -554,8 +529,7 @@
   <span class="md-ellipsis">
     
   
-    Documentation
-  
+  Documentation
 
     
   </span>
@@ -566,10 +540,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -582,8 +556,7 @@
   <span class="md-ellipsis">
     
   
-    🎪 Examples
-  
+  🎪 Examples
 
     
   </span>
@@ -594,10 +567,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -610,8 +583,7 @@
   <span class="md-ellipsis">
     
   
-    ⚙️ Configuration
-  
+  ⚙️ Configuration
 
     
   </span>
@@ -622,10 +594,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -638,8 +610,7 @@
   <span class="md-ellipsis">
     
   
-    🔀 Async Support
-  
+  🔀 Async Support
 
     
   </span>
@@ -650,10 +621,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -666,8 +637,7 @@
   <span class="md-ellipsis">
     
   
-    🔐 Authentication
-  
+  🔐 Authentication
 
     
   </span>
@@ -678,10 +648,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -694,8 +664,7 @@
   <span class="md-ellipsis">
     
   
-    🔌 HTTP Backends
-  
+  🔌 HTTP Backends
 
     
   </span>
@@ -706,10 +675,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -722,8 +691,7 @@
   <span class="md-ellipsis">
     
   
-    💾 Caching
-  
+  💾 Caching
 
     
   </span>
@@ -734,10 +702,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -750,8 +718,7 @@
   <span class="md-ellipsis">
     
   
-    🌊 Streaming
-  
+  🌊 Streaming
 
     
   </span>
@@ -762,10 +729,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -778,8 +745,7 @@
   <span class="md-ellipsis">
     
   
-    🧬 GraphQL
-  
+  🧬 GraphQL
 
     
   </span>
@@ -790,10 +756,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -806,8 +772,7 @@
   <span class="md-ellipsis">
     
   
-    🚨 Exception Handling
-  
+  🚨 Exception Handling
 
     
   </span>
@@ -818,10 +783,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -834,8 +799,7 @@
   <span class="md-ellipsis">
     
   
-    🔄 Retries
-  
+  🔄 Retries
 
     
   </span>
@@ -846,10 +810,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -862,8 +826,7 @@
   <span class="md-ellipsis">
     
   
-    🪵 Logging
-  
+  🪵 Logging
 
     
   </span>
@@ -874,10 +837,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -890,8 +853,7 @@
   <span class="md-ellipsis">
     
   
-    🧪 Testing
-  
+  🧪 Testing
 
     
   </span>
@@ -902,10 +864,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -918,8 +880,7 @@
   <span class="md-ellipsis">
     
   
-    🎯 Direct requests
-  
+  🎯 Direct requests
 
     
   </span>
@@ -930,10 +891,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -946,8 +907,7 @@
   <span class="md-ellipsis">
     
   
-    💉 Injected parameters & typing
-  
+  💉 Injected parameters & typing
 
     
   </span>
@@ -958,10 +918,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -995,8 +956,7 @@
   <span class="md-ellipsis">
     
   
-    📟 Command line tools
-  
+  📟 Command line tools
 
     
   </span>
@@ -1006,19 +966,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    📟 Command line tools
-  
+  📟 Command line tools
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -1031,8 +991,7 @@
   <span class="md-ellipsis">
     
   
-    🏗️ Client creator
-  
+  🏗️ Client creator
 
     
   </span>
@@ -1043,10 +1002,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -1080,8 +1040,7 @@
   <span class="md-ellipsis">
     
   
-    ⚡️ API Server Integrations
-  
+  ⚡️ API Server Integrations
 
     
   </span>
@@ -1091,19 +1050,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    ⚡️ API Server Integrations
-  
+  ⚡️ API Server Integrations
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -1116,8 +1075,7 @@
   <span class="md-ellipsis">
     
   
-    ⚡️ FastAPI
-  
+  ⚡️ FastAPI
 
     
   </span>
@@ -1128,10 +1086,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1144,8 +1102,7 @@
   <span class="md-ellipsis">
     
   
-    🦄 Django REST Framework
-  
+  🦄 Django REST Framework
 
     
   </span>
@@ -1156,10 +1113,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1172,8 +1129,7 @@
   <span class="md-ellipsis">
     
   
-    🥷 Django Ninja
-  
+  🥷 Django Ninja
 
     
   </span>
@@ -1184,10 +1140,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -1203,7 +1160,7 @@
   
     <li class="md-nav__item md-nav__item--active">
       
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
       
       
         
@@ -1216,8 +1173,7 @@
   <span class="md-ellipsis">
     
   
-    📝 Change Log
-  
+  📝 Change Log
 
     
   </span>
@@ -1227,15 +1183,14 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="./" class="md-nav__link md-nav__link--active">
+      <a href="././" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    📝 Change Log
-  
+  📝 Change Log
 
     
   </span>
@@ -1246,7 +1201,8 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
   
   
   
@@ -1255,16 +1211,16 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#240-unreleased" class="md-nav__link">
+  <a href="#300" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        2.4.0 UNRELEASED
-      
+      <span class="md-typeset">
+        3.0.0
+      </span>
     </span>
   </a>
   
@@ -1273,9 +1229,9 @@
         <li class="md-nav__item">
   <a href="#231" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.3.1
-      
+      </span>
     </span>
   </a>
   
@@ -1284,9 +1240,9 @@
         <li class="md-nav__item">
   <a href="#230" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.3.0
-      
+      </span>
     </span>
   </a>
   
@@ -1295,9 +1251,9 @@
         <li class="md-nav__item">
   <a href="#222" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.2.2
-      
+      </span>
     </span>
   </a>
   
@@ -1306,9 +1262,9 @@
         <li class="md-nav__item">
   <a href="#221" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.2.1
-      
+      </span>
     </span>
   </a>
   
@@ -1317,9 +1273,9 @@
         <li class="md-nav__item">
   <a href="#220" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.2.0
-      
+      </span>
     </span>
   </a>
   
@@ -1328,9 +1284,9 @@
         <li class="md-nav__item">
   <a href="#210" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.1.0
-      
+      </span>
     </span>
   </a>
   
@@ -1339,9 +1295,9 @@
         <li class="md-nav__item">
   <a href="#200" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.0.0
-      
+      </span>
     </span>
   </a>
   
@@ -1350,9 +1306,9 @@
         <li class="md-nav__item">
   <a href="#1111" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.11.1
-      
+      </span>
     </span>
   </a>
   
@@ -1361,9 +1317,9 @@
         <li class="md-nav__item">
   <a href="#1110" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.11.0
-      
+      </span>
     </span>
   </a>
   
@@ -1373,9 +1329,9 @@
           <li class="md-nav__item">
   <a href="#graphqlclient-support" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         GraphQLClient support
-      
+      </span>
     </span>
   </a>
   
@@ -1389,9 +1345,9 @@
         <li class="md-nav__item">
   <a href="#1100" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.10.0
-      
+      </span>
     </span>
   </a>
   
@@ -1400,9 +1356,9 @@
         <li class="md-nav__item">
   <a href="#192" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.9.2
-      
+      </span>
     </span>
   </a>
   
@@ -1412,9 +1368,9 @@
           <li class="md-nav__item">
   <a href="#responsefactory" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         ResponseFactory
-      
+      </span>
     </span>
   </a>
   
@@ -1423,9 +1379,9 @@
           <li class="md-nav__item">
   <a href="#networkerrorfactory" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         NetworkErrorFactory
-      
+      </span>
     </span>
   </a>
   
@@ -1439,9 +1395,9 @@
         <li class="md-nav__item">
   <a href="#191" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.9.1
-      
+      </span>
     </span>
   </a>
   
@@ -1450,9 +1406,9 @@
         <li class="md-nav__item">
   <a href="#190" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.9.0
-      
+      </span>
     </span>
   </a>
   
@@ -1462,9 +1418,9 @@
           <li class="md-nav__item">
   <a href="#retry-support" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Retry support
-      
+      </span>
     </span>
   </a>
   
@@ -1473,9 +1429,9 @@
           <li class="md-nav__item">
   <a href="#improved-testing" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Improved testing
-      
+      </span>
     </span>
   </a>
   
@@ -1484,9 +1440,9 @@
           <li class="md-nav__item">
   <a href="#dropped-explore-command" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Dropped explore command
-      
+      <span class="md-typeset">
+        Dropped <code>explore</code> command
+      </span>
     </span>
   </a>
   
@@ -1500,9 +1456,9 @@
         <li class="md-nav__item">
   <a href="#181" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.8.1
-      
+      </span>
     </span>
   </a>
   
@@ -1511,9 +1467,9 @@
         <li class="md-nav__item">
   <a href="#180" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.8.0
-      
+      </span>
     </span>
   </a>
   
@@ -1523,9 +1479,9 @@
           <li class="md-nav__item">
   <a href="#request-logging" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Request Logging
-      
+      </span>
     </span>
   </a>
   
@@ -1534,9 +1490,9 @@
           <li class="md-nav__item">
   <a href="#cli-commands-update" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         CLI commands update
-      
+      </span>
     </span>
   </a>
   
@@ -1550,9 +1506,9 @@
         <li class="md-nav__item">
   <a href="#171" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.7.1
-      
+      </span>
     </span>
   </a>
   
@@ -1561,9 +1517,9 @@
         <li class="md-nav__item">
   <a href="#170" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.7.0
-      
+      </span>
     </span>
   </a>
   
@@ -1573,9 +1529,9 @@
           <li class="md-nav__item">
   <a href="#http-backends" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         HTTP Backends
-      
+      </span>
     </span>
   </a>
   
@@ -1584,9 +1540,9 @@
           <li class="md-nav__item">
   <a href="#direct-requests" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Direct requests
-      
+      </span>
     </span>
   </a>
   
@@ -1600,9 +1556,9 @@
         <li class="md-nav__item">
   <a href="#161" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.6.1
-      
+      </span>
     </span>
   </a>
   
@@ -1611,9 +1567,9 @@
         <li class="md-nav__item">
   <a href="#160" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.6.0
-      
+      </span>
     </span>
   </a>
   
@@ -1623,9 +1579,9 @@
           <li class="md-nav__item">
   <a href="#streaming-responses" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Streaming responses
-      
+      </span>
     </span>
   </a>
   
@@ -1634,9 +1590,9 @@
           <li class="md-nav__item">
   <a href="#mypy-support" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Mypy support
-      
+      </span>
     </span>
   </a>
   
@@ -1645,9 +1601,9 @@
           <li class="md-nav__item">
   <a href="#other-changes" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Other changes
-      
+      </span>
     </span>
   </a>
   
@@ -1661,9 +1617,9 @@
         <li class="md-nav__item">
   <a href="#150" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.5.0
-      
+      </span>
     </span>
   </a>
   
@@ -1672,9 +1628,9 @@
         <li class="md-nav__item">
   <a href="#143" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.3
-      
+      </span>
     </span>
   </a>
   
@@ -1683,9 +1639,9 @@
         <li class="md-nav__item">
   <a href="#142" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.2
-      
+      </span>
     </span>
   </a>
   
@@ -1694,9 +1650,9 @@
         <li class="md-nav__item">
   <a href="#141" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.1
-      
+      </span>
     </span>
   </a>
   
@@ -1705,9 +1661,9 @@
         <li class="md-nav__item">
   <a href="#140" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.0
-      
+      </span>
     </span>
   </a>
   
@@ -1716,9 +1672,9 @@
         <li class="md-nav__item">
   <a href="#130" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.3.0
-      
+      </span>
     </span>
   </a>
   
@@ -1728,9 +1684,9 @@
           <li class="md-nav__item">
   <a href="#introducing-clientele-api-a-different-way-to-think-about-python-api-clients" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Introducing Clientele API - a different way to think about Python API Clients
-      
+      <span class="md-typeset">
+        Introducing <strong>Clientele API</strong> - a different way to think about Python API Clients
+      </span>
     </span>
   </a>
   
@@ -1739,9 +1695,9 @@
           <li class="md-nav__item">
   <a href="#generate-scaffolding-for-openapi-projects-with-clientele-api" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Generate scaffolding for OpenAPI projects with clientele API
-      
+      <span class="md-typeset">
+        Generate scaffolding for OpenAPI projects with <strong>clientele API</strong>
+      </span>
     </span>
   </a>
   
@@ -1750,9 +1706,9 @@
           <li class="md-nav__item">
   <a href="#explore-apis-with-clientele-api-clients" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Explore APIs with Clientele API clients
-      
+      <span class="md-typeset">
+        Explore APIs with <strong>Clientele API</strong> clients
+      </span>
     </span>
   </a>
   
@@ -1761,9 +1717,9 @@
           <li class="md-nav__item">
   <a href="#improved-documentation" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Improved documentation
-      
+      </span>
     </span>
   </a>
   
@@ -1772,9 +1728,9 @@
           <li class="md-nav__item">
   <a href="#200-deprecation-notice" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.0.0 deprecation notice
-      
+      </span>
     </span>
   </a>
   
@@ -1788,9 +1744,9 @@
         <li class="md-nav__item">
   <a href="#120" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.2.0
-      
+      </span>
     </span>
   </a>
   
@@ -1799,9 +1755,9 @@
         <li class="md-nav__item">
   <a href="#110" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.1.0
-      
+      </span>
     </span>
   </a>
   
@@ -1810,9 +1766,9 @@
         <li class="md-nav__item">
   <a href="#101" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.0.1
-      
+      </span>
     </span>
   </a>
   
@@ -1821,9 +1777,9 @@
         <li class="md-nav__item">
   <a href="#100" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.0.0
-      
+      </span>
     </span>
   </a>
   
@@ -1833,9 +1789,9 @@
           <li class="md-nav__item">
   <a href="#2025-12-27" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2025-12-27
-      
+      </span>
     </span>
   </a>
   
@@ -1844,9 +1800,9 @@
           <li class="md-nav__item">
   <a href="#major-new-features" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Major new features
-      
+      </span>
     </span>
   </a>
   
@@ -1855,9 +1811,9 @@
           <li class="md-nav__item">
   <a href="#clientele-code-generation-improvements" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Clientele code generation improvements
-      
+      </span>
     </span>
   </a>
   
@@ -1871,9 +1827,9 @@
         <li class="md-nav__item">
   <a href="#0100" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.10.0
-      
+      </span>
     </span>
   </a>
   
@@ -1882,9 +1838,9 @@
         <li class="md-nav__item">
   <a href="#090" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.9.0
-      
+      </span>
     </span>
   </a>
   
@@ -1893,9 +1849,9 @@
         <li class="md-nav__item">
   <a href="#083" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.3
-      
+      </span>
     </span>
   </a>
   
@@ -1904,9 +1860,9 @@
         <li class="md-nav__item">
   <a href="#082" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.2
-      
+      </span>
     </span>
   </a>
   
@@ -1915,9 +1871,9 @@
         <li class="md-nav__item">
   <a href="#081" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.1
-      
+      </span>
     </span>
   </a>
   
@@ -1926,9 +1882,9 @@
         <li class="md-nav__item">
   <a href="#080" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.0
-      
+      </span>
     </span>
   </a>
   
@@ -1937,9 +1893,9 @@
         <li class="md-nav__item">
   <a href="#071" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.7.1
-      
+      </span>
     </span>
   </a>
   
@@ -1948,9 +1904,9 @@
         <li class="md-nav__item">
   <a href="#070" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.7.0
-      
+      </span>
     </span>
   </a>
   
@@ -1959,9 +1915,9 @@
         <li class="md-nav__item">
   <a href="#063" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.3
-      
+      </span>
     </span>
   </a>
   
@@ -1970,9 +1926,9 @@
         <li class="md-nav__item">
   <a href="#062" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.2
-      
+      </span>
     </span>
   </a>
   
@@ -1981,9 +1937,9 @@
         <li class="md-nav__item">
   <a href="#061" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.1
-      
+      </span>
     </span>
   </a>
   
@@ -1992,9 +1948,9 @@
         <li class="md-nav__item">
   <a href="#060" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.0
-      
+      </span>
     </span>
   </a>
   
@@ -2003,9 +1959,9 @@
         <li class="md-nav__item">
   <a href="#052" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.5.2
-      
+      </span>
     </span>
   </a>
   
@@ -2014,9 +1970,9 @@
         <li class="md-nav__item">
   <a href="#051" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.5.1
-      
+      </span>
     </span>
   </a>
   
@@ -2025,9 +1981,9 @@
         <li class="md-nav__item">
   <a href="#050" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.5.0
-      
+      </span>
     </span>
   </a>
   
@@ -2037,9 +1993,9 @@
           <li class="md-nav__item">
   <a href="#please-delete-the-constantspy-file-when-updating-to-this-version-to-have-new-features-take-affect" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Please delete the constants.py file when updating to this version to have new features take affect
-      
+      </span>
     </span>
   </a>
   
@@ -2053,9 +2009,9 @@
         <li class="md-nav__item">
   <a href="#044" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.4
-      
+      </span>
     </span>
   </a>
   
@@ -2064,9 +2020,9 @@
         <li class="md-nav__item">
   <a href="#043" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.3
-      
+      </span>
     </span>
   </a>
   
@@ -2075,9 +2031,9 @@
         <li class="md-nav__item">
   <a href="#042" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.2
-      
+      </span>
     </span>
   </a>
   
@@ -2086,9 +2042,9 @@
         <li class="md-nav__item">
   <a href="#041" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.1
-      
+      </span>
     </span>
   </a>
   
@@ -2097,9 +2053,9 @@
         <li class="md-nav__item">
   <a href="#040" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.0
-      
+      </span>
     </span>
   </a>
   
@@ -2108,9 +2064,9 @@
         <li class="md-nav__item">
   <a href="#032" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.3.2
-      
+      </span>
     </span>
   </a>
   
@@ -2119,9 +2075,9 @@
         <li class="md-nav__item">
   <a href="#031" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.3.1
-      
+      </span>
     </span>
   </a>
   
@@ -2130,9 +2086,9 @@
         <li class="md-nav__item">
   <a href="#030" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.3.0
-      
+      </span>
     </span>
   </a>
   
@@ -2141,9 +2097,9 @@
         <li class="md-nav__item">
   <a href="#020" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.2.0
-      
+      </span>
     </span>
   </a>
   
@@ -2152,9 +2108,9 @@
         <li class="md-nav__item">
   <a href="#010" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.1.0
-      
+      </span>
     </span>
   </a>
   
@@ -2178,10 +2134,24 @@
               
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
   
   
   
@@ -2190,16 +2160,16 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#240-unreleased" class="md-nav__link">
+  <a href="#300" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        2.4.0 UNRELEASED
-      
+      <span class="md-typeset">
+        3.0.0
+      </span>
     </span>
   </a>
   
@@ -2208,9 +2178,9 @@
         <li class="md-nav__item">
   <a href="#231" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.3.1
-      
+      </span>
     </span>
   </a>
   
@@ -2219,9 +2189,9 @@
         <li class="md-nav__item">
   <a href="#230" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.3.0
-      
+      </span>
     </span>
   </a>
   
@@ -2230,9 +2200,9 @@
         <li class="md-nav__item">
   <a href="#222" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.2.2
-      
+      </span>
     </span>
   </a>
   
@@ -2241,9 +2211,9 @@
         <li class="md-nav__item">
   <a href="#221" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.2.1
-      
+      </span>
     </span>
   </a>
   
@@ -2252,9 +2222,9 @@
         <li class="md-nav__item">
   <a href="#220" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.2.0
-      
+      </span>
     </span>
   </a>
   
@@ -2263,9 +2233,9 @@
         <li class="md-nav__item">
   <a href="#210" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.1.0
-      
+      </span>
     </span>
   </a>
   
@@ -2274,9 +2244,9 @@
         <li class="md-nav__item">
   <a href="#200" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.0.0
-      
+      </span>
     </span>
   </a>
   
@@ -2285,9 +2255,9 @@
         <li class="md-nav__item">
   <a href="#1111" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.11.1
-      
+      </span>
     </span>
   </a>
   
@@ -2296,9 +2266,9 @@
         <li class="md-nav__item">
   <a href="#1110" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.11.0
-      
+      </span>
     </span>
   </a>
   
@@ -2308,9 +2278,9 @@
           <li class="md-nav__item">
   <a href="#graphqlclient-support" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         GraphQLClient support
-      
+      </span>
     </span>
   </a>
   
@@ -2324,9 +2294,9 @@
         <li class="md-nav__item">
   <a href="#1100" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.10.0
-      
+      </span>
     </span>
   </a>
   
@@ -2335,9 +2305,9 @@
         <li class="md-nav__item">
   <a href="#192" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.9.2
-      
+      </span>
     </span>
   </a>
   
@@ -2347,9 +2317,9 @@
           <li class="md-nav__item">
   <a href="#responsefactory" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         ResponseFactory
-      
+      </span>
     </span>
   </a>
   
@@ -2358,9 +2328,9 @@
           <li class="md-nav__item">
   <a href="#networkerrorfactory" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         NetworkErrorFactory
-      
+      </span>
     </span>
   </a>
   
@@ -2374,9 +2344,9 @@
         <li class="md-nav__item">
   <a href="#191" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.9.1
-      
+      </span>
     </span>
   </a>
   
@@ -2385,9 +2355,9 @@
         <li class="md-nav__item">
   <a href="#190" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.9.0
-      
+      </span>
     </span>
   </a>
   
@@ -2397,9 +2367,9 @@
           <li class="md-nav__item">
   <a href="#retry-support" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Retry support
-      
+      </span>
     </span>
   </a>
   
@@ -2408,9 +2378,9 @@
           <li class="md-nav__item">
   <a href="#improved-testing" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Improved testing
-      
+      </span>
     </span>
   </a>
   
@@ -2419,9 +2389,9 @@
           <li class="md-nav__item">
   <a href="#dropped-explore-command" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Dropped explore command
-      
+      <span class="md-typeset">
+        Dropped <code>explore</code> command
+      </span>
     </span>
   </a>
   
@@ -2435,9 +2405,9 @@
         <li class="md-nav__item">
   <a href="#181" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.8.1
-      
+      </span>
     </span>
   </a>
   
@@ -2446,9 +2416,9 @@
         <li class="md-nav__item">
   <a href="#180" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.8.0
-      
+      </span>
     </span>
   </a>
   
@@ -2458,9 +2428,9 @@
           <li class="md-nav__item">
   <a href="#request-logging" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Request Logging
-      
+      </span>
     </span>
   </a>
   
@@ -2469,9 +2439,9 @@
           <li class="md-nav__item">
   <a href="#cli-commands-update" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         CLI commands update
-      
+      </span>
     </span>
   </a>
   
@@ -2485,9 +2455,9 @@
         <li class="md-nav__item">
   <a href="#171" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.7.1
-      
+      </span>
     </span>
   </a>
   
@@ -2496,9 +2466,9 @@
         <li class="md-nav__item">
   <a href="#170" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.7.0
-      
+      </span>
     </span>
   </a>
   
@@ -2508,9 +2478,9 @@
           <li class="md-nav__item">
   <a href="#http-backends" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         HTTP Backends
-      
+      </span>
     </span>
   </a>
   
@@ -2519,9 +2489,9 @@
           <li class="md-nav__item">
   <a href="#direct-requests" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Direct requests
-      
+      </span>
     </span>
   </a>
   
@@ -2535,9 +2505,9 @@
         <li class="md-nav__item">
   <a href="#161" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.6.1
-      
+      </span>
     </span>
   </a>
   
@@ -2546,9 +2516,9 @@
         <li class="md-nav__item">
   <a href="#160" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.6.0
-      
+      </span>
     </span>
   </a>
   
@@ -2558,9 +2528,9 @@
           <li class="md-nav__item">
   <a href="#streaming-responses" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Streaming responses
-      
+      </span>
     </span>
   </a>
   
@@ -2569,9 +2539,9 @@
           <li class="md-nav__item">
   <a href="#mypy-support" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Mypy support
-      
+      </span>
     </span>
   </a>
   
@@ -2580,9 +2550,9 @@
           <li class="md-nav__item">
   <a href="#other-changes" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Other changes
-      
+      </span>
     </span>
   </a>
   
@@ -2596,9 +2566,9 @@
         <li class="md-nav__item">
   <a href="#150" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.5.0
-      
+      </span>
     </span>
   </a>
   
@@ -2607,9 +2577,9 @@
         <li class="md-nav__item">
   <a href="#143" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.3
-      
+      </span>
     </span>
   </a>
   
@@ -2618,9 +2588,9 @@
         <li class="md-nav__item">
   <a href="#142" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.2
-      
+      </span>
     </span>
   </a>
   
@@ -2629,9 +2599,9 @@
         <li class="md-nav__item">
   <a href="#141" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.1
-      
+      </span>
     </span>
   </a>
   
@@ -2640,9 +2610,9 @@
         <li class="md-nav__item">
   <a href="#140" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.4.0
-      
+      </span>
     </span>
   </a>
   
@@ -2651,9 +2621,9 @@
         <li class="md-nav__item">
   <a href="#130" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.3.0
-      
+      </span>
     </span>
   </a>
   
@@ -2663,9 +2633,9 @@
           <li class="md-nav__item">
   <a href="#introducing-clientele-api-a-different-way-to-think-about-python-api-clients" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Introducing Clientele API - a different way to think about Python API Clients
-      
+      <span class="md-typeset">
+        Introducing <strong>Clientele API</strong> - a different way to think about Python API Clients
+      </span>
     </span>
   </a>
   
@@ -2674,9 +2644,9 @@
           <li class="md-nav__item">
   <a href="#generate-scaffolding-for-openapi-projects-with-clientele-api" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Generate scaffolding for OpenAPI projects with clientele API
-      
+      <span class="md-typeset">
+        Generate scaffolding for OpenAPI projects with <strong>clientele API</strong>
+      </span>
     </span>
   </a>
   
@@ -2685,9 +2655,9 @@
           <li class="md-nav__item">
   <a href="#explore-apis-with-clientele-api-clients" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        Explore APIs with Clientele API clients
-      
+      <span class="md-typeset">
+        Explore APIs with <strong>Clientele API</strong> clients
+      </span>
     </span>
   </a>
   
@@ -2696,9 +2666,9 @@
           <li class="md-nav__item">
   <a href="#improved-documentation" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Improved documentation
-      
+      </span>
     </span>
   </a>
   
@@ -2707,9 +2677,9 @@
           <li class="md-nav__item">
   <a href="#200-deprecation-notice" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2.0.0 deprecation notice
-      
+      </span>
     </span>
   </a>
   
@@ -2723,9 +2693,9 @@
         <li class="md-nav__item">
   <a href="#120" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.2.0
-      
+      </span>
     </span>
   </a>
   
@@ -2734,9 +2704,9 @@
         <li class="md-nav__item">
   <a href="#110" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.1.0
-      
+      </span>
     </span>
   </a>
   
@@ -2745,9 +2715,9 @@
         <li class="md-nav__item">
   <a href="#101" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.0.1
-      
+      </span>
     </span>
   </a>
   
@@ -2756,9 +2726,9 @@
         <li class="md-nav__item">
   <a href="#100" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         1.0.0
-      
+      </span>
     </span>
   </a>
   
@@ -2768,9 +2738,9 @@
           <li class="md-nav__item">
   <a href="#2025-12-27" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         2025-12-27
-      
+      </span>
     </span>
   </a>
   
@@ -2779,9 +2749,9 @@
           <li class="md-nav__item">
   <a href="#major-new-features" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Major new features
-      
+      </span>
     </span>
   </a>
   
@@ -2790,9 +2760,9 @@
           <li class="md-nav__item">
   <a href="#clientele-code-generation-improvements" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Clientele code generation improvements
-      
+      </span>
     </span>
   </a>
   
@@ -2806,9 +2776,9 @@
         <li class="md-nav__item">
   <a href="#0100" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.10.0
-      
+      </span>
     </span>
   </a>
   
@@ -2817,9 +2787,9 @@
         <li class="md-nav__item">
   <a href="#090" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.9.0
-      
+      </span>
     </span>
   </a>
   
@@ -2828,9 +2798,9 @@
         <li class="md-nav__item">
   <a href="#083" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.3
-      
+      </span>
     </span>
   </a>
   
@@ -2839,9 +2809,9 @@
         <li class="md-nav__item">
   <a href="#082" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.2
-      
+      </span>
     </span>
   </a>
   
@@ -2850,9 +2820,9 @@
         <li class="md-nav__item">
   <a href="#081" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.1
-      
+      </span>
     </span>
   </a>
   
@@ -2861,9 +2831,9 @@
         <li class="md-nav__item">
   <a href="#080" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.8.0
-      
+      </span>
     </span>
   </a>
   
@@ -2872,9 +2842,9 @@
         <li class="md-nav__item">
   <a href="#071" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.7.1
-      
+      </span>
     </span>
   </a>
   
@@ -2883,9 +2853,9 @@
         <li class="md-nav__item">
   <a href="#070" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.7.0
-      
+      </span>
     </span>
   </a>
   
@@ -2894,9 +2864,9 @@
         <li class="md-nav__item">
   <a href="#063" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.3
-      
+      </span>
     </span>
   </a>
   
@@ -2905,9 +2875,9 @@
         <li class="md-nav__item">
   <a href="#062" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.2
-      
+      </span>
     </span>
   </a>
   
@@ -2916,9 +2886,9 @@
         <li class="md-nav__item">
   <a href="#061" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.1
-      
+      </span>
     </span>
   </a>
   
@@ -2927,9 +2897,9 @@
         <li class="md-nav__item">
   <a href="#060" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.6.0
-      
+      </span>
     </span>
   </a>
   
@@ -2938,9 +2908,9 @@
         <li class="md-nav__item">
   <a href="#052" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.5.2
-      
+      </span>
     </span>
   </a>
   
@@ -2949,9 +2919,9 @@
         <li class="md-nav__item">
   <a href="#051" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.5.1
-      
+      </span>
     </span>
   </a>
   
@@ -2960,9 +2930,9 @@
         <li class="md-nav__item">
   <a href="#050" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.5.0
-      
+      </span>
     </span>
   </a>
   
@@ -2972,9 +2942,9 @@
           <li class="md-nav__item">
   <a href="#please-delete-the-constantspy-file-when-updating-to-this-version-to-have-new-features-take-affect" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Please delete the constants.py file when updating to this version to have new features take affect
-      
+      </span>
     </span>
   </a>
   
@@ -2988,9 +2958,9 @@
         <li class="md-nav__item">
   <a href="#044" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.4
-      
+      </span>
     </span>
   </a>
   
@@ -2999,9 +2969,9 @@
         <li class="md-nav__item">
   <a href="#043" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.3
-      
+      </span>
     </span>
   </a>
   
@@ -3010,9 +2980,9 @@
         <li class="md-nav__item">
   <a href="#042" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.2
-      
+      </span>
     </span>
   </a>
   
@@ -3021,9 +2991,9 @@
         <li class="md-nav__item">
   <a href="#041" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.1
-      
+      </span>
     </span>
   </a>
   
@@ -3032,9 +3002,9 @@
         <li class="md-nav__item">
   <a href="#040" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.4.0
-      
+      </span>
     </span>
   </a>
   
@@ -3043,9 +3013,9 @@
         <li class="md-nav__item">
   <a href="#032" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.3.2
-      
+      </span>
     </span>
   </a>
   
@@ -3054,9 +3024,9 @@
         <li class="md-nav__item">
   <a href="#031" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.3.1
-      
+      </span>
     </span>
   </a>
   
@@ -3065,9 +3035,9 @@
         <li class="md-nav__item">
   <a href="#030" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.3.0
-      
+      </span>
     </span>
   </a>
   
@@ -3076,9 +3046,9 @@
         <li class="md-nav__item">
   <a href="#020" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.2.0
-      
+      </span>
     </span>
   </a>
   
@@ -3087,9 +3057,9 @@
         <li class="md-nav__item">
   <a href="#010" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         0.1.0
-      
+      </span>
     </span>
   </a>
   
@@ -3107,20 +3077,30 @@
             <div class="md-content" data-md-component="content">
               
               <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
                 
                   
-
 
   
   
 
 
 <h1 id="change-log">Change log</h1>
-<h2 id="240-unreleased">2.4.0 UNRELEASED</h2>
+<h2 id="300">3.0.0</h2>
+<p>A major release: entries marked <strong>Breaking</strong>, <strong>Behaviour change</strong> or <strong>Typing change</strong> need attention when upgrading. Regenerate your clients and review the diff; an existing <code>config.py</code> is never overwritten.</p>
 <ul>
-<li><strong>Custom HTTP backends:</strong> <code>handle_sync_stream</code> and <code>handle_async_stream</code> no longer take <code>inner_type</code> or <code>response_parser</code>. They now yield each line as a <code>str</code>, and clientele turns the lines into the return type. Built-in backends are updated; custom backends need the same change.</li>
-<li><code>APIException</code> and <code>HTTPStatusError</code> now live in <code>clientele.http</code>, and <code>CacheBackend</code> in <code>clientele.api.config</code>. They can still be imported from their old locations.</li>
-<li>Fix request bodies with more than one content type (e.g. JSON and form data) generating the wrong input classes. Only the last content type's class was written, sometimes more than once, and if that content type used a <code>$ref</code>, the class written was an empty copy that replaced the real model (<a href="https://github.com/phalt/clientele/pull/273">#273</a>).</li>
+<li><strong>Breaking:</strong> custom HTTP backends' <code>handle_sync_stream</code> / <code>handle_async_stream</code> no longer take <code>inner_type</code> or <code>response_parser</code> and now yield lines as <code>str</code>.</li>
+<li><strong>Behaviour change:</strong> request bodies include defaulted fields again; omitting unset fields is opt-in with <code>BaseConfig(request_body_exclude_unset=True)</code> (<a href="https://github.com/phalt/clientele/issues/276">#276</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/276.md">spec</a>).</li>
+<li><strong>Behaviour change:</strong> newly generated <code>Config</code> classes read prefixed environment variables (e.g. <code>BILLING_CLIENT_BASE_URL</code>); set the prefix with <code>start-api --env-prefix</code> (<a href="https://github.com/phalt/clientele/issues/281">#281</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/281.md">spec</a>).</li>
+<li><strong>Typing change:</strong> properties with no <code>required</code> list are generated as optional (<a href="https://github.com/phalt/clientele/issues/268">#268</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/268.md">spec</a>).</li>
+<li><strong>Typing change:</strong> inline <code>enum</code>s are generated as <code>typing.Literal[...]</code>, fixing discriminated unions (<a href="https://github.com/phalt/clientele/issues/278">#278</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/278.md">spec</a>).</li>
+<li><strong>Typing change:</strong> <code>uuid</code>, <code>date-time</code>, <code>date</code>, <code>time</code> and <code>duration</code> string formats map to <code>uuid.UUID</code> and <code>datetime</code> types (<a href="https://github.com/phalt/clientele/issues/280">#280</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/280.md">spec</a>).</li>
+<li><strong>Typing change:</strong> 2xx no-content responses stay in <code>response_map</code> as <code>None</code>, and response <code>$ref</code>s are dereferenced (<a href="https://github.com/phalt/clientele/issues/265">#265</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/265.md">spec</a>).</li>
+<li>New <code>start-api --base-class</code> option to set the base class of generated models (<a href="https://github.com/phalt/clientele/issues/282">#282</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/282.md">spec</a>).</li>
+<li><code>APIException</code> and <code>HTTPStatusError</code> now live in <code>clientele.http</code>, and <code>CacheBackend</code> in <code>clientele.api.config</code>; the old import paths still work.</li>
+<li>Fix generated clients left unformatted when <code>ruff</code> isn't on <code>PATH</code> (<a href="https://github.com/phalt/clientele/issues/279">#279</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/279.md">spec</a>).</li>
+<li>Fix duplicate enum members when values differ only by punctuation (<a href="https://github.com/phalt/clientele/issues/277">#277</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/277.md">spec</a>).</li>
+<li>Fix <code>schemas.py</code> failing to import when a <code>oneOf</code>/<code>anyOf</code> alias or array model comes before a component it references (<a href="https://github.com/phalt/clientele/issues/291">#291</a>, <a href="https://github.com/phalt/clientele/blob/main/specs/issues/291.md">spec</a>).</li>
 </ul>
 <h2 id="231">2.3.1</h2>
 <ul>
@@ -3197,25 +3177,25 @@
 <li>It follows the "Clientele" pattern of the standard <code>APIClient</code>.</li>
 </ul>
 <p><strong>Query example</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">'''</span>
 <span class="s1">    query($owner: String!, $name: String!) {</span>
 <span class="s1">        repository(owner: $owner, name: $name) {</span>
 <span class="s1">            name</span>
 <span class="s1">            stargazerCount</span>
 <span class="s1">        }</span>
 <span class="s1">    }</span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="s1">'''</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_repo</span><span class="p">(</span><span class="n">owner</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">RepositoryData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Repository</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">repository</span>
 </code></pre></div>
 <p><strong>Mutation example</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">mutation</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+<div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">mutation</span><span class="p">(</span><span class="s1">'''</span>
 <span class="s1">    mutation($title: String!) {</span>
 <span class="s1">        createIssue(input: {title: $title}) {</span>
 <span class="s1">            issue { id title }</span>
 <span class="s1">        }</span>
 <span class="s1">    }</span>
-<span class="s1">&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="s1">'''</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_issue</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">IssueData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Issue</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">createIssue</span><span class="o">.</span><span class="n">issue</span>
 </code></pre></div>
@@ -3253,10 +3233,10 @@
 </ul>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span><span class="p">,</span> <span class="n">retries</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://httpbin.org/&quot;</span><span class="p">))</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">api</span><span class="o">.</span><span class="n">BaseConfig</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"https://httpbin.org/"</span><span class="p">))</span>
 
 <span class="nd">@retries</span><span class="o">.</span><span class="n">retry</span><span class="p">(</span><span class="n">attempts</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/status/</span><span class="si">{status_code}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/status/</span><span class="si">{status_code}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_status</span><span class="p">(</span><span class="n">status_code</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
@@ -3277,11 +3257,11 @@
 
     <span class="c1"># Configure HTTP responses</span>
     <span class="n">fake_backend</span><span class="o">.</span><span class="n">queue_response</span><span class="p">(</span>
-        <span class="n">path</span><span class="o">=</span><span class="s2">&quot;/users&quot;</span><span class="p">,</span>
+        <span class="n">path</span><span class="o">=</span><span class="s2">"/users"</span><span class="p">,</span>
         <span class="n">response_obj</span><span class="o">=</span><span class="n">Response</span><span class="p">(</span>
             <span class="n">status_code</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span>
-            <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">&#39;{&quot;id&quot;: 10, &quot;name&quot;: &quot;Bob&quot;}&#39;</span><span class="p">,</span>
-            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;content-type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">},</span>
+            <span class="n">content</span><span class="o">=</span><span class="sa">b</span><span class="s1">'{"id": 10, "name": "Bob"}'</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"content-type"</span><span class="p">:</span> <span class="s2">"application/json"</span><span class="p">},</span>
         <span class="p">),</span>
     <span class="p">)</span>
 
@@ -3354,12 +3334,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"http://localhost:8000"</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Event</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/events&quot;</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/events"</span><span class="p">,</span> <span class="n">streaming_response</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_events</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Event</span><span class="p">]:</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
@@ -3655,6 +3635,8 @@
 
 
 
+
+
                 
               </article>
             </div>
@@ -3675,7 +3657,7 @@
           <a href="../server-django-ninja/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 🥷 Django Ninja">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
@@ -3697,8 +3679,8 @@
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
     </a>
   
 </div>
@@ -3708,7 +3690,7 @@
 </footer>
       
     </div>
-    <div class="md-dialog" data-md-component="dialog">
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
@@ -3716,10 +3698,14 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "content.code.copy", "search.suggest", "search.highlight", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.tabs","content.code.copy","search.suggest","search.highlight","navigation.footer"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d31f0ffa.min.js"></script>
       
     
   </body>

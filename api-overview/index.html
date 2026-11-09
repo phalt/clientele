@@ -11,6 +11,7 @@
         <link rel="canonical" href="https://docs.clientele.dev/api-overview/">
       
       
+      
         <link rel="prev" href="../install/">
       
       
@@ -21,7 +22,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="zensical-0.1.0">
     
     
       
@@ -29,10 +30,15 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
       
       
 
@@ -46,12 +52,12 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -72,14 +78,11 @@
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#documentation" class="md-skip">
-          Skip to content
-        </a>
-      
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
     </div>
     <div data-md-component="announce">
       
@@ -90,14 +93,15 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Clientele" class="md-header__button md-logo" aria-label="Clientele" data-md-component="logo">
+    <a href="./.." title="Clientele" class="md-header__button md-logo" aria-label="Clientele" data-md-component="logo">
       
-  <img src="../favicon.png" alt="logo">
+  <img src="../favicon.png" alt="Clientele">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -151,57 +155,29 @@
       
         <label class="md-header__button md-icon" for="__search">
           
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
 </div>
       
     
-    
-      <div class="md-header__source">
+    <div class="md-header__source">
+      
         <a href="https://github.com/phalt/clientele" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     phalt/clientele
   </div>
 </a>
-      </div>
-    
+      
+    </div>
   </nav>
   
 </header>
@@ -222,11 +198,8 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="./.." class="md-tabs__link">
         
-  
-  
-    
   
   ⚜️ Home
 
@@ -241,11 +214,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../install/" class="md-tabs__link">
           
-  
   
   🚀 Install
 
@@ -263,11 +238,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+        <a href="././" class="md-tabs__link">
           
-  
   
   📕 Documentation
 
@@ -283,11 +260,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../openapi-cli/" class="md-tabs__link">
           
-  
   
   📟 Command line tools
 
@@ -303,11 +282,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../server-fastapi/" class="md-tabs__link">
           
-  
   
   ⚡️ API Server Integrations
 
@@ -325,9 +306,6 @@
     <li class="md-tabs__item">
       <a href="../CHANGELOG/" class="md-tabs__link">
         
-  
-  
-    
   
   📝 Change Log
 
@@ -358,9 +336,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Clientele" class="md-nav__button md-logo" aria-label="Clientele" data-md-component="logo">
+    <a href="./.." title="Clientele" class="md-nav__button md-logo" aria-label="Clientele" data-md-component="logo">
       
-  <img src="../favicon.png" alt="logo">
+  <img src="../favicon.png" alt="Clientele">
 
     </a>
     Clientele
@@ -370,7 +348,7 @@
       <a href="https://github.com/phalt/clientele" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     phalt/clientele
@@ -387,15 +365,14 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="./.." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    ⚜️ Home
-  
+  ⚜️ Home
 
     
   </span>
@@ -435,8 +412,7 @@
   <span class="md-ellipsis">
     
   
-    🚀 Install
-  
+  🚀 Install
 
     
   </span>
@@ -446,19 +422,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    🚀 Install
-  
+  🚀 Install
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -471,8 +447,7 @@
   <span class="md-ellipsis">
     
   
-    Install
-  
+  Install
 
     
   </span>
@@ -483,10 +458,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -525,8 +501,7 @@
   <span class="md-ellipsis">
     
   
-    📕 Documentation
-  
+  📕 Documentation
 
     
   </span>
@@ -536,19 +511,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    📕 Documentation
-  
+  📕 Documentation
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
     
@@ -557,7 +532,7 @@
   
     <li class="md-nav__item md-nav__item--active">
       
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
       
       
         
@@ -570,8 +545,7 @@
   <span class="md-ellipsis">
     
   
-    Documentation
-  
+  Documentation
 
     
   </span>
@@ -581,15 +555,14 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="./" class="md-nav__link md-nav__link--active">
+      <a href="././" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    Documentation
-  
+  Documentation
 
     
   </span>
@@ -600,7 +573,8 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
   
   
   
@@ -609,16 +583,16 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#http-get-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         HTTP GET example
-      
+      </span>
     </span>
   </a>
   
@@ -627,9 +601,9 @@
         <li class="md-nav__item">
   <a href="#http-post-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         HTTP POST example
-      
+      </span>
     </span>
   </a>
   
@@ -638,9 +612,9 @@
         <li class="md-nav__item">
   <a href="#put-patch-and-delete-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         PUT, PATCH, and DELETE examples
-      
+      </span>
     </span>
   </a>
   
@@ -649,9 +623,9 @@
         <li class="md-nav__item">
   <a href="#return-value-independence" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Return value independence
-      
+      </span>
     </span>
   </a>
   
@@ -660,9 +634,9 @@
         <li class="md-nav__item">
   <a href="#injected-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Injected parameters
-      
+      </span>
     </span>
   </a>
   
@@ -671,9 +645,9 @@
         <li class="md-nav__item">
   <a href="#response-parsing-rules" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Response parsing rules
-      
+      </span>
     </span>
   </a>
   
@@ -682,9 +656,9 @@
         <li class="md-nav__item">
   <a href="#custom-response-parsing" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Custom response parsing
-      
+      </span>
     </span>
   </a>
   
@@ -693,9 +667,9 @@
         <li class="md-nav__item">
   <a href="#handling-multiple-response-bodies-and-status-codes" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Handling multiple response bodies and status codes
-      
+      </span>
     </span>
   </a>
   
@@ -705,9 +679,9 @@
           <li class="md-nav__item">
   <a href="#response_map-requirements" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        response_map requirements
-      
+      <span class="md-typeset">
+        <code>response_map</code> requirements
+      </span>
     </span>
   </a>
   
@@ -717,9 +691,9 @@
           <li class="md-nav__item">
   <a href="#multi-status-example-with-post" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Multi-status example with POST
-      
+      </span>
     </span>
   </a>
   
@@ -738,9 +712,9 @@
         <li class="md-nav__item">
   <a href="#connection-persistence" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Connection persistence
-      
+      </span>
     </span>
   </a>
   
@@ -753,10 +727,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -769,8 +743,7 @@
   <span class="md-ellipsis">
     
   
-    🎪 Examples
-  
+  🎪 Examples
 
     
   </span>
@@ -781,10 +754,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -797,8 +770,7 @@
   <span class="md-ellipsis">
     
   
-    ⚙️ Configuration
-  
+  ⚙️ Configuration
 
     
   </span>
@@ -809,10 +781,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -825,8 +797,7 @@
   <span class="md-ellipsis">
     
   
-    🔀 Async Support
-  
+  🔀 Async Support
 
     
   </span>
@@ -837,10 +808,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -853,8 +824,7 @@
   <span class="md-ellipsis">
     
   
-    🔐 Authentication
-  
+  🔐 Authentication
 
     
   </span>
@@ -865,10 +835,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -881,8 +851,7 @@
   <span class="md-ellipsis">
     
   
-    🔌 HTTP Backends
-  
+  🔌 HTTP Backends
 
     
   </span>
@@ -893,10 +862,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -909,8 +878,7 @@
   <span class="md-ellipsis">
     
   
-    💾 Caching
-  
+  💾 Caching
 
     
   </span>
@@ -921,10 +889,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -937,8 +905,7 @@
   <span class="md-ellipsis">
     
   
-    🌊 Streaming
-  
+  🌊 Streaming
 
     
   </span>
@@ -949,10 +916,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -965,8 +932,7 @@
   <span class="md-ellipsis">
     
   
-    🧬 GraphQL
-  
+  🧬 GraphQL
 
     
   </span>
@@ -977,10 +943,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -993,8 +959,7 @@
   <span class="md-ellipsis">
     
   
-    🚨 Exception Handling
-  
+  🚨 Exception Handling
 
     
   </span>
@@ -1005,10 +970,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1021,8 +986,7 @@
   <span class="md-ellipsis">
     
   
-    🔄 Retries
-  
+  🔄 Retries
 
     
   </span>
@@ -1033,10 +997,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1049,8 +1013,7 @@
   <span class="md-ellipsis">
     
   
-    🪵 Logging
-  
+  🪵 Logging
 
     
   </span>
@@ -1061,10 +1024,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1077,8 +1040,7 @@
   <span class="md-ellipsis">
     
   
-    🧪 Testing
-  
+  🧪 Testing
 
     
   </span>
@@ -1089,10 +1051,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1105,8 +1067,7 @@
   <span class="md-ellipsis">
     
   
-    🎯 Direct requests
-  
+  🎯 Direct requests
 
     
   </span>
@@ -1117,10 +1078,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1133,8 +1094,7 @@
   <span class="md-ellipsis">
     
   
-    💉 Injected parameters & typing
-  
+  💉 Injected parameters & typing
 
     
   </span>
@@ -1145,10 +1105,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -1182,8 +1143,7 @@
   <span class="md-ellipsis">
     
   
-    📟 Command line tools
-  
+  📟 Command line tools
 
     
   </span>
@@ -1193,19 +1153,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    📟 Command line tools
-  
+  📟 Command line tools
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -1218,8 +1178,7 @@
   <span class="md-ellipsis">
     
   
-    🏗️ Client creator
-  
+  🏗️ Client creator
 
     
   </span>
@@ -1230,10 +1189,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -1267,8 +1227,7 @@
   <span class="md-ellipsis">
     
   
-    ⚡️ API Server Integrations
-  
+  ⚡️ API Server Integrations
 
     
   </span>
@@ -1278,19 +1237,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    ⚡️ API Server Integrations
-  
+  ⚡️ API Server Integrations
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -1303,8 +1262,7 @@
   <span class="md-ellipsis">
     
   
-    ⚡️ FastAPI
-  
+  ⚡️ FastAPI
 
     
   </span>
@@ -1315,10 +1273,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1331,8 +1289,7 @@
   <span class="md-ellipsis">
     
   
-    🦄 Django REST Framework
-  
+  🦄 Django REST Framework
 
     
   </span>
@@ -1343,10 +1300,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1359,8 +1316,7 @@
   <span class="md-ellipsis">
     
   
-    🥷 Django Ninja
-  
+  🥷 Django Ninja
 
     
   </span>
@@ -1371,10 +1327,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -1394,8 +1351,7 @@
   <span class="md-ellipsis">
     
   
-    📝 Change Log
-  
+  📝 Change Log
 
     
   </span>
@@ -1417,10 +1373,24 @@
               
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
   
   
   
@@ -1429,16 +1399,16 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#http-get-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         HTTP GET example
-      
+      </span>
     </span>
   </a>
   
@@ -1447,9 +1417,9 @@
         <li class="md-nav__item">
   <a href="#http-post-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         HTTP POST example
-      
+      </span>
     </span>
   </a>
   
@@ -1458,9 +1428,9 @@
         <li class="md-nav__item">
   <a href="#put-patch-and-delete-examples" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         PUT, PATCH, and DELETE examples
-      
+      </span>
     </span>
   </a>
   
@@ -1469,9 +1439,9 @@
         <li class="md-nav__item">
   <a href="#return-value-independence" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Return value independence
-      
+      </span>
     </span>
   </a>
   
@@ -1480,9 +1450,9 @@
         <li class="md-nav__item">
   <a href="#injected-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Injected parameters
-      
+      </span>
     </span>
   </a>
   
@@ -1491,9 +1461,9 @@
         <li class="md-nav__item">
   <a href="#response-parsing-rules" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Response parsing rules
-      
+      </span>
     </span>
   </a>
   
@@ -1502,9 +1472,9 @@
         <li class="md-nav__item">
   <a href="#custom-response-parsing" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Custom response parsing
-      
+      </span>
     </span>
   </a>
   
@@ -1513,9 +1483,9 @@
         <li class="md-nav__item">
   <a href="#handling-multiple-response-bodies-and-status-codes" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Handling multiple response bodies and status codes
-      
+      </span>
     </span>
   </a>
   
@@ -1525,9 +1495,9 @@
           <li class="md-nav__item">
   <a href="#response_map-requirements" class="md-nav__link">
     <span class="md-ellipsis">
-      
-        response_map requirements
-      
+      <span class="md-typeset">
+        <code>response_map</code> requirements
+      </span>
     </span>
   </a>
   
@@ -1537,9 +1507,9 @@
           <li class="md-nav__item">
   <a href="#multi-status-example-with-post" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Multi-status example with POST
-      
+      </span>
     </span>
   </a>
   
@@ -1558,9 +1528,9 @@
         <li class="md-nav__item">
   <a href="#connection-persistence" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Connection persistence
-      
+      </span>
     </span>
   </a>
   
@@ -1578,9 +1548,9 @@
             <div class="md-content" data-md-component="content">
               
               <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
                 
                   
-
 
   
   
@@ -1592,14 +1562,14 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"https://api.example.com"</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">email</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">include_details</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
@@ -1618,7 +1588,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"https://api.example.com"</span><span class="p">)</span>
 
 <span class="c1"># Using Pydantic models</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CreateUserRequest</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -1628,11 +1598,11 @@
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/users&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/users"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">CreateUserRequest</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
-<span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">CreateUserRequest</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Ada&quot;</span><span class="p">))</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">CreateUserRequest</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Ada"</span><span class="p">))</span>
 
 <span class="c1"># Or use TypedDict for the `data` and `result` parameters</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">CreateUserRequestDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
@@ -1642,12 +1612,12 @@
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
-<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/users&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/users"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_user_with_dict</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">UserDict</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">CreateUserRequestDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">UserDict</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="c1"># Pass dict directly - no instantiation needed</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">create_user_with_dict</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ada&quot;</span><span class="p">})</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">create_user_with_dict</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">{</span><span class="s2">"name"</span><span class="p">:</span> <span class="s2">"Ada"</span><span class="p">})</span>
 </code></pre></div>
 <p>How body-based methods (POST, PUT, PATCH, DELETE) work with Clientele:</p>
 <ul>
@@ -1661,7 +1631,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"https://api.example.com"</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UpdateUser</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -1675,21 +1645,21 @@
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
 
 <span class="c1"># PUT with a full body</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">update_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">UpdateUser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
-<span class="n">updated</span> <span class="o">=</span> <span class="n">update_user</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">UpdateUser</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;New Name&quot;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">&quot;test@foo.com&quot;</span><span class="p">))</span>
+<span class="n">updated</span> <span class="o">=</span> <span class="n">update_user</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">UpdateUser</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"New Name"</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s2">"test@foo.com"</span><span class="p">))</span>
 
 <span class="c1"># PATCH with partial data</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">patch</span><span class="p">(</span><span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">patch_user_name</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">PatchNameUser</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
-<span class="n">patched</span> <span class="o">=</span> <span class="n">patch_user_name</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">PatchUserName</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;New Name&quot;</span><span class="p">))</span>
+<span class="n">patched</span> <span class="o">=</span> <span class="n">patch_user_name</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">PatchUserName</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"New Name"</span><span class="p">))</span>
 
 <span class="c1"># DELETE that returns an empty response body</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">delete_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
@@ -1698,20 +1668,20 @@
 <h2 id="return-value-independence">Return value independence</h2>
 <p>The <code>result</code> parameter defines <strong>what response you get from the API</strong>, but your function's return value is independent. This gives you flexibility:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Return the result directly (most common)</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">User</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="c1"># Return a derived value</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_email</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">email</span>
 
 <span class="c1"># Return multiple values as a tuple</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">&quot;/events&quot;</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s2">"/events"</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">create_event</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">EventOut</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">EventIn</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">EventOut</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
-    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created event </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="s2">&quot;success&quot;</span>
+    <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Created event </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="s2">"success"</span>
 </code></pre></div>
 <h2 id="injected-parameters">Injected parameters</h2>
 <p>Clientele will inject the following parameters into your function once an http response is returned:</p>
@@ -1740,7 +1710,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;http://localhost:8000&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"http://localhost:8000"</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomResponseParserResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
@@ -1749,10 +1719,10 @@
 <span class="c1"># A custom handler for parsing the response</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">custom_parser</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="n">httpx</span><span class="o">.</span><span class="n">Response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CustomResponseParserResponse</span><span class="p">:</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">CustomResponseParserResponse</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">other_value</span><span class="o">=</span><span class="s2">&quot;other value&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">CustomResponseParserResponse</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span> <span class="n">other_value</span><span class="o">=</span><span class="s2">"other value"</span><span class="p">)</span>
 
 <span class="c1"># Annotate the decorate to use, `result` type must match</span>
-<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">custom_parser</span><span class="p">)</span>
+<span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">,</span> <span class="n">response_parser</span><span class="o">=</span><span class="n">custom_parser</span><span class="p">)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">get_user_custom_response</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">CustomResponseParserResponse</span><span class="p">,</span> <span class="n">user_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">other_value</span>
 </code></pre></div>
@@ -1762,7 +1732,7 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">clientele</span><span class="w"> </span><span class="kn">import</span> <span class="n">api</span> <span class="k">as</span> <span class="n">clientele_api</span>
 
-<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIClient</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"https://api.example.com"</span><span class="p">)</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span>
@@ -1773,7 +1743,7 @@
     <span class="n">code</span><span class="p">:</span> <span class="nb">int</span>
 
 <span class="nd">@client</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-    <span class="s2">&quot;/users/</span><span class="si">{user_id}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="s2">"/users/</span><span class="si">{user_id}</span><span class="s2">"</span><span class="p">,</span>
     <span class="n">response_map</span><span class="o">=</span><span class="p">{</span>
         <span class="mi">200</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span>
         <span class="mi">404</span><span class="p">:</span> <span class="n">NotFoundError</span><span class="p">,</span>
@@ -1786,29 +1756,29 @@
 <span class="n">user</span> <span class="o">=</span> <span class="n">get_user</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="k">match</span> <span class="n">user</span><span class="p">:</span>
     <span class="k">case</span> <span class="n">User</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found user: </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Found user: </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">NotFoundError</span><span class="p">()</span> <span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error: </span><span class="si">{</span><span class="n">user</span><span class="o">.</span><span class="n">error</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
 <span class="c1"># For unexpected status codes, clientele.api.APIException is raised</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">get_user</span><span class="p">(</span><span class="o">-</span><span class="mi">999</span><span class="p">)</span>  <span class="c1"># imagine the server returns 500</span>
 <span class="k">except</span> <span class="n">clientele_api</span><span class="o">.</span><span class="n">APIException</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected status: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reason: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected status: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Reason: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">reason</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="response_map-requirements"><code>response_map</code> requirements</h3>
 <ol>
 <li><strong>Keys must be valid HTTP status codes</strong>: Use the <code>codes</code> enum from <code>clientele.api</code> for reference, or any standard HTTP status code integers (100-599).</li>
-<li><strong>Values must be Pydantic models or TypedDict</strong>: Each value must be a <code>BaseModel</code> subclass or a <code>TypedDict</code> class.</li>
-<li><strong>Result parameter type must include all models</strong>: The <code>result</code> parameter's type annotation must be a Union containing all the Pydantic models or TypedDict classes used in <code>response_map</code>.</li>
+<li><strong>Values must be Pydantic models or TypedDict</strong>: Each value must be a <code>BaseModel</code> subclass or a <code>TypedDict</code> class, or <code>None</code> for a status code with no response body (e.g. <code>{204: None, 403: ErrorResponse}</code>). A <code>None</code> status code returns <code>None</code> without validating the body.</li>
+<li><strong>Result parameter type must include all models</strong>: The <code>result</code> parameter's type annotation must be a Union containing all the Pydantic models or TypedDict classes used in <code>response_map</code>, plus <code>None</code> if any value is <code>None</code> (e.g. <code>result: ErrorResponse | None</code>).</li>
 <li><strong>Unexpected status codes raise <code>APIException</code></strong>: If the server returns a status code not in the <code>response_map</code>, an <code>APIException</code> is raised with details about the unexpected status.</li>
 <li><strong>Precedence</strong>: If <code>response_map</code> provides a model for the actual HTTP status code, that model is used. Otherwise, the <code>result</code> parameter annotation is used as the default for 2xx responses.</li>
 </ol>
 <h4 id="multi-status-example-with-post">Multi-status example with POST</h4>
 <p>If multiple statuses return the same response it is easy enough to extend the map:</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-    <span class="s2">&quot;/users&quot;</span><span class="p">,</span>
+    <span class="s2">"/users"</span><span class="p">,</span>
     <span class="n">response_map</span><span class="o">=</span><span class="p">{</span>
         <span class="mi">201</span><span class="p">:</span> <span class="n">User</span><span class="p">,</span>
         <span class="mi">400</span><span class="p">:</span> <span class="n">ValidationError</span><span class="p">,</span>
@@ -1821,15 +1791,17 @@
     <span class="k">return</span> <span class="n">result</span>
 
 <span class="c1"># Handle different responses</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Alice&quot;</span><span class="p">))</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">User</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">"Alice"</span><span class="p">))</span>
 <span class="k">match</span> <span class="n">response</span><span class="p">:</span>
     <span class="k">case</span> <span class="n">User</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created user </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Created user </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">ValidationError</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">errors</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Validation failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">errors</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="connection-persistence">Connection persistence</h2>
 <p>Clientele API will generate a singleton instance for the async and sync http clients. When you import the module and issue multiple function calls it will use the same http connection.</p>
+
+
 
 
 
@@ -1862,7 +1834,7 @@
           <a href="../install/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Install">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
@@ -1887,7 +1859,7 @@
             </div>
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
           </a>
         
@@ -1900,8 +1872,8 @@
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
     </a>
   
 </div>
@@ -1911,7 +1883,7 @@
 </footer>
       
     </div>
-    <div class="md-dialog" data-md-component="dialog">
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
@@ -1919,10 +1891,14 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "content.code.copy", "search.suggest", "search.highlight", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.tabs","content.code.copy","search.suggest","search.highlight","navigation.footer"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d31f0ffa.min.js"></script>
       
     
   </body>

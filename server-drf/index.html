@@ -11,6 +11,7 @@
         <link rel="canonical" href="https://docs.clientele.dev/server-drf/">
       
       
+      
         <link rel="prev" href="../server-fastapi/">
       
       
@@ -21,7 +22,7 @@
       
       
       <link rel="icon" href="../favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="zensical-0.1.0">
     
     
       
@@ -29,10 +30,15 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.b60ce83d.min.css">
       
       
 
@@ -46,12 +52,12 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
     
       
 
@@ -72,14 +78,11 @@
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
-    <label class="md-overlay" for="__drawer"></label>
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#using-clientele-with-django-rest-framework" class="md-skip">
-          Skip to content
-        </a>
-      
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
     </div>
     <div data-md-component="announce">
       
@@ -90,14 +93,15 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="Clientele" class="md-header__button md-logo" aria-label="Clientele" data-md-component="logo">
+    <a href="./.." title="Clientele" class="md-header__button md-logo" aria-label="Clientele" data-md-component="logo">
       
-  <img src="../favicon.png" alt="logo">
+  <img src="../favicon.png" alt="Clientele">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
       
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+      <span class="md-visually-hidden">Navigation</span>
     </label>
     <div class="md-header__title" data-md-component="header-title">
       <div class="md-header__ellipsis">
@@ -151,57 +155,29 @@
       
         <label class="md-header__button md-icon" for="__search">
           
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+          <span class="md-visually-hidden">Search</span>
         </label>
-        <div class="md-search" data-md-component="search" role="dialog">
-  <label class="md-search__overlay" for="__search"></label>
-  <div class="md-search__inner" role="search">
-    <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
-      <label class="md-search__icon md-icon" for="__search">
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-      </label>
-      <nav class="md-search__options" aria-label="Search">
-        
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-        </button>
-      </nav>
-      
-        <div class="md-search__suggest" data-md-component="search-suggest"></div>
-      
-    </form>
-    <div class="md-search__output">
-      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
-        <div class="md-search-result" data-md-component="search-result">
-          <div class="md-search-result__meta">
-            Initializing search
-          </div>
-          <ol class="md-search-result__list" role="presentation"></ol>
-        </div>
-      </div>
-    </div>
-  </div>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
 </div>
       
     
-    
-      <div class="md-header__source">
+    <div class="md-header__source">
+      
         <a href="https://github.com/phalt/clientele" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     phalt/clientele
   </div>
 </a>
-      </div>
-    
+      
+    </div>
   </nav>
   
 </header>
@@ -222,11 +198,8 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="./.." class="md-tabs__link">
         
-  
-  
-    
   
   ⚜️ Home
 
@@ -241,11 +214,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../install/" class="md-tabs__link">
           
-  
   
   🚀 Install
 
@@ -261,11 +236,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../api-overview/" class="md-tabs__link">
           
-  
   
   📕 Documentation
 
@@ -281,11 +258,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item">
         <a href="../openapi-cli/" class="md-tabs__link">
           
-  
   
   📟 Command line tools
 
@@ -303,11 +282,13 @@
   
   
     
+      
+    
+    
     
       <li class="md-tabs__item md-tabs__item--active">
         <a href="../server-fastapi/" class="md-tabs__link">
           
-  
   
   ⚡️ API Server Integrations
 
@@ -325,9 +306,6 @@
     <li class="md-tabs__item">
       <a href="../CHANGELOG/" class="md-tabs__link">
         
-  
-  
-    
   
   📝 Change Log
 
@@ -358,9 +336,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="Clientele" class="md-nav__button md-logo" aria-label="Clientele" data-md-component="logo">
+    <a href="./.." title="Clientele" class="md-nav__button md-logo" aria-label="Clientele" data-md-component="logo">
       
-  <img src="../favicon.png" alt="logo">
+  <img src="../favicon.png" alt="Clientele">
 
     </a>
     Clientele
@@ -370,7 +348,7 @@
       <a href="https://github.com/phalt/clientele" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
   </div>
   <div class="md-source__repository">
     phalt/clientele
@@ -387,15 +365,14 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="./.." class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    ⚜️ Home
-  
+  ⚜️ Home
 
     
   </span>
@@ -435,8 +412,7 @@
   <span class="md-ellipsis">
     
   
-    🚀 Install
-  
+  🚀 Install
 
     
   </span>
@@ -446,19 +422,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_2">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    🚀 Install
-  
+  🚀 Install
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -471,8 +447,7 @@
   <span class="md-ellipsis">
     
   
-    Install
-  
+  Install
 
     
   </span>
@@ -483,10 +458,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -520,8 +496,7 @@
   <span class="md-ellipsis">
     
   
-    📕 Documentation
-  
+  📕 Documentation
 
     
   </span>
@@ -531,19 +506,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    📕 Documentation
-  
+  📕 Documentation
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -556,8 +531,7 @@
   <span class="md-ellipsis">
     
   
-    Documentation
-  
+  Documentation
 
     
   </span>
@@ -568,10 +542,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -584,8 +558,7 @@
   <span class="md-ellipsis">
     
   
-    🎪 Examples
-  
+  🎪 Examples
 
     
   </span>
@@ -596,10 +569,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -612,8 +585,7 @@
   <span class="md-ellipsis">
     
   
-    ⚙️ Configuration
-  
+  ⚙️ Configuration
 
     
   </span>
@@ -624,10 +596,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -640,8 +612,7 @@
   <span class="md-ellipsis">
     
   
-    🔀 Async Support
-  
+  🔀 Async Support
 
     
   </span>
@@ -652,10 +623,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -668,8 +639,7 @@
   <span class="md-ellipsis">
     
   
-    🔐 Authentication
-  
+  🔐 Authentication
 
     
   </span>
@@ -680,10 +650,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -696,8 +666,7 @@
   <span class="md-ellipsis">
     
   
-    🔌 HTTP Backends
-  
+  🔌 HTTP Backends
 
     
   </span>
@@ -708,10 +677,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -724,8 +693,7 @@
   <span class="md-ellipsis">
     
   
-    💾 Caching
-  
+  💾 Caching
 
     
   </span>
@@ -736,10 +704,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -752,8 +720,7 @@
   <span class="md-ellipsis">
     
   
-    🌊 Streaming
-  
+  🌊 Streaming
 
     
   </span>
@@ -764,10 +731,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -780,8 +747,7 @@
   <span class="md-ellipsis">
     
   
-    🧬 GraphQL
-  
+  🧬 GraphQL
 
     
   </span>
@@ -792,10 +758,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -808,8 +774,7 @@
   <span class="md-ellipsis">
     
   
-    🚨 Exception Handling
-  
+  🚨 Exception Handling
 
     
   </span>
@@ -820,10 +785,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -836,8 +801,7 @@
   <span class="md-ellipsis">
     
   
-    🔄 Retries
-  
+  🔄 Retries
 
     
   </span>
@@ -848,10 +812,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -864,8 +828,7 @@
   <span class="md-ellipsis">
     
   
-    🪵 Logging
-  
+  🪵 Logging
 
     
   </span>
@@ -876,10 +839,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -892,8 +855,7 @@
   <span class="md-ellipsis">
     
   
-    🧪 Testing
-  
+  🧪 Testing
 
     
   </span>
@@ -904,10 +866,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -920,8 +882,7 @@
   <span class="md-ellipsis">
     
   
-    🎯 Direct requests
-  
+  🎯 Direct requests
 
     
   </span>
@@ -932,10 +893,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -948,8 +909,7 @@
   <span class="md-ellipsis">
     
   
-    💉 Injected parameters & typing
-  
+  💉 Injected parameters & typing
 
     
   </span>
@@ -960,10 +920,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -997,8 +958,7 @@
   <span class="md-ellipsis">
     
   
-    📟 Command line tools
-  
+  📟 Command line tools
 
     
   </span>
@@ -1008,19 +968,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    📟 Command line tools
-  
+  📟 Command line tools
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -1033,8 +993,7 @@
   <span class="md-ellipsis">
     
   
-    🏗️ Client creator
-  
+  🏗️ Client creator
 
     
   </span>
@@ -1045,10 +1004,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -1087,8 +1047,7 @@
   <span class="md-ellipsis">
     
   
-    ⚡️ API Server Integrations
-  
+  ⚡️ API Server Integrations
 
     
   </span>
@@ -1098,19 +1057,19 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
-            <span class="md-nav__icon md-icon"></span>
-            
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_5">
+              <span class="md-nav__icon md-icon"></span>
+              
   
-    ⚡️ API Server Integrations
-  
+  ⚡️ API Server Integrations
 
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
               
                 
+                  
   
   
   
@@ -1123,8 +1082,7 @@
   <span class="md-ellipsis">
     
   
-    ⚡️ FastAPI
-  
+  ⚡️ FastAPI
 
     
   </span>
@@ -1135,10 +1093,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
     
@@ -1147,7 +1105,7 @@
   
     <li class="md-nav__item md-nav__item--active">
       
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
       
       
         
@@ -1160,8 +1118,7 @@
   <span class="md-ellipsis">
     
   
-    🦄 Django REST Framework
-  
+  🦄 Django REST Framework
 
     
   </span>
@@ -1171,15 +1128,14 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="./" class="md-nav__link md-nav__link--active">
+      <a href="././" class="md-nav__link md-nav__link--active">
         
   
   
   <span class="md-ellipsis">
     
   
-    🦄 Django REST Framework
-  
+  🦄 Django REST Framework
 
     
   </span>
@@ -1190,7 +1146,8 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
   
   
   
@@ -1199,16 +1156,16 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Prerequisites
-      
+      </span>
     </span>
   </a>
   
@@ -1217,9 +1174,9 @@
         <li class="md-nav__item">
   <a href="#why-drf-spectacular" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Why drf-spectacular?
-      
+      </span>
     </span>
   </a>
   
@@ -1228,9 +1185,9 @@
         <li class="md-nav__item">
   <a href="#step-1-install-and-configure-drf-spectacular" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 1: Install and Configure drf-spectacular
-      
+      </span>
     </span>
   </a>
   
@@ -1240,9 +1197,9 @@
           <li class="md-nav__item">
   <a href="#install-drf-spectacular" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Install drf-spectacular
-      
+      </span>
     </span>
   </a>
   
@@ -1251,9 +1208,9 @@
           <li class="md-nav__item">
   <a href="#configure-django-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Configure Django Settings
-      
+      </span>
     </span>
   </a>
   
@@ -1262,9 +1219,9 @@
           <li class="md-nav__item">
   <a href="#add-url-patterns" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Add URL Patterns
-      
+      </span>
     </span>
   </a>
   
@@ -1278,9 +1235,9 @@
         <li class="md-nav__item">
   <a href="#step-2-get-your-openapi-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 2: Get Your OpenAPI Schema
-      
+      </span>
     </span>
   </a>
   
@@ -1290,9 +1247,9 @@
           <li class="md-nav__item">
   <a href="#downloading-the-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Downloading the Schema
-      
+      </span>
     </span>
   </a>
   
@@ -1306,9 +1263,9 @@
         <li class="md-nav__item">
   <a href="#step-3-scaffold-the-client" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 3: Scaffold the Client
-      
+      </span>
     </span>
   </a>
   
@@ -1318,9 +1275,9 @@
           <li class="md-nav__item">
   <a href="#async-client" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Async Client
-      
+      </span>
     </span>
   </a>
   
@@ -1334,9 +1291,9 @@
         <li class="md-nav__item">
   <a href="#step-4-use-the-scaffolded-client" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 4: Use the scaffolded Client
-      
+      </span>
     </span>
   </a>
   
@@ -1346,9 +1303,9 @@
           <li class="md-nav__item">
   <a href="#usage-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Usage Example
-      
+      </span>
     </span>
   </a>
   
@@ -1357,9 +1314,9 @@
           <li class="md-nav__item">
   <a href="#async-usage-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Async usage Example
-      
+      </span>
     </span>
   </a>
   
@@ -1373,9 +1330,9 @@
         <li class="md-nav__item">
   <a href="#improving-operationid-in-drf" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Improving operationId in DRF
-      
+      </span>
     </span>
   </a>
   
@@ -1385,9 +1342,9 @@
           <li class="md-nav__item">
   <a href="#using-extend_schema-decorator" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Using extend_schema Decorator
-      
+      </span>
     </span>
   </a>
   
@@ -1396,9 +1353,9 @@
           <li class="md-nav__item">
   <a href="#for-function-based-views" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         For Function-Based Views
-      
+      </span>
     </span>
   </a>
   
@@ -1412,9 +1369,9 @@
         <li class="md-nav__item">
   <a href="#authentication" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Authentication
-      
+      </span>
     </span>
   </a>
   
@@ -1423,9 +1380,9 @@
         <li class="md-nav__item">
   <a href="#serializers-and-schemas" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Serializers and Schemas
-      
+      </span>
     </span>
   </a>
   
@@ -1435,9 +1392,9 @@
           <li class="md-nav__item">
   <a href="#drf-serializer" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         DRF Serializer
-      
+      </span>
     </span>
   </a>
   
@@ -1446,9 +1403,9 @@
           <li class="md-nav__item">
   <a href="#generated-pydantic-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Generated Pydantic Schema
-      
+      </span>
     </span>
   </a>
   
@@ -1457,9 +1414,9 @@
           <li class="md-nav__item">
   <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Usage
-      
+      </span>
     </span>
   </a>
   
@@ -1473,9 +1430,9 @@
         <li class="md-nav__item">
   <a href="#path-and-query-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Path and Query Parameters
-      
+      </span>
     </span>
   </a>
   
@@ -1484,9 +1441,9 @@
         <li class="md-nav__item">
   <a href="#response-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Response Models
-      
+      </span>
     </span>
   </a>
   
@@ -1495,9 +1452,9 @@
         <li class="md-nav__item">
   <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Best Practices
-      
+      </span>
     </span>
   </a>
   
@@ -1506,9 +1463,9 @@
         <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Next Steps
-      
+      </span>
     </span>
   </a>
   
@@ -1521,10 +1478,10 @@
     </li>
   
 
-              
-            
+                
               
                 
+                  
   
   
   
@@ -1537,8 +1494,7 @@
   <span class="md-ellipsis">
     
   
-    🥷 Django Ninja
-  
+  🥷 Django Ninja
 
     
   </span>
@@ -1549,10 +1505,11 @@
     </li>
   
 
+                
               
-            
-          </ul>
-        </nav>
+            </ul>
+          </nav>
+        
       
     </li>
   
@@ -1572,8 +1529,7 @@
   <span class="md-ellipsis">
     
   
-    📝 Change Log
-  
+  📝 Change Log
 
     
   </span>
@@ -1595,10 +1551,24 @@
               
               <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
   
   
   
@@ -1607,16 +1577,16 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      On this page
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
   <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Prerequisites
-      
+      </span>
     </span>
   </a>
   
@@ -1625,9 +1595,9 @@
         <li class="md-nav__item">
   <a href="#why-drf-spectacular" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Why drf-spectacular?
-      
+      </span>
     </span>
   </a>
   
@@ -1636,9 +1606,9 @@
         <li class="md-nav__item">
   <a href="#step-1-install-and-configure-drf-spectacular" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 1: Install and Configure drf-spectacular
-      
+      </span>
     </span>
   </a>
   
@@ -1648,9 +1618,9 @@
           <li class="md-nav__item">
   <a href="#install-drf-spectacular" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Install drf-spectacular
-      
+      </span>
     </span>
   </a>
   
@@ -1659,9 +1629,9 @@
           <li class="md-nav__item">
   <a href="#configure-django-settings" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Configure Django Settings
-      
+      </span>
     </span>
   </a>
   
@@ -1670,9 +1640,9 @@
           <li class="md-nav__item">
   <a href="#add-url-patterns" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Add URL Patterns
-      
+      </span>
     </span>
   </a>
   
@@ -1686,9 +1656,9 @@
         <li class="md-nav__item">
   <a href="#step-2-get-your-openapi-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 2: Get Your OpenAPI Schema
-      
+      </span>
     </span>
   </a>
   
@@ -1698,9 +1668,9 @@
           <li class="md-nav__item">
   <a href="#downloading-the-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Downloading the Schema
-      
+      </span>
     </span>
   </a>
   
@@ -1714,9 +1684,9 @@
         <li class="md-nav__item">
   <a href="#step-3-scaffold-the-client" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 3: Scaffold the Client
-      
+      </span>
     </span>
   </a>
   
@@ -1726,9 +1696,9 @@
           <li class="md-nav__item">
   <a href="#async-client" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Async Client
-      
+      </span>
     </span>
   </a>
   
@@ -1742,9 +1712,9 @@
         <li class="md-nav__item">
   <a href="#step-4-use-the-scaffolded-client" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Step 4: Use the scaffolded Client
-      
+      </span>
     </span>
   </a>
   
@@ -1754,9 +1724,9 @@
           <li class="md-nav__item">
   <a href="#usage-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Usage Example
-      
+      </span>
     </span>
   </a>
   
@@ -1765,9 +1735,9 @@
           <li class="md-nav__item">
   <a href="#async-usage-example" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Async usage Example
-      
+      </span>
     </span>
   </a>
   
@@ -1781,9 +1751,9 @@
         <li class="md-nav__item">
   <a href="#improving-operationid-in-drf" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Improving operationId in DRF
-      
+      </span>
     </span>
   </a>
   
@@ -1793,9 +1763,9 @@
           <li class="md-nav__item">
   <a href="#using-extend_schema-decorator" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Using extend_schema Decorator
-      
+      </span>
     </span>
   </a>
   
@@ -1804,9 +1774,9 @@
           <li class="md-nav__item">
   <a href="#for-function-based-views" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         For Function-Based Views
-      
+      </span>
     </span>
   </a>
   
@@ -1820,9 +1790,9 @@
         <li class="md-nav__item">
   <a href="#authentication" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Authentication
-      
+      </span>
     </span>
   </a>
   
@@ -1831,9 +1801,9 @@
         <li class="md-nav__item">
   <a href="#serializers-and-schemas" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Serializers and Schemas
-      
+      </span>
     </span>
   </a>
   
@@ -1843,9 +1813,9 @@
           <li class="md-nav__item">
   <a href="#drf-serializer" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         DRF Serializer
-      
+      </span>
     </span>
   </a>
   
@@ -1854,9 +1824,9 @@
           <li class="md-nav__item">
   <a href="#generated-pydantic-schema" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Generated Pydantic Schema
-      
+      </span>
     </span>
   </a>
   
@@ -1865,9 +1835,9 @@
           <li class="md-nav__item">
   <a href="#usage" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Usage
-      
+      </span>
     </span>
   </a>
   
@@ -1881,9 +1851,9 @@
         <li class="md-nav__item">
   <a href="#path-and-query-parameters" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Path and Query Parameters
-      
+      </span>
     </span>
   </a>
   
@@ -1892,9 +1862,9 @@
         <li class="md-nav__item">
   <a href="#response-models" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Response Models
-      
+      </span>
     </span>
   </a>
   
@@ -1903,9 +1873,9 @@
         <li class="md-nav__item">
   <a href="#best-practices" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Best Practices
-      
+      </span>
     </span>
   </a>
   
@@ -1914,9 +1884,9 @@
         <li class="md-nav__item">
   <a href="#next-steps" class="md-nav__link">
     <span class="md-ellipsis">
-      
+      <span class="md-typeset">
         Next Steps
-      
+      </span>
     </span>
   </a>
   
@@ -1934,9 +1904,9 @@
             <div class="md-content" data-md-component="content">
               
               <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
                 
                   
-
 
   
   
@@ -1963,21 +1933,21 @@
 <p>Add to your <code>settings.py</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
     <span class="c1"># ...</span>
-    <span class="s1">&#39;rest_framework&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;drf_spectacular&#39;</span><span class="p">,</span>
+    <span class="s1">'rest_framework'</span><span class="p">,</span>
+    <span class="s1">'drf_spectacular'</span><span class="p">,</span>
     <span class="c1"># ...</span>
 <span class="p">]</span>
 
 <span class="n">REST_FRAMEWORK</span> <span class="o">=</span> <span class="p">{</span>
     <span class="c1"># ...</span>
-    <span class="s1">&#39;DEFAULT_SCHEMA_CLASS&#39;</span><span class="p">:</span> <span class="s1">&#39;drf_spectacular.openapi.AutoSchema&#39;</span><span class="p">,</span>
+    <span class="s1">'DEFAULT_SCHEMA_CLASS'</span><span class="p">:</span> <span class="s1">'drf_spectacular.openapi.AutoSchema'</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="n">SPECTACULAR_SETTINGS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;TITLE&#39;</span><span class="p">:</span> <span class="s1">&#39;Your API&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;DESCRIPTION&#39;</span><span class="p">:</span> <span class="s1">&#39;Your API description&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;VERSION&#39;</span><span class="p">:</span> <span class="s1">&#39;1.0.0&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;SERVE_INCLUDE_SCHEMA&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="s1">'TITLE'</span><span class="p">:</span> <span class="s1">'Your API'</span><span class="p">,</span>
+    <span class="s1">'DESCRIPTION'</span><span class="p">:</span> <span class="s1">'Your API description'</span><span class="p">,</span>
+    <span class="s1">'VERSION'</span><span class="p">:</span> <span class="s1">'1.0.0'</span><span class="p">,</span>
+    <span class="s1">'SERVE_INCLUDE_SCHEMA'</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">}</span>
 </code></pre></div>
 <h3 id="add-url-patterns">Add URL Patterns</h3>
@@ -1987,7 +1957,7 @@
 
 <span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
     <span class="c1"># ...</span>
-    <span class="n">path</span><span class="p">(</span><span class="s1">&#39;api/schema/&#39;</span><span class="p">,</span> <span class="n">SpectacularAPIView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;schema&#39;</span><span class="p">),</span>
+    <span class="n">path</span><span class="p">(</span><span class="s1">'api/schema/'</span><span class="p">,</span> <span class="n">SpectacularAPIView</span><span class="o">.</span><span class="n">as_view</span><span class="p">(),</span> <span class="n">name</span><span class="o">=</span><span class="s1">'schema'</span><span class="p">),</span>
 <span class="p">]</span>
 </code></pre></div>
 <h2 id="step-2-get-your-openapi-schema">Step 2: Get Your OpenAPI Schema</h2>
@@ -2026,25 +1996,25 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
 
 <span class="c1"># Create a resource</span>
 <span class="n">user_data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">UserRequest</span><span class="p">(</span>
-    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span>
-    <span class="n">email</span><span class="o">=</span><span class="s2">&quot;alice@example.com&quot;</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">"alice"</span><span class="p">,</span>
+    <span class="n">email</span><span class="o">=</span><span class="s2">"alice@example.com"</span>
 <span class="p">)</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">create_user_api_users_post</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">user_data</span><span class="p">)</span>
 
 <span class="c1"># Handle responses</span>
 <span class="k">match</span> <span class="n">response</span><span class="p">:</span>
     <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">User</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;User created: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"User created: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">username</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">schemas</span><span class="o">.</span><span class="n">ValidationError</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Validation failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">detail</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Validation failed: </span><span class="si">{</span><span class="n">response</span><span class="o">.</span><span class="n">detail</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="async-usage-example">Async usage Example</h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">my_async_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">client</span><span class="p">,</span> <span class="n">schemas</span>
 
 <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_user</span><span class="p">():</span>
     <span class="n">user_data</span> <span class="o">=</span> <span class="n">schemas</span><span class="o">.</span><span class="n">UserRequest</span><span class="p">(</span>
-        <span class="n">username</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span><span class="p">,</span>
-        <span class="n">email</span><span class="o">=</span><span class="s2">&quot;alice@example.com&quot;</span>
+        <span class="n">username</span><span class="o">=</span><span class="s2">"alice"</span><span class="p">,</span>
+        <span class="n">email</span><span class="o">=</span><span class="s2">"alice@example.com"</span>
     <span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">create_user_api_users_post</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">user_data</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">response</span>
@@ -2059,15 +2029,15 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
 
-    <span class="nd">@extend_schema</span><span class="p">(</span><span class="n">operation_id</span><span class="o">=</span><span class="s2">&quot;list_users&quot;</span><span class="p">)</span>
+    <span class="nd">@extend_schema</span><span class="p">(</span><span class="n">operation_id</span><span class="o">=</span><span class="s2">"list_users"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
-    <span class="nd">@extend_schema</span><span class="p">(</span><span class="n">operation_id</span><span class="o">=</span><span class="s2">&quot;create_user&quot;</span><span class="p">)</span>
+    <span class="nd">@extend_schema</span><span class="p">(</span><span class="n">operation_id</span><span class="o">=</span><span class="s2">"create_user"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 
-    <span class="nd">@extend_schema</span><span class="p">(</span><span class="n">operation_id</span><span class="o">=</span><span class="s2">&quot;get_user&quot;</span><span class="p">)</span>
+    <span class="nd">@extend_schema</span><span class="p">(</span><span class="n">operation_id</span><span class="o">=</span><span class="s2">"get_user"</span><span class="p">)</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="p">)</span>
 </code></pre></div>
@@ -2082,10 +2052,10 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
 <span class="kn">from</span><span class="w"> </span><span class="nn">rest_framework.decorators</span><span class="w"> </span><span class="kn">import</span> <span class="n">api_view</span>
 
 <span class="nd">@extend_schema</span><span class="p">(</span>
-    <span class="n">operation_id</span><span class="o">=</span><span class="s2">&quot;get_user_stats&quot;</span><span class="p">,</span>
+    <span class="n">operation_id</span><span class="o">=</span><span class="s2">"get_user_stats"</span><span class="p">,</span>
     <span class="n">responses</span><span class="o">=</span><span class="p">{</span><span class="mi">200</span><span class="p">:</span> <span class="n">UserStatsSerializer</span><span class="p">}</span>
 <span class="p">)</span>
-<span class="nd">@api_view</span><span class="p">([</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="nd">@api_view</span><span class="p">([</span><span class="s1">'GET'</span><span class="p">])</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">user_stats</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
     <span class="c1"># ...</span>
     <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -2100,7 +2070,7 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
 <span class="k">class</span><span class="w"> </span><span class="nc">UserSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">User</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span> <span class="s1">&#39;is_active&#39;</span><span class="p">]</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'username'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">,</span> <span class="s1">'is_active'</span><span class="p">]</span>
 </code></pre></div>
 <h3 id="generated-pydantic-schema">Generated Pydantic Schema</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># In my_client/schemas.py</span>
@@ -2124,13 +2094,13 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">UserViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">UserSerializer</span>
-    <span class="n">filterset_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;is_active&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">]</span>
+    <span class="n">filterset_fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'is_active'</span><span class="p">,</span> <span class="s1">'username'</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>Client Usage</strong></p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Query parameters become function arguments</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">list_users_api_users_get</span><span class="p">(</span>
     <span class="n">is_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">username</span><span class="o">=</span><span class="s2">&quot;alice&quot;</span>
+    <span class="n">username</span><span class="o">=</span><span class="s2">"alice"</span>
 <span class="p">)</span>
 </code></pre></div>
 <h2 id="response-models">Response Models</h2>
@@ -2141,7 +2111,7 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
 <span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">UserModel</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">]</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'id'</span><span class="p">,</span> <span class="s1">'username'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">]</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">UserViewSet</span><span class="p">(</span><span class="n">viewsets</span><span class="o">.</span><span class="n">ModelViewSet</span><span class="p">):</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">UserModel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
@@ -2177,6 +2147,8 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
 
 
 
+
+
                 
               </article>
             </div>
@@ -2197,7 +2169,7 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
           <a href="../server-fastapi/" class="md-footer__link md-footer__link--prev" aria-label="Previous: ⚡️ FastAPI">
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
             </div>
             <div class="md-footer__title">
               <span class="md-footer__direction">
@@ -2222,7 +2194,7 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
             </div>
             <div class="md-footer__button md-icon">
               
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </div>
           </a>
         
@@ -2235,8 +2207,8 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
   
   
     Made with
-    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-      Material for MkDocs
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
     </a>
   
 </div>
@@ -2246,7 +2218,7 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
 </footer>
       
     </div>
-    <div class="md-dialog" data-md-component="dialog">
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
@@ -2254,10 +2226,14 @@ clientele<span class="w"> </span>start-api<span class="w"> </span>-f<span class=
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "content.code.copy", "search.suggest", "search.highlight", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["navigation.tabs","content.code.copy","search.suggest","search.highlight","navigation.footer"],"redirect":null,"search":"../assets/javascripts/workers/search.719e0d91.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d31f0ffa.min.js"></script>
       
     
   </body>
