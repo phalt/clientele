@@ -46,6 +46,14 @@ def build_union_type_string(
     return union_str
 
 
+def _admits_null(schema: dict) -> bool:
+    """True if the schema itself allows null: `type: "null"` or a null member of `anyOf`/`oneOf`."""
+    if schema.get("type") == "null":
+        return True
+    members = schema.get("anyOf") or schema.get("oneOf") or []
+    return any(member.get("type") == "null" for member in members)
+
+
 class SchemasGenerator:
     """
     Handles all the content generated in the schemas.py file.
@@ -88,7 +96,9 @@ class SchemasGenerator:
         for arg, arg_details in properties.items():
             sanitized_arg = utils.snake_case_prop(arg)
             arg_type = utils.get_type(arg_details)
-            is_optional = required and arg not in required
+            # Per OpenAPI, a property is required only if it is listed in `required`.
+            # A missing or empty `required` array means every property is optional.
+            is_optional = arg not in (required or [])
             has_default = "default" in arg_details
 
             needs_alias = sanitized_arg != arg
@@ -102,10 +112,12 @@ class SchemasGenerator:
                 else:
                     type_string = f"{arg_type} = {py_default}"
             elif is_optional and not arg_type.startswith("typing.Optional["):
+                # Don't wrap a type that already admits None (e.g. `int | None`) in Optional again
+                optional_type = arg_type if _admits_null(arg_details) else f"typing.Optional[{arg_type}]"
                 if needs_alias:
-                    type_string = f'typing.Optional[{arg_type}] = pydantic.Field(default=None, alias="{arg}")'
+                    type_string = f'{optional_type} = pydantic.Field(default=None, alias="{arg}")'
                 else:
-                    type_string = f"typing.Optional[{arg_type}] = None"
+                    type_string = f"{optional_type} = None"
             elif arg_type.startswith("typing.Optional["):
                 if needs_alias:
                     type_string = f'{arg_type} = pydantic.Field(default=None, alias="{arg}")'

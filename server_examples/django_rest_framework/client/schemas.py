@@ -9,10 +9,10 @@ from clientele.schemas import ListResponse  # noqa
 
 
 class PatchedUser(pydantic.BaseModel):
-    id: int
-    username: str
-    email: str
-    is_active: bool
+    id: typing.Optional[int] = None
+    username: typing.Optional[str] = None
+    email: typing.Optional[str] = None
+    is_active: typing.Optional[bool] = None
 
 
 class User(pydantic.BaseModel):

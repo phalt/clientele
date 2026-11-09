@@ -14,7 +14,7 @@ class CreateUserRequest(pydantic.BaseModel):
 
 
 class HTTPValidationError(pydantic.BaseModel):
-    detail: list["ValidationError"]
+    detail: typing.Optional[list["ValidationError"]] = None
 
 
 class UserResponse(pydantic.BaseModel):
