@@ -1,9 +1,21 @@
 # Change log
 
-## 2.4.0 UNRELEASED
+## 3.0.0 UNRELEASED
 
-- **Custom HTTP backends:** `handle_sync_stream` and `handle_async_stream` no longer take `inner_type` or `response_parser`. They now yield each line as a `str`, and clientele turns the lines into the return type. Built-in backends are updated; custom backends need the same change.
-- `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`. They can still be imported from their old locations.
+A major release: entries marked **Breaking**, **Behaviour change** or **Typing change** need attention when upgrading. Regenerate your clients and review the diff; an existing `config.py` is never overwritten.
+
+- **Breaking:** custom HTTP backends' `handle_sync_stream` / `handle_async_stream` no longer take `inner_type` or `response_parser` and now yield lines as `str`.
+- **Behaviour change:** request bodies include defaulted fields again; omitting unset fields is opt-in with `BaseConfig(request_body_exclude_unset=True)` ([#276](https://github.com/phalt/clientele/issues/276), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/276.md)).
+- **Behaviour change:** newly generated `Config` classes read prefixed environment variables (e.g. `BILLING_CLIENT_BASE_URL`); set the prefix with `start-api --env-prefix` ([#281](https://github.com/phalt/clientele/issues/281), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/281.md)).
+- **Typing change:** properties with no `required` list are generated as optional ([#268](https://github.com/phalt/clientele/issues/268), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/268.md)).
+- **Typing change:** inline `enum`s are generated as `typing.Literal[...]`, fixing discriminated unions ([#278](https://github.com/phalt/clientele/issues/278), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/278.md)).
+- **Typing change:** `uuid`, `date-time`, `date`, `time` and `duration` string formats map to `uuid.UUID` and `datetime` types ([#280](https://github.com/phalt/clientele/issues/280), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/280.md)).
+- **Typing change:** 2xx no-content responses stay in `response_map` as `None`, and response `$ref`s are dereferenced ([#265](https://github.com/phalt/clientele/issues/265), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/265.md)).
+- New `start-api --base-class` option to set the base class of generated models ([#282](https://github.com/phalt/clientele/issues/282), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/282.md)).
+- `APIException` and `HTTPStatusError` now live in `clientele.http`, and `CacheBackend` in `clientele.api.config`; the old import paths still work.
+- Fix generated clients left unformatted when `ruff` isn't on `PATH` ([#279](https://github.com/phalt/clientele/issues/279), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/279.md)).
+- Fix duplicate enum members when values differ only by punctuation ([#277](https://github.com/phalt/clientele/issues/277), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/277.md)).
+- Fix `schemas.py` failing to import when a `oneOf`/`anyOf` alias or array model comes before a component it references ([#291](https://github.com/phalt/clientele/issues/291), [spec](https://github.com/phalt/clientele/blob/main/specs/issues/291.md)).
 
 ## 2.3.1
 

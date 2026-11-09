@@ -47,4 +47,4 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Release note
 
-#276, #278, #280, #281 and #265 change behaviour or generated types. Together with the unreleased 2.4.0 changes, consider shipping as 3.0.0.
+#276, #278, #280, #281 and #265 change behaviour or generated types. Shipping together with the other unreleased changes as 3.0.0.
