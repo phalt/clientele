@@ -8,5 +8,9 @@ import typing
 import uuid
 
 import pydantic
+{%- if base_class %}
+{%- set base_module, _, base_name = base_class.rpartition(".") %}
+from {{ base_module }} import {{ base_name }} as _ClienteleBase
+{%- endif %}
 
 from clientele.schemas import ListResponse  # noqa

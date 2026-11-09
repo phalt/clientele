@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import keyword
 import re
 import sys
 import textwrap
@@ -142,7 +143,7 @@ def generate_basic(output):
     generator.generate()
 
 
-def scaffold_api(url, file, output, asyncio=False, regen=False, env_prefix=None):
+def scaffold_api(url, file, output, asyncio=False, regen=False, env_prefix=None, base_class=None):
     """
     Scaffold an API client from an OpenAPI schema.
     """
@@ -156,7 +157,14 @@ def scaffold_api(url, file, output, asyncio=False, regen=False, env_prefix=None)
     if not spec:
         return
     generator = APIGenerator(
-        spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file, env_prefix=env_prefix
+        spec=spec,
+        asyncio=asyncio,
+        regen=regen,
+        output_dir=output,
+        url=url,
+        file=file,
+        env_prefix=env_prefix,
+        base_class=base_class,
     )
     if generator.prevent_accidental_regens():
         generator.generate()
@@ -166,6 +174,16 @@ def scaffold_api(url, file, output, asyncio=False, regen=False, env_prefix=None)
 def _validate_env_prefix(ctx, param, value):
     if value is not None and not re.fullmatch(r"[A-Za-z0-9_]*", value):
         raise click.BadParameter("may only contain letters, digits and underscores")
+    return value
+
+
+def _validate_base_class(ctx, param, value):
+    # A dotted path `module.attr`; it's imported by the generated schemas.py, not at generation time
+    if value is None:
+        return value
+    parts = value.split(".")
+    if len(parts) < 2 or not all(part.isidentifier() and not keyword.iskeyword(part) for part in parts):
+        raise click.BadParameter("must be a dotted path to a class, e.g. my_app.models.Base")
     return value
 
 
@@ -181,7 +199,13 @@ def _validate_env_prefix(ctx, param, value):
     callback=_validate_env_prefix,
     help='Environment variable prefix for the generated Config (default: the output directory name, e.g. MY_CLIENT_). Pass "" for no prefix.',  # noqa: E501
 )
-def start_api(url, file, output, asyncio=False, regen=False, env_prefix=None):
+@click.option(
+    "--base-class",
+    default=None,
+    callback=_validate_base_class,
+    help="Dotted path to a pydantic.BaseModel subclass for generated models to inherit from, e.g. my_app.models.Base",
+)
+def start_api(url, file, output, asyncio=False, regen=False, env_prefix=None, base_class=None):
     """
     Set up a new API Client
 
@@ -197,13 +221,25 @@ def start_api(url, file, output, asyncio=False, regen=False, env_prefix=None):
     --env-prefix sets the environment variable prefix the generated Config reads
     (default: the output directory name, e.g. MY_CLIENT_BASE_URL). Pass "" for none.
     Only used when config.py is created; an existing config.py is never overwritten.
+
+    --base-class makes generated models subclass the given class (a pydantic.BaseModel
+    subclass, e.g. my_app.models.Base) instead of pydantic.BaseModel. Enums and list
+    models are unchanged.
     """
     if not url and not file:
         # No schema provided, generate basic scaffold
         generate_basic(output=output)
     else:
         # Schema provided, generate full client
-        scaffold_api(url=url, file=file, output=output, asyncio=asyncio, regen=regen, env_prefix=env_prefix)
+        scaffold_api(
+            url=url,
+            file=file,
+            output=output,
+            asyncio=asyncio,
+            regen=regen,
+            env_prefix=env_prefix,
+            base_class=base_class,
+        )
 
 
 cli_group.add_command(version)

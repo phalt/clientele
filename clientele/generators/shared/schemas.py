@@ -139,12 +139,27 @@ class SchemasGenerator:
     schemas: dict[str, str]
     output_dir: str
     writer: typing.Any
+    base_class: typing.Optional[str]
 
-    def __init__(self, spec: cicerone_openapi_spec.OpenAPISpec, output_dir: str, writer: typing.Any) -> None:
+    def __init__(
+        self,
+        spec: cicerone_openapi_spec.OpenAPISpec,
+        output_dir: str,
+        writer: typing.Any,
+        base_class: typing.Optional[str] = None,
+    ) -> None:
         self.spec = spec
         self.schemas = {}
         self.output_dir = output_dir
         self.writer = writer
+        # Dotted path (`my_pkg.models.Base`) of a user-supplied base class for generated models.
+        # schemas_py.jinja2 imports it as `_ClienteleBase` so it can't clash with a component name.
+        self.base_class = base_class
+
+    @property
+    def model_base(self) -> str:
+        """The base class generated models subclass."""
+        return "_ClienteleBase" if self.base_class else "pydantic.BaseModel"
 
     def generate_enum_properties(self, properties: dict) -> str:
         lines = []
@@ -167,7 +182,7 @@ class SchemasGenerator:
             f'    {utils.snake_case_prop(k)}: {v} = pydantic.Field(serialization_alias="{k}")'
             for k, v in properties.items()
         )
-        content = template.render(class_name=class_name, properties=string_props, enum=False)
+        content = template.render(class_name=class_name, properties=string_props, enum=False, base=self.model_base)
         self.writer.write_to_schemas(content, output_dir=self.output_dir)
         return f"typing.Optional[schemas.{utils.class_name_titled(func_name)}Headers]"
 
@@ -236,7 +251,9 @@ class SchemasGenerator:
                     required=input_schema["schema"].get("required", None),
                 )
                 template = self.writer.templates.get_template("schema_class.jinja2")
-                out_content = template.render(class_name=class_name, properties=properties, enum=False)
+                out_content = template.render(
+                    class_name=class_name, properties=properties, enum=False, base=self.model_base
+                )
                 self.writer.write_to_schemas(out_content, output_dir=self.output_dir)
                 self.schemas[class_name] = properties
 
@@ -317,7 +334,7 @@ class SchemasGenerator:
             )
         self.schemas[schema_key] = properties
         template = self.writer.templates.get_template("schema_class.jinja2")
-        content = template.render(class_name=schema_key, properties=properties, enum=enum)
+        content = template.render(class_name=schema_key, properties=properties, enum=enum, base=self.model_base)
         self.writer.write_to_schemas(content, output_dir=self.output_dir)
 
     def write_helpers(self) -> None:
