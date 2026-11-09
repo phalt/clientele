@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+import datetime
 import functools
 import inspect
 import re
 import time
 import typing
+import uuid
 from urllib import parse
 
 import pydantic
+import pydantic_core
 
 from clientele.api import config as api_config
 from clientele.api import exceptions as api_exceptions
@@ -19,6 +22,24 @@ from clientele.http import response as http_response
 _P = typing.ParamSpec("_P")
 _R = typing.TypeVar("_R")
 _PATH_PARAM_PATTERN = re.compile(r"{([^{}]+)}")
+
+_ISO_TYPES = (datetime.date, datetime.time, datetime.timedelta, uuid.UUID)
+
+
+def _serialise_param(value: typing.Any) -> typing.Any:
+    """
+    Serialise date/time/duration/UUID values the way pydantic does in JSON (ISO 8601), so
+    a `datetime` is sent as `2026-01-02T03:04:05Z` rather than `str()`'s
+    `2026-01-02 03:04:05+00:00` and a `timedelta` as `P1D` rather than `1 day, 0:00:00`.
+    Lists (repeated query params) are serialised item by item; other values are unchanged.
+    """
+    if isinstance(value, _ISO_TYPES):
+        return pydantic_core.to_jsonable_python(value)
+    if isinstance(value, (list, tuple)):
+        return [_serialise_param(v) for v in value]
+    return value
+
+
 _INJECTED_PARAMS = frozenset({"result", "response"})
 
 
@@ -378,7 +399,7 @@ class APIClient:
 
         # Filter out None values from query params to avoid adding empty parameters to the URL
         if query_params:
-            query_params = {k: v for k, v in query_params.items() if v is not None}
+            query_params = {k: _serialise_param(v) for k, v in query_params.items() if v is not None}
 
         data_payload: dict[str, typing.Any] | None = None
         if context.method in {"POST", "PUT", "PATCH", "DELETE"}:
@@ -750,6 +771,6 @@ class APIClient:
     def _substitute_path(self, path_template: str, values: dict[str, typing.Any]) -> str:
         def replacer(match: re.Match[str]) -> str:
             key = match.group(1)
-            return parse.quote(str(values.get(key)), safe="")
+            return parse.quote(str(_serialise_param(values.get(key))), safe="")
 
         return _PATH_PARAM_PATTERN.sub(replacer, path_template)

@@ -90,7 +90,7 @@ class TestRefInResponses:
         schemas_content = (tmp_path / "schemas.py").read_text()
 
         assert "class DetailErrorResponseModel(pydantic.BaseModel):" in schemas_content
-        assert "timestamp: typing.Optional[str]" in schemas_content
+        assert "timestamp: typing.Optional[datetime.datetime]" in schemas_content
         assert "status: int" in schemas_content
 
 
@@ -106,8 +106,8 @@ class TestRefInParameters:
         schemas_content = (tmp_path / "schemas.py").read_text()
 
         assert "class CreateThreadHeaders(pydantic.BaseModel):" in schemas_content
-        assert 'request_id: str = pydantic.Field(serialization_alias="request-id")' in schemas_content
-        assert 'idempotency_key: str = pydantic.Field(serialization_alias="idempotency-key")' in schemas_content
+        assert 'request_id: uuid.UUID = pydantic.Field(serialization_alias="request-id")' in schemas_content
+        assert 'idempotency_key: uuid.UUID = pydantic.Field(serialization_alias="idempotency-key")' in schemas_content
 
 
 class TestRefInAllOf:
@@ -122,7 +122,7 @@ class TestRefInAllOf:
         schemas_content = (tmp_path / "schemas.py").read_text()
 
         assert "class CreateThreadRequest(pydantic.BaseModel):" in schemas_content
-        assert "thread_id: str" in schemas_content
+        assert "thread_id: uuid.UUID" in schemas_content
         assert "content: str" in schemas_content
 
 
@@ -172,7 +172,7 @@ class TestRuntimeRefBehavior:
         schemas_content = (tmp_path / "schemas.py").read_text()
 
         assert "class CreateThreadRequest(pydantic.BaseModel):" in schemas_content
-        assert "thread_id: str" in schemas_content
+        assert "thread_id: uuid.UUID" in schemas_content
         assert "content: str" in schemas_content
 
 
