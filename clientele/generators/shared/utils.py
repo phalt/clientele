@@ -1,6 +1,7 @@
 import functools
 import keyword
 import os
+import pathlib
 import re
 
 from cicerone.spec import openapi_spec as cicerone_openapi_spec
@@ -10,6 +11,16 @@ from clientele.generators import cicerone_compat
 
 # Pre-computed set of Python reserved words for efficient lookup
 RESERVED_WORDS = frozenset(list(keyword.kwlist) + list(keyword.softkwlist))
+
+
+def default_env_prefix(output_dir: str) -> str:
+    """
+    The environment variable prefix for a generated client's `Config`: the output
+    directory's name, upper-cased, with anything that isn't a letter or digit turned
+    into `_`, e.g. `path/to/billing-client/` -> `BILLING_CLIENT_`.
+    """
+    name = re.sub(r"[^A-Za-z0-9]+", "_", pathlib.Path(output_dir).resolve().name).strip("_").upper()
+    return f"{name}_" if name else ""
 
 
 def get_client_project_directory_path(output_dir: str) -> str:

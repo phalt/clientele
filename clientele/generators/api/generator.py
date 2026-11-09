@@ -52,6 +52,7 @@ class APIGenerator(generators.Generator):
         regen: bool,
         url: typing.Optional[str],
         file: typing.Optional[str],
+        env_prefix: typing.Optional[str] = None,
     ) -> None:
         self.schemas_generator = schemas.SchemasGenerator(spec=spec, output_dir=output_dir, writer=writer)
         self.clients_generator = clients.ClientsGenerator(
@@ -66,12 +67,21 @@ class APIGenerator(generators.Generator):
         self.output_dir = output_dir
         self.file = file
         self.url = url
+        # None derives the prefix from the output directory; "" turns it off
+        self.env_prefix_option = env_prefix
+        self.env_prefix = utils.default_env_prefix(output_dir) if env_prefix is None else env_prefix
         # The api generator only needs client, config, and schemas (no http.py)
         self.file_name_writer_tuple = (
             ("config.py", "config_py.jinja2", writer.write_to_config),
             ("client.py", "client_py.jinja2", writer.write_to_client),
             ("schemas.py", "schemas_py.jinja2", writer.write_to_schemas),
         )
+
+    def _env_prefix_arg(self) -> str:
+        if self.env_prefix_option is None:
+            return ""
+        prefix = self.env_prefix_option or '""'
+        return f" --env-prefix {prefix}"
 
     def generate_templates_files(self) -> None:
         client_project_directory_path = utils.get_client_project_directory_path(output_dir=self.output_dir)
@@ -97,6 +107,7 @@ class APIGenerator(generators.Generator):
             content = template.render(
                 client_project_directory_path=client_project_directory_path,
                 base_url=base_url,
+                env_prefix=self.env_prefix,
             )
             write_func(content, output_dir=self.output_dir)
         # Manifest file
@@ -104,7 +115,7 @@ class APIGenerator(generators.Generator):
         if manifest_file.exists():
             os.remove(manifest_file)
         template = writer.templates.get_template("manifest.jinja2")
-        generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio' if self.asyncio else ''} --regen"  # noqa
+        generate_command = f"{f'-u {self.url}' if self.url else ''}{f'-f {self.file}' if self.file else ''} -o {self.output_dir} {'--asyncio' if self.asyncio else ''} --regen{self._env_prefix_arg()}"  # noqa
         content = (
             template.render(
                 api_version=self.spec.info.version if self.spec.info else "N/A",

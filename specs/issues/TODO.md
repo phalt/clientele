@@ -35,7 +35,7 @@ Convention for every fix (one PR per issue, linked with `Fixes #<n>`):
 
 ## Phase 6: config (breaking)
 
-- [ ] [#281](281.md): per-client `env_prefix` for generated `Config`
+- [x] [#281](281.md): per-client `env_prefix` for generated `Config`
 
 ## Phase 7: new generator option
 

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import sys
 import textwrap
 
@@ -141,7 +142,7 @@ def generate_basic(output):
     generator.generate()
 
 
-def scaffold_api(url, file, output, asyncio=False, regen=False):
+def scaffold_api(url, file, output, asyncio=False, regen=False, env_prefix=None):
     """
     Scaffold an API client from an OpenAPI schema.
     """
@@ -154,10 +155,18 @@ def scaffold_api(url, file, output, asyncio=False, regen=False):
     spec = _prepare_spec(console=console, url=url, file=file)
     if not spec:
         return
-    generator = APIGenerator(spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file)
+    generator = APIGenerator(
+        spec=spec, asyncio=asyncio, regen=regen, output_dir=output, url=url, file=file, env_prefix=env_prefix
+    )
     if generator.prevent_accidental_regens():
         generator.generate()
         console.log("\n[green]⚜️ client generated! ⚜️ \n")
+
+
+def _validate_env_prefix(ctx, param, value):
+    if value is not None and not re.fullmatch(r"[A-Za-z0-9_]*", value):
+        raise click.BadParameter("may only contain letters, digits and underscores")
+    return value
 
 
 @click.command()
@@ -166,7 +175,13 @@ def scaffold_api(url, file, output, asyncio=False, regen=False):
 @click.option("-o", "--output", help="Directory for the generated client", required=True)
 @click.option("-a", "--asyncio", is_flag=True, help="Generate async client")
 @click.option("-r", "--regen", is_flag=True, help="Regenerate client")
-def start_api(url, file, output, asyncio=False, regen=False):
+@click.option(
+    "--env-prefix",
+    default=None,
+    callback=_validate_env_prefix,
+    help='Environment variable prefix for the generated Config (default: the output directory name, e.g. MY_CLIENT_). Pass "" for no prefix.',  # noqa: E501
+)
+def start_api(url, file, output, asyncio=False, regen=False, env_prefix=None):
     """
     Set up a new API Client
 
@@ -178,13 +193,17 @@ def start_api(url, file, output, asyncio=False, regen=False):
     if -a / --asyncio is provided, generates an async client.
 
     if -r / --regen is provided, regenerates the client even if files exist.
+
+    --env-prefix sets the environment variable prefix the generated Config reads
+    (default: the output directory name, e.g. MY_CLIENT_BASE_URL). Pass "" for none.
+    Only used when config.py is created; an existing config.py is never overwritten.
     """
     if not url and not file:
         # No schema provided, generate basic scaffold
         generate_basic(output=output)
     else:
         # Schema provided, generate full client
-        scaffold_api(url=url, file=file, output=output, asyncio=asyncio, regen=regen)
+        scaffold_api(url=url, file=file, output=output, asyncio=asyncio, regen=regen, env_prefix=env_prefix)
 
 
 cli_group.add_command(version)

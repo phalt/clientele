@@ -68,6 +68,18 @@ If you prefer an [asyncio](https://docs.python.org/3/library/asyncio.html) clien
 clientele start-api -f path/to/file.json -o my_client/ --asyncio
 ```
 
+### Environment variable prefix
+
+The generated `Config` in `config.py` reads its settings from environment variables and `.env`, prefixed with the output directory's name in upper case. For `-o billing_client/` that's `BILLING_CLIENT_BASE_URL`, `BILLING_CLIENT_TIMEOUT`, `BILLING_CLIENT_HEADERS` and so on, so two clients in one app don't share settings, and generic names like `TIMEOUT` don't collide with your app's own.
+
+Use `--env-prefix` to pick a different prefix, or pass `""` to read the unprefixed names (`BASE_URL`, `TIMEOUT`, ...):
+
+```sh
+clientele start-api -f path/to/file.json -o billing_client/ --env-prefix BILLING_
+```
+
+The prefix is only used when `config.py` is created. `config.py` is never overwritten, so `--regen` keeps the prefix (or no prefix) your existing `config.py` has. To change it, edit `model_config = SettingsConfigDict(env_prefix=...)` in `config.py`.
+
 ### Regenerating
 
 When your API changes, run the same command again with `-r` or `--regen` to update the client in place. Without it, clientele won't overwrite an existing client and will warn you instead. The exact command is also written into your client's `MANIFEST.md`.

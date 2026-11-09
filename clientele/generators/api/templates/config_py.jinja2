@@ -4,6 +4,9 @@ Use it as a space to store configuration and constants.
 """
 
 from pydantic import Field
+{%- if env_prefix %}
+from pydantic_settings import SettingsConfigDict
+{%- endif %}
 
 from clientele import api as clientele_api
 
@@ -13,13 +16,13 @@ class Config(clientele_api.BaseConfig):
     Configuration object for your API client.
 
     Values can be set via:
-    1. Environment variables (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
+    1. Environment variables{% if env_prefix %} prefixed with {{ env_prefix }}{% endif %} (see https://docs.pydantic.dev/latest/concepts/pydantic_settings/#usage)
     2. Direct instantiation with keyword arguments
     3. .env file (if python-dotenv is installed)
 
     Example:
         # From environment variables
-        export BASE_URL="https://api.example.com"
+        export {{ env_prefix }}BASE_URL="https://api.example.com"
         config = Config()
 
         # Direct instantiation
@@ -28,7 +31,10 @@ class Config(clientele_api.BaseConfig):
             timeout=10.0
         )
     """
-
+{% if env_prefix %}
+    # Read {{ env_prefix }}BASE_URL, {{ env_prefix }}TIMEOUT, ... so clients don't share settings
+    model_config = SettingsConfigDict(env_prefix="{{ env_prefix }}")
+{% endif %}
     base_url: str = "{{ base_url }}"
     headers: dict[str, str] = Field(default_factory=dict)
     timeout: float | None = 5.0
