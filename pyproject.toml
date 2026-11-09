@@ -40,11 +40,12 @@ clientele = "clientele.mypy"
 [dependency-groups]
 dev = [
     "clientele[cli]",
+    "ghp-import>=2.1.0",
     "fastapi[standard]>=0.127.0",
     "ty>=0.0.38",
-    "mkdocs>=1.6.1",
+    # Zensical needs Python 3.11+; the docs build is skipped on 3.10
+    "zensical>=0.1.0,<0.2; python_full_version >= '3.11'",
     "ipython>=8.37.0",
-    "mkdocs-material>=9.7.6",
     "pytest-httpx2>=1.0.0",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.2.0",

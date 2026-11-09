@@ -8,11 +8,11 @@ install:  ## Install requirements ready for development
 	uv sync
 
 deploy-docs:  ## Build and deploy the documentation
-	uv run mkdocs build
-	uv run mkdocs gh-deploy
+	uv run zensical build --clean --strict
+	uv run ghp-import --no-jekyll --push --force --message "Deploy docs" site
 
 docs-serve:  ## Run a local documentation server
-	uv run mkdocs serve
+	uv run zensical serve
 
 release:  ## Build a new version and release it
 	uv build

@@ -52,6 +52,11 @@ jobs:
       - name: Check import contracts
         run: |
           make lint-imports
+      - name: Build docs
+        # Zensical needs Python 3.11+
+        if: matrix.python-version != '3.10'
+        run: |
+          uv run zensical build --strict
       - name: Test with pytest
         run: |
           uv run pytest -vv --cov=clientele --cov-branch --cov-report=term-missing --cov-report=xml --cov-config=pyproject.toml
